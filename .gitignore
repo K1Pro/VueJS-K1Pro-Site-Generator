@@ -1,0 +1,17 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# production
+/not working
+/archive
+*.png
+*.ico
+*.env
+*.htaccess
+/index.php
+/sync.ffs_db
+/src/assets/js/pinia
+/src/assets/js/vue-demi
+/src/assets/js/vue3-sfc-loader
