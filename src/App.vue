@@ -24,9 +24,14 @@ export default {
           method: 'GET',
         });
         const getSiteResJSON = await response.json();
+        if (getSiteResJSON.success) {
+          this.siteStore.site = getSiteResJSON.data.site;
+        }
         console.log(getSiteResJSON);
+        this.siteStore.message = getSiteResJSON.messages[0];
       } catch (error) {
         console.log(error.toString());
+        this.siteStore.message = error.toString();
       }
     },
   },
