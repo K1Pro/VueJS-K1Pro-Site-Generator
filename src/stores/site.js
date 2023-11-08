@@ -5,7 +5,7 @@ const useSiteStore = Pinia.defineStore('site', {
       hostname: window.location.hostname,
       pathname: window.location.pathname.replaceAll('/node/vuejs/Frontends/Site', ''),
       // pathname: window.location.pathname.replaceAll('/node/vuejs/Frontends/Site', '').replaceAll('/', ''),
-      site: '',
+      site: [],
     };
   },
   actions: {
