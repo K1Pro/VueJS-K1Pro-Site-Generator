@@ -25,7 +25,7 @@ export default {
         });
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
-          this.siteStore.site = getSiteResJSON.data.site;
+          this.siteStore.site = getSiteResJSON.data;
         }
         console.log(getSiteResJSON);
         this.siteStore.message = getSiteResJSON.messages[0];

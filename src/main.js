@@ -1,6 +1,6 @@
 const vm = Vue.createApp({
   components: {
-    app: Vue.defineAsyncComponent(() => loadModule('./src/App.vue', options)),
+    app: Vue.defineAsyncComponent(() => loadModule(`${assetsPath}/src/App.vue`, options)),
   },
   template: '<app></app>',
 });
