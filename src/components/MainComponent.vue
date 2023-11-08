@@ -2,8 +2,8 @@
   <div class="helloworld">
     <!-- <h2>{{ siteStore.hostname }}</h2>
     <h2>{{ siteStore.pathname }}</h2> -->
-    <h2>{{ siteStore.site.entire_query[0] ? siteStore.site.entire_query[0] : "Main Directory" }}</h2>
-    {{ siteStore.site.entire_query[1] ? siteStore.site.entire_query[1] : '' }}
+
+    <h2 v-for="value in siteStore.searchedSite.entire_query">{{ value }}</h2>
     
   </div>
 </template>
