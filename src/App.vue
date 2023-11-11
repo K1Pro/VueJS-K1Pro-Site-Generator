@@ -20,12 +20,26 @@ export default {
   methods: {
     async getSite() {
       try {
+        console.log(servrURL + this.siteStore.pathname);
         const response = await fetch(servrURL + this.siteStore.pathname, {
-          method: 'GET',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            hostname: window.location.hostname.toLowerCase(),
+          }),
         });
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.siteStore.searchedSite = getSiteResJSON.data;
+          let head = document.getElementsByTagName('HEAD')[0];
+          let link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.type = 'text/css';
+          link.href = servrURL + '../protected/' + getSiteResJSON.data.site + '/body.css';
+          head.appendChild(link);
         }
         console.log(getSiteResJSON);
         this.siteStore.message = getSiteResJSON.messages[0];
