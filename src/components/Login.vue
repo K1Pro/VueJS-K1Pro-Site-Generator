@@ -8,7 +8,14 @@
     </template>
     <template v-else>
       <input type="text" name="email" placeholder="Username" autocomplete="email" v-model="this.email" /><br /><br />
-      <input type="password" name="password" minlength="8" placeholder="Password" v-model="this.password" /><br /><br />
+      <input
+        type="password"
+        name="password"
+        minlength="8"
+        placeholder="Password"
+        v-model="this.password"
+        @keyup.enter="postLogin"
+      /><br /><br />
       <button type="button" @click.prevent="postLogin">Log In</button>
     </template>
   </div>

@@ -5,11 +5,9 @@
     <template v-for="htmlElements in site.params.htmlElements">
       <header><!-- <h2>{{ site.params.site }}</h2> --></header>
 
-      <div v-for="([elKey, elValue], elIndex) in Object.entries(htmlElements)" :class="elKey">
-        <ul v-if="elKey == 'horizontal-menu'" :name="elValue.name">
-          <horizontal_menu :elIndex="elIndex" :elValue="elValue"> </horizontal_menu>
-        </ul>
-      </div>
+      <template v-for="([elKey, elValue], elIndex) in Object.entries(htmlElements)">
+        <horizontal_menu :elKey="elKey" :elValue="elValue" :elIndex="elIndex"> </horizontal_menu>
+      </template>
 
       <foot></foot>
     </template>
@@ -50,7 +48,7 @@ export default {
   computed: {
     // ...Pinia.mapStores(useSiteStore),
     ...Pinia.mapWritableState(useSiteStore, [
-      'loggedIn',
+      'accessToken',
       'message',
       'hostname',
       'pathname',
@@ -103,9 +101,6 @@ export default {
     } else {
       this.deleteCookie();
     }
-
-    console.log(this.hostname);
-    console.log(this.pathname);
   },
 };
 </script>
