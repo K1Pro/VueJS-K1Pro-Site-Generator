@@ -32,13 +32,7 @@
             <option value="deleteMenu">Delete Menu</option>
           </select>
           <template v-if="menuChange.toLowerCase().includes('color')">
-            <span
-              :style="{
-                color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor'],
-              }"
-              style="filter: invert(100%)"
-              >Text Color:</span
-            ><input
+            <input
               type="color"
               :name="'horizontal_menu' + menuChange"
               v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
@@ -47,14 +41,18 @@
       </template>
       <template v-else
         ><a
+          :ref="menuItem"
           :href="'#' + menuItem"
           :style="{
             color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
               ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
               : '#000000',
           }"
+          @mouseover="highlightMenuItem(true, menuItem)"
+          @mouseout="highlightMenuItem(false, menuItem)"
           >{{ menuItem }}</a
         >
+        <!-- Responsive Hamburger Menu -->
         <template v-if="index === elValue['menu-items'].length - 1">
           <a class="icon" @click.prevent="respToggle = !respToggle"
             ><i
@@ -70,7 +68,6 @@
 </template>
 
 <script>
-// style="color: #ffffff"
 export default {
   name: 'Horizontal_menu',
 
@@ -87,6 +84,19 @@ export default {
   methods: {
     deleteMenuItem(menuItemIndex) {
       this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].splice(menuItemIndex, 1);
+    },
+    highlightMenuItem(isHovering, menuItem) {
+      if (isHovering) {
+        this.$refs[menuItem].style.backgroundColor =
+          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
+        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'] == '#000000'
+          ? (this.$refs[menuItem].style.backgroundColor = '#878787')
+          : (this.$refs[menuItem].style.filter = 'brightness(90%)');
+      } else {
+        this.$refs[menuItem].style.backgroundColor =
+          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
+        this.$refs[menuItem].style.filter = 'none';
+      }
     },
   },
 };
@@ -170,8 +180,9 @@ export default {
 }
 
 .horizontal-menu a:hover {
-  background-color: #ddd;
-  color: black;
+  /* filter: saturation(10%);
+  background-color: #ff0000; */
+  /* color: black; */
 }
 
 .horizontal-menu a.active {
