@@ -56,6 +56,8 @@ export default {
       'endPts',
       'getCookie',
       'deleteCookie',
+      'onScreenResize',
+      'updateScreenWidth',
       'getLoginUser',
     ]),
   },
@@ -80,6 +82,11 @@ export default {
           Object.keys(getSiteResJSON.data?.params.body.style).forEach((key) => {
             document.body.style[key] = getSiteResJSON.data.params.body.style[key];
           });
+
+          const setFavicon = document.createElement('link');
+          setFavicon.setAttribute('rel', 'shortcut icon');
+          setFavicon.setAttribute('href', this.endPts.servrURL + '../protected/' + this.site.site + '/logo/favi.ico');
+          document.head.appendChild(setFavicon);
         }
         console.log(getSiteResJSON);
         this.message = getSiteResJSON.messages[0];
@@ -101,6 +108,11 @@ export default {
     } else {
       this.deleteCookie();
     }
+  },
+
+  mounted() {
+    this.updateScreenWidth();
+    this.onScreenResize();
   },
 };
 </script>

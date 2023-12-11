@@ -11,6 +11,7 @@ const useSiteStore = Pinia.defineStore('site', {
       pathname: window.location.host.includes('192.168')
         ? window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001/', '')
         : window.location.pathname.slice(1),
+      windowWidth: 0,
       site: {},
       user: {},
       endPts: {
@@ -39,6 +40,14 @@ const useSiteStore = Pinia.defineStore('site', {
       this.loggedIn = false;
       document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${this.cookiePath};`;
       document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${this.cookiePath};`;
+    },
+    onScreenResize() {
+      window.addEventListener('resize', () => {
+        this.updateScreenWidth();
+      });
+    },
+    updateScreenWidth() {
+      this.windowWidth = window.innerWidth;
     },
     async getLoginUser() {
       try {
