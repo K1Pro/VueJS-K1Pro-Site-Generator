@@ -12,6 +12,7 @@ const useSiteStore = Pinia.defineStore('site', {
         ? window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001/', '')
         : window.location.pathname.slice(1),
       windowWidth: 0,
+      respWidth: 650,
       site: {},
       user: {},
       endPts: {

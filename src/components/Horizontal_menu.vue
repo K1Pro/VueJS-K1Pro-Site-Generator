@@ -7,9 +7,12 @@
       backgroundColor: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
         ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
         : '#808080',
-      height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']
-        ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px'
-        : '100px',
+      height:
+        windowWidth < this.respWidth && this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+          ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] +
+            this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].length * 50 +
+            'px'
+          : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
     }"
   >
     <template v-if="loggedIn === null"></template>
@@ -50,26 +53,28 @@
         </template>
       </template>
     </template>
-    <!-- Rendered Menu Items -->
+    <!-- Rendered Menu -->
     <template v-else>
+      <!-- Menu Logo -->
       <div
         class="logo"
         :style="{
-          height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']
-            ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px'
-            : '100px',
+          height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] - 20 + 'px',
         }"
       >
         <img :src="this.endPts.servrURL + '../protected/' + this.site.site + '/logo/logo.png'" alt="" />
       </div>
+      <!-- Menu Logo -->
 
       <div class="horizontal-menu-alignment">
         <div
+          v-if="
+            windowWidth > this.respWidth ||
+            (windowWidth < this.respWidth && this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive'])
+          "
           class="horizontal-menu-items"
-          :style="{
-            display: respToggle ? 'none' : 'block',
-          }"
         >
+          <!-- Menu Items -->
           <template v-for="(menuItem, index) in elValue['menu-items']">
             <a
               :href="'#' + menuItem"
@@ -77,29 +82,42 @@
                 color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
                   ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
                   : '#000000',
+                height:
+                  windowWidth < this.respWidth &&
+                  this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+                    ? '50px'
+                    : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+                'line-height':
+                  windowWidth < this.respWidth &&
+                  this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+                    ? '50px'
+                    : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
               }"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
               >{{ menuItem }}</a
             >
           </template>
+          <!-- Menu Items -->
         </div>
       </div>
 
-      <!-- Responsive Hamburger Menu -->
-      <template v-if="windowWidth < 700">
-        <a @click.prevent="respToggle = !respToggle" class="horizontal-menu-icon"
+      <!-- Menu Hamburger Button -->
+      <template v-if="windowWidth < this.respWidth">
+        <a @click.prevent="toggleRespMenu" class="horizontal-menu-icon"
           ><i
             class="fa fa-bars"
             :style="{
-              color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor'],
-              height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']
-                ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px'
-                : '100px',
+              color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color'],
+              height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+              'line-height': this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
             }"
-            style="filter: invert(100%)"
+            style="padding-left: 16px; padding-right: 16px; margin-right: -16px; margin-left: -16px"
+            @mouseover="highlightMenuItem(true, $event)"
+            @mouseout="highlightMenuItem(false, $event)"
           ></i></a
       ></template>
+      <!-- Menu Hamburger Button -->
     </template>
   </div>
 </template>
@@ -114,6 +132,7 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'loggedIn',
       'windowWidth',
+      'respWidth',
       'site',
       'endPts',
       'onScreenResize',
@@ -122,10 +141,14 @@ export default {
   },
 
   data() {
-    return { respToggle: true, menuChange: '' };
+    return { menuChange: '' };
   },
 
   methods: {
+    toggleRespMenu() {
+      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] =
+        !this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'];
+    },
     deleteMenuItem(menuItemIndex) {
       this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].splice(menuItemIndex, 1);
     },
@@ -144,10 +167,18 @@ export default {
       }
     },
   },
+  created() {
+    if (this.windowWidth < this.respWidth)
+      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+  },
 
   watch: {
     windowWidth(newWindowWidth, oldWindowWidth) {
-      this.respToggle = newWindowWidth > 700 ? false : true;
+      if (
+        (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
+        (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
+      )
+        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
     },
   },
 };
@@ -162,8 +193,6 @@ export default {
 .horizontal-menu input[type='text'] {
   margin: 7px -1px 7px 8px;
   padding: 5px;
-  /* width: auto; */
-  /* height: 20px; */
   text-align: left;
 }
 
@@ -172,58 +201,31 @@ export default {
   padding: 6px;
 }
 
-/* input {
-  height: 34px;
-  width: 100px;
-  text-align: center;
-  font-size: 26px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  display: inline-block;
-  vertical-align: middle;
-} */
-
 .horizontal-menu {
   overflow: hidden;
   position: relative;
-  /* background-color: #333; */
-  /* height: 100px; */
 }
 
 .horizontal-menu-items {
-  display: none;
+  display: block;
 }
 
 .horizontal-menu a {
   cursor: pointer;
   float: none; /* change this dynamic alignment */
   display: block;
-  /* color: #f2f2f2; */
-  /* text-align: center; */
-  padding: 14px 16px;
+  padding-left: 16px;
+  padding-right: 16px;
   text-decoration: none;
   font-size: 18px;
-  /* height: 100px; */
   /* transition: width 2s, height 2s, transform 2s; */
 }
 
 .horizontal-menu-icon {
-  /* background: black; */
   display: block;
   position: absolute;
   right: 0;
   top: 0;
-}
-
-/* .horitzontal-menu-icon {
-  display: none;
-} */
-
-.horizontal-menu a:hover {
-  /* transform: rotate(180deg); */
-  /* filter: invert(50%); */
-  /* background-color: #ff0000; */
-  /* color: black; */
 }
 
 .horizontal-menu a.active {
@@ -231,50 +233,23 @@ export default {
   color: white;
 }
 
-img {
-  height: 25%;
-  /* max-width: auto; */
+.logo {
+  padding: 10px;
 }
 
-@media only screen and (min-width: 700px) {
+img {
+  height: 100%;
+}
+
+@media only screen and (min-width: 650px) {
   .horizontal-menu-alignment {
     float: right;
   }
   .horizontal-menu a {
     float: left;
   }
-  .horizontal-menu-items {
-    display: block;
-  }
   .logo {
     float: left;
-    /* padding: 5px; */
   }
 }
-
-/* @media screen and (max-width: 600px) {
-  .horizontal-menu a:not(:first-child) {
-    display: none;
-  }
-  .horizontal-menu a.icon {
-    float: left; 
-    display: block;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .horizontal-menu.responsive {
-    position: relative;
-  }
-  .horizontal-menu.responsive .icon {
-    position: absolute;
-    left: 0; 
-    top: 0;
-  }
-  .horizontal-menu.responsive a {
-    float: none;
-    display: block;
-    text-align: right; 
-  }
-} */
 </style>
