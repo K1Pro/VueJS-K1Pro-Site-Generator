@@ -9,8 +9,8 @@
         : '#808080',
       height:
         windowWidth < this.respWidth && this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
-          ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] +
-            this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].length * 50 +
+          ? 50 * this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].length +
+            Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) +
             'px'
           : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
     }"
@@ -24,6 +24,8 @@
           v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index]"
           :style="{
             width: this.site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index].length * 9 + 'px',
+            'margin-top':
+              Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) / 2 - 10 + 'px',
           }"
         />
         <template v-if="index > 1">
@@ -46,10 +48,13 @@
           /></template>
           <template v-if="menuChange == 'height'">
             <input
-              type="number"
+              type="range"
+              min="50"
+              max="150"
               :name="'horizontal_menu' + menuChange"
               v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
-          /></template>
+            />{{ this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}</template
+          >
         </template>
       </template>
     </template>
@@ -59,7 +64,7 @@
       <div
         class="logo"
         :style="{
-          height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] - 20 + 'px',
+          height: Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) - 20 + 'px',
         }"
       >
         <img :src="this.endPts.servrURL + '../protected/' + this.site.site + '/logo/logo.png'" alt="" />
@@ -206,10 +211,6 @@ export default {
   position: relative;
 }
 
-.horizontal-menu-items {
-  display: block;
-}
-
 .horizontal-menu a {
   cursor: pointer;
   float: none; /* change this dynamic alignment */
@@ -221,6 +222,11 @@ export default {
   /* transition: width 2s, height 2s, transform 2s; */
 }
 
+.horizontal-menu a.active {
+  background-color: #04aa6d;
+  color: white;
+}
+
 .horizontal-menu-icon {
   display: block;
   position: absolute;
@@ -228,9 +234,8 @@ export default {
   top: 0;
 }
 
-.horizontal-menu a.active {
-  background-color: #04aa6d;
-  color: white;
+.horizontal-menu-items {
+  display: block;
 }
 
 .logo {
@@ -242,14 +247,14 @@ img {
 }
 
 @media only screen and (min-width: 650px) {
-  .horizontal-menu-alignment {
-    float: right;
-  }
   .horizontal-menu a {
     float: left;
   }
   .logo {
     float: left;
+  }
+  .horizontal-menu-alignment {
+    float: right;
   }
 }
 </style>
