@@ -67,7 +67,7 @@
           height: Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) - 20 + 'px',
         }"
       >
-        <img :src="this.endPts.servrURL + '../protected/' + this.site.site + '/logo/logo.png'" alt="" />
+        <img :src="this.endPts.servrURL + this.site.params.logo" alt="logo" />
       </div>
       <!-- Menu Logo -->
 

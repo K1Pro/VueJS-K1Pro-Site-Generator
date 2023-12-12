@@ -85,11 +85,11 @@ export default {
 
           const setFavicon = document.createElement('link');
           setFavicon.setAttribute('rel', 'shortcut icon');
-          setFavicon.setAttribute('href', this.endPts.servrURL + '../protected/' + this.site.site + '/logo/favi.ico');
+          setFavicon.setAttribute('href', this.endPts.servrURL + this.site.params.icon);
           document.head.appendChild(setFavicon);
         }
         console.log(getSiteResJSON);
-        this.message = getSiteResJSON.messages[0];
+        // this.message = getSiteResJSON.messages[0];
       } catch (error) {
         console.log(error.toString());
         this.message = error.toString();

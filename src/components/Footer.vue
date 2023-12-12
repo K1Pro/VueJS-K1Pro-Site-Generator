@@ -1,20 +1,20 @@
 <template>
   <div class="footer">
     <div class="grid-container">
-      <div class="grid-item">
+      <div class="item1">
         <p>
           {{ site.params.author }}<br /><br />
           {{ site.params.phone }}<br /><br />
           <a href="mailto:test@test.com">{{ site.params.email }}</a>
         </p>
       </div>
-      <div class="grid-item"></div>
-      <div class="grid-item"></div>
-      <div class="grid-item">
+      <div class="item2"></div>
+      <div class="item3"></div>
+      <div class="item4">
         <login> </login>
       </div>
-      <div class="grid-item"></div>
-      <div class="grid-item"></div>
+      <div class="item5"></div>
+      <div class="item6"></div>
     </div>
   </div>
 </template>
@@ -46,30 +46,42 @@ export default {
 <style>
 .footer {
   position: absolute;
-  bottom: 0;
-  width: 100vw;
+  top: 100vh;
+  width: 100%;
   /* text-align: left;
     padding: 0vw 3vw;
     background-color: grey;
     color: white; */
 }
 
+.footer input {
+  padding: 5px;
+}
+
 .footer .grid-container {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-columns: 100%;
+  grid-template-rows: auto;
   background-color: grey;
   /* padding: 10px; */
 }
 
-.footer .grid-item {
+.footer .item1,
+.footer .item2,
+.footer .item3,
+.footer .item4,
+.footer .item5,
+.footer .item6 {
+  padding: 20px 20px;
+  text-align: left;
   /* background-color: rgba(255, 255, 255, 0.8); */
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
-  padding: 20px 20px;
   /* font-size: 30px; */
-  text-align: left;
 }
 
-.footer input {
-  padding: 5px;
+@media only screen and (min-width: 650px) {
+  .footer .grid-container {
+    grid-template-columns: auto auto auto auto auto auto;
+  }
 }
 </style>
