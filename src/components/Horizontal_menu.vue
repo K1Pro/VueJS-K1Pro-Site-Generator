@@ -4,15 +4,15 @@
     :name="elValue.name"
     :class="elKey"
     :style="{
-      backgroundColor: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
-        ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
+      backgroundColor: site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
+        ? site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
         : '#808080',
       height:
-        windowWidth < this.respWidth && this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
-          ? 50 * this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].length +
-            Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) +
+        windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+          ? 50 * site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'].length +
+            Number(site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) +
             'px'
-          : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+          : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
       'overflow-x': loggedIn ? 'scroll' : 'hidden',
       'white-space': loggedIn ? 'nowrap' : 'normal',
     }"
@@ -23,30 +23,31 @@
         <input
           type="text"
           :name="menuItem"
-          v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index]"
+          v-model="site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index]"
           :style="{
-            width: this.site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index].length * 9 + 'px',
+            width: site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index].length * 9 + 'px',
             'margin-top':
-              Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) / 2 - 10 + 'px',
+              Number(site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) / 2 - 10 + 'px',
           }"
         />
         <template v-if="index > 1">
           <button class="fa-solid fa-trash-can" @click.prevent="deleteMenuItem(index)"></button>
         </template>
         <template v-if="index === elValue['menu-items'].length - 1">
-          <select name="menuChange" v-model="menuChange">
+          <select name="menuChange" v-model="menuChange" @change="menuAction">
             <option value="" disabled selected>Change Menu</option>
             <option value="color">Text Color</option>
             <option value="backgroundColor">Background Color</option>
             <option value="height">Menu Height</option>
+            <option value="alignment">Menu Alignment</option>
             <option value="addItem">Add Menu Item</option>
-            <option value="deleteMenu">Delete Menu</option>
+            <!-- <option value="deleteMenu">Delete Menu</option> -->
           </select>
           <template v-if="menuChange.toLowerCase().includes('color')">
             <input
               type="color"
               :name="'horizontal_menu' + menuChange"
-              v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
+              v-model="site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
           /></template>
           <template v-if="menuChange == 'height'">
             <input
@@ -54,18 +55,18 @@
               min="50"
               max="150"
               :name="'horizontal_menu' + menuChange"
-              v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
-            />{{ this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}</template
-          >
-          <template v-if="menuChange == 'addItem'">
-            <input
-              type="range"
-              min="50"
-              max="150"
-              :name="'horizontal_menu' + menuChange"
-              v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
-            />{{ this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}</template
-          >
+              v-model="site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
+            />{{ site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}
+          </template>
+          <template v-if="menuChange == 'alignment'">
+            <input type="radio" name="menu-alignment" value="left" checked @click="changeMenuAlignment" /><label
+              for="left"
+              >Left</label
+            >
+            <input type="radio" name="menu-alignment" value="right" @click="changeMenuAlignment" /><label for="right"
+              >Right</label
+            >
+          </template>
         </template>
       </template>
     </template>
@@ -75,18 +76,26 @@
       <div
         class="logo"
         :style="{
-          height: Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) - 20 + 'px',
+          height: Number(site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) - 20 + 'px',
         }"
       >
-        <img :src="this.endPts.servrURL + this.site.params.logo" alt="logo" />
+        <img :src="endPts.servrURL + site.params.logo" alt="logo" />
       </div>
       <!-- Menu Logo -->
 
-      <div class="horizontal-menu-alignment">
+      <div
+        class="horizontal-menu-alignment"
+        :style="{
+          float:
+            windowWidth > respWidth
+              ? site.params.htmlElements[elIndex]['horizontal-menu']['style']['alignment']
+              : 'none',
+        }"
+      >
         <div
           v-if="
-            windowWidth > this.respWidth ||
-            (windowWidth < this.respWidth && this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive'])
+            windowWidth > respWidth ||
+            (windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive'])
           "
           class="horizontal-menu-items"
         >
@@ -95,19 +104,17 @@
             <a
               :href="'#' + menuItem"
               :style="{
-                color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
-                  ? this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
+                color: site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
+                  ? site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
                   : '#000000',
                 height:
-                  windowWidth < this.respWidth &&
-                  this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+                  windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
                     ? '50px'
-                    : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+                    : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
                 'line-height':
-                  windowWidth < this.respWidth &&
-                  this.site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+                  windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
                     ? '50px'
-                    : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+                    : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
               }"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
@@ -119,14 +126,14 @@
       </div>
 
       <!-- Menu Hamburger Button -->
-      <template v-if="windowWidth < this.respWidth">
+      <template v-if="windowWidth < respWidth">
         <a @click.prevent="toggleRespMenu" class="horizontal-menu-icon"
           ><i
             class="fa fa-bars"
             :style="{
-              color: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['color'],
-              height: this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
-              'line-height': this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+              color: site.params.htmlElements[elIndex]['horizontal-menu']['style']['color'],
+              height: site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+              'line-height': site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
             }"
             style="padding-left: 16px; padding-right: 16px; margin-right: -16px; margin-left: -16px"
             @mouseover="highlightMenuItem(true, $event)"
@@ -147,6 +154,7 @@ export default {
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
       'loggedIn',
+      'message',
       'windowWidth',
       'respWidth',
       'site',
@@ -161,14 +169,6 @@ export default {
   },
 
   methods: {
-    toggleRespMenu() {
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] =
-        !this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'];
-    },
-    deleteMenuItem(menuItemIndex) {
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].splice(menuItemIndex, 1);
-    },
-
     highlightMenuItem(isHovering, event) {
       if (isHovering) {
         event.target.style.backgroundColor =
@@ -181,6 +181,27 @@ export default {
           this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
         event.target.style.filter = 'none';
       }
+    },
+    toggleRespMenu() {
+      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] =
+        !this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'];
+    },
+    deleteMenuItem(menuItemIndex) {
+      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].splice(menuItemIndex, 1);
+    },
+    menuAction(event) {
+      if (event.srcElement.selectedOptions[0].value == 'addItem') {
+        if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].length < 10) {
+          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].push('');
+          this.menuChange = '';
+        } else {
+          this.menuChange = '';
+          this.message = 'Maximum 10 menu items';
+        }
+      }
+    },
+    changeMenuAlignment(event) {
+      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['alignment'] = event.target.value;
     },
   },
   created() {
@@ -207,6 +228,7 @@ export default {
 }
 
 .horizontal-menu input[type='text'] {
+  min-width: 30px;
   margin: 7px -1px 7px 8px;
   padding: 5px;
   text-align: left;
@@ -264,7 +286,7 @@ img {
     float: left;
   }
   .horizontal-menu-alignment {
-    float: right;
+    /* float: right; */
   }
 }
 </style>
