@@ -13,6 +13,8 @@
             Number(this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) +
             'px'
           : this.site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+      'overflow-x': loggedIn ? 'scroll' : 'hidden',
+      'white-space': loggedIn ? 'nowrap' : 'normal',
     }"
   >
     <template v-if="loggedIn === null"></template>
@@ -47,6 +49,15 @@
               v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
           /></template>
           <template v-if="menuChange == 'height'">
+            <input
+              type="range"
+              min="50"
+              max="150"
+              :name="'horizontal_menu' + menuChange"
+              v-model="this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
+            />{{ this.site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}</template
+          >
+          <template v-if="menuChange == 'addItem'">
             <input
               type="range"
               min="50"
@@ -207,12 +218,11 @@ export default {
 }
 
 .horizontal-menu {
-  overflow: hidden;
+  overflow-y: hidden;
   position: relative;
 }
 
 .horizontal-menu a {
-  cursor: pointer;
   float: none; /* change this dynamic alignment */
   display: block;
   padding-left: 16px;
