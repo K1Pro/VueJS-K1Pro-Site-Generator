@@ -1,5 +1,5 @@
 <template>
-  <div v-if="elKey == 'background-video'" :class="elKey"></div>
+  <div :class="elKey"></div>
 </template>
 
 <script>

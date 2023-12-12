@@ -1,14 +1,12 @@
 <template>
-  <div v-if="elKey == 'background-image'" :class="elKey">
+  <div :class="elKey">
     <div class="hero-image">
-      <div class="hero-text">
+      <!-- <div class="hero-text">
         <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
         <p>Programista</p>
         <button>Zatrudnij mnie</button>
-      </div>
+      </div> -->
     </div>
-
-    <p>Reszte..</p>
   </div>
 </template>
 
@@ -24,7 +22,7 @@ export default {
 .background-image {
   position: absolute;
   top: 0;
-  height: 150vh;
+  height: 100vh;
   width: 100%;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -32,7 +30,7 @@ export default {
 }
 .hero-image {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('background_image.jpg');
-  height: 50%;
+  height: 75%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

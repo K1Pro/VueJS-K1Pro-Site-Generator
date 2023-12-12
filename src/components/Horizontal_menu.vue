@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="elKey == 'horizontal-menu'"
     :name="elValue.name"
     :class="elKey"
     :style="{
@@ -19,6 +18,7 @@
   >
     <template v-if="loggedIn === null"></template>
     <template v-else-if="loggedIn">
+      __Top Menu:
       <template v-for="(menuItem, index) in elValue['menu-items']">
         <input
           type="text"
@@ -35,7 +35,7 @@
         </template>
         <template v-if="index === elValue['menu-items'].length - 1">
           <select name="menuChange" v-model="menuChange" @change="menuAction">
-            <option value="" disabled selected>Change Menu</option>
+            <option value="" disabled selected>Change Top Menu</option>
             <option value="color">Text Color</option>
             <option value="backgroundColor">Background Color</option>
             <option value="height">Menu Height</option>
@@ -206,8 +206,7 @@ export default {
   },
   created() {
     if (this.windowWidth < this.respWidth)
-      if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'])
-        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
   },
 
   watch: {
@@ -216,8 +215,7 @@ export default {
         (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
         (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
       )
-        if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'])
-          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
     },
   },
 };

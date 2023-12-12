@@ -4,11 +4,27 @@
   <template v-if="site?.isValid === true">
     <template v-for="htmlElements in site.params.htmlElements">
       <header><!-- <h2>{{ site.params.site }}</h2> --></header>
+      <body_background v-if="loggedIn === true"></body_background>
 
       <template v-for="([elKey, elValue], elIndex) in Object.entries(htmlElements)">
-        <horizontal_menu :elKey="elKey" :elValue="elValue" :elIndex="elIndex"></horizontal_menu>
-        <background_image :elKey="elKey" :elValue="elValue" :elIndex="elIndex"></background_image>
-        <background_video :elKey="elKey" :elValue="elValue" :elIndex="elIndex"></background_video>
+        <horizontal_menu
+          v-if="elKey == 'horizontal-menu'"
+          :elKey="elKey"
+          :elValue="elValue"
+          :elIndex="elIndex"
+        ></horizontal_menu>
+        <background_image
+          v-if="elKey == 'background-image' && loggedIn === false"
+          :elKey="elKey"
+          :elValue="elValue"
+          :elIndex="elIndex"
+        ></background_image>
+        <background_video
+          v-if="elKey == 'background-video' && loggedIn === false"
+          :elKey="elKey"
+          :elValue="elValue"
+          :elIndex="elIndex"
+        ></background_video>
       </template>
 
       <foot></foot>
@@ -36,6 +52,7 @@
 <script>
 import Snackbar from './components/Snackbar.vue';
 import Foot from './components/Footer.vue';
+import Body_background from './components/Body_background.vue';
 import Horizontal_menu from './components/Horizontal_menu.vue';
 import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
@@ -45,6 +62,7 @@ export default {
 
   components: {
     Snackbar,
+    Body_background,
     Horizontal_menu,
     Background_image,
     Background_video,
@@ -55,6 +73,7 @@ export default {
     // ...Pinia.mapStores(useSiteStore),
     ...Pinia.mapWritableState(useSiteStore, [
       'accessToken',
+      'loggedIn',
       'message',
       'hostname',
       'pathname',
