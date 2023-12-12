@@ -1,6 +1,16 @@
 <template>
   <div :class="elKey">
-    <div class="hero-image">
+    <div
+      class="hero-image"
+      :style="{
+        backgroundImage: `url(${
+          site.params.htmlElements[elIndex]['background-image']['url'].includes('http://') ||
+          site.params.htmlElements[elIndex]['background-image']['url'].includes('https://')
+            ? site.params.htmlElements[elIndex]['background-image']['url']
+            : endPts.servrURL + site.params.htmlElements[elIndex]['background-image']['url']
+        })`,
+      }"
+    >
       <!-- <div class="hero-text">
         <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
         <p>Programista</p>
@@ -14,7 +24,21 @@
 export default {
   name: 'Background_Image',
 
+  computed: {
+    ...Pinia.mapWritableState(useSiteStore, ['site', 'endPts']),
+  },
+
   props: ['elKey', 'elValue', 'elIndex'],
+
+  created() {
+    // This can be used an an alternative if inline styling does not work
+    // const style = document.createElement('style');
+    // style.type = 'text/css';
+    // style.textContent = `.hero-image { background-image: url('${
+    //   this.endPts.servrURL + this.site.params.htmlElements[this.elIndex]['background-image']['url']
+    // }')}`;
+    // document.head.appendChild(style);
+  },
 };
 </script>
 
@@ -29,7 +53,8 @@ export default {
   z-index: -100;
 }
 .hero-image {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('background_image.jpg');
+  /* background-image: url('background_image.jpg'); */
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('background_image.jpg'); */
   height: 75%;
   background-position: center;
   background-repeat: no-repeat;

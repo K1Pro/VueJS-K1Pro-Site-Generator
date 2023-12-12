@@ -2,33 +2,31 @@
   <snackbar> </snackbar>
 
   <template v-if="site?.isValid === true">
-    <template v-for="htmlElements in site.params.htmlElements">
-      <header><!-- <h2>{{ site.params.site }}</h2> --></header>
-      <body_background v-if="loggedIn === true"></body_background>
-
-      <template v-for="([elKey, elValue], elIndex) in Object.entries(htmlElements)">
+    <header><!-- <h2>{{ site.params.site }}</h2> --></header>
+    <body_background v-if="loggedIn === true"></body_background>
+    <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
+      <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
         <horizontal_menu
           v-if="elKey == 'horizontal-menu'"
           :elKey="elKey"
           :elValue="elValue"
-          :elIndex="elIndex"
+          :elIndex="htmlIndex"
         ></horizontal_menu>
         <background_image
           v-if="elKey == 'background-image' && loggedIn === false"
           :elKey="elKey"
           :elValue="elValue"
-          :elIndex="elIndex"
+          :elIndex="htmlIndex"
         ></background_image>
         <background_video
           v-if="elKey == 'background-video' && loggedIn === false"
           :elKey="elKey"
           :elValue="elValue"
-          :elIndex="elIndex"
+          :elIndex="htmlIndex"
         ></background_video>
       </template>
-
-      <foot></foot>
     </template>
+    <foot></foot>
   </template>
 
   <template v-else-if="site?.isValid === false">

@@ -3,9 +3,9 @@
     :name="elValue.name"
     :class="elKey"
     :style="{
-      backgroundColor: site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
-        ? site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor']
-        : '#808080',
+      backgroundColor:
+        site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor'] +
+        site.params.htmlElements[elIndex]['horizontal-menu']['style']['opacity'],
       height:
         windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
           ? 50 * site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'].length +
@@ -38,6 +38,7 @@
             <option value="" disabled selected>Change Top Menu</option>
             <option value="color">Text Color</option>
             <option value="backgroundColor">Background Color</option>
+            <option value="opacity">Menu Opacity</option>
             <option value="height">Menu Height</option>
             <option value="alignment">Menu Alignment</option>
             <option value="addItem">Add Menu Item</option>
@@ -56,6 +57,20 @@
               max="150"
               :name="'horizontal_menu' + menuChange"
               v-model="site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
+            />{{ site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}
+          </template>
+          <template v-if="menuChange == 'opacity'">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              :name="'horizontal_menu' + menuChange"
+              :value="
+                site.params.htmlElements[elIndex]['horizontal-menu']['style']['opacity'] == ''
+                  ? 100
+                  : site.params.htmlElements[elIndex]['horizontal-menu']['style']['opacity']
+              "
+              @input="changeMenuOpacity"
             />{{ site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}
           </template>
           <template v-if="menuChange == 'alignment'">
@@ -177,8 +192,13 @@ export default {
           ? (event.target.style.backgroundColor = '#878787')
           : (event.target.style.filter = 'brightness(90%)');
       } else {
-        event.target.style.backgroundColor =
-          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
+        if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['opacity'] != '') {
+          event.target.style.backgroundColor =
+            this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'] + '00';
+        } else {
+          event.target.style.backgroundColor =
+            this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
+        }
         event.target.style.filter = 'none';
       }
     },
@@ -202,6 +222,11 @@ export default {
     },
     changeMenuAlignment(event) {
       this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['alignment'] = event.target.value;
+    },
+    changeMenuOpacity(event) {
+      event.target.value == 100
+        ? (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['opacity'] = '')
+        : (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['opacity'] = event.target.value);
     },
   },
   created() {
