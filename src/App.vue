@@ -6,7 +6,9 @@
       <header><!-- <h2>{{ site.params.site }}</h2> --></header>
 
       <template v-for="([elKey, elValue], elIndex) in Object.entries(htmlElements)">
-        <horizontal_menu :elKey="elKey" :elValue="elValue" :elIndex="elIndex"> </horizontal_menu>
+        <horizontal_menu :elKey="elKey" :elValue="elValue" :elIndex="elIndex"></horizontal_menu>
+        <background_image :elKey="elKey" :elValue="elValue" :elIndex="elIndex"></background_image>
+        <background_video :elKey="elKey" :elValue="elValue" :elIndex="elIndex"></background_video>
       </template>
 
       <foot></foot>
@@ -35,6 +37,8 @@
 import Snackbar from './components/Snackbar.vue';
 import Foot from './components/Footer.vue';
 import Horizontal_menu from './components/Horizontal_menu.vue';
+import Background_image from './components/Background_image.vue';
+import Background_video from './components/Background_video.vue';
 
 export default {
   name: 'App',
@@ -42,6 +46,8 @@ export default {
   components: {
     Snackbar,
     Horizontal_menu,
+    Background_image,
+    Background_video,
     Foot,
   },
 

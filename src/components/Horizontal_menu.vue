@@ -206,7 +206,8 @@ export default {
   },
   created() {
     if (this.windowWidth < this.respWidth)
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+      if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'])
+        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
   },
 
   watch: {
@@ -215,7 +216,8 @@ export default {
         (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
         (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
       )
-        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+        if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'])
+          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
     },
   },
 };
