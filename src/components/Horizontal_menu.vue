@@ -167,16 +167,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, [
-      'loggedIn',
-      'message',
-      'windowWidth',
-      'respWidth',
-      'site',
-      'endPts',
-      'onScreenResize',
-      'updateScreenWidth',
-    ]),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'windowWidth', 'respWidth', 'site', 'endPts']),
   },
 
   data() {
