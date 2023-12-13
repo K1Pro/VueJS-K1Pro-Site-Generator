@@ -6,6 +6,7 @@
     <body_background v-if="loggedIn === true"></body_background>
     <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
       <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
+        <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
         <horizontal_menu
           v-if="elKey == 'horizontal-menu'"
           :elKey="elKey"
@@ -48,6 +49,7 @@
 
 <script>
 import Snackbar from './components/Snackbar.vue';
+import Headline from './components/Headline.vue';
 import Foot from './components/Footer.vue';
 import Body_background from './components/Body_background.vue';
 import Horizontal_menu from './components/Horizontal_menu.vue';
@@ -60,12 +62,13 @@ export default {
 
   components: {
     Snackbar,
+    Headline,
+    Foot,
     Body_background,
     Horizontal_menu,
     Background_image,
     Background_video,
     Icon_slider,
-    Foot,
   },
 
   computed: {

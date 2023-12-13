@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div class="footer" :style="{ top: loggedIn ? '75vh' : '0px' }">
     <div class="grid-container">
       <div class="item1">
         <p>
@@ -46,7 +46,6 @@ export default {
 <style>
 .footer {
   position: relative;
-  /* top: 100vh; */
   width: 100%;
   /* text-align: left;
     padding: 0vw 3vw;
