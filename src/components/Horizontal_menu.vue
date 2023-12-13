@@ -266,7 +266,10 @@ export default {
 
 .horizontal-menu {
   overflow-y: hidden;
-  position: relative;
+  position: absolute;
+  z-index: 4;
+  /* top: 0; */
+  width: 100%;
 }
 
 .horizontal-menu a {

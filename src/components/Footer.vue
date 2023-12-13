@@ -45,8 +45,8 @@ export default {
 
 <style>
 .footer {
-  position: absolute;
-  top: 100vh;
+  position: relative;
+  /* top: 100vh; */
   width: 100%;
   /* text-align: left;
     padding: 0vw 3vw;

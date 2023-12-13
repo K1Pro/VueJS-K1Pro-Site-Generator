@@ -44,18 +44,17 @@ export default {
 
 <style>
 .background-image {
-  position: absolute;
+  position: relative;
   top: 0;
-  height: 100vh;
+  height: 75vh;
   width: 100%;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  z-index: -100;
 }
 .hero-image {
   /* background-image: url('background_image.jpg'); */
   /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('background_image.jpg'); */
-  height: 75%;
+  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

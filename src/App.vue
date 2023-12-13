@@ -24,21 +24,20 @@
           :elValue="elValue"
           :elIndex="htmlIndex"
         ></background_video>
+        <icon_slider
+          v-if="elKey == 'icon-slider' && loggedIn === false"
+          :elKey="elKey"
+          :elValue="elValue"
+          :elIndex="htmlIndex"
+        ></icon_slider>
       </template>
     </template>
     <foot></foot>
   </template>
 
-  <template v-else-if="site?.isValid === false">
+  <template v-else-if="site?.isValid === 'root' || site?.isValid === false">
     <h2>Site Directory</h2>
-    <h4>Invalid Site</h4>
-    <div v-for="value in site.scannedDirs">
-      <a :href="value">{{ value }}</a>
-    </div>
-  </template>
-
-  <template v-else-if="site?.isValid === 'root'">
-    <h2>Site Directory</h2>
+    <h4 v-if="site?.isValid === false">Invalid Site Invalid</h4>
     <div v-for="value in site.scannedDirs">
       <a :href="value" target="_blank">{{ value }}</a>
     </div>
@@ -54,6 +53,7 @@ import Body_background from './components/Body_background.vue';
 import Horizontal_menu from './components/Horizontal_menu.vue';
 import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
+import Icon_slider from './components/Icon_slider.vue';
 
 export default {
   name: 'App',
@@ -64,6 +64,7 @@ export default {
     Horizontal_menu,
     Background_image,
     Background_video,
+    Icon_slider,
     Foot,
   },
 
