@@ -28,6 +28,7 @@ const useSiteStore = Pinia.defineStore('site', {
         user: 'users',
         params: 'administrator',
       },
+      selectedPhoto: '',
     };
   },
   actions: {

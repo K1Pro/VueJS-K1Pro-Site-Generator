@@ -11,7 +11,7 @@
             <button type="button" @click.prevent="patchParams">Update</button>
           </div>
           <body_background style="padding: 10px"></body_background>
-          <image_search style="padding: 10px"></image_search>
+          <image_search></image_search>
         </div>
         <div class="app-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
           <div :style="{ padding: '10px', backgroundColor: 'white', borderBottom: '1px solid black' }">
@@ -104,7 +104,7 @@ import Horizontal_menu from './components/Horizontal_menu.vue';
 import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
 import Icon_slider from './components/Icon_slider.vue';
-import Image_search from './components/Image_searh.vue';
+import Image_search from './components/Image_search.vue';
 
 export default {
   name: 'App',
@@ -233,7 +233,8 @@ export default {
   /* padding: 20px; */
   /* text-align: center; */
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .app-item2 {
