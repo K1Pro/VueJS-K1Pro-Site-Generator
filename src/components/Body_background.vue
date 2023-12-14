@@ -1,6 +1,5 @@
 <template>
   <div class="body-background">
-    __Body background:
     <select name="bodyBackgroundChange" v-model="bodyBackgroundChange" @change="bodyBackgroundAction">
       <option value="" disabled selected>Change Background</option>
       <option value="color">Text Color</option>
@@ -42,7 +41,7 @@ export default {
 
 <style>
 .body-background select {
-  margin: 7px 8px 7px 16px;
+  margin: 7px 8px 7px 0px;
   padding: 5px;
 }
 </style>

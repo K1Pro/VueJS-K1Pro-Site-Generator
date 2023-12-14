@@ -14,11 +14,14 @@
           : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
       'overflow-x': loggedIn ? 'scroll' : 'hidden',
       'white-space': loggedIn ? 'nowrap' : 'normal',
+      position: loggedIn ? 'relative' : 'absolute',
+      marginBottom: loggedIn
+        ? '-' + site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px'
+        : '0px',
     }"
   >
     <template v-if="loggedIn === null"></template>
     <template v-else-if="loggedIn">
-      __Top Menu:
       <template v-for="(menuItem, index) in elValue['menu-items']">
         <input
           type="text"
@@ -257,7 +260,7 @@ export default {
 
 .horizontal-menu {
   overflow-y: hidden;
-  position: absolute;
+  /* position: absolute; */
   z-index: 4;
   /* top: 0; */
   width: 100%;

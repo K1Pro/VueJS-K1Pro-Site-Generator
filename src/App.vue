@@ -2,38 +2,86 @@
   <snackbar> </snackbar>
 
   <template v-if="site?.isValid === true">
-    <header><!-- <h2>{{ site.params.site }}</h2> --></header>
-    <body_background v-if="loggedIn === true"></body_background>
-    <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
-      <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
-        <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
-        <horizontal_menu
-          v-if="elKey == 'horizontal-menu'"
-          :elKey="elKey"
-          :elValue="elValue"
-          :elIndex="htmlIndex"
-        ></horizontal_menu>
-        <background_image
-          v-if="elKey == 'background-image' && loggedIn === false"
-          :elKey="elKey"
-          :elValue="elValue"
-          :elIndex="htmlIndex"
-        ></background_image>
-        <background_video
-          v-if="elKey == 'background-video' && loggedIn === false"
-          :elKey="elKey"
-          :elValue="elValue"
-          :elIndex="htmlIndex"
-        ></background_video>
-        <icon_slider
-          v-if="elKey == 'icon-slider' && loggedIn === false"
-          :elKey="elKey"
-          :elValue="elValue"
-          :elIndex="htmlIndex"
-        ></icon_slider>
-      </template>
+    <template v-if="loggedIn === true">
+      <div class="app-container">
+        <div class="app-item1">
+          <div :style="{ padding: '10px', borderBottom: '1px solid black' }">
+            <b>Settings: </b>
+            <button type="button">Apply</button>&nbsp;
+            <button type="button" @click.prevent="patchParams">Update</button>
+          </div>
+          <body_background style="padding: 10px"></body_background>
+          <image_search style="padding: 10px"></image_search>
+        </div>
+        <div class="app-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
+          <div :style="{ padding: '10px', backgroundColor: 'white', borderBottom: '1px solid black' }">
+            <b>Inline editor:</b>
+          </div>
+          <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
+            <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
+              <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
+              <horizontal_menu
+                v-if="elKey == 'horizontal-menu'"
+                :elKey="elKey"
+                :elValue="elValue"
+                :elIndex="htmlIndex"
+              ></horizontal_menu>
+              <background_image
+                v-if="elKey == 'background-image'"
+                :elKey="elKey"
+                :elValue="elValue"
+                :elIndex="htmlIndex"
+              ></background_image>
+              <background_video
+                v-if="elKey == 'background-video'"
+                :elKey="elKey"
+                :elValue="elValue"
+                :elIndex="htmlIndex"
+              ></background_video>
+              <icon_slider
+                v-if="elKey == 'icon-slider'"
+                :elKey="elKey"
+                :elValue="elValue"
+                :elIndex="htmlIndex"
+              ></icon_slider>
+            </template>
+          </template>
+          <foot></foot>
+        </div>
+      </div>
     </template>
-    <foot></foot>
+    <template v-else>
+      <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
+        <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
+          <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
+          <horizontal_menu
+            v-if="elKey == 'horizontal-menu'"
+            :elKey="elKey"
+            :elValue="elValue"
+            :elIndex="htmlIndex"
+          ></horizontal_menu>
+          <background_image
+            v-if="elKey == 'background-image'"
+            :elKey="elKey"
+            :elValue="elValue"
+            :elIndex="htmlIndex"
+          ></background_image>
+          <background_video
+            v-if="elKey == 'background-video'"
+            :elKey="elKey"
+            :elValue="elValue"
+            :elIndex="htmlIndex"
+          ></background_video>
+          <icon_slider
+            v-if="elKey == 'icon-slider'"
+            :elKey="elKey"
+            :elValue="elValue"
+            :elIndex="htmlIndex"
+          ></icon_slider>
+        </template>
+      </template>
+      <foot></foot>
+    </template>
   </template>
 
   <template v-else-if="site?.isValid === 'root' || site?.isValid === false">
@@ -56,6 +104,7 @@ import Horizontal_menu from './components/Horizontal_menu.vue';
 import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
 import Icon_slider from './components/Icon_slider.vue';
+import Image_search from './components/Image_searh.vue';
 
 export default {
   name: 'App',
@@ -69,6 +118,7 @@ export default {
     Background_image,
     Background_video,
     Icon_slider,
+    Image_search,
   },
 
   computed: {
@@ -122,6 +172,30 @@ export default {
         this.message = error.toString();
       }
     },
+    async patchParams() {
+      try {
+        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
+          method: 'PATCH',
+          headers: {
+            Authorization: this.accessToken,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            site: this.site.site,
+            params: this.site.params,
+          }),
+        });
+        const patchParamsJSON = await response.json();
+        if (patchParamsJSON.success) {
+          console.log(patchParamsJSON);
+          this.message = patchParamsJSON.messages[0];
+        }
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
+    },
   },
 
   watch: {},
@@ -144,4 +218,31 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.app-container {
+  display: grid;
+  grid-template-columns: 25% 74%;
+  /* background-color: #2196f3; */
+  padding: 2vh;
+  column-gap: 2vh;
+  height: 96vh;
+}
+.app-item1 {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  /* padding: 20px; */
+  /* text-align: center; */
+  height: 100%;
+  overflow: scroll;
+}
+
+.app-item2 {
+  /* background-color: rgb(255, 255, 255); */
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  /* padding: 20px; */
+  /* text-align: center; */
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+</style>

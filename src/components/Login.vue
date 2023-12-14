@@ -3,7 +3,6 @@
     <template v-if="loggedIn == null"></template>
     <template v-else-if="loggedIn">
       <p>{{ this.user.Username }} is logged in</p>
-      <button type="button" @click.prevent="patchParams">Update</button><br /><br />
       <button type="button" @click.prevent="deleteLogin">Log Out</button>
     </template>
     <template v-else>
@@ -92,31 +91,6 @@ export default {
       } catch (error) {
         this.error = error.toString();
         this.message = this.error;
-      }
-    },
-
-    async patchParams() {
-      try {
-        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
-          method: 'PATCH',
-          headers: {
-            Authorization: this.accessToken,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            site: this.site.site,
-            params: this.site.params,
-          }),
-        });
-        const patchParamsJSON = await response.json();
-        if (patchParamsJSON.success) {
-          console.log(patchParamsJSON);
-          this.message = patchParamsJSON.messages[0];
-        }
-      } catch (error) {
-        console.log(error.toString());
-        this.message = error.toString();
       }
     },
   },
