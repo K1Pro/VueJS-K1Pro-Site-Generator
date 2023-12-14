@@ -11,11 +11,12 @@
         })`,
       }"
     >
-      <!-- <div class="hero-text">
-        <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
+      <div v-if="loggedIn" class="hero-text">
+        <button @click="selectSearchedImg">Select Gallery Image</button>
+        <!-- <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
         <p>Programista</p>
-        <button>Zatrudnij mnie</button>
-      </div> -->
+        <button>Zatrudnij mnie</button> -->
+      </div>
     </div>
   </div>
 </template>
@@ -25,10 +26,20 @@ export default {
   name: 'Background_Image',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'site', 'endPts', 'selectedPhoto']),
   },
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  methods: {
+    selectSearchedImg() {
+      if (this.selectedPhoto) {
+        this.site.params.htmlElements[this.elIndex]['background-image']['url'] = this.selectedPhoto;
+      } else {
+        this.message = 'Search for image first';
+      }
+    },
+  },
 
   created() {
     // This can be used an an alternative if inline styling does not work

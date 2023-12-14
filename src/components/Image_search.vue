@@ -15,10 +15,10 @@
           v-for="images in imgSrchArr1stPart"
           :src="images.src.medium"
           :style="{
-            outline: images.src.medium == selectedPhoto ? '8px solid LawnGreen' : 'none',
-            outlineOffset: images.src.medium == selectedPhoto ? '-8px' : '0',
+            outline: images.src.large == selectedPhoto ? '8px solid LawnGreen' : 'none',
+            outlineOffset: images.src.large == selectedPhoto ? '-8px' : '0',
           }"
-          @click="selectImg($event, images.src.medium)"
+          @click="selectImg($event, images.src.large)"
         />
       </div>
       <div class="Gallery-Column">
@@ -26,10 +26,10 @@
           v-for="images in imgSrchArr2ndPart"
           :src="images.src.medium"
           :style="{
-            outline: images.src.medium == selectedPhoto ? '8px solid LawnGreen' : 'none',
-            outlineOffset: images.src.medium == selectedPhoto ? '-8px' : '0',
+            outline: images.src.large == selectedPhoto ? '8px solid LawnGreen' : 'none',
+            outlineOffset: images.src.large == selectedPhoto ? '-8px' : '0',
           }"
-          @click="selectImg($event, images.src.medium)"
+          @click="selectImg($event, images.src.large)"
         />
       </div>
     </div>
@@ -60,27 +60,25 @@ export default {
 
   methods: {
     async imageSearch() {
-      //   console.log('searching for images');
       try {
         const response = await fetch(
           'https://api.pexels.com/v1/search?query=' + this.imageSearchInput.toLowerCase() + `&page=1&per_page=80`,
           {
             method: 'GET',
             headers: {
-              Authorization: this.key,
+              Authorization: 'C346RvN6Azf2oNJxzV1fTvT3z8fJKMYTeQNowA1IuAjfQLfa1jl6SyBX',
             },
           }
         );
         const imageSearchJSON = await response.json();
         if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
-          console.log(imageSearchJSON);
           this.searchedPhotos = imageSearchJSON;
-          //   this.selectedPhoto = imageSearchJSON.photos;
         }
       } catch (error) {
         this.message = error.toString();
       }
     },
+
     selectImg(event, selectedImgPath) {
       this.selectedPhoto = selectedImgPath;
     },
