@@ -5,16 +5,10 @@
     <template v-if="loggedIn === true">
       <div class="app-container">
         <div class="app-item1">
-          <div :style="{ padding: '10px', borderBottom: '1px solid black' }">
-            <b>Settings: </b>
-            <button type="button">Apply</button>&nbsp;
-            <button type="button" @click.prevent="patchParams">Update</button>
-          </div>
-          <body_background style="padding: 10px"></body_background>
-          <image_search></image_search>
+          <login_side_panel></login_side_panel>
         </div>
         <div class="app-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
-          <div :style="{ padding: '10px', backgroundColor: 'white', borderBottom: '1px solid black' }">
+          <div :style="{ height: '3vh', padding: '10px', backgroundColor: 'white', borderBottom: '1px solid black' }">
             <b>Inline editor:</b>
           </div>
           <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
@@ -85,11 +79,7 @@
   </template>
 
   <template v-else-if="site?.isValid === 'root' || site?.isValid === false">
-    <h2>Site Directory</h2>
-    <h4 v-if="site?.isValid === false">Invalid Site Invalid</h4>
-    <div v-for="value in site.scannedDirs">
-      <a :href="value" target="_blank">{{ value }}</a>
-    </div>
+    <directory></directory>
   </template>
 
   <template v-else> </template>
@@ -99,12 +89,12 @@
 import Snackbar from './components/Snackbar.vue';
 import Headline from './components/Headline.vue';
 import Foot from './components/Footer.vue';
-import Body_background from './components/Body_background.vue';
 import Horizontal_menu from './components/Horizontal_menu.vue';
 import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
 import Icon_slider from './components/Icon_slider.vue';
-import Image_search from './components/Image_search.vue';
+import Directory from './components/Directory.vue';
+import Login_side_panel from './components/Login_side_panel.vue';
 
 export default {
   name: 'App',
@@ -113,12 +103,12 @@ export default {
     Snackbar,
     Headline,
     Foot,
-    Body_background,
     Horizontal_menu,
     Background_image,
     Background_video,
     Icon_slider,
-    Image_search,
+    Directory,
+    Login_side_panel,
   },
 
   computed: {
@@ -221,15 +211,15 @@ export default {
 <style>
 .app-container {
   display: grid;
-  grid-template-columns: 25% 74%;
+  grid-template-columns: 25% 75%;
   /* background-color: #2196f3; */
-  padding: 2vh;
-  column-gap: 2vh;
-  height: 96vh;
+  /* padding: 2vh; */
+  /* column-gap: 2vh; */
+  height: 100vh;
 }
 .app-item1 {
   background-color: rgb(255, 255, 255);
-  border: 1px solid rgba(0, 0, 0, 0.8);
+  /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* padding: 20px; */
   /* text-align: center; */
   height: 100%;
@@ -239,7 +229,7 @@ export default {
 
 .app-item2 {
   /* background-color: rgb(255, 255, 255); */
-  border: 1px solid rgba(0, 0, 0, 0.8);
+  /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* padding: 20px; */
   /* text-align: center; */
   height: 100%;

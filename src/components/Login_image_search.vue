@@ -41,7 +41,7 @@ export default {
   name: 'Image Search',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['message', 'site', 'endPts', 'selectedPhoto']),
+    ...Pinia.mapWritableState(useSiteStore, ['message', 'site', 'endPts', 'user', 'selectedPhoto']),
     imgSrchArr1stPart() {
       return this.searchedPhotos?.photos?.slice(0, this.searchedPhotos?.photos.length / 2);
     },
@@ -66,7 +66,7 @@ export default {
           {
             method: 'GET',
             headers: {
-              Authorization: 'C346RvN6Azf2oNJxzV1fTvT3z8fJKMYTeQNowA1IuAjfQLfa1jl6SyBX',
+              Authorization: this.user.AppPermissions.Pexels,
             },
           }
         );

@@ -67,6 +67,7 @@ const useSiteStore = Pinia.defineStore('site', {
           this.message = getLoginJSON.messages[0];
           this.user = getLoginJSON.data.user;
           this.loggedIn = true;
+          document.body.style.backgroundColor = '#FFFFFF';
           const tomorrow = new Date();
           tomorrow.setDate(tomorrow.getDate() + 1);
           document.cookie = `_a_t=${this.accessToken}; expires=${tomorrow.toString()};`;
