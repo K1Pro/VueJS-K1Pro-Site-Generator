@@ -41,7 +41,7 @@ export default {
 
 <style>
 .body-background select {
-  margin: 7px 8px 7px 0px;
+  /* margin: 7px 8px 7px 0px; */
   padding: 5px;
 }
 </style>

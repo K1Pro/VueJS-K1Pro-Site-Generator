@@ -307,8 +307,8 @@ img {
   .logo {
     float: left;
   }
-  .horizontal-menu-alignment {
-    /* float: right; */
-  }
+  /* .horizontal-menu-alignment {
+    float: right;
+  } */
 }
 </style>

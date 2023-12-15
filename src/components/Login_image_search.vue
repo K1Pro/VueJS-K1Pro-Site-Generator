@@ -1,12 +1,14 @@
 <template>
   <div class="image-search">
-    <input
-      type="search"
-      name="image-search"
-      placeholder="Image search..."
-      v-model="imageSearchInput"
-      @keyup.enter="imageSearch"
-    /><button @click="imageSearch">Search</button>
+    <div class="image-search-search-button">
+      <input
+        type="search"
+        name="image-search"
+        placeholder="Image search..."
+        v-model="imageSearchInput"
+        @keyup.enter="imageSearch"
+      /><button @click="imageSearch">Search</button>
+    </div>
   </div>
   <div class="Gallery">
     <div v-if="this.searchedPhotos" class="Gallery-Row">
@@ -87,9 +89,13 @@ export default {
 </script>
 
 <style>
-.image-search {
-  padding: 10px;
+.image-search-search-button {
+  padding-left: 10px;
+  padding-top: 10px;
 }
+/* .image-search {
+  padding: 10px;
+} */
 .image-search input[type='search'] {
   padding: 5px;
 }

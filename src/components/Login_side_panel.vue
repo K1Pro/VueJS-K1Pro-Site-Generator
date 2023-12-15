@@ -45,6 +45,11 @@ export default {
     Text_generation,
   },
 
+  computed: {
+    // ...Pinia.mapStores(useSiteStore),
+    ...Pinia.mapWritableState(useSiteStore, ['accessToken', 'message', 'site', 'endPts']),
+  },
+
   data() {
     return { activeTab: 'gear' };
   },
@@ -52,6 +57,30 @@ export default {
     openTab(event) {
       this.activeTab = event.target.className.replace('tablinks fa fa-', '');
       console.log(this.activeTab);
+    },
+    async patchParams() {
+      try {
+        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
+          method: 'PATCH',
+          headers: {
+            Authorization: this.accessToken,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            site: this.site.site,
+            params: this.site.params,
+          }),
+        });
+        const patchParamsJSON = await response.json();
+        if (patchParamsJSON.success) {
+          console.log(patchParamsJSON);
+          this.message = patchParamsJSON.messages[0];
+        }
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
     },
   },
 };
@@ -94,7 +123,7 @@ export default {
   text-align: left;
   cursor: pointer;
   transition: 0.3s;
-  font-size: 17px;
+  font-size: 1.25vw;
 }
 
 /* Change background color of buttons on hover */
@@ -111,7 +140,7 @@ export default {
 .tabcontent {
   box-sizing: border-box;
   float: left;
-  padding: 0px 12px;
+  /* padding: 0px 12px; */
   border: 1px solid #ccc;
   width: 85%;
   border-left: none;
