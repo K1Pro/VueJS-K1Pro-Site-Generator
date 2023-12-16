@@ -10,7 +10,7 @@
       />
       <select name="image-searched" @change="selectSearch">
         <option v-for="searched in Object.keys(content.searched)" :value="searched">
-          {{ searched.charAt(0).toUpperCase() }}{{ searched.slice(1).replaceAll('_', ' ') }}
+          {{ searched.charAt(0).toUpperCase() }}{{ searched.slice(1).replaceAll('-', ' ') }}
         </option></select
       ><button @click="imageSearch">Search</button>
     </div>
