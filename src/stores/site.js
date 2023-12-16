@@ -15,6 +15,7 @@ const useSiteStore = Pinia.defineStore('site', {
       respWidth: 650,
       site: {},
       user: {},
+      content: {},
       endPts: {
         servrURL: window.location.host.includes('192.168')
           ? 'http://192.168.54.22/php81/APIs/k1pro/site/v001/public/'
@@ -27,6 +28,7 @@ const useSiteStore = Pinia.defineStore('site', {
         logout: 'sessions/',
         user: 'users',
         params: 'administrator',
+        content: 'content',
       },
       selectedPhoto: '',
     };
@@ -63,6 +65,7 @@ const useSiteStore = Pinia.defineStore('site', {
         });
         const getLoginJSON = await response.json();
         if (getLoginJSON.success && getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.site]) {
+          this.getUserContent('POST');
           console.log(getLoginJSON);
           this.message = getLoginJSON.messages[0];
           this.user = getLoginJSON.data.user;
@@ -76,6 +79,32 @@ const useSiteStore = Pinia.defineStore('site', {
           this.loggedIn = false;
           this.email = '';
           this.password = '';
+        }
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
+    },
+    async getUserContent(method) {
+      try {
+        const response = await fetch(this.endPts.servrURL + this.endPts.content, {
+          method: method,
+          headers: {
+            Authorization: this.accessToken,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            site: this.site.site,
+            content: this.content,
+          }),
+        });
+        const getUserContentJSON = await response.json();
+        if (getUserContentJSON.success) {
+          console.log(getUserContentJSON);
+          if (getUserContentJSON.data.content) {
+            this.content = getUserContentJSON.data.content;
+          }
         }
       } catch (error) {
         console.log(error.toString());

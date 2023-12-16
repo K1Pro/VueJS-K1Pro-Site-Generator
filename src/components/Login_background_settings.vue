@@ -1,18 +1,28 @@
 <template>
   <div class="body-background">
-    <select name="bodyBackgroundChange" v-model="bodyBackgroundChange" @change="bodyBackgroundAction">
-      <option value="" disabled selected>Change Background</option>
-      <option value="color">Text Color</option>
-      <option value="backgroundColor">Background Color</option>
-      <option value="font">Font</option>
+    <div>Logo:</div>
+    <input type="file" />
+    <hr />
+    <div>Icon:</div>
+    <input type="file" />
+    <hr />
+    <div>Background:</div>
+    <input type="color" v-model="site.params.body.style.backgroundColor" />
+    <hr />
+    <div>Text Color:</div>
+    <input type="color" />
+    <hr />
+    <div>Font:</div>
+    <select name="Font">
+      <option value="Arial">Arial</option>
+      <option value="Courier">Courier</option>
+      <option value="Times New Roman">Times New Roman</option>
     </select>
-    <template v-if="bodyBackgroundChange.toLowerCase().includes('color')">
-      <input
-        type="color"
-        :name="'body-background' + bodyBackgroundChange"
-        v-model="site.params.body.style[bodyBackgroundChange]"
-        @input="backgroundColorChange"
-    /></template>
+    <hr />
+    <button type="button">Apply</button>&nbsp; <button type="button" @click.prevent="patchParams">Update</button>&nbsp;
+    <button type="button">Reset</button>&nbsp;
+    <hr />
+    <button type="button">Logout</button>
   </div>
 </template>
 
@@ -21,19 +31,33 @@ export default {
   name: 'Body background',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['site']),
-  },
-
-  data() {
-    return { bodyBackgroundChange: '' };
+    ...Pinia.mapWritableState(useSiteStore, ['accessToken', 'message', 'site', 'endPts']),
   },
 
   methods: {
-    bodyBackgroundAction(event) {
-      console.log(event.srcElement.selectedOptions[0].value);
-    },
-    backgroundColorChange(event) {
-      document.body.style.backgroundColor = event.target.value;
+    async patchParams() {
+      try {
+        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
+          method: 'PATCH',
+          headers: {
+            Authorization: this.accessToken,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            site: this.site.site,
+            params: this.site.params,
+          }),
+        });
+        const patchParamsJSON = await response.json();
+        if (patchParamsJSON.success) {
+          console.log(patchParamsJSON);
+          this.message = patchParamsJSON.messages[0];
+        }
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
     },
   },
 };

@@ -17,10 +17,10 @@
           v-for="images in imgSrchArr1stPart"
           :src="images.src.medium"
           :style="{
-            outline: images.src.large == selectedPhoto ? '8px solid LawnGreen' : 'none',
-            outlineOffset: images.src.large == selectedPhoto ? '-8px' : '0',
+            outline: images.src.large2x == selectedPhoto ? '8px solid LawnGreen' : 'none',
+            outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
           }"
-          @click="selectImg($event, images.src.large)"
+          @click="selectImg($event, images.src.large2x)"
         />
       </div>
       <div class="Gallery-Column">
@@ -28,10 +28,10 @@
           v-for="images in imgSrchArr2ndPart"
           :src="images.src.medium"
           :style="{
-            outline: images.src.large == selectedPhoto ? '8px solid LawnGreen' : 'none',
-            outlineOffset: images.src.large == selectedPhoto ? '-8px' : '0',
+            outline: images.src.large2x == selectedPhoto ? '8px solid LawnGreen' : 'none',
+            outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
           }"
-          @click="selectImg($event, images.src.large)"
+          @click="selectImg($event, images.src.large2x)"
         />
       </div>
     </div>
@@ -43,7 +43,15 @@ export default {
   name: 'Image Search',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['message', 'site', 'endPts', 'user', 'selectedPhoto']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'message',
+      'site',
+      'content',
+      'endPts',
+      'user',
+      'selectedPhoto',
+      'getUserContent',
+    ]),
     imgSrchArr1stPart() {
       return this.searchedPhotos?.photos?.slice(0, this.searchedPhotos?.photos.length / 2);
     },
@@ -64,7 +72,9 @@ export default {
     async imageSearch() {
       try {
         const response = await fetch(
-          'https://api.pexels.com/v1/search?query=' + this.imageSearchInput.toLowerCase() + `&page=1&per_page=80`,
+          'https://api.pexels.com/v1/search?query=' +
+            this.imageSearchInput.toLowerCase().replaceAll(' ', '+') +
+            `&page=1&per_page=80`,
           {
             method: 'GET',
             headers: {
@@ -75,6 +85,9 @@ export default {
         const imageSearchJSON = await response.json();
         if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
           this.searchedPhotos = imageSearchJSON;
+          this.content[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
+          console.log(imageSearchJSON);
+          this.getUserContent('PATCH');
         }
       } catch (error) {
         this.message = error.toString();
@@ -84,6 +97,9 @@ export default {
     selectImg(event, selectedImgPath) {
       this.selectedPhoto = selectedImgPath;
     },
+  },
+  created() {
+    this.searchedPhotos = this.content.chicago;
   },
 };
 </script>

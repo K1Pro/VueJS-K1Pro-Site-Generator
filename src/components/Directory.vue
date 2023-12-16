@@ -6,29 +6,36 @@
     <div class="directory-search">
       <input type="search" id="site-search" name="search" placeholder="Search for a site..." />
     </div>
-    <div class="directory-grid-container" :style="{ gridTemplateColumns: directoryGridColumnsFull }">
-      <div class="directory-grid-item"></div>
-      <div
-        v-for="value in site.scannedDirs"
-        class="directory-grid-item"
-        :style="{
-          border: '1px solid rgba(0, 0, 0, 0.8)',
-          borderRadius: '5px',
-          backgroundColor: 'lightgrey',
-        }"
-      >
-        <a :href="value" target="_blank">
-          <div style="height: 50%">
-            <img :src="endPts.servrURL + 'public/' + value + '/logo/logo.png'" :alt="value" height="100%" />
-          </div>
-          <div style="position: relative; height: 50%; padding: 0">
-            <div style="position: absolute; bottom: 0">
-              {{ value.charAt(0).toUpperCase() }}{{ value.slice(1).replaceAll('-', ' ') }}
+    <div
+      class="directory-grid-container"
+      :style="{
+        gridTemplateColumns:
+          site.scannedDirs.length < 9 ? directoryGridColumnsFull : '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%',
+      }"
+    >
+      <template v-for="(value, gridIndex) in site.scannedDirs">
+        <div class="directory-grid-item" v-if="gridIndex === 0 || gridIndex % 9 === 0"></div>
+        <div class="directory-grid-item" v-if="gridIndex % 9 === 0 && gridIndex !== 0"></div>
+        <div
+          class="directory-grid-item"
+          :style="{
+            border: '1px solid rgba(0, 0, 0, 0.8)',
+            borderRadius: '5px',
+            backgroundColor: 'lightgrey',
+          }"
+        >
+          <a :href="value" target="_blank">
+            <div style="height: 50%">
+              <img :src="endPts.servrURL + 'public/' + value + '/logo/logo.png'" :alt="value" height="100%" />
             </div>
-          </div>
-        </a>
-      </div>
-      <div class="directory-grid-item"></div>
+            <div style="position: relative; height: 50%; padding: 0">
+              <div style="position: absolute; bottom: 0">
+                {{ value.charAt(0).toUpperCase() }}{{ value.slice(1).replaceAll('-', ' ') }}
+              </div>
+            </div>
+          </a>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -69,7 +76,9 @@ export default {
 .directory-grid-container {
   display: grid;
   column-gap: 1%;
+  row-gap: 2%;
   padding-top: 5vh;
+  padding-bottom: 5vh;
 }
 
 .directory-grid-item {

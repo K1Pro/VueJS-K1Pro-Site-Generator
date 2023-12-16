@@ -3,9 +3,6 @@
     <div class="tabtitlecontainer">
       <div class="tabtitle">
         <b>Settings: </b>
-        <button type="button">Apply</button>&nbsp;
-        <button type="button" @click.prevent="patchParams">Update</button>&nbsp;
-        <button type="button">Logout</button>
       </div>
     </div>
 
@@ -45,42 +42,12 @@ export default {
     Text_generation,
   },
 
-  computed: {
-    // ...Pinia.mapStores(useSiteStore),
-    ...Pinia.mapWritableState(useSiteStore, ['accessToken', 'message', 'site', 'endPts']),
-  },
-
   data() {
     return { activeTab: 'gear' };
   },
   methods: {
     openTab(event) {
       this.activeTab = event.target.className.replace('tablinks fa fa-', '');
-      console.log(this.activeTab);
-    },
-    async patchParams() {
-      try {
-        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
-          method: 'PATCH',
-          headers: {
-            Authorization: this.accessToken,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            site: this.site.site,
-            params: this.site.params,
-          }),
-        });
-        const patchParamsJSON = await response.json();
-        if (patchParamsJSON.success) {
-          console.log(patchParamsJSON);
-          this.message = patchParamsJSON.messages[0];
-        }
-      } catch (error) {
-        console.log(error.toString());
-        this.message = error.toString();
-      }
     },
   },
 };

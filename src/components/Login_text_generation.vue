@@ -1,5 +1,5 @@
 <template>
-  <div>Text Generation</div>
+  <div class="text-generation">Text Generation</div>
 </template>
 
 <script>
@@ -16,4 +16,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.text-generation {
+  padding: 10px;
+}
+</style>
