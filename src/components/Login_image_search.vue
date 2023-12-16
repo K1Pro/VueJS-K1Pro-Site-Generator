@@ -7,7 +7,12 @@
         placeholder="Image search..."
         v-model="imageSearchInput"
         @keyup.enter="imageSearch"
-      /><button @click="imageSearch">Search</button>
+      />
+      <select name="image-searched" @change="selectSearch">
+        <option v-for="searched in Object.keys(content.searched)" :value="searched">
+          {{ searched.charAt(0).toUpperCase() }}{{ searched.slice(1).replaceAll('_', ' ') }}
+        </option></select
+      ><button @click="imageSearch">Search</button>
     </div>
   </div>
   <div class="Gallery">
@@ -70,11 +75,16 @@ export default {
 
   methods: {
     async imageSearch() {
+      const prevSrchTtlRslts =
+        this.content.searched?.[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')]?.total_results;
+      const prevSrchTtlRsltsMax = prevSrchTtlRslts ? Math.floor(prevSrchTtlRslts / 80) : 1;
+      const randomPage = Math.floor(Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1);
+
       try {
         const response = await fetch(
           'https://api.pexels.com/v1/search?query=' +
             this.imageSearchInput.toLowerCase().replaceAll(' ', '+') +
-            `&page=1&per_page=80`,
+            `&page=${randomPage}&per_page=80`,
           {
             method: 'GET',
             headers: {
@@ -85,8 +95,8 @@ export default {
         const imageSearchJSON = await response.json();
         if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
           this.searchedPhotos = imageSearchJSON;
-          this.content['most_recent_search'] = this.imageSearchInput.toLowerCase();
-          this.content[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
+          this.content['most_recent_search'] = this.imageSearchInput.toLowerCase().replaceAll(' ', '-');
+          this.content.searched[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
           console.log(imageSearchJSON);
           this.getUserContent('PATCH');
         }
@@ -98,9 +108,22 @@ export default {
     selectImg(event, selectedImgPath) {
       this.selectedPhoto = selectedImgPath;
     },
+
+    selectSearch(event) {
+      this.searchedPhotos = this.content.searched[event.target.value];
+      this.imageSearchInput =
+        event.srcElement.selectedOptions[0]._value.charAt(0).toUpperCase() +
+        event.srcElement.selectedOptions[0]._value.slice(1).toLowerCase().replaceAll('_', ' ');
+      this.content.most_recent_search = event.srcElement.selectedOptions[0]._value
+        .replaceAll(' ', '_')
+        .toLowerCase()
+        .trim();
+      // this.patchUserData(null, 'MostRecentSearch', this.imageSearchInput.replaceAll(' ', '_').toLowerCase().trim());
+    },
   },
   created() {
-    this.searchedPhotos = this.content[this.content.most_recent_search];
+    this.searchedPhotos = this.content.searched[this.content.most_recent_search];
+    this.imageSearchInput = this.content.most_recent_search;
   },
 };
 </script>
@@ -115,6 +138,23 @@ export default {
 } */
 .image-search input[type='search'] {
   padding: 5px;
+
+  position: relative;
+  width: 65%;
+  background: white;
+  margin-left: 2px;
+  border: 0;
+  margin-right: -66%;
+  z-index: 2;
+}
+
+.image-search select {
+  position: relative;
+  width: 72%;
+  background: white;
+  border: 1px solid;
+  padding: 5px;
+  z-index: 1;
 }
 .image-search button {
   padding: 5px;
