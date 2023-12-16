@@ -85,6 +85,7 @@ export default {
         const imageSearchJSON = await response.json();
         if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
           this.searchedPhotos = imageSearchJSON;
+          this.content['most_recent_search'] = this.imageSearchInput.toLowerCase();
           this.content[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
           console.log(imageSearchJSON);
           this.getUserContent('PATCH');
@@ -99,7 +100,7 @@ export default {
     },
   },
   created() {
-    this.searchedPhotos = this.content.chicago;
+    this.searchedPhotos = this.content[this.content.most_recent_search];
   },
 };
 </script>
