@@ -13,25 +13,22 @@
             backgroundColor: '#FFFFFF',
             border: '1px solid rgba(0, 0, 0, 0.8)',
             'text-align': loggedIn ? 'center' : 'center',
-            padding: loggedIn ? '20px 0px 0px 0px' : '20px',
+            padding: loggedIn ? '0px' : '20px',
             'font-size': loggedIn ? '30px' : '30px',
           }"
         >
           <template v-if="loggedIn === true">
+            <button
+              v-if="iconIndex !== 0"
+              class="fa-solid fa-trash-can"
+              @click.prevent="deleteIcon(iconIndex)"
+            ></button>
             <i :class="icon[1]"></i>
             <select
               :style="{ width: '100%' }"
               v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][1]"
             >
-              <option value="" disabled>Choose Icon</option>
-              <option value="fa-solid fa-house">House</option>
-              <option value="fa-solid fa-magnifying-glass">Magnifying Glass</option>
-              <option value="fa-solid fa-desktop">Desktop</option>
-              <option value="fa-solid fa-database">Database</option>
-              <option value="fa-solid fa-server">Server</option>
-              <option value="fa-solid fa-photo-film">Photo-film</option>
-              <option value="fa-solid fa-video">Video</option>
-              <option value="fa-solid fa-pencil">Pencil</option>
+              <icon_slider_options></icon_slider_options>
             </select>
             <input type="text" v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][0]" />
           </template>
@@ -62,8 +59,14 @@
 </template>
 
 <script>
+import Icon_slider_options from './Icon_slider_options.vue';
+
 export default {
   name: 'Image Slider',
+
+  components: {
+    Icon_slider_options,
+  },
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -78,6 +81,12 @@ export default {
 
     gridTemplateColumnsMobile() {
       return '1% 30% 30% 30% 1%';
+    },
+  },
+
+  methods: {
+    deleteIcon(iconIndex) {
+      this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].splice(iconIndex, 1);
     },
   },
 
@@ -120,6 +129,11 @@ export default {
 
 .grid-item select {
   padding: 5px;
+}
+
+.grid-item button {
+  padding: 6px;
+  float: right;
 }
 
 @media only screen and (min-width: 650px) {

@@ -12,7 +12,18 @@
       }"
     >
       <div v-if="loggedIn">
-        <button @click="selectSearchedImg">Select Gallery Image</button>
+        <span>Background image: </span>
+
+        <button
+          @click="selectSearchedImg"
+          :style="{
+            'margin-top': topMenu
+              ? Number(site.params.htmlElements[topMenuPos]['top-menu']['style']['height']) + 'px'
+              : '0px',
+          }"
+        >
+          Select Gallery Image
+        </button>
         <!-- <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
         <p>Programista</p>
         <button>Zatrudnij mnie</button> -->
@@ -31,6 +42,10 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
+  data() {
+    return { topMenu: false, topMenuPos: '' };
+  },
+
   methods: {
     selectSearchedImg() {
       if (this.selectedPhoto) {
@@ -42,6 +57,14 @@ export default {
   },
 
   created() {
+    this.site.params.htmlElements.forEach((htmlElement, index) => {
+      Object.keys(htmlElement).forEach((htmlElementType) => {
+        if (htmlElementType.includes('top-menu')) {
+          this.topMenuPos = index;
+          return (this.topMenu = true);
+        }
+      });
+    });
     // This can be used an an alternative if inline styling does not work
     // const style = document.createElement('style');
     // style.type = 'text/css';
@@ -62,6 +85,15 @@ export default {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.background-image button {
+  padding: 6px;
+}
+
+.background-image span {
+  margin-left: 10px;
+}
+
 .hero-image {
   /* background-image: url('background_image.jpg'); */
   /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('background_image.jpg'); */
