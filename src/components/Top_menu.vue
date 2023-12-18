@@ -31,7 +31,7 @@
             backgroundColor: '#FFFFFF00',
             color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
           }"
-          style="border: none"
+          style="border-style: dashed"
         />
         <template v-if="index > 1">
           <button class="fa-solid fa-trash-can" @click.prevent="deleteMenuItem(index)"></button>
@@ -226,6 +226,10 @@ export default {
   z-index: 4;
   /* top: 0; */
   width: 100%;
+}
+
+.top-menu::-webkit-scrollbar-track {
+  background: #ffffff00;
 }
 
 .top-menu a {
