@@ -4,20 +4,18 @@
     :class="elKey"
     :style="{
       backgroundColor:
-        site.params.htmlElements[elIndex]['horizontal-menu']['style']['backgroundColor'] +
-        site.params.htmlElements[elIndex]['horizontal-menu']['style']['opacity'],
+        site.params.htmlElements[elIndex]['top-menu']['style']['backgroundColor'] +
+        site.params.htmlElements[elIndex]['top-menu']['style']['opacity'],
       height:
-        windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
-          ? 50 * site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'].length +
-            Number(site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) +
+        windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive']
+          ? 50 * site.params.htmlElements[elIndex]['top-menu']['menu-items'].length +
+            Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) +
             'px'
-          : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+          : site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
       'overflow-x': loggedIn ? 'scroll' : 'hidden',
       'white-space': loggedIn ? 'nowrap' : 'normal',
       position: loggedIn ? 'relative' : 'absolute',
-      marginBottom: loggedIn
-        ? '-' + site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px'
-        : '0px',
+      marginBottom: loggedIn ? '-' + site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px' : '0px',
     }"
   >
     <template v-if="loggedIn === null"></template>
@@ -26,12 +24,16 @@
         <input
           type="text"
           :name="menuItem"
-          v-model="site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index]"
+          v-model="site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]"
           :style="{
-            width: site.params.htmlElements[elIndex]['horizontal-menu']['menu-items'][index].length * 9 + 'px',
-            'margin-top':
-              Number(site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) / 2 - 10 + 'px',
+            width: site.params.htmlElements[elIndex]['top-menu']['menu-items'][index].length * 9 + 'px',
+            'margin-top': Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) / 2 - 10 + 'px',
+            backgroundColor:
+              site.params.htmlElements[elIndex]['top-menu']['style']['backgroundColor'] +
+              site.params.htmlElements[elIndex]['top-menu']['style']['opacity'],
+            color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
           }"
+          style="border: none"
         />
         <template v-if="index > 1">
           <button class="fa-solid fa-trash-can" @click.prevent="deleteMenuItem(index)"></button>
@@ -50,31 +52,31 @@
           <template v-if="menuChange.toLowerCase().includes('color')">
             <input
               type="color"
-              :name="'horizontal_menu' + menuChange"
-              v-model="site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
+              :name="'top_menu' + menuChange"
+              v-model="site.params.htmlElements[elIndex]['top-menu']['style'][menuChange]"
           /></template>
           <template v-if="menuChange == 'height'">
             <input
               type="range"
               min="50"
               max="150"
-              :name="'horizontal_menu' + menuChange"
-              v-model="site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange]"
-            />{{ site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}
+              :name="'top_menu' + menuChange"
+              v-model="site.params.htmlElements[elIndex]['top-menu']['style'][menuChange]"
+            />{{ site.params.htmlElements[elIndex]['top-menu']['style'][menuChange] }}
           </template>
           <template v-if="menuChange == 'opacity'">
             <input
               type="range"
               min="0"
               max="100"
-              :name="'horizontal_menu' + menuChange"
+              :name="'top_menu' + menuChange"
               :value="
-                site.params.htmlElements[elIndex]['horizontal-menu']['style']['opacity'] == ''
+                site.params.htmlElements[elIndex]['top-menu']['style']['opacity'] == ''
                   ? 100
-                  : site.params.htmlElements[elIndex]['horizontal-menu']['style']['opacity']
+                  : site.params.htmlElements[elIndex]['top-menu']['style']['opacity']
               "
               @input="changeMenuOpacity"
-            />{{ site.params.htmlElements[elIndex]['horizontal-menu']['style'][menuChange] }}
+            />{{ site.params.htmlElements[elIndex]['top-menu']['style'][menuChange] }}
           </template>
           <template v-if="menuChange == 'alignment'">
             <input type="radio" name="menu-alignment" value="left" checked @click="changeMenuAlignment" /><label
@@ -94,7 +96,7 @@
       <div
         class="logo"
         :style="{
-          height: Number(site.params.htmlElements[elIndex]['horizontal-menu']['style']['height']) - 20 + 'px',
+          height: Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) - 20 + 'px',
         }"
       >
         <img :src="endPts.servrURL + site.params.logo" alt="logo" />
@@ -102,37 +104,34 @@
       <!-- Menu Logo -->
 
       <div
-        class="horizontal-menu-alignment"
+        class="top-menu-alignment"
         :style="{
-          float:
-            windowWidth > respWidth
-              ? site.params.htmlElements[elIndex]['horizontal-menu']['style']['alignment']
-              : 'none',
+          float: windowWidth > respWidth ? site.params.htmlElements[elIndex]['top-menu']['style']['alignment'] : 'none',
         }"
       >
         <div
           v-if="
             windowWidth > respWidth ||
-            (windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive'])
+            (windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive'])
           "
-          class="horizontal-menu-items"
+          class="top-menu-items"
         >
           <!-- Menu Items -->
           <template v-for="(menuItem, index) in elValue['menu-items']">
             <a
               :href="'#' + menuItem"
               :style="{
-                color: site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
-                  ? site.params.htmlElements[elIndex]['horizontal-menu']['style']['color']
+                color: site.params.htmlElements[elIndex]['top-menu']['style']['color']
+                  ? site.params.htmlElements[elIndex]['top-menu']['style']['color']
                   : '#000000',
                 height:
-                  windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+                  windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive']
                     ? '50px'
-                    : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+                    : site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
                 'line-height':
-                  windowWidth < respWidth && site.params.htmlElements[elIndex]['horizontal-menu']['responsive']
+                  windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive']
                     ? '50px'
-                    : site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+                    : site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
               }"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
@@ -145,13 +144,13 @@
 
       <!-- Menu Hamburger Button -->
       <template v-if="windowWidth < respWidth">
-        <a @click.prevent="toggleRespMenu" class="horizontal-menu-icon"
+        <a @click.prevent="toggleRespMenu" class="top-menu-icon"
           ><i
             class="fa fa-bars"
             :style="{
-              color: site.params.htmlElements[elIndex]['horizontal-menu']['style']['color'],
-              height: site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
-              'line-height': site.params.htmlElements[elIndex]['horizontal-menu']['style']['height'] + 'px',
+              color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
+              height: site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
+              'line-height': site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
             }"
             style="padding-left: 16px; padding-right: 16px; margin-right: -16px; margin-left: -16px"
             @mouseover="highlightMenuItem(true, $event)"
@@ -165,7 +164,7 @@
 
 <script>
 export default {
-  name: 'Horizontal_menu',
+  name: 'Top Menu',
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -181,32 +180,32 @@ export default {
     highlightMenuItem(isHovering, event) {
       if (isHovering) {
         event.target.style.backgroundColor =
-          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
-        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'] == '#000000'
+          this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'];
+        this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'] == '#000000'
           ? (event.target.style.backgroundColor = '#878787')
           : (event.target.style.filter = 'brightness(90%)');
       } else {
-        if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['opacity'] != '') {
+        if (this.site.params.htmlElements[this.elIndex]['top-menu']['style']['opacity'] != '') {
           event.target.style.backgroundColor =
-            this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'] + '00';
+            this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'] + '00';
         } else {
           event.target.style.backgroundColor =
-            this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['backgroundColor'];
+            this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'];
         }
         event.target.style.filter = 'none';
       }
     },
     toggleRespMenu() {
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] =
-        !this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'];
+      this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'] =
+        !this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'];
     },
     deleteMenuItem(menuItemIndex) {
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].splice(menuItemIndex, 1);
+      this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].splice(menuItemIndex, 1);
     },
     menuAction(event) {
       if (event.srcElement.selectedOptions[0].value == 'addItem') {
-        if (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].length < 10) {
-          this.site.params.htmlElements[this.elIndex]['horizontal-menu']['menu-items'].push('');
+        if (this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
+          this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].push('');
           this.menuChange = '';
         } else {
           this.menuChange = '';
@@ -215,17 +214,17 @@ export default {
       }
     },
     changeMenuAlignment(event) {
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['alignment'] = event.target.value;
+      this.site.params.htmlElements[this.elIndex]['top-menu']['style']['alignment'] = event.target.value;
     },
     changeMenuOpacity(event) {
       event.target.value == 100
-        ? (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['opacity'] = '')
-        : (this.site.params.htmlElements[this.elIndex]['horizontal-menu']['style']['opacity'] = event.target.value);
+        ? (this.site.params.htmlElements[this.elIndex]['top-menu']['style']['opacity'] = '')
+        : (this.site.params.htmlElements[this.elIndex]['top-menu']['style']['opacity'] = event.target.value);
     },
   },
   created() {
     if (this.windowWidth < this.respWidth)
-      this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+      this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'] = false;
   },
 
   watch: {
@@ -234,31 +233,31 @@ export default {
         (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
         (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
       )
-        this.site.params.htmlElements[this.elIndex]['horizontal-menu']['responsive'] = false;
+        this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'] = false;
     },
   },
 };
 </script>
 
 <style>
-.horizontal-menu select {
+.top-menu select {
   margin: 7px 8px 7px 16px;
   padding: 5px;
 }
 
-.horizontal-menu input[type='text'] {
+.top-menu input[type='text'] {
   min-width: 30px;
   margin: 7px -1px 7px 8px;
   padding: 5px;
   text-align: left;
 }
 
-.horizontal-menu button {
+.top-menu button {
   margin: 7px 7px 7px 0px;
   padding: 6px;
 }
 
-.horizontal-menu {
+.top-menu {
   overflow-y: hidden;
   /* position: absolute; */
   z-index: 4;
@@ -266,7 +265,7 @@ export default {
   width: 100%;
 }
 
-.horizontal-menu a {
+.top-menu a {
   float: none; /* change this dynamic alignment */
   display: block;
   padding-left: 16px;
@@ -276,19 +275,19 @@ export default {
   /* transition: width 2s, height 2s, transform 2s; */
 }
 
-.horizontal-menu a.active {
+.top-menu a.active {
   background-color: #04aa6d;
   color: white;
 }
 
-.horizontal-menu-icon {
+.top-menu-icon {
   display: block;
   position: absolute;
   right: 0;
   top: 0;
 }
 
-.horizontal-menu-items {
+.top-menu-items {
   display: block;
 }
 
@@ -301,13 +300,13 @@ img {
 }
 
 @media only screen and (min-width: 650px) {
-  .horizontal-menu a {
+  .top-menu a {
     float: left;
   }
   .logo {
     float: left;
   }
-  /* .horizontal-menu-alignment {
+  /* .top-menu-alignment {
     float: right;
   } */
 }

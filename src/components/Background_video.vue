@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'Background_video',
+  name: 'Background Video',
 
   props: ['elKey', 'elValue', 'elIndex'],
 };

@@ -9,9 +9,11 @@
         @keyup.enter="imageSearch"
       />
       <select name="image-searched" @change="selectSearch">
-        <option v-for="searched in Object.keys(content.searched)" :value="searched">
-          {{ searched.charAt(0).toUpperCase() }}{{ searched.slice(1).replaceAll('-', ' ') }}
-        </option></select
+        <template v-if="content.searched">
+          <option v-for="searched in Object.keys(content.searched)" :value="searched">
+            {{ searched.charAt(0).toUpperCase() }}{{ searched.slice(1).replaceAll('-', ' ') }}
+          </option>
+        </template></select
       ><button @click="imageSearch">Search</button>
     </div>
   </div>
@@ -122,8 +124,11 @@ export default {
     },
   },
   created() {
-    this.searchedPhotos = this.content.searched[this.content.most_recent_search];
-    this.imageSearchInput = this.content.most_recent_search;
+    this.searchedPhotos =
+      this.content.most_recent_search && this.content.searched
+        ? this.content.searched[this.content.most_recent_search]
+        : {};
+    this.imageSearchInput = this.content.most_recent_search ? this.content.most_recent_search : '';
   },
 };
 </script>

@@ -14,12 +14,7 @@
           <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
             <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
               <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
-              <horizontal_menu
-                v-if="elKey == 'horizontal-menu'"
-                :elKey="elKey"
-                :elValue="elValue"
-                :elIndex="htmlIndex"
-              ></horizontal_menu>
+              <top_menu v-if="elKey == 'top-menu'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></top_menu>
               <background_image
                 v-if="elKey == 'background-image'"
                 :elKey="elKey"
@@ -48,12 +43,7 @@
       <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
         <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
           <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
-          <horizontal_menu
-            v-if="elKey == 'horizontal-menu'"
-            :elKey="elKey"
-            :elValue="elValue"
-            :elIndex="htmlIndex"
-          ></horizontal_menu>
+          <top_menu v-if="elKey == 'top-menu'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></top_menu>
           <background_image
             v-if="elKey == 'background-image'"
             :elKey="elKey"
@@ -89,7 +79,7 @@
 import Snackbar from './components/Snackbar.vue';
 import Headline from './components/Headline.vue';
 import Foot from './components/Footer.vue';
-import Horizontal_menu from './components/Horizontal_menu.vue';
+import Top_menu from './components/Top_menu.vue';
 import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
 import Icon_slider from './components/Icon_slider.vue';
@@ -103,7 +93,7 @@ export default {
     Snackbar,
     Headline,
     Foot,
-    Horizontal_menu,
+    Top_menu,
     Background_image,
     Background_video,
     Icon_slider,

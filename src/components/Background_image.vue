@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'Background_Image',
+  name: 'Background Image',
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'site', 'endPts', 'selectedPhoto']),
