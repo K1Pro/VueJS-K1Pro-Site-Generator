@@ -84,7 +84,7 @@ import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
 import Icon_slider from './components/Icon_slider.vue';
 import Directory from './components/Directory.vue';
-import Login_side_panel from './components/Login_side_panel.vue';
+import Login_side_panel from './components/login/Login_side_panel.vue';
 
 export default {
   name: 'App',

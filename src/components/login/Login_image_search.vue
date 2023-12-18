@@ -128,7 +128,10 @@ export default {
       this.content.most_recent_search && this.content.searched
         ? this.content.searched[this.content.most_recent_search]
         : {};
-    this.imageSearchInput = this.content.most_recent_search ? this.content.most_recent_search : '';
+    this.imageSearchInput = this.content.most_recent_search
+      ? this.content.most_recent_search.charAt(0).toUpperCase() +
+        this.content.most_recent_search.slice(1).toLowerCase().replaceAll('-', ' ')
+      : '';
   },
 };
 </script>

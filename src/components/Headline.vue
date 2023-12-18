@@ -11,14 +11,14 @@
         }"
         style="border-style: dashed"
       />
-      <element_select :selectKey="elKey" :selectIndex="elIndex">test</element_select>
+      <element_select :selectKey="elKey" :selectIndex="elIndex">{{ elValue.text }}</element_select>
     </template>
     <template v-else>{{ elValue.text }}</template>
   </div>
 </template>
 
 <script>
-import Element_select from './Login_element_select.vue';
+import Element_select from './login/Login_element_select.vue';
 
 export default {
   name: 'Headline',
