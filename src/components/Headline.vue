@@ -11,7 +11,22 @@
         }"
         style="border-style: dashed"
       />
-      <element_select :selectKey="elKey" :selectIndex="elIndex">{{ elValue.text }}</element_select>
+      <!-- Modify element select and options -->
+      &nbsp;
+      <select name="menuChange" v-model="menuChange" @change="menuAction">
+        <option value="" disabled selected>
+          Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+        </option>
+        <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+        <!-- Custom select options here -->
+      </select>
+      &nbsp;
+      <element_select_options
+        :selectKey="elKey"
+        :selectIndex="elIndex"
+        :selectChange="menuChange"
+      ></element_select_options>
+      <!-- Modify element select and options -->
     </template>
     <template v-else>{{ elValue.text }}</template>
   </div>
@@ -19,16 +34,36 @@
 
 <script>
 import Element_select from './login/Login_element_select.vue';
+import Element_select_options from './login/Login_element_select_options.vue';
 
 export default {
   name: 'Headline',
 
-  components: { Element_select },
+  components: { Element_select, Element_select_options },
 
   props: ['elKey', 'elValue', 'elIndex'],
 
+  data() {
+    return { menuChange: '' };
+  },
+
   computed: {
     ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'site']),
+  },
+
+  methods: {
+    menuAction(event) {
+      console.log(event.srcElement.selectedOptions[0].value);
+      //     if (event.srcElement.selectedOptions[0].value == 'addItem') {
+      //     if (this.site.params.htmlElements[this.selectIndex]['top-menu']['menu-items'].length < 10) {
+      //       this.site.params.htmlElements[this.selectIndex]['top-menu']['menu-items'].push('');
+      //       this.menuChange = '';
+      //     } else {
+      //       this.menuChange = '';
+      //       this.message = 'Maximum 10 menu items';
+      //     }
+      //   }
+    },
   },
 
   created() {},
@@ -47,5 +82,9 @@ export default {
 .headline input[type='text'] {
   padding: 5px;
   text-align: center;
+}
+
+.headline select {
+  padding: 5px;
 }
 </style>

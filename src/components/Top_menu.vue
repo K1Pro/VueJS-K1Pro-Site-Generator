@@ -28,9 +28,7 @@
           :style="{
             width: site.params.htmlElements[elIndex]['top-menu']['menu-items'][index].length * 9 + 'px',
             'margin-top': Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) / 2 - 10 + 'px',
-            backgroundColor:
-              site.params.htmlElements[elIndex]['top-menu']['style']['backgroundColor'] +
-              site.params.htmlElements[elIndex]['top-menu']['style']['opacity'],
+            backgroundColor: '#FFFFFF00',
             color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
           }"
           style="border: none"
@@ -39,54 +37,22 @@
           <button class="fa-solid fa-trash-can" @click.prevent="deleteMenuItem(index)"></button>
         </template>
         <template v-if="index === elValue['menu-items'].length - 1">
+          <!-- Modify element select and options -->
+          &nbsp;
           <select name="menuChange" v-model="menuChange" @change="menuAction">
-            <option value="" disabled selected>Change Top Menu</option>
-            <option value="color">Text Color</option>
-            <option value="backgroundColor">Background Color</option>
-            <option value="opacity">Menu Opacity</option>
-            <option value="height">Menu Height</option>
-            <option value="alignment">Menu Alignment</option>
-            <option value="addItem">Add Menu Item</option>
-            <!-- <option value="deleteMenu">Delete Menu</option> -->
+            <option value="" disabled selected>
+              Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+            </option>
+            <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+            <!-- Custom select options here -->
           </select>
-          <template v-if="menuChange.toLowerCase().includes('color')">
-            <input
-              type="color"
-              :name="'top_menu' + menuChange"
-              v-model="site.params.htmlElements[elIndex]['top-menu']['style'][menuChange]"
-          /></template>
-          <template v-if="menuChange == 'height'">
-            <input
-              type="range"
-              min="50"
-              max="150"
-              :name="'top_menu' + menuChange"
-              v-model="site.params.htmlElements[elIndex]['top-menu']['style'][menuChange]"
-            />{{ site.params.htmlElements[elIndex]['top-menu']['style'][menuChange] }}
-          </template>
-          <template v-if="menuChange == 'opacity'">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              :name="'top_menu' + menuChange"
-              :value="
-                site.params.htmlElements[elIndex]['top-menu']['style']['opacity'] == ''
-                  ? 100
-                  : site.params.htmlElements[elIndex]['top-menu']['style']['opacity']
-              "
-              @input="changeMenuOpacity"
-            />{{ site.params.htmlElements[elIndex]['top-menu']['style'][menuChange] }}
-          </template>
-          <template v-if="menuChange == 'alignment'">
-            <input type="radio" name="menu-alignment" value="left" checked @click="changeMenuAlignment" /><label
-              for="left"
-              >Left</label
-            >
-            <input type="radio" name="menu-alignment" value="right" @click="changeMenuAlignment" /><label for="right"
-              >Right</label
-            >
-          </template>
+          &nbsp;
+          <element_select_options
+            :selectKey="elKey"
+            :selectIndex="elIndex"
+            :selectChange="menuChange"
+          ></element_select_options>
+          <!-- Modify element select and options -->
         </template>
       </template>
     </template>
@@ -163,10 +129,15 @@
 </template>
 
 <script>
+import Element_select from './login/Login_element_select.vue';
+import Element_select_options from './login/Login_element_select_options.vue';
+
 export default {
   name: 'Top Menu',
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  components: { Element_select, Element_select_options },
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'windowWidth', 'respWidth', 'site', 'endPts']),
@@ -212,14 +183,6 @@ export default {
           this.message = 'Maximum 10 menu items';
         }
       }
-    },
-    changeMenuAlignment(event) {
-      this.site.params.htmlElements[this.elIndex]['top-menu']['style']['alignment'] = event.target.value;
-    },
-    changeMenuOpacity(event) {
-      event.target.value == 100
-        ? (this.site.params.htmlElements[this.elIndex]['top-menu']['style']['opacity'] = '')
-        : (this.site.params.htmlElements[this.elIndex]['top-menu']['style']['opacity'] = event.target.value);
     },
   },
   created() {
