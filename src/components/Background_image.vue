@@ -11,7 +11,7 @@
         })`,
       }"
     >
-      <div v-if="loggedIn" class="hero-text">
+      <div v-if="loggedIn">
         <button @click="selectSearchedImg">Select Gallery Image</button>
         <!-- <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
         <p>Programista</p>

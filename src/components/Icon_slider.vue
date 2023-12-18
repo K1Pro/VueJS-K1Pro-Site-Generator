@@ -7,15 +7,38 @@
       <div class="grid-item"></div>
       <template v-if="windowWidth > respWidth">
         <div
-          v-for="icon in elValue['icon-slider-items']"
+          v-for="(icon, iconIndex) in elValue['icon-slider-items']"
           class="grid-item"
           :style="{
             backgroundColor: '#FFFFFF',
             border: '1px solid rgba(0, 0, 0, 0.8)',
+            'text-align': loggedIn ? 'center' : 'center',
+            padding: loggedIn ? '20px 0px 0px 0px' : '20px',
+            'font-size': loggedIn ? '30px' : '30px',
           }"
         >
-          <i :class="icon[1]"></i>
-          <p>{{ icon[0] }}</p>
+          <template v-if="loggedIn === true">
+            <i :class="icon[1]"></i>
+            <select
+              :style="{ width: '100%' }"
+              v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][1]"
+            >
+              <option value="" disabled>Choose Icon</option>
+              <option value="fa-solid fa-house">House</option>
+              <option value="fa-solid fa-magnifying-glass">Magnifying Glass</option>
+              <option value="fa-solid fa-desktop">Desktop</option>
+              <option value="fa-solid fa-database">Database</option>
+              <option value="fa-solid fa-server">Server</option>
+              <option value="fa-solid fa-photo-film">Photo-film</option>
+              <option value="fa-solid fa-video">Video</option>
+              <option value="fa-solid fa-pencil">Pencil</option>
+            </select>
+            <input type="text" v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][0]" />
+          </template>
+          <template v-else>
+            <i :class="icon[1]"></i>
+            <p>{{ icon[0] }}</p>
+          </template>
         </div>
       </template>
       <template v-else>
@@ -45,11 +68,10 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['message', 'windowWidth', 'respWidth', 'site']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'windowWidth', 'respWidth', 'site']),
 
     gridTemplateColumnsFull() {
       const side = (99 - this.elValue['icon-slider-items'].length * 10) / 2;
-      console.log(side);
       const autos = '9% '.repeat(this.elValue['icon-slider-items'].length);
       return side + '% ' + autos + side + '%';
     },
@@ -60,7 +82,7 @@ export default {
   },
 
   created() {
-    console.log(this.gridTemplateColumnsFull);
+    // console.log(this.gridTemplateColumnsFull);
   },
 };
 </script>
@@ -81,14 +103,23 @@ export default {
 .grid-item {
   /* background-color: rgb(255, 255, 255); */
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
-  padding: 20px;
+  /*  padding: 20px;
   font-size: 30px;
-  text-align: center;
+  text-align: center;*/
   overflow: hidden;
 }
 .grid-item p {
   font-size: 3vw;
   margin-bottom: -10px;
+}
+
+.grid-item input[type='text'] {
+  padding: 5px;
+  border-style: dashed;
+}
+
+.grid-item select {
+  padding: 5px;
 }
 
 @media only screen and (min-width: 650px) {
