@@ -22,7 +22,7 @@
     <button type="button">Apply</button>&nbsp; <button type="button" @click.prevent="patchParams">Update</button>&nbsp;
     <button type="button" @click.prevent="getSite">Reset</button>&nbsp;
     <hr />
-    <button type="button">Logout</button>
+    <button type="button" @click.prevent="deleteLogin">Logout</button>
   </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
   name: 'Background Settings',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['accessToken', 'message', 'pathname', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['accessToken', 'message', 'pathname', 'site', 'endPts', 'deleteLogin']),
   },
 
   methods: {

@@ -112,5 +112,6 @@ export default {
   width: 85%;
   border-left: none;
   height: 94vh;
+  overflow-y: scroll;
 }
 </style>

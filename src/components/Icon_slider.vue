@@ -16,7 +16,6 @@
             'background-color': site.params.htmlElements[elIndex][elKey]['style']['slideColor'],
             border: '1px solid ' + site.params.htmlElements[elIndex][elKey]['style']['borderColor'],
             'text-align': loggedIn ? 'center' : 'center',
-            padding: loggedIn ? '0px' : '20px',
             'font-size': loggedIn ? '30px' : '30px',
             'border-radius': site.params.htmlElements[elIndex][elKey]['style']['borderRadius'] + 'px',
             color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'],
@@ -49,8 +48,13 @@
             />
           </template>
           <template v-else>
-            <i :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }" :class="icon[1]"></i>
-            <p>{{ icon[0] }}</p>
+            <div class="grid-item-icon">
+              <i
+                :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }"
+                :class="icon[1]"
+              ></i>
+            </div>
+            <div class="grid-item-text">{{ icon[0] }}</div>
           </template>
         </div>
       </template>
@@ -60,15 +64,22 @@
             v-if="index < 3"
             class="grid-item"
             :style="{
-              backgroundColor: '#FFFFFF',
-              border: '1px solid rgba(0, 0, 0, 0.8)',
+              'background-color': site.params.htmlElements[elIndex][elKey]['style']['slideColor'],
+              border: '1px solid ' + site.params.htmlElements[elIndex][elKey]['style']['borderColor'],
               'text-align': loggedIn ? 'center' : 'center',
               padding: loggedIn ? '0px' : '20px',
               'font-size': loggedIn ? '30px' : '30px',
+              'border-radius': site.params.htmlElements[elIndex][elKey]['style']['borderRadius'] + 'px',
+              color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'],
             }"
           >
-            <i :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }" :class="icon[1]"></i>
-            <p>{{ icon[0] }}</p>
+            <div class="grid-item-icon">
+              <i
+                :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }"
+                :class="icon[1]"
+              ></i>
+            </div>
+            <div class="grid-item-text">{{ icon[0] }}</div>
           </div>
         </template>
       </template>
@@ -85,7 +96,6 @@
                 <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
                 <!-- Custom select options here -->
               </select>
-              <p></p>
               <div>
                 <element_select_options
                   :selectKey="elKey"
@@ -128,7 +138,7 @@ export default {
     },
 
     gridTemplateColumnsMobile() {
-      return '1% 30% 30% 30% 1%';
+      return '0% 32% 32% 32% 0%';
     },
   },
 
@@ -160,7 +170,6 @@ export default {
   height: 100%;
 }
 .icon-slider-modify {
-  /* position: relative; */
   display: table-cell;
   vertical-align: middle;
   text-align: center;
@@ -168,29 +177,28 @@ export default {
 
 .grid-container {
   display: grid;
-  /* grid-template-columns: auto auto auto auto auto auto; */
-  /* background-color: #2196f300; */
-  padding: 10px;
   column-gap: 1%;
 }
 
 .grid-item {
-  /* background-color: rgb(255, 255, 255); */
-  /* border: 1px solid rgba(0, 0, 0, 0.8); */
-  /*  padding: 20px;
-  font-size: 30px;
-  text-align: center;*/
-  overflow: hidden;
-  /* border-radius: 25px; */
+  overflow: visible;
+  height: 100px;
+  padding: 20px 0px;
 }
-.grid-item p {
-  font-size: 3vw;
-  margin-bottom: -10px;
+
+.grid-item-icon {
+  height: 50%;
+}
+
+.grid-item-text {
+  height: 50%;
+  font-size: 20px;
 }
 
 .grid-item input[type='text'] {
   padding: 5px;
   border-style: dashed;
+  width: 85%;
 }
 
 .grid-item select {
@@ -203,8 +211,8 @@ export default {
 }
 
 @media only screen and (min-width: 650px) {
-  .grid-item p {
-    font-size: 1.2vw;
+  .grid-item-text {
+    font-size: 1.4vw;
   }
 }
 </style>

@@ -111,6 +111,25 @@ const useSiteStore = Pinia.defineStore('site', {
         this.message = error.toString();
       }
     },
+    async deleteLogin() {
+      try {
+        const response = await fetch(this.endPts.loginURL + this.endPts.logout + this.sessionID, {
+          method: 'DELETE',
+          headers: {
+            Authorization: this.accessToken,
+            'Cache-Control': 'no-store',
+          },
+        });
+        const logOutResJSON = await response.json();
+        if (logOutResJSON.success) {
+          this.deleteCookie();
+        }
+        this.message = logOutResJSON.messages[0];
+      } catch (error) {
+        this.error = error.toString();
+        this.message = this.error;
+      }
+    },
   },
   getters: {},
 });

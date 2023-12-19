@@ -193,7 +193,7 @@ export default {
   /* padding: 20px; */
   /* text-align: center; */
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
