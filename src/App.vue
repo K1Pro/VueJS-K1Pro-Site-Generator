@@ -8,34 +8,38 @@
           <login_side_panel></login_side_panel>
         </div>
         <div class="app-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
-          <div :style="{ height: '3vh', padding: '10px', backgroundColor: 'white', borderBottom: '1px solid black' }">
-            <b>Inline editor:</b>
+          <div class="inline-editor-container">
+            <div class="inline-editor-title">
+              <b>Inline editor:</b>
+            </div>
           </div>
-          <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
-            <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
-              <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
-              <top_menu v-if="elKey == 'top-menu'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></top_menu>
-              <background_image
-                v-if="elKey == 'background-image'"
-                :elKey="elKey"
-                :elValue="elValue"
-                :elIndex="htmlIndex"
-              ></background_image>
-              <background_video
-                v-if="elKey == 'background-video'"
-                :elKey="elKey"
-                :elValue="elValue"
-                :elIndex="htmlIndex"
-              ></background_video>
-              <icon_slider
-                v-if="elKey == 'icon-slider'"
-                :elKey="elKey"
-                :elValue="elValue"
-                :elIndex="htmlIndex"
-              ></icon_slider>
+          <div class="inline-editor">
+            <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
+              <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
+                <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
+                <top_menu v-if="elKey == 'top-menu'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></top_menu>
+                <background_image
+                  v-if="elKey == 'background-image'"
+                  :elKey="elKey"
+                  :elValue="elValue"
+                  :elIndex="htmlIndex"
+                ></background_image>
+                <background_video
+                  v-if="elKey == 'background-video'"
+                  :elKey="elKey"
+                  :elValue="elValue"
+                  :elIndex="htmlIndex"
+                ></background_video>
+                <icon_slider
+                  v-if="elKey == 'icon-slider'"
+                  :elKey="elKey"
+                  :elValue="elValue"
+                  :elIndex="htmlIndex"
+                ></icon_slider>
+              </template>
             </template>
-          </template>
-          <foot></foot>
+            <foot></foot>
+          </div>
         </div>
       </div>
     </template>
@@ -199,6 +203,25 @@ export default {
   /* padding: 20px; */
   /* text-align: center; */
   height: 100%;
+  /* overflow: hidden; */
+}
+
+.inline-editor-container {
+  display: table;
+  height: 6vh;
+  width: 100%;
+  background-color: white;
+  /* border-bottom: 1px solid black; */
+}
+
+.inline-editor-title {
+  display: table-cell;
+  padding-left: 10px;
+  vertical-align: middle;
+}
+
+.inline-editor {
+  height: 94vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }

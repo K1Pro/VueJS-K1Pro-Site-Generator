@@ -1,13 +1,23 @@
 <template>
-  <div :name="elValue.name" :class="elKey" :style="{ backgroundColor: elValue.style.backgroundColor }">
+  <div
+    :name="elValue.name"
+    :class="elKey"
+    :style="{
+      backgroundColor: elValue.style.backgroundColor,
+      fontSize: loggedIn ? '18px' : elValue.style.fontSize + 'px',
+      height: elValue.style.height + 'px',
+    }"
+  >
     <template v-if="loggedIn === true">
       <input
         type="text"
         v-model="site.params.htmlElements[elIndex]['headline']['text']"
         :style="{
-          width: site.params.htmlElements[elIndex]['headline']['text'].length * 9 + 'px',
+          width: '50%',
           backgroundColor: site.params.htmlElements[elIndex]['headline']['style']['backgroundColor'],
           color: site.params.htmlElements[elIndex]['headline']['style']['color'],
+          fontSize: site.params.htmlElements[elIndex]['headline']['style']['fontSize'] + 'px',
+          'margin-top': site.params.htmlElements[elIndex]['headline']['style']['height'] / 4 + 'px',
         }"
         style="border-style: dashed"
       />
@@ -28,7 +38,9 @@
       ></element_select_options>
       <!-- Modify element select and options -->
     </template>
-    <template v-else>{{ elValue.text }}</template>
+    <template v-else
+      ><span>{{ elValue.text }}</span></template
+    >
   </div>
 </template>
 
@@ -76,7 +88,13 @@ export default {
   text-align: center;
   padding: 10px;
   /* background-color: rgb(174, 46, 142); */
-  font-size: 2.5vw;
+  /* font-size: 30px; */
+}
+.headline span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .headline input[type='text'] {

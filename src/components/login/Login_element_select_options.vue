@@ -14,6 +14,25 @@
       v-model="site.params.htmlElements[selectIndex][selectKey]['style'][selectChange]"
     />{{ site.params.htmlElements[selectIndex][selectKey]['style'][selectChange] }}
   </template>
+  <template v-if="selectChange == 'fontSize'">
+    <input
+      type="range"
+      min="10"
+      max="50"
+      :name="selectKey + '_' + selectChange"
+      v-model="site.params.htmlElements[selectIndex][selectKey]['style'][selectChange]"
+    />{{ site.params.htmlElements[selectIndex][selectKey]['style'][selectChange] }}
+  </template>
+  <template v-if="selectChange == 'borderRadius'">
+    <input
+      type="range"
+      min="0"
+      max="50"
+      :name="selectKey + '_' + selectChange"
+      v-model="site.params.htmlElements[selectIndex][selectKey]['style'][selectChange]"
+    />{{ site.params.htmlElements[selectIndex][selectKey]['style'][selectChange] }}
+  </template>
+
   <template v-if="selectChange == 'opacity'">
     <input
       type="range"
