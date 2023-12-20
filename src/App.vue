@@ -10,7 +10,9 @@
         <div class="app-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
           <div class="inline-editor-container">
             <div class="inline-editor-title">
-              <b>Inline editor:</b>
+              <b>Inline editor:</b> <button type="button">Apply</button>&nbsp;
+              <button type="button" @click.prevent="patchParams">Update</button>&nbsp;
+              <button type="button" @click.prevent="getSite">Reset</button>&nbsp;
             </div>
           </div>
           <div class="inline-editor">
@@ -151,6 +153,30 @@ export default {
         }
         console.log(getSiteResJSON);
         // this.message = getSiteResJSON.messages[0];
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
+    },
+    async patchParams() {
+      try {
+        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
+          method: 'PATCH',
+          headers: {
+            Authorization: this.accessToken,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            site: this.site.site,
+            params: this.site.params,
+          }),
+        });
+        const patchParamsJSON = await response.json();
+        if (patchParamsJSON.success) {
+          console.log(patchParamsJSON);
+          this.message = patchParamsJSON.messages[0];
+        }
       } catch (error) {
         console.log(error.toString());
         this.message = error.toString();

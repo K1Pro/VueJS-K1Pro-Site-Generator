@@ -9,13 +9,12 @@
     <div
       class="directory-grid-container"
       :style="{
-        gridTemplateColumns:
-          site.scannedDirs.length < 9 ? directoryGridColumnsFull : '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%',
+        gridTemplateColumns: site.scannedDirs.length < respvColAmnt ? directoryGridDynamicCol : directoryGridStaticCol,
       }"
     >
       <template v-for="(value, gridIndex) in site.scannedDirs">
-        <div class="directory-grid-item" v-if="gridIndex === 0 || gridIndex % 9 === 0"></div>
-        <div class="directory-grid-item" v-if="gridIndex % 9 === 0 && gridIndex !== 0"></div>
+        <div class="directory-grid-item" v-if="gridIndex === 0 || gridIndex % respvColAmnt === 0"></div>
+        <div class="directory-grid-item" v-if="gridIndex % respvColAmnt === 0 && gridIndex !== 0"></div>
         <div
           class="directory-grid-item"
           :style="{
@@ -45,9 +44,9 @@ export default {
   name: 'Directory',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['site', 'endPts', 'message']),
+    ...Pinia.mapWritableState(useSiteStore, ['windowWidth', 'respWidth', 'site', 'endPts', 'message']),
 
-    directoryGridColumnsFull() {
+    directoryGridDynamicCol() {
       const side = (99 - this.site.scannedDirs.length * 10) / 2;
       console.log(side);
       const autos = '9% '.repeat(this.site.scannedDirs.length);
@@ -55,17 +54,35 @@ export default {
     },
   },
 
+  data() {
+    return {
+      respvColAmnt: '',
+      directoryGridStaticCol: '',
+    };
+  },
+
   created() {
     if (this.site?.isValid === false) {
       this.message = 'Invalid site';
     }
+    this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
+    this.directoryGridStaticCol =
+      this.windowWidth > this.respWidth ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%' : '3% 30% 30% 30% 3%';
+  },
+
+  watch: {
+    windowWidth(newWindowWidth, oldWindowWidth) {
+      this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
+      this.directoryGridStaticCol =
+        this.windowWidth > this.respWidth ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%' : '3% 30% 30% 30% 3%';
+    },
   },
 };
 </script>
 
 <style>
 .directory-title {
-  padding-top: 20vh;
+  padding-top: 2vh;
   text-align: center;
 }
 
@@ -93,5 +110,11 @@ export default {
   width: 50vh;
   padding: 15px;
   border-radius: 25px;
+}
+
+@media only screen and (min-width: 650px) {
+  .directory-title {
+    padding-top: 20vh;
+  }
 }
 </style>

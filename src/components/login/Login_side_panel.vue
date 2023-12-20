@@ -11,6 +11,8 @@
         <button class="tablinks fa fa-gear" @click="openTab"></button>
         <button class="tablinks fa fa-photo-film" @click="openTab"></button>
         <button class="tablinks fa fa-file-lines" @click="openTab"></button>
+        <button class="tablinks fa-solid fa-user-gear" @click="openTab"></button>
+        <button class="tablinks fa-solid fa-arrow-right-from-bracket" @click.prevent="deleteLogin"></button>
       </div>
 
       <div class="tabcontent" v-if="activeTab === 'gear'">
@@ -42,6 +44,10 @@ export default {
     Text_generation,
   },
 
+  computed: {
+    ...Pinia.mapWritableState(useSiteStore, ['deleteLogin']),
+  },
+
   data() {
     return { activeTab: 'gear' };
   },
@@ -68,13 +74,14 @@ export default {
 
 .tabcontainer {
   height: 100%;
+  display: flex;
 }
 .tab {
   box-sizing: border-box;
   float: left;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
-  width: 15%;
+  width: 50px;
   height: 94vh;
 }
 
@@ -83,14 +90,14 @@ export default {
   display: block;
   background-color: inherit;
   color: black;
-  padding: 22px 16px;
+  padding: 22px 13px;
   width: 100%;
   border: none;
   outline: none;
   text-align: left;
   cursor: pointer;
   transition: 0.3s;
-  font-size: 1.25vw;
+  font-size: 20px;
 }
 
 /* Change background color of buttons on hover */
@@ -109,7 +116,8 @@ export default {
   float: left;
   /* padding: 0px 12px; */
   border: 1px solid #ccc;
-  width: 85%;
+  /* width: 85%; */
+  flex-grow: 1;
   border-left: none;
   height: 94vh;
   overflow-y: scroll;

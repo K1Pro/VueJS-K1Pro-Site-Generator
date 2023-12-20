@@ -10,6 +10,12 @@
   <option value="fa-solid fa-pencil">Pencil</option>
   <option value="fa-solid fa-user">User (solid)</option>
   <option value="fa-regular fa-user">User (regular)</option>
+  <option value="fa-solid fa-car">Car</option>
+  <option value="fa-solid fa-house-chimney">House-chimney</option>
+  <option value="fa-solid fa-building">Building</option>
+  <option value="fa-solid fa-people-roof">People-roof</option>
+  <option value="fa-solid fa-user-tie">User-tie</option>
+  <option value="fa-solid fa-money-bill-trend-up">Money-bill-trend-up</option>
 </template>
 
 <script>
