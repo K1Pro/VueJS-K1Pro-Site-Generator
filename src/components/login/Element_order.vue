@@ -2,12 +2,22 @@
   <div class="element-order">
     <template v-for="(element, elementIndex) in site.params.htmlElements">
       <div v-if="elementIndex === site.params.htmlElements.length - 1" class="element-order-items">
-        <select name="addElement">
-          <option value="headline">Headline</option>
-          <option value="icon-slider">Icon slider</option>
+        <!-- Add new element -->
+        <select name="addElement" v-model="selectedCreateElType">
+          <option value="" disabled selected>Create</option>
+          <template v-if="content.default">
+            <option
+              v-for="defaultName in Object.keys(content.default).filter((e) => {
+                return !site.params.htmlElementsUniqList.includes(e);
+              })"
+              :value="defaultName"
+            >
+              {{ defaultName.charAt(0).toUpperCase() }}{{ defaultName.slice(1).replaceAll('-', ' ') }}
+            </option>
+          </template>
         </select>
-        <input type="text" placeholder="Name" />
-        <div>
+        <input type="text" placeholder="Name" v-model="selectedCreateElName" />
+        <div @click.prevent="createEl(elementIndex)">
           <i class="fa-solid fa-circle-plus" style="color: green"></i>
         </div>
       </div>
@@ -40,7 +50,8 @@
             elementName !== 'background-image' &&
             elementName !== 'footer' &&
             !site.params.htmlElements?.[elementIndex - 1]?.['background-image'] &&
-            !site.params.htmlElements?.[elementIndex - 1]?.['top-menu']
+            !site.params.htmlElements?.[elementIndex - 1]?.['top-menu'] &&
+            site.params.htmlElements?.[elementIndex - 1]
           "
           @click.prevent="moveUp(elementIndex)"
         >
@@ -54,13 +65,29 @@
 export default {
   name: 'Element Order',
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'site', 'content', 'endPts']),
+  },
+
+  data() {
+    return { selectedCreateElType: '', selectedCreateElName: '' };
   },
   methods: {
+    createEl() {
+      if (this.selectedCreateElType && this.selectedCreateElName) {
+        const createdElement = { [this.selectedCreateElType]: this.content.default[this.selectedCreateElType] };
+        createdElement[this.selectedCreateElType].name = this.selectedCreateElName;
+        this.site.params.htmlElements.splice(this.site.params.htmlElements.length - 1, 0, createdElement);
+      } else {
+        !this.selectedCreateElType
+          ? (this.message = 'Element type required')
+          : (this.message = 'Element name required');
+      }
+    },
     deleteEl(elementIndex) {
-      console.log(this.site.params.htmlElements);
-      console.log(elementIndex);
-
+      const removeUniqEl = this.site.params.htmlElementsUniqList.filter((uniqElements) => {
+        return uniqElements !== Object.keys(this.site.params.htmlElements[elementIndex])[0];
+      });
+      this.site.params.htmlElementsUniqList = removeUniqEl;
       this.site.params.htmlElements.splice(elementIndex, 1);
     },
     moveDown(elementIndex) {

@@ -117,6 +117,7 @@ export default {
       'pathname',
       'site',
       'endPts',
+      'getSite',
       'getCookie',
       'deleteCookie',
       'onScreenResize',
@@ -126,38 +127,6 @@ export default {
   },
 
   methods: {
-    async getSite() {
-      try {
-        console.log(this.endPts.servrURL + this.pathname);
-        const response = await fetch(this.endPts.servrURL + this.pathname, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            hostname: window.location.hostname.toLowerCase(),
-          }),
-        });
-        const getSiteResJSON = await response.json();
-        if (getSiteResJSON.success) {
-          this.site = getSiteResJSON.data;
-          Object.keys(getSiteResJSON.data?.params.body.style).forEach((key) => {
-            document.body.style[key] = getSiteResJSON.data.params.body.style[key];
-          });
-
-          const setFavicon = document.createElement('link');
-          setFavicon.setAttribute('rel', 'shortcut icon');
-          setFavicon.setAttribute('href', this.endPts.servrURL + this.site.params.icon);
-          document.head.appendChild(setFavicon);
-        }
-        console.log(getSiteResJSON);
-        // this.message = getSiteResJSON.messages[0];
-      } catch (error) {
-        console.log(error.toString());
-        this.message = error.toString();
-      }
-    },
     async patchParams() {
       try {
         const response = await fetch(this.endPts.servrURL + this.endPts.params, {

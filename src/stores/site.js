@@ -34,6 +34,38 @@ const useSiteStore = Pinia.defineStore('site', {
     };
   },
   actions: {
+    async getSite() {
+      try {
+        console.log(this.endPts.servrURL + this.pathname);
+        const response = await fetch(this.endPts.servrURL + this.pathname, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            hostname: window.location.hostname.toLowerCase(),
+          }),
+        });
+        const getSiteResJSON = await response.json();
+        if (getSiteResJSON.success) {
+          this.site = getSiteResJSON.data;
+          Object.keys(getSiteResJSON.data?.params.body.style).forEach((key) => {
+            document.body.style[key] = getSiteResJSON.data.params.body.style[key];
+          });
+
+          const setFavicon = document.createElement('link');
+          setFavicon.setAttribute('rel', 'shortcut icon');
+          setFavicon.setAttribute('href', this.endPts.servrURL + this.site.params.icon);
+          document.head.appendChild(setFavicon);
+        }
+        console.log(getSiteResJSON);
+        // this.message = getSiteResJSON.messages[0];
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
+    },
     getCookie(accessToken, sessionID) {
       this.accessToken = document.cookie.match(new RegExp(`(^| )${accessToken}=([^;]+)`))?.at(2);
       this.sessionID = document.cookie.match(new RegExp(`(^| )${sessionID}=([^;]+)`))?.at(2);
@@ -123,6 +155,7 @@ const useSiteStore = Pinia.defineStore('site', {
         });
         const logOutResJSON = await response.json();
         if (logOutResJSON.success) {
+          this.getSite();
           this.deleteCookie();
         }
         this.message = logOutResJSON.messages[0];
