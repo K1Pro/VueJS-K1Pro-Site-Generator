@@ -207,11 +207,10 @@ export default {
 <style>
 .app-container {
   display: grid;
-  grid-template-columns: 25% 75%;
+  grid-template-columns: 100%;
   /* background-color: #2196f3; */
   /* padding: 2vh; */
   /* column-gap: 2vh; */
-  height: 100vh;
 }
 .app-item1 {
   background-color: rgb(255, 255, 255);
@@ -250,5 +249,12 @@ export default {
   height: 94vh;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+@media only screen and (min-width: 650px) {
+  .app-container {
+    grid-template-columns: 25% 75%;
+    height: 100vh;
+  }
 }
 </style>
