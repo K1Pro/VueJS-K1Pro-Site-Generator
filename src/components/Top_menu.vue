@@ -3,20 +3,16 @@
     :name="elValue.name"
     :class="elKey"
     :style="{
-      backgroundColor:
-        site.params.htmlElements[elIndex]['top-menu']['style']['backgroundColor'] +
-        site.params.htmlElements[elIndex]['top-menu']['style']['opacity'],
+      backgroundColor: elValue.style.backgroundColor + elValue.style.opacity,
       height:
-        windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive']
-          ? 50 * site.params.htmlElements[elIndex]['top-menu']['menu-items'].length +
-            Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) +
-            'px'
-          : site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
+        windowWidth < respWidth && elValue.responsive
+          ? 50 * elValue['menu-items'].length + Number(elValue.style.height) + 'px'
+          : elValue.style.height + 'px',
       'overflow-x': loggedIn ? 'scroll' : 'hidden',
       'white-space': loggedIn ? 'nowrap' : 'normal',
       position: loggedIn ? 'relative' : 'absolute',
-      marginBottom: loggedIn ? '-' + site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px' : '0px',
-      'text-align': loggedIn ? site.params.htmlElements[elIndex]['top-menu']['style']['alignment'] : 'left',
+      'margin-bottom': loggedIn ? '-' + elValue.style.height + 'px' : '0px',
+      'text-align': loggedIn ? elValue.style.alignment : 'left',
       'border-width': loggedIn ? '1px 1px 1px 1px' : 'none',
       'border-style': loggedIn ? 'dashed' : 'none',
       'border-color': loggedIn ? 'black' : 'none',
@@ -29,7 +25,7 @@
         v-if="windowWidth > respWidth"
         class="logo"
         :style="{
-          height: Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) - 20 + 'px',
+          height: Number(elValue.style.height) - 20 + 'px',
         }"
       >
         <img :src="endPts.servrURL + site.params.logo" alt="logo" />
@@ -41,10 +37,10 @@
           :name="menuItem"
           v-model="site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]"
           :style="{
-            width: site.params.htmlElements[elIndex]['top-menu']['menu-items'][index].length * 9 + 'px',
-            'margin-top': Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) / 2 - 10 + 'px',
+            width: elValue['menu-items'][index].length * 9 + 'px',
+            'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
             backgroundColor: '#FFFFFF00',
-            color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
+            color: elValue.style.color,
           }"
           style="border: none"
         />
@@ -84,42 +80,27 @@
       <div
         class="logo"
         :style="{
-          height: Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) - 20 + 'px',
+          height: Number(elValue.style.height) - 20 + 'px',
         }"
       >
         <img :src="endPts.servrURL + site.params.logo" alt="logo" />
       </div>
       <!-- Menu Logo -->
-
       <div
         class="top-menu-alignment"
         :style="{
-          float: windowWidth > respWidth ? site.params.htmlElements[elIndex]['top-menu']['style']['alignment'] : 'none',
+          float: windowWidth > respWidth ? elValue.style.alignment : 'none',
         }"
       >
-        <div
-          v-if="
-            windowWidth > respWidth ||
-            (windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive'])
-          "
-          class="top-menu-items"
-        >
+        <div v-if="windowWidth > respWidth || (windowWidth < respWidth && elValue.responsive)" class="top-menu-items">
           <!-- Menu Items -->
-          <template v-for="(menuItem, index) in elValue['menu-items']">
+          <template v-for="menuItem in elValue['menu-items']">
             <a
               :href="'#' + menuItem"
               :style="{
-                color: site.params.htmlElements[elIndex]['top-menu']['style']['color']
-                  ? site.params.htmlElements[elIndex]['top-menu']['style']['color']
-                  : '#000000',
-                height:
-                  windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive']
-                    ? '50px'
-                    : site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
-                'line-height':
-                  windowWidth < respWidth && site.params.htmlElements[elIndex]['top-menu']['responsive']
-                    ? '50px'
-                    : site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
+                color: elValue.style.color ? elValue.style.color : '#000000',
+                height: windowWidth < respWidth && elValue.responsive ? '50px' : elValue.style.height + 'px',
+                'line-height': windowWidth < respWidth && elValue.responsive ? '50px' : elValue.style.height + 'px',
               }"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
@@ -136,9 +117,9 @@
           ><i
             class="fa fa-bars"
             :style="{
-              color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
-              height: site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
-              'line-height': site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px',
+              color: elValue.style.color,
+              height: elValue.style.height + 'px',
+              'line-height': elValue.style.height + 'px',
             }"
             style="padding-left: 16px; padding-right: 16px; margin-right: -16px; margin-left: -16px"
             @mouseover="highlightMenuItem(true, $event)"
@@ -173,24 +154,24 @@ export default {
     highlightMenuItem(isHovering, event) {
       if (isHovering) {
         event.target.style.backgroundColor =
-          this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'];
-        this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'] == '#000000'
+          this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor;
+        this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor == '#000000'
           ? (event.target.style.backgroundColor = '#878787')
           : (event.target.style.filter = 'brightness(90%)');
       } else {
-        if (this.site.params.htmlElements[this.elIndex]['top-menu']['style']['opacity'] != '') {
+        if (this.site.params.htmlElements[this.elIndex]['top-menu'].style.opacity != '') {
           event.target.style.backgroundColor =
-            this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'] + '00';
+            this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor + '00';
         } else {
           event.target.style.backgroundColor =
-            this.site.params.htmlElements[this.elIndex]['top-menu']['style']['backgroundColor'];
+            this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor;
         }
         event.target.style.filter = 'none';
       }
     },
     toggleRespMenu() {
-      this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'] =
-        !this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'];
+      this.site.params.htmlElements[this.elIndex]['top-menu'].responsive =
+        !this.site.params.htmlElements[this.elIndex]['top-menu'].responsive;
     },
     deleteMenuItem(menuItemIndex) {
       this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].splice(menuItemIndex, 1);
@@ -208,17 +189,17 @@ export default {
     },
   },
   created() {
-    if (this.windowWidth < this.respWidth)
-      this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'] = false;
+    if (this.windowWidth < this.respWidth) this.site.params.htmlElements[this.elIndex]['top-menu'].responsive = false;
   },
 
   watch: {
     windowWidth(newWindowWidth, oldWindowWidth) {
+      // This closes the responsive menu if window width changes from mobile to full and vice-versa.
       if (
         (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
         (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
       )
-        this.site.params.htmlElements[this.elIndex]['top-menu']['responsive'] = false;
+        this.site.params.htmlElements[this.elIndex]['top-menu'].responsive = false;
     },
   },
 };
@@ -244,9 +225,7 @@ export default {
 
 .top-menu {
   overflow-y: hidden;
-  /* position: absolute; */
   z-index: 4;
-  /* top: 0; */
   width: 100%;
 }
 

@@ -50,7 +50,7 @@
         : site.params.htmlElements[selectIndex][selectKey]['style']['opacity']
     }}
   </template>
-  <template v-if="selectChange == 'margin-bottom'">
+  <template v-if="selectChange == 'padding-bottom'">
     <input
       type="range"
       min="0"

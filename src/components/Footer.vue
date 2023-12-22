@@ -157,6 +157,7 @@ export default {
 .footer-item6 {
   padding: 10px 30px;
   text-align: left;
+  word-wrap: break-word;
   /* background-color: rgba(255, 255, 255, 0.8); */
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* font-size: 30px; */

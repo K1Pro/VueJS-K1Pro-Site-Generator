@@ -3,7 +3,11 @@
     :name="elValue.name"
     :class="elKey"
     :style="{
-      'margin-bottom': elValue.style['margin-bottom'] + 'px',
+      'padding-bottom': elValue.style['padding-bottom'] + 'px',
+      'background-color': elValue.style.backgroundColor,
+      'border-width': loggedIn ? '1px 1px 0px 1px' : 'none',
+      'border-style': loggedIn ? 'dashed' : 'none',
+      'border-color': loggedIn ? 'black' : 'none',
     }"
   >
     <template v-if="loggedIn === true">
@@ -30,24 +34,21 @@
       class="grid-container"
       :style="{
         gridTemplateColumns: windowWidth > respWidth ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
-        'background-color': site.params.htmlElements[elIndex][elKey]['style']['backgroundColor'],
-        'border-width': loggedIn ? '1px 1px 0px 1px' : 'none',
-        'border-style': loggedIn ? 'dashed' : 'none',
-        'border-color': loggedIn ? 'black' : 'none',
       }"
     >
       <div class="grid-item"></div>
-      <template v-if="windowWidth > respWidth">
+      <template v-for="(icon, iconIndex) in elValue['icon-slider-items']">
         <div
-          v-for="(icon, iconIndex) in elValue['icon-slider-items']"
+          v-if="iconIndex < respvIconAmnt"
           class="grid-item"
           :style="{
-            'background-color': site.params.htmlElements[elIndex][elKey]['style']['slideColor'],
-            border: '1px solid ' + site.params.htmlElements[elIndex][elKey]['style']['borderColor'],
+            'background-color': elValue.style.slideColor,
+            border: '1px solid ' + elValue.style.borderColor,
             'text-align': loggedIn ? 'center' : 'center',
             'font-size': loggedIn ? '30px' : '30px',
-            'border-radius': site.params.htmlElements[elIndex][elKey]['style']['borderRadius'] + 'px',
-            color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'],
+            'border-radius': elValue.style.borderRadius + 'px',
+            color: elValue.style.iconColor,
+            // padding: loggedIn ? '0px' : '20px',
           }"
         >
           <template v-if="loggedIn === true">
@@ -57,7 +58,7 @@
               style="color: #ff0000"
               @click.prevent="deleteIcon(iconIndex)"
             ></button>
-            <i :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }" :class="icon[1]"></i>
+            <i :style="{ color: elValue.style.iconColor }" :class="icon[1]"></i>
             <select
               :style="{
                 width: '100%',
@@ -68,51 +69,24 @@
             </select>
             <input
               type="text"
+              placeholder="text here..."
               v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][0]"
               :style="{
-                color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'],
-                'background-color': site.params.htmlElements[elIndex][elKey]['style']['slideColor'],
+                color: elValue.style.iconColor,
+                'background-color': elValue.style.slideColor,
               }"
             />
           </template>
           <template v-else>
             <div class="grid-item-icon">
-              <i
-                :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }"
-                :class="icon[1]"
-              ></i>
+              <i :style="{ color: elValue.style.iconColor }" :class="icon[1]"></i>
             </div>
             <div class="grid-item-text">{{ icon[0] }}</div>
           </template>
         </div>
       </template>
-      <template v-else>
-        <template v-for="(icon, index) in elValue['icon-slider-items']">
-          <div
-            v-if="index < 3"
-            class="grid-item"
-            :style="{
-              'background-color': site.params.htmlElements[elIndex][elKey]['style']['slideColor'],
-              border: '1px solid ' + site.params.htmlElements[elIndex][elKey]['style']['borderColor'],
-              'text-align': loggedIn ? 'center' : 'center',
-              padding: loggedIn ? '0px' : '20px',
-              'font-size': loggedIn ? '30px' : '30px',
-              'border-radius': site.params.htmlElements[elIndex][elKey]['style']['borderRadius'] + 'px',
-              color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'],
-            }"
-          >
-            <div class="grid-item-icon">
-              <i
-                :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }"
-                :class="icon[1]"
-              ></i>
-            </div>
-            <div class="grid-item-text">{{ icon[0] }}</div>
-          </div>
-        </template>
-      </template>
       <div class="grid-item">
-        <template v-if="loggedIn && site.params.htmlElements[elIndex][elKey]['icon-slider-items'].length < 9">
+        <template v-if="loggedIn && elValue['icon-slider-items'].length < 9">
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
               <button @click.prevent="addIcon"><i class="fa-solid fa-circle-plus" style="color: green"></i></button>
@@ -130,7 +104,7 @@ import Element_select from './login/Login_element_select.vue';
 import Element_select_options from './login/Login_element_select_options.vue';
 
 export default {
-  name: 'Image Slider',
+  name: 'Icon Slider',
 
   components: {
     Icon_slider_options,
@@ -155,12 +129,15 @@ export default {
   },
 
   data() {
-    return { menuChange: '' };
+    return {
+      menuChange: '',
+      respvIconAmnt: '',
+    };
   },
 
   methods: {
     addIcon() {
-      this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].push(['text', 'fa-solid fa-house']);
+      this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].push(['', 'fa-solid fa-question']);
     },
     deleteIcon(iconIndex) {
       this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].splice(iconIndex, 1);
@@ -171,7 +148,19 @@ export default {
   },
 
   created() {
-    // console.log(this.gridTemplateColumnsFull);
+    this.respvIconAmnt =
+      this.windowWidth > this.respWidth
+        ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+        : 3;
+  },
+
+  watch: {
+    windowWidth(newWindowWidth, oldWindowWidth) {
+      this.respvIconAmnt =
+        this.windowWidth > this.respWidth
+          ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+          : 3;
+    },
   },
 };
 </script>

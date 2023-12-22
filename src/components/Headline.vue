@@ -9,7 +9,7 @@
       'border-width': loggedIn ? '1px 1px 0px 1px' : 'none',
       'border-style': loggedIn ? 'dashed' : 'none',
       'border-color': loggedIn ? 'black' : 'none',
-      'margin-bottom': elValue.style['margin-bottom'] + 'px',
+      'padding-bottom': elValue.style['padding-bottom'] + 'px',
     }"
   >
     <template v-if="loggedIn === true">
