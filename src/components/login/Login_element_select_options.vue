@@ -52,11 +52,21 @@
     }}
   </template>
   <template v-if="selectChange == 'alignment'">
-    <input type="radio" name="menu-alignment" value="left" checked @click="changeMenuAlignment" /><label for="left"
-      >Left</label
-    >
-    <input type="radio" name="menu-alignment" value="right" @click="changeMenuAlignment" /><label for="right"
-      >Right</label
+    <template v-if="site.params.htmlElements[selectIndex][selectKey]['style']['alignment'] == 'left'">
+      <input type="radio" name="menu-alignment" value="left" checked @click="changeMenuAlignment" /><label for="left"
+        >Left</label
+      >
+      <input type="radio" name="menu-alignment" value="right" @click="changeMenuAlignment" /><label for="right"
+        >Right</label
+      >
+    </template>
+    <template v-else>
+      <input type="radio" name="menu-alignment" value="left" @click="changeMenuAlignment" /><label for="left"
+        >Left</label
+      >
+      <input type="radio" name="menu-alignment" value="right" checked @click="changeMenuAlignment" /><label for="right"
+        >Right</label
+      ></template
     >
   </template>
 </template>

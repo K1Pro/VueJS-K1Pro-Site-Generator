@@ -16,10 +16,24 @@
       'white-space': loggedIn ? 'nowrap' : 'normal',
       position: loggedIn ? 'relative' : 'absolute',
       marginBottom: loggedIn ? '-' + site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px' : '0px',
+      'text-align': site.params.htmlElements[elIndex]['top-menu']['style']['alignment'],
+      'border-width': loggedIn ? '1px 1px 1px 1px' : 'none',
+      'border-style': loggedIn ? 'dashed' : 'none',
+      'border-color': loggedIn ? 'black' : 'none',
     }"
   >
     <template v-if="loggedIn === null"></template>
     <template v-else-if="loggedIn">
+      <!-- Menu Logo -->
+      <div
+        class="logo"
+        :style="{
+          height: Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) - 20 + 'px',
+        }"
+      >
+        <img :src="endPts.servrURL + site.params.logo" alt="logo" />
+      </div>
+      <!-- Menu Logo -->
       <template v-for="(menuItem, index) in elValue['menu-items']">
         <input
           type="text"
@@ -31,27 +45,34 @@
             backgroundColor: '#FFFFFF00',
             color: site.params.htmlElements[elIndex]['top-menu']['style']['color'],
           }"
-          style="border-style: dashed"
+          style="border: none"
         />
         <template v-if="index > 1">
-          <button class="fa-solid fa-trash-can" @click.prevent="deleteMenuItem(index)"></button>
+          <button
+            class="fa-solid fa-circle-minus"
+            style="color: #ff0000"
+            @click.prevent="deleteMenuItem(index)"
+          ></button>
         </template>
         <template v-if="index === elValue['menu-items'].length - 1">
           <!-- Modify element select and options -->
-          &nbsp;
-          <select name="menuChange" v-model="menuChange" @change="menuAction">
-            <option value="" disabled selected>
-              Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
-            </option>
-            <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
-            <!-- Custom select options here -->
-          </select>
-          &nbsp;
-          <element_select_options
-            :selectKey="elKey"
-            :selectIndex="elIndex"
-            :selectChange="menuChange"
-          ></element_select_options>
+          <div class="modPosition">
+            <select name="menuChange" v-model="menuChange" @change="menuAction">
+              <option value="" disabled selected>
+                Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+              </option>
+              <option value="addItem">Add Menu Item</option>
+              <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+              <!-- Custom select options here -->
+            </select>
+            <div class="modChange">
+              <element_select_options
+                :selectKey="elKey"
+                :selectIndex="elIndex"
+                :selectChange="menuChange"
+              ></element_select_options>
+            </div>
+          </div>
           <!-- Modify element select and options -->
         </template>
       </template>
@@ -264,6 +285,31 @@ export default {
 
 img {
   height: 100%;
+}
+
+.modPosition {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  text-align: left;
+}
+
+.modPosition input[type='color'] {
+  width: 150px;
+}
+
+.modPosition select {
+  width: 150px;
+  padding: 3px;
+  margin: 0px;
+}
+
+.modChange {
+  background-color: white;
+  width: 150px;
+}
+.modChange input[type='range'] {
+  width: 75%;
 }
 
 @media only screen and (min-width: 650px) {

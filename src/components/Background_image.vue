@@ -12,8 +12,6 @@
       }"
     >
       <div v-if="loggedIn">
-        <span>Background image: </span>
-
         <button
           @click="selectSearchedImg"
           :style="{
@@ -87,7 +85,9 @@ export default {
 }
 
 .background-image button {
-  padding: 6px;
+  padding: 3px;
+  width: 150px;
+  margin-left: 5px;
 }
 
 .background-image span {

@@ -4,8 +4,11 @@
     :style="{
       top: '0px',
       color: site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['color'],
-      'border-top':
-        '1px solid ' + site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['borderColor'],
+      'border-width': loggedIn ? '1px 1px 0px 1px' : '1px 0px 0px 0px',
+      'border-style': loggedIn ? 'dashed' : 'solid',
+      'border-color': loggedIn
+        ? 'black'
+        : site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['borderColor'],
     }"
   >
     <div

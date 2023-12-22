@@ -1,10 +1,33 @@
 <template>
   <div :name="elValue.name" :class="elKey">
+    <template v-if="loggedIn === true">
+      <!-- Modify element select and options -->
+      <div class="modPosition">
+        <select name="menuChange" v-model="menuChange" @change="menuAction">
+          <option value="" disabled selected>
+            Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+          </option>
+          <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+          <!-- Custom select options here -->
+        </select>
+        <div class="modChange">
+          <element_select_options
+            :selectKey="elKey"
+            :selectIndex="elIndex"
+            :selectChange="menuChange"
+          ></element_select_options>
+        </div>
+      </div>
+      <!-- Modify element select and options -->
+    </template>
     <div
       class="grid-container"
       :style="{
         gridTemplateColumns: windowWidth > respWidth ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
         'background-color': site.params.htmlElements[elIndex][elKey]['style']['backgroundColor'],
+        'border-width': loggedIn ? '1px 1px 0px 1px' : 'none',
+        'border-style': loggedIn ? 'dashed' : 'none',
+        'border-color': loggedIn ? 'black' : 'none',
       }"
     >
       <div class="grid-item"></div>
@@ -24,15 +47,14 @@
           <template v-if="loggedIn === true">
             <button
               v-if="iconIndex !== 0"
-              class="fa-solid fa-trash-can"
+              class="fa-solid fa-circle-minus"
+              style="color: #ff0000"
               @click.prevent="deleteIcon(iconIndex)"
             ></button>
             <i :style="{ color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'] }" :class="icon[1]"></i>
             <select
               :style="{
                 width: '100%',
-                color: site.params.htmlElements[elIndex][elKey]['style']['iconColor'],
-                'background-color': site.params.htmlElements[elIndex][elKey]['style']['slideColor'],
               }"
               v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][1]"
             >
@@ -84,26 +106,10 @@
         </template>
       </template>
       <div class="grid-item">
-        <template v-if="loggedIn === true">
+        <template v-if="loggedIn && site.params.htmlElements[elIndex][elKey]['icon-slider-items'].length < 9">
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
-              <!-- Modify element select and options -->
-              &nbsp;
-              <select name="menuChange" v-model="menuChange" @change="menuAction">
-                <option value="" disabled selected>
-                  Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
-                </option>
-                <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
-                <!-- Custom select options here -->
-              </select>
-              <div>
-                <element_select_options
-                  :selectKey="elKey"
-                  :selectIndex="elIndex"
-                  :selectChange="menuChange"
-                ></element_select_options>
-              </div>
-              <!-- Modify element select and options -->
+              <button @click.prevent="addIcon"><i class="fa-solid fa-circle-plus" style="color: green"></i></button>
             </div>
           </div>
         </template>
@@ -147,6 +153,9 @@ export default {
   },
 
   methods: {
+    addIcon() {
+      this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].push(['text', 'fa-solid fa-house']);
+    },
     deleteIcon(iconIndex) {
       this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].splice(iconIndex, 1);
     },
@@ -197,7 +206,7 @@ export default {
 
 .grid-item input[type='text'] {
   padding: 5px;
-  border-style: dashed;
+  border-style: none;
   width: 85%;
 }
 
@@ -208,6 +217,31 @@ export default {
 .grid-item button {
   padding: 6px;
   float: right;
+}
+
+.modPosition {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  text-align: left;
+}
+
+.modPosition input[type='color'] {
+  width: 150px;
+}
+
+.modPosition select {
+  width: 150px;
+  padding: 3px;
+  margin: 0px;
+}
+
+.modChange {
+  background-color: white;
+  width: 150px;
+}
+.modChange input[type='range'] {
+  width: 75%;
 }
 
 @media only screen and (min-width: 650px) {
