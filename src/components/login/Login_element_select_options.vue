@@ -32,7 +32,6 @@
       v-model="site.params.htmlElements[selectIndex][selectKey]['style'][selectChange]"
     />{{ site.params.htmlElements[selectIndex][selectKey]['style'][selectChange] }}
   </template>
-
   <template v-if="selectChange == 'opacity'">
     <input
       type="range"
@@ -50,6 +49,15 @@
         ? 100
         : site.params.htmlElements[selectIndex][selectKey]['style']['opacity']
     }}
+  </template>
+  <template v-if="selectChange == 'margin-bottom'">
+    <input
+      type="range"
+      min="0"
+      max="100"
+      :name="selectKey + '_' + selectChange"
+      v-model="site.params.htmlElements[selectIndex][selectKey]['style'][selectChange]"
+    />{{ site.params.htmlElements[selectIndex][selectKey]['style'][selectChange] }}
   </template>
   <template v-if="selectChange == 'alignment'">
     <template v-if="site.params.htmlElements[selectIndex][selectKey]['style']['alignment'] == 'left'">

@@ -16,7 +16,7 @@
       'white-space': loggedIn ? 'nowrap' : 'normal',
       position: loggedIn ? 'relative' : 'absolute',
       marginBottom: loggedIn ? '-' + site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px' : '0px',
-      'text-align': site.params.htmlElements[elIndex]['top-menu']['style']['alignment'],
+      'text-align': loggedIn ? site.params.htmlElements[elIndex]['top-menu']['style']['alignment'] : 'none',
       'border-width': loggedIn ? '1px 1px 1px 1px' : 'none',
       'border-style': loggedIn ? 'dashed' : 'none',
       'border-color': loggedIn ? 'black' : 'none',

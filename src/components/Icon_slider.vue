@@ -1,5 +1,11 @@
 <template>
-  <div :name="elValue.name" :class="elKey">
+  <div
+    :name="elValue.name"
+    :class="elKey"
+    :style="{
+      'margin-bottom': elValue.style['margin-bottom'] + 'px',
+    }"
+  >
     <template v-if="loggedIn === true">
       <!-- Modify element select and options -->
       <div class="modPosition">
