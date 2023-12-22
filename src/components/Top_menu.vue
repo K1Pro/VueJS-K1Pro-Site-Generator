@@ -16,7 +16,7 @@
       'white-space': loggedIn ? 'nowrap' : 'normal',
       position: loggedIn ? 'relative' : 'absolute',
       marginBottom: loggedIn ? '-' + site.params.htmlElements[elIndex]['top-menu']['style']['height'] + 'px' : '0px',
-      'text-align': loggedIn ? site.params.htmlElements[elIndex]['top-menu']['style']['alignment'] : 'none',
+      'text-align': loggedIn ? site.params.htmlElements[elIndex]['top-menu']['style']['alignment'] : 'left',
       'border-width': loggedIn ? '1px 1px 1px 1px' : 'none',
       'border-style': loggedIn ? 'dashed' : 'none',
       'border-color': loggedIn ? 'black' : 'none',
@@ -26,6 +26,7 @@
     <template v-else-if="loggedIn">
       <!-- Menu Logo -->
       <div
+        v-if="windowWidth > respWidth"
         class="logo"
         :style="{
           height: Number(site.params.htmlElements[elIndex]['top-menu']['style']['height']) - 20 + 'px',
