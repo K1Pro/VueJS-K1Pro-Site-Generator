@@ -138,9 +138,17 @@ export default {
   methods: {
     addIcon() {
       this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].push(['', 'fa-solid fa-question']);
+      this.respvIconAmnt =
+        this.windowWidth > this.respWidth
+          ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+          : 3;
     },
     deleteIcon(iconIndex) {
       this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].splice(iconIndex, 1);
+      this.respvIconAmnt =
+        this.windowWidth > this.respWidth
+          ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+          : 3;
     },
     menuAction(event) {
       console.log(event.srcElement.selectedOptions[0].value);
@@ -210,8 +218,14 @@ export default {
 }
 
 .grid-item button {
+  position: absolute;
+  margin-left: 25px;
+  margin-top: -10px;
   padding: 6px;
-  float: right;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  /* float: right; */
 }
 
 .modPosition {

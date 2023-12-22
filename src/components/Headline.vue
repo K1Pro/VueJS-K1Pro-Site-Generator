@@ -12,41 +12,43 @@
       'padding-bottom': elValue.style['padding-bottom'] + 'px',
     }"
   >
-    <template v-if="loggedIn === true">
-      <input
-        type="text"
-        placeholder="empty"
-        v-model="site.params.htmlElements[elIndex]['headline']['text']"
-        :style="{
-          width: '100%',
-          backgroundColor: site.params.htmlElements[elIndex]['headline']['style']['backgroundColor'],
-          color: site.params.htmlElements[elIndex]['headline']['style']['color'],
-          fontSize: site.params.htmlElements[elIndex]['headline']['style']['fontSize'] + 'px',
-          height: elValue.style.height + 'px',
-        }"
-      />
-      <!-- Modify element select and options -->
-      <div class="modPosition">
-        <select name="menuChange" v-model="menuChange" @change="menuAction">
-          <option value="" disabled selected>
-            Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
-          </option>
-          <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
-          <!-- Custom select options here -->
-        </select>
-        <div class="modChange">
-          <element_select_options
-            :selectKey="elKey"
-            :selectIndex="elIndex"
-            :selectChange="menuChange"
-          ></element_select_options>
+    <div class="headline-container">
+      <template v-if="loggedIn === true">
+        <input
+          type="text"
+          placeholder="empty"
+          v-model="site.params.htmlElements[elIndex]['headline']['text']"
+          :style="{
+            width: '100%',
+            backgroundColor: site.params.htmlElements[elIndex]['headline']['style']['backgroundColor'],
+            color: site.params.htmlElements[elIndex]['headline']['style']['color'],
+            fontSize: site.params.htmlElements[elIndex]['headline']['style']['fontSize'] + 'px',
+            height: elValue.style.height + 'px',
+          }"
+        />
+        <!-- Modify element select and options -->
+        <div class="modPosition">
+          <select name="menuChange" v-model="menuChange" @change="menuAction">
+            <option value="" disabled selected>
+              Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+            </option>
+            <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+            <!-- Custom select options here -->
+          </select>
+          <div class="modChange">
+            <element_select_options
+              :selectKey="elKey"
+              :selectIndex="elIndex"
+              :selectChange="menuChange"
+            ></element_select_options>
+          </div>
         </div>
-      </div>
-      <!-- Modify element select and options -->
-    </template>
-    <template v-else
-      ><span>{{ elValue.text }}</span></template
-    >
+        <!-- Modify element select and options -->
+      </template>
+      <template v-else
+        ><span>{{ elValue.text }}</span></template
+      >
+    </div>
   </div>
 </template>
 
@@ -96,6 +98,12 @@ export default {
   /* background-color: rgb(174, 46, 142); */
   /* font-size: 30px; */
 }
+
+.headline-container {
+  position: relative;
+  height: 100%;
+}
+
 .headline span {
   position: absolute;
   top: 50%;
