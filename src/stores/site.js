@@ -36,7 +36,6 @@ const useSiteStore = Pinia.defineStore('site', {
   actions: {
     async getSite() {
       try {
-        console.log(this.endPts.servrURL + this.pathname);
         const response = await fetch(this.endPts.servrURL + this.pathname, {
           method: 'POST',
           headers: {

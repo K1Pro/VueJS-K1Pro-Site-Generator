@@ -56,11 +56,13 @@ export default {
           body: JSON.stringify({
             Email: this.email.toLowerCase(),
             Password: this.password,
-            IP_Address: userIP,
+            Referer: window.location.href,
           }),
         });
         const logInResJSON = await response.json();
         if (logInResJSON.success) {
+          console.log('<-- Login Info -->');
+          console.log(logInResJSON);
           this.accessToken = logInResJSON.data.accesstoken;
           this.sessionID = logInResJSON.data.session_id;
           this.getLoginUser();

@@ -116,7 +116,7 @@ export default {
 
   created() {
     // work on this
-    console.log(this.site.params.htmlElements[this.site.params.htmlElements.length - 1]);
+    // console.log(this.site.params.htmlElements[this.site.params.htmlElements.length - 1]);
     // this.site.params.htmlElements.forEach((htmlElement, index) => {
     //   Object.keys(htmlElement).forEach((htmlElementType) => {
     //     if (htmlElementType.includes('top-menu')) {

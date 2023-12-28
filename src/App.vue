@@ -159,7 +159,6 @@ export default {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
     this.getSite();
-    console.log(document.body.style);
     this.getCookie('_a_t', '_s_i');
     if (this.accessToken) {
       this.getLoginUser();
