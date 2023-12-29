@@ -111,6 +111,7 @@ export default {
     // ...Pinia.mapStores(useSiteStore),
     ...Pinia.mapWritableState(useSiteStore, [
       'accessToken',
+      'urlQuery',
       'loggedIn',
       'message',
       'hostname',
@@ -162,7 +163,7 @@ export default {
     // console.log(searchParams.has('token'));
     // console.log(new URLSearchParams(window.location.search).get('token'));
     this.getSite();
-    if (!this.accessToken) this.getCookie('_a_t', '_s_i');
+    if (!this.urlQuery.has('email') && !this.urlQuery.has('token')) this.getCookie('_a_t', '_s_i');
     if (this.accessToken) {
       this.getLoginUser();
       console.log('logging in');

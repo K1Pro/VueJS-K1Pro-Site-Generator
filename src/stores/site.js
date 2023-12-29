@@ -1,8 +1,9 @@
 const useSiteStore = Pinia.defineStore('site', {
   state: () => {
     return {
-      accessToken: new URLSearchParams(window.location.search).get('token'),
+      accessToken: '',
       sessionID: '',
+      urlQuery: new URLSearchParams(window.location.search),
       loggedIn: null,
       email: '',
       password: '',
@@ -112,6 +113,7 @@ const useSiteStore = Pinia.defineStore('site', {
           this.email = '';
           this.password = '';
         }
+        console.log(getLoginJSON);
       } catch (error) {
         console.log(error.toString());
         this.message = error.toString();

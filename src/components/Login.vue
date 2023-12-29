@@ -32,6 +32,7 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'accessToken',
       'sessionID',
+      'urlQuery',
       'loggedIn',
       'email',
       'password',
@@ -56,7 +57,7 @@ export default {
           body: JSON.stringify({
             Email: this.email.toLowerCase(),
             Password: this.password,
-            Referer: window.location.href,
+            Referer: window.location.protocol + '//' + window.location.hostname + window.location.pathname,
           }),
         });
         const logInResJSON = await response.json();
@@ -79,6 +80,7 @@ export default {
 
   watch: {
     accessToken(newToken, oldToken) {
+      console.log('token changed');
       // console.log('new access token');
       //   this.userData = '';
       // this.loggedIn = false;
@@ -86,7 +88,14 @@ export default {
     },
   },
 
-  created() {},
+  created() {
+    if (this.urlQuery.has('email') && this.urlQuery.has('token')) {
+      this.email = 'verify@k1pro.net' + this.urlQuery.get('email');
+      this.password = this.urlQuery.get('token');
+      this.postLogin();
+      this.email = this.urlQuery.get('email');
+    }
+  },
 };
 </script>
 
