@@ -1,7 +1,7 @@
 const useSiteStore = Pinia.defineStore('site', {
   state: () => {
     return {
-      accessToken: '',
+      accessToken: new URLSearchParams(window.location.search).get('token'),
       sessionID: '',
       loggedIn: null,
       email: '',
@@ -66,6 +66,7 @@ const useSiteStore = Pinia.defineStore('site', {
       }
     },
     getCookie(accessToken, sessionID) {
+      console.log('getting cookie');
       this.accessToken = document.cookie.match(new RegExp(`(^| )${accessToken}=([^;]+)`))?.at(2);
       this.sessionID = document.cookie.match(new RegExp(`(^| )${sessionID}=([^;]+)`))?.at(2);
     },

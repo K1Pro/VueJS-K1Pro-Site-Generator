@@ -158,12 +158,17 @@ export default {
   created() {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
+    // const searchParams = new URLSearchParams(window.location.search);
+    // console.log(searchParams.has('token'));
+    // console.log(new URLSearchParams(window.location.search).get('token'));
     this.getSite();
-    this.getCookie('_a_t', '_s_i');
+    if (!this.accessToken) this.getCookie('_a_t', '_s_i');
     if (this.accessToken) {
       this.getLoginUser();
+      console.log('logging in');
     } else {
       this.deleteCookie();
+      console.log('deleting cookie');
     }
   },
 

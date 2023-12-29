@@ -33,7 +33,7 @@ export default {
   components: { Element_order },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['accessToken', 'message', 'pathname', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['message', 'pathname', 'site', 'endPts']),
   },
 
   methods: {},
