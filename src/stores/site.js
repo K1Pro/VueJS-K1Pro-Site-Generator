@@ -3,10 +3,17 @@ const useSiteStore = Pinia.defineStore('site', {
     return {
       accessToken: '',
       sessionID: '',
-      urlQuery: new URLSearchParams(window.location.search),
       loggedIn: null,
-      email: '',
-      password: '',
+      email:
+        new URLSearchParams(window.location.search).has('email') &&
+        new URLSearchParams(window.location.search).has('token')
+          ? new URLSearchParams(window.location.search).get('email')
+          : '',
+      password:
+        new URLSearchParams(window.location.search).has('email') &&
+        new URLSearchParams(window.location.search).has('token')
+          ? new URLSearchParams(window.location.search).get('token')
+          : '',
       message: '',
       hostname: window.location.hostname,
       pathname: window.location.host.includes('192.168')
@@ -67,11 +74,12 @@ const useSiteStore = Pinia.defineStore('site', {
       }
     },
     getCookie(accessToken, sessionID) {
-      console.log('getting cookie');
       this.accessToken = document.cookie.match(new RegExp(`(^| )${accessToken}=([^;]+)`))?.at(2);
       this.sessionID = document.cookie.match(new RegExp(`(^| )${sessionID}=([^;]+)`))?.at(2);
+      console.log('getting cookie');
     },
     deleteCookie() {
+      console.log('deleting cookie');
       this.accessToken = undefined;
       this.sessionID = undefined;
       this.loggedIn = false;
@@ -87,6 +95,7 @@ const useSiteStore = Pinia.defineStore('site', {
       this.windowWidth = window.innerWidth;
     },
     async getLoginUser() {
+      console.log('logging in');
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.user, {
           method: 'GET',
@@ -146,6 +155,36 @@ const useSiteStore = Pinia.defineStore('site', {
         this.message = error.toString();
       }
     },
+    async postLogin() {
+      try {
+        const response = await fetch(this.endPts.loginURL + this.endPts.login, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            Email: this.email.toLowerCase(),
+            Password: this.password,
+            Referer: window.location.protocol + '//' + window.location.hostname + window.location.pathname,
+          }),
+        });
+        const logInResJSON = await response.json();
+        if (logInResJSON.success) {
+          console.log('<-- Login Info -->');
+          console.log(logInResJSON);
+          this.accessToken = logInResJSON.data.accesstoken;
+          this.sessionID = logInResJSON.data.session_id;
+          this.getLoginUser();
+        } else {
+          this.deleteCookie();
+        }
+        this.message = logInResJSON.messages[0];
+      } catch (error) {
+        this.error = error.toString();
+        this.message = this.error;
+      }
+    },
     async deleteLogin() {
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.logout + this.sessionID, {
@@ -159,6 +198,8 @@ const useSiteStore = Pinia.defineStore('site', {
         if (logOutResJSON.success) {
           this.getSite();
           this.deleteCookie();
+          this.email = '';
+          this.password = '';
         }
         this.message = logOutResJSON.messages[0];
       } catch (error) {

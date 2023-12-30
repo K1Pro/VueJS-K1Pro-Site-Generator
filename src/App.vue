@@ -111,8 +111,9 @@ export default {
     // ...Pinia.mapStores(useSiteStore),
     ...Pinia.mapWritableState(useSiteStore, [
       'accessToken',
-      'urlQuery',
       'loggedIn',
+      'email',
+      'password',
       'message',
       'hostname',
       'pathname',
@@ -124,6 +125,7 @@ export default {
       'onScreenResize',
       'updateScreenWidth',
       'getLoginUser',
+      'postLogin',
     ]),
   },
 
@@ -159,18 +161,13 @@ export default {
   created() {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
+    console.log('login app created');
     // const searchParams = new URLSearchParams(window.location.search);
     // console.log(searchParams.has('token'));
     // console.log(new URLSearchParams(window.location.search).get('token'));
     this.getSite();
-    if (!this.urlQuery.has('email') && !this.urlQuery.has('token')) this.getCookie('_a_t', '_s_i');
-    if (this.accessToken) {
-      this.getLoginUser();
-      console.log('logging in');
-    } else {
-      this.deleteCookie();
-      console.log('deleting cookie');
-    }
+    this.email && this.password ? this.postLogin() : this.getCookie('_a_t', '_s_i');
+    this.accessToken ? this.getLoginUser() : this.deleteCookie();
   },
 
   mounted() {

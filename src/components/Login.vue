@@ -6,13 +6,13 @@
       <button type="button" @click.prevent="deleteLogin">Log Out</button>
     </template>
     <template v-else> -->
-    <input type="text" name="email" placeholder="Username" autocomplete="email" v-model="this.email" /><br />
+    <input type="text" name="email" placeholder="Username" autocomplete="email" v-model="email" /><br />
     <input
       type="password"
       name="password"
       minlength="8"
       placeholder="Password"
-      v-model="this.password"
+      v-model="password"
       @keyup.enter="postLogin"
     /><br />
     <button type="button" @click.prevent="postLogin">Log In</button>
@@ -32,7 +32,6 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'accessToken',
       'sessionID',
-      'urlQuery',
       'loggedIn',
       'email',
       'password',
@@ -42,60 +41,19 @@ export default {
       'endPts',
       'deleteCookie',
       'getLoginUser',
+      'postLogin',
     ]),
   },
 
-  methods: {
-    async postLogin() {
-      try {
-        const response = await fetch(this.endPts.loginURL + this.endPts.login, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            Email: this.email.toLowerCase(),
-            Password: this.password,
-            Referer: window.location.protocol + '//' + window.location.hostname + window.location.pathname,
-          }),
-        });
-        const logInResJSON = await response.json();
-        if (logInResJSON.success) {
-          console.log('<-- Login Info -->');
-          console.log(logInResJSON);
-          this.accessToken = logInResJSON.data.accesstoken;
-          this.sessionID = logInResJSON.data.session_id;
-          this.getLoginUser();
-        } else {
-          this.deleteCookie();
-        }
-        this.message = logInResJSON.messages[0];
-      } catch (error) {
-        this.error = error.toString();
-        this.message = this.error;
-      }
-    },
-  },
+  methods: {},
 
   watch: {
     accessToken(newToken, oldToken) {
       console.log('token changed');
-      // console.log('new access token');
-      //   this.userData = '';
-      // this.loggedIn = false;
-      //   if (newToken != undefined) this.getLoginUser(this.endPts.userData);
     },
   },
 
-  created() {
-    if (this.urlQuery.has('email') && this.urlQuery.has('token')) {
-      this.email = 'verify@k1pro.net' + this.urlQuery.get('email');
-      this.password = this.urlQuery.get('token');
-      this.postLogin();
-      this.email = this.urlQuery.get('email');
-    }
-  },
+  created() {},
 };
 </script>
 
