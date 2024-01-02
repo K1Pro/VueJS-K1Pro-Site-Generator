@@ -15,7 +15,10 @@
       v-model="password"
       @keyup.enter="postLogin"
     /><br />
-    <button type="button" @click.prevent="postLogin">Log In</button>
+    <button type="button" @click.prevent="loginFn">
+      <i v-if="spinLogin && spinGlobal" class="spin fa-sharp fa-solid fa-circle-notch"></i> Log In</button
+    ><br /><br />
+    <button type="button">Reset</button>
     <!-- </template> -->
   </div>
 </template>
@@ -25,7 +28,7 @@ export default {
   name: 'Login',
 
   data() {
-    return {};
+    return { spinLogin: false };
   },
 
   computed: {
@@ -36,6 +39,7 @@ export default {
       'email',
       'password',
       'message',
+      'spinGlobal',
       'site',
       'user',
       'endPts',
@@ -45,11 +49,21 @@ export default {
     ]),
   },
 
-  methods: {},
+  methods: {
+    loginFn() {
+      this.spinLogin = true;
+      this.postLogin();
+    },
+  },
 
   watch: {
     accessToken(newToken, oldToken) {
       console.log('token changed');
+    },
+    spinGlobal(newSpin, oldSpin) {
+      if (newSpin == false) {
+        this.spinLogin = false;
+      }
     },
   },
 

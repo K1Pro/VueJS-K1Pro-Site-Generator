@@ -15,6 +15,7 @@ const useSiteStore = Pinia.defineStore('site', {
           ? new URLSearchParams(window.location.search).get('token')
           : '',
       message: '',
+      spinGlobal: false,
       hostname: window.location.hostname,
       pathname: window.location.host.includes('192.168')
         ? window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001/', '')
@@ -156,6 +157,7 @@ const useSiteStore = Pinia.defineStore('site', {
       }
     },
     async postLogin() {
+      this.spinGlobal = true;
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.login, {
           method: 'POST',
@@ -180,9 +182,11 @@ const useSiteStore = Pinia.defineStore('site', {
           this.deleteCookie();
         }
         this.message = logInResJSON.messages[0];
+        this.spinGlobal = false;
       } catch (error) {
         this.error = error.toString();
         this.message = this.error;
+        this.spinGlobal = false;
       }
     },
     async deleteLogin() {
