@@ -45,6 +45,7 @@
           <input type="text" name="name" placeholder="Name" />
           <input type="text" name="email" placeholder="Email" />
           <textarea id="subject" name="subject" placeholder="Message" rows="3"></textarea>
+          <img src="http://192.168.54.22/php81/APIs/k1pro/captcha/v001/public/captcha.php" alt="" /><br /><br />
           <input type="submit" value="Submit" />
         </div>
       </div>
@@ -198,6 +199,13 @@ export default {
   /* border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px; */
+}
+
+.footer img {
+  width: 50%;
+  margin-left: 2px;
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
 
 @media only screen and (min-width: 650px) {
