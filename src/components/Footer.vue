@@ -42,17 +42,17 @@
       <div class="footer-item4">
         <h2>Contact Us</h2>
         <div class="footer-contact-container">
-          <input type="text" name="name" placeholder="Name" />
-          <input type="text" name="email" placeholder="Email" />
-          <textarea id="subject" name="subject" placeholder="Message" rows="3"></textarea>
+          <input type="text" placeholder="Name" v-model="msgName" />
+          <input type="text" placeholder="Email" v-model="msgEmail" />
+          <textarea rows="3" placeholder="Message" v-model="msgMessage"></textarea>
           <div class="footer-captcha">
-            <img :src="endPts.captcha + date + '.jpg'" />
+            <img :src="endPts.captcha + msgDate + '.jpg'" />
             <button @click="updateCaptcha">
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
-            <input type="text" placeholder="Verify captcha..." />
+            <input type="text" placeholder="Verify captcha..." v-model="msgCaptcha" />
           </div>
-          <input type="submit" value="Submit" />
+          <button @click="postMsg">Send</button>
         </div>
       </div>
 
@@ -107,7 +107,11 @@ export default {
 
   data() {
     return {
-      date:
+      msgName: '',
+      msgEmail: '',
+      msgMessage: '',
+      msgCaptcha: '',
+      msgDate:
         new Date().toLocaleString('en-UK', { year: 'numeric', timeZone: server_timezone }) +
         ('00' + new Date().toLocaleString('en-UK', { month: '2-digit', timeZone: server_timezone })).slice(-2) +
         ('00' + new Date().toLocaleString('en-UK', { day: '2-digit', timeZone: server_timezone })).slice(-2) +
@@ -131,8 +135,34 @@ export default {
   },
 
   methods: {
+    async postMsg() {
+      try {
+        const response = await fetch(this.endPts.servrURL + this.endPts.messages, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            name: this.msgName,
+            email: this.msgEmail,
+            message: this.msgMessage,
+            captcha: this.msgCaptcha,
+            date: this.msgDate,
+          }),
+        });
+        const postMsgResJSON = await response.json();
+        if (postMsgResJSON.success) {
+        }
+        console.log(postMsgResJSON);
+        this.message = postMsgResJSON.messages[0];
+      } catch (error) {
+        console.log(error.toString());
+        this.message = error.toString();
+      }
+    },
     updateCaptcha() {
-      this.date =
+      this.msgDate =
         new Date().toLocaleString('en-UK', { year: 'numeric', timeZone: server_timezone }) +
         ('00' + new Date().toLocaleString('en-UK', { month: '2-digit', timeZone: server_timezone })).slice(-2) +
         ('00' + new Date().toLocaleString('en-UK', { day: '2-digit', timeZone: server_timezone })).slice(-2) +
@@ -209,6 +239,17 @@ export default {
   resize: vertical;
 }
 
+.footer-contact-container button {
+  /* background-color: #04aa6d;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer; */
+  padding: 3px;
+  width: 60px;
+}
+
 .footer-captcha {
   width: 50%;
   position: relative;
@@ -224,21 +265,11 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  width: auto;
 }
 
 .footer-captcha input[type='text'] {
   margin-top: -5px;
-}
-
-.footer input[type='submit'] {
-  /* background-color: #04aa6d;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer; */
-  padding: 3px;
-  width: 60px;
 }
 
 .footer input[type='submit']:hover {
@@ -253,12 +284,32 @@ export default {
 
 @media only screen and (min-width: 650px) {
   .footer-container {
-    grid-template-columns: auto 15% 25% 25% 15% auto;
+    grid-template-columns: 0% 20% 25% 35% 20% 0%;
   }
 
   .footer-captcha {
     width: 75%;
     position: relative;
+  }
+
+  .footer-item1,
+  .footer-item6 {
+    padding: 0px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .footer-container {
+    grid-template-columns: auto 15% 25% 25% 15% auto;
+  }
+
+  .footer-item1,
+  .footer-item2,
+  .footer-item3,
+  .footer-item4,
+  .footer-item5,
+  .footer-item6 {
+    padding: 10px 30px;
   }
 }
 </style>
