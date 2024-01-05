@@ -20,6 +20,12 @@ const useSiteStore = Pinia.defineStore('site', {
       pathname: window.location.host.includes('192.168')
         ? window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001/', '')
         : window.location.pathname.slice(1),
+      referer: window.location.host.includes('192.168')
+        ? window.location.protocol +
+          '//' +
+          window.location.hostname +
+          window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001', '')
+        : window.location.protocol + '//' + window.location.hostname + window.location.pathname,
       windowWidth: 0,
       respWidth: 650,
       site: {},
@@ -172,7 +178,7 @@ const useSiteStore = Pinia.defineStore('site', {
           body: JSON.stringify({
             Email: this.email.toLowerCase(),
             Password: this.password,
-            Referer: window.location.protocol + '//' + window.location.hostname + window.location.pathname,
+            Referer: this.referer,
           }),
         });
         const logInResJSON = await response.json();

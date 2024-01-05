@@ -122,16 +122,7 @@ export default {
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, [
-      'loggedIn',
-      'message',
-      'hostname',
-      'pathname',
-      'windowWidth',
-      'respWidth',
-      'site',
-      'endPts',
-    ]),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'referer', 'site', 'endPts']),
   },
 
   methods: {
@@ -144,11 +135,12 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            name: this.msgName,
-            email: this.msgEmail,
-            message: this.msgMessage,
-            captcha: this.msgCaptcha,
-            date: this.msgDate,
+            Name: this.msgName,
+            Email: this.msgEmail,
+            Message: this.msgMessage,
+            Captcha: this.msgCaptcha,
+            Date: this.msgDate,
+            Referer: this.referer,
           }),
         });
         const postMsgResJSON = await response.json();
