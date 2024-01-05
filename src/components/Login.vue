@@ -16,8 +16,10 @@
       @keyup.enter="postLogin"
     /><br />
     <button type="button" @click.prevent="loginFn">
-      <i v-if="spinLogin && spinGlobal" class="spin fa-sharp fa-solid fa-circle-notch"></i> Log In</button
-    ><br /><br />
+      <i v-if="spinLogin && spinGlobal" class="spin fa-sharp fa-solid fa-circle-notch"></i>
+      <span v-else>Log In</span>
+    </button>
+    <p></p>
     <button type="button">Reset</button>
     <!-- </template> -->
   </div>
@@ -71,4 +73,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.login button {
+  width: 60px;
+  padding: 3px;
+}
+</style>

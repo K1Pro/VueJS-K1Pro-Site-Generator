@@ -46,12 +46,12 @@
           <input type="text" name="email" placeholder="Email" />
           <textarea id="subject" name="subject" placeholder="Message" rows="3"></textarea>
           <div class="footer-captcha">
-            <img class="footer-captcha-image" :src="endPts.captcha + date + '.jpg'" />
-            <button class="footer-captcha-refresh" @click="updateCaptcha">
+            <img :src="endPts.captcha + date + '.jpg'" />
+            <button @click="updateCaptcha">
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
+            <input type="text" placeholder="Verify captcha..." />
           </div>
-          <br /><br />
           <input type="submit" value="Submit" />
         </div>
       </div>
@@ -210,26 +210,24 @@ export default {
 }
 
 .footer-captcha {
-  /* vertical-align: middle; */
-  /* display: inline-block; */
-  /* width: 100%; */
-  height: 100%;
-}
-
-.footer-captcha-image {
-  /* display: inline; */
   width: 50%;
-  /* border: 1px solid white; */
   position: relative;
-  top: 50%;
+  padding: 0px 1.25px;
 }
 
-.footer-captcha-refresh {
-  /* display: inline; */
-  /* height: 100%; */
-  /* width: 100%; */
-  position: relative;
-  top: 50%;
+.footer-captcha img {
+  margin: 0px;
+  width: 100%;
+}
+
+.footer-captcha button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.footer-captcha input[type='text'] {
+  margin-top: -5px;
 }
 
 .footer input[type='submit'] {
@@ -239,6 +237,8 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer; */
+  padding: 3px;
+  width: 60px;
 }
 
 .footer input[type='submit']:hover {
@@ -254,6 +254,11 @@ export default {
 @media only screen and (min-width: 650px) {
   .footer-container {
     grid-template-columns: auto 15% 25% 25% 15% auto;
+  }
+
+  .footer-captcha {
+    width: 75%;
+    position: relative;
   }
 }
 </style>
