@@ -159,6 +159,7 @@ const useSiteStore = Pinia.defineStore('site', {
           if (getUserContentJSON.data.content) {
             this.content = getUserContentJSON.data.content;
             this.content.default = getUserContentJSON.data.default;
+            this.content.messages = getUserContentJSON.data.messages;
           }
         }
       } catch (error) {

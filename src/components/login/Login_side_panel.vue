@@ -12,6 +12,7 @@
         <button class="tablinks fa fa-photo-film" @click="openTab"></button>
         <button class="tablinks fa fa-file-lines" @click="openTab"></button>
         <button class="tablinks fa-solid fa-user-gear" @click="openTab"></button>
+        <button class="tablinks fa fa-envelope" @click="openTab"></button>
         <button class="tablinks fa-solid fa-arrow-right-from-bracket" @click.prevent="deleteLogin"></button>
       </div>
 
@@ -26,6 +27,10 @@
       <div class="tabcontent" v-if="activeTab === 'file-lines'">
         <text_generation></text_generation>
       </div>
+
+      <div class="tabcontent" v-if="activeTab === 'envelope'">
+        <messages></messages>
+      </div>
     </div>
   </div>
 </template>
@@ -34,6 +39,7 @@
 import Background_settings from './Login_background_settings.vue';
 import Image_search from './Login_image_search.vue';
 import Text_generation from './Login_text_generation.vue';
+import Messages from './Messages.vue';
 
 export default {
   name: 'Login Side Panel',
@@ -42,6 +48,7 @@ export default {
     Background_settings,
     Image_search,
     Text_generation,
+    Messages,
   },
 
   computed: {
