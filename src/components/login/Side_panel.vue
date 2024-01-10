@@ -8,13 +8,17 @@
 
     <div class="tabcontainer">
       <div class="tab">
-        <button class="tablinks fa fa-gear" @click="openTab"></button>
-        <button class="tablinks fa fa-camera" @click="openTab"></button>
-        <button class="tablinks fa fa-video" @click="openTab"></button>
-        <button class="tablinks fa fa-file-lines" @click="openTab"></button>
-        <button class="tablinks fa fa-envelope" @click="openTab"></button>
-        <button class="tablinks fa-solid fa-user-gear" @click="openTab"></button>
-        <button class="tablinks fa-solid fa-arrow-right-from-bracket" @click.prevent="deleteLogin"></button>
+        <button class="tablinks fa fa-gear" title="Page settings" @click="openTab"></button>
+        <button class="tablinks fa fa-camera" title="Photo search" @click="openTab"></button>
+        <button class="tablinks fa fa-video" title="Video search" @click="openTab"></button>
+        <button class="tablinks fa fa-file-lines" title="Text search" @click="openTab"></button>
+        <button class="tablinks fa fa-envelope" title="Messages" @click="openTab"></button>
+        <button class="tablinks fa-solid fa-user-gear" title="User settings" @click="openTab"></button>
+        <button
+          class="tablinks fa-solid fa-arrow-right-from-bracket"
+          title="Log out"
+          @click.prevent="deleteLogin"
+        ></button>
       </div>
 
       <div class="tabcontent" v-if="activeTab === 'gear'">
