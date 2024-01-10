@@ -46,7 +46,7 @@
           <input type="text" placeholder="Email" v-model="msgEmail" />
           <textarea rows="3" placeholder="Message" v-model="msgMessage"></textarea>
           <div class="footer-captcha">
-            <img :src="endPts.captcha + msgDate + '.jpg'" />
+            <img :src="endPts.captchaURL + msgDate + '.jpg'" />
             <button @click="updateCaptcha">
               <i class="fa-solid fa-arrows-rotate"></i>
             </button>
@@ -122,7 +122,7 @@ export default {
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'referer', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'pathname', 'site', 'endPts']),
   },
 
   methods: {
@@ -140,7 +140,7 @@ export default {
             Message: this.msgMessage,
             Captcha: this.msgCaptcha,
             Date: this.msgDate,
-            Referer: this.referer,
+            Referer: this.pathname,
           }),
         });
         const postMsgResJSON = await response.json();

@@ -3,45 +3,29 @@ const useSiteStore = Pinia.defineStore('site', {
     return {
       accessToken: '',
       sessionID: '',
-      loggedIn: null,
-      email:
-        new URLSearchParams(window.location.search).has('email') &&
-        new URLSearchParams(window.location.search).has('token')
-          ? new URLSearchParams(window.location.search).get('email')
-          : '',
-      password:
-        new URLSearchParams(window.location.search).has('email') &&
-        new URLSearchParams(window.location.search).has('token')
-          ? new URLSearchParams(window.location.search).get('token')
-          : '',
+      loggedIn: false,
+      email: email,
+      password: token,
       message: '',
       spinGlobal: false,
-      hostname: window.location.hostname,
-      pathname: window.location.host.includes('192.168')
-        ? window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001/', '')
-        : window.location.pathname.slice(1),
-      referer: window.location.host.includes('192.168')
-        ? window.location.protocol +
-          '//' +
-          window.location.hostname +
-          window.location.pathname.replaceAll('/node/vuejs/Frontends/k1pro/site/v001', '')
-        : window.location.protocol + '//' + window.location.hostname + window.location.pathname,
+      hostname: host_name,
+      pathname: path_name,
+      referer: protocol + host_name + '/' + path_name,
       windowWidth: 0,
       respWidth: 650,
-      site: {},
+      site: {
+        isValid: valid_site == 'true' ? true : false,
+        params: params,
+        scannedDirs: scanned_dirs,
+        site: folder_path,
+      },
       user: {},
       content: {},
       endPts: {
-        servrURL: window.location.host.includes('192.168')
-          ? 'http://192.168.54.22/php81/APIs/k1pro/site/v001/public/'
-          : 'https://api-site.k1pro.net/',
-        loginURL: window.location.host.includes('192.168')
-          ? 'http://192.168.54.22/php81/APIs/k1pro/login/v001/public/'
-          : 'https://api-login.k1pro.net/',
-        captcha: window.location.host.includes('192.168')
-          ? 'http://192.168.54.22/php81/APIs/k1pro/captcha/v001/public/'
-          : 'https://api-captcha.k1pro.net/',
-        cookiePath: window.location.host.includes('192.168') ? '/node/vuejs/Frontends/k1pro/site/v001' : '/',
+        servrURL: server_url,
+        loginURL: login_url,
+        captchaURL: captcha_url,
+        cookiePath: cookie_path,
         login: 'sessions',
         logout: 'sessions/',
         user: 'users',
