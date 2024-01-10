@@ -8,13 +8,44 @@
 
     <div class="tabcontainer">
       <div class="tab">
-        <button class="tablinks fa fa-gear" title="Page settings" @click="openTab"></button>
-        <button class="tablinks fa fa-camera" title="Photo search" @click="openTab"></button>
-        <button class="tablinks fa fa-video" title="Video search" @click="openTab"></button>
-        <button class="tablinks fa fa-file-lines" title="Text search" @click="openTab"></button>
-        <button class="tablinks fa fa-envelope" title="Messages" @click="openTab"></button>
-        <button class="tablinks fa-solid fa-user-gear" title="User settings" @click="openTab"></button>
         <button
+          :class="{ tabactive: activeTab == 'gear' }"
+          class="tablinks fa fa-gear"
+          title="Page settings"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'camera' }"
+          class="tablinks fa fa-camera"
+          title="Photo search"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'video' }"
+          class="tablinks fa fa-video"
+          title="Video search"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'file-lines' }"
+          class="tablinks fa fa-file-lines"
+          title="Text search"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'envelope' }"
+          class="tablinks fa fa-envelope"
+          title="Messages"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'user-gear' }"
+          class="tablinks fa fa-user-gear"
+          title="User settings"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'arrow-right-from-bracket' }"
           class="tablinks fa-solid fa-arrow-right-from-bracket"
           title="Log out"
           @click.prevent="deleteLogin"
@@ -67,7 +98,7 @@ export default {
   },
   methods: {
     openTab(event) {
-      this.activeTab = event.target.className.replace('tablinks fa fa-', '');
+      this.activeTab = event.target.className.split('fa-')[1];
     },
   },
 };
@@ -102,7 +133,7 @@ export default {
 /* Style the buttons inside the tab */
 .tab button {
   display: block;
-  background-color: inherit;
+  /* background-color: inherit; this prevents active button to remain highlighted */
   color: black;
   padding: 22px 13px;
   width: 100%;
@@ -120,8 +151,12 @@ export default {
 }
 
 /* Create an active/current "tab button" class */
-.tab button.active {
+/* .tab button.active {
   background-color: #ccc;
+} */
+
+.tabactive {
+  background-color: #bbbbbb;
 }
 
 /* Style the tab content */
