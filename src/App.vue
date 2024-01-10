@@ -1,7 +1,7 @@
 <template>
   <snackbar> </snackbar>
 
-  <template v-if="site?.isValid === true">
+  <template v-if="site.isValid === 'true'">
     <template v-if="loggedIn === true">
       <div class="app-container">
         <div class="app-item1">
@@ -74,7 +74,7 @@
     </template>
   </template>
 
-  <template v-else-if="site?.isValid === 'root' || site?.isValid === false">
+  <template v-else-if="site.isValid === 'root' || site.isValid === 'false'">
     <directory></directory>
   </template>
 
@@ -90,7 +90,7 @@ import Background_image from './components/Background_image.vue';
 import Background_video from './components/Background_video.vue';
 import Icon_slider from './components/Icon_slider.vue';
 import Directory from './components/Directory.vue';
-import Login_side_panel from './components/login/Login_side_panel.vue';
+import Login_side_panel from './components/login/Side_panel.vue';
 
 export default {
   name: 'App',

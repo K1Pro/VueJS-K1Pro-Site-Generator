@@ -36,9 +36,9 @@
 </template>
 
 <script>
-import Background_settings from './Login_background_settings.vue';
-import Image_search from './Login_image_search.vue';
-import Text_generation from './Login_text_generation.vue';
+import Background_settings from './Background_settings.vue';
+import Image_search from './Image_search.vue';
+import Text_generation from './Text_generation.vue';
 import Messages from './Messages.vue';
 
 export default {

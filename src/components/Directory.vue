@@ -62,7 +62,7 @@ export default {
   },
 
   created() {
-    if (this.site?.isValid === false) {
+    if (this.site.isValid === false || this.site.isValid === null) {
       this.message = 'Invalid site';
     }
     this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;

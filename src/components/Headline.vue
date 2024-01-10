@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import Element_select from './login/Login_element_select.vue';
-import Element_select_options from './login/Login_element_select_options.vue';
+import Element_select from './login/Element_select.vue';
+import Element_select_options from './login/Element_select_options.vue';
 
 export default {
   name: 'Headline',

@@ -14,7 +14,7 @@ const useSiteStore = Pinia.defineStore('site', {
       windowWidth: 0,
       respWidth: 650,
       site: {
-        isValid: valid_site == 'true' ? true : false,
+        isValid: valid_site,
         params: params,
         scannedDirs: scanned_dirs,
         site: folder_path,
