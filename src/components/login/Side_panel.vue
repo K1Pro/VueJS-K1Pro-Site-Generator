@@ -9,10 +9,11 @@
     <div class="tabcontainer">
       <div class="tab">
         <button class="tablinks fa fa-gear" @click="openTab"></button>
-        <button class="tablinks fa fa-photo-film" @click="openTab"></button>
+        <button class="tablinks fa fa-camera" @click="openTab"></button>
+        <button class="tablinks fa fa-video" @click="openTab"></button>
         <button class="tablinks fa fa-file-lines" @click="openTab"></button>
-        <button class="tablinks fa-solid fa-user-gear" @click="openTab"></button>
         <button class="tablinks fa fa-envelope" @click="openTab"></button>
+        <button class="tablinks fa-solid fa-user-gear" @click="openTab"></button>
         <button class="tablinks fa-solid fa-arrow-right-from-bracket" @click.prevent="deleteLogin"></button>
       </div>
 
@@ -20,9 +21,11 @@
         <background_settings style="padding: 10px"></background_settings>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'photo-film'">
+      <div class="tabcontent" v-if="activeTab === 'camera'">
         <image_search></image_search>
       </div>
+
+      <div class="tabcontent" v-if="activeTab === 'camera'"></div>
 
       <div class="tabcontent" v-if="activeTab === 'file-lines'">
         <text_generation></text_generation>

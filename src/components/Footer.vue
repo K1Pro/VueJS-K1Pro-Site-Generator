@@ -111,13 +111,7 @@ export default {
       msgEmail: '',
       msgMessage: '',
       msgCaptcha: '',
-      msgDate:
-        new Date().toLocaleString('en-UK', { year: 'numeric', timeZone: server_timezone }) +
-        ('00' + new Date().toLocaleString('en-UK', { month: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { day: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { hour: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { minute: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { second: '2-digit', timeZone: server_timezone })).slice(-2),
+      msgDate: now,
     };
   },
 
@@ -153,14 +147,17 @@ export default {
         this.message = error.toString();
       }
     },
-    updateCaptcha() {
-      this.msgDate =
-        new Date().toLocaleString('en-UK', { year: 'numeric', timeZone: server_timezone }) +
-        ('00' + new Date().toLocaleString('en-UK', { month: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { day: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { hour: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { minute: '2-digit', timeZone: server_timezone })).slice(-2) +
-        ('00' + new Date().toLocaleString('en-UK', { second: '2-digit', timeZone: server_timezone })).slice(-2);
+    async updateCaptcha() {
+      try {
+        const response = await fetch(this.endPts.servertimeURL, {
+          method: 'GET',
+        });
+        const getServerTimeJSON = await response.json();
+        this.msgDate = getServerTimeJSON.YmdHis;
+      } catch (error) {
+        console.log(error.toString());
+        this.message = 'Captcha error - refresh page';
+      }
     },
   },
 

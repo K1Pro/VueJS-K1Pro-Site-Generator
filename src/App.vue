@@ -3,11 +3,11 @@
 
   <template v-if="site.isValid === 'true'">
     <template v-if="loggedIn === true">
-      <div class="app-container">
-        <div class="app-item1">
+      <div class="login-container">
+        <div class="login-item1">
           <login_side_panel></login_side_panel>
         </div>
-        <div class="app-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
+        <div class="login-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
           <div class="inline-editor-container">
             <div class="inline-editor-title">
               <b>Inline editor:</b> <button type="button">Apply</button>&nbsp;
@@ -114,14 +114,14 @@ export default {
 </script>
 
 <style>
-.app-container {
+.login-container {
   display: grid;
   grid-template-columns: 100%;
   /* background-color: #2196f3; */
   /* padding: 2vh; */
   /* column-gap: 2vh; */
 }
-.app-item1 {
+.login-item1 {
   background-color: rgb(255, 255, 255);
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* padding: 20px; */
@@ -131,7 +131,7 @@ export default {
   overflow-x: hidden;
 }
 
-.app-item2 {
+.login-item2 {
   /* background-color: rgb(255, 255, 255); */
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* padding: 20px; */
@@ -161,7 +161,7 @@ export default {
 }
 
 @media only screen and (min-width: 650px) {
-  .app-container {
+  .login-container {
     grid-template-columns: 25% 75%;
     height: 100vh;
   }
