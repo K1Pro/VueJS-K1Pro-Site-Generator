@@ -72,10 +72,8 @@ const useSiteStore = Pinia.defineStore('site', {
     getCookie(accessToken, sessionID) {
       this.accessToken = document.cookie.match(new RegExp(`(^| )${accessToken}=([^;]+)`))?.at(2);
       this.sessionID = document.cookie.match(new RegExp(`(^| )${sessionID}=([^;]+)`))?.at(2);
-      console.log('getting cookie');
     },
     deleteCookie() {
-      console.log('deleting cookie');
       this.accessToken = undefined;
       this.sessionID = undefined;
       this.loggedIn = false;
@@ -153,6 +151,7 @@ const useSiteStore = Pinia.defineStore('site', {
       }
     },
     async postLogin() {
+      console.log(this.referer);
       this.spinGlobal = true;
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.login, {
