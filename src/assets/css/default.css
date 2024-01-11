@@ -24,3 +24,11 @@
 a {
   cursor: pointer;
 }
+
+.validation-message {
+  color: red;
+  font-size: 12px;
+  background-color: white;
+  padding: 2px;
+  font-weight: bold;
+}

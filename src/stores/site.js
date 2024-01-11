@@ -7,6 +7,7 @@ const useSiteStore = Pinia.defineStore('site', {
       email: email,
       password: token,
       message: '',
+      loginMsg: '',
       spinGlobal: false,
       hostname: host_name,
       pathname: path_name,
@@ -174,6 +175,7 @@ const useSiteStore = Pinia.defineStore('site', {
           this.sessionID = logInResJSON.data.session_id;
           this.getLoginUser();
         } else {
+          this.loginMsg = logInResJSON.messages[0];
           this.deleteCookie();
         }
         this.message = logInResJSON.messages[0];
