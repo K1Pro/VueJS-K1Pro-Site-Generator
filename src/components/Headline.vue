@@ -80,7 +80,7 @@ export default {
       //       this.menuChange = '';
       //     } else {
       //       this.menuChange = '';
-      //       this.message = 'Maximum 10 menu items';
+      //       this.msg.snackBar = 'Maximum 10 menu items';
       //     }
       //   }
     },

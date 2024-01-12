@@ -6,8 +6,10 @@ const useSiteStore = Pinia.defineStore('site', {
       loggedIn: false,
       email: email,
       password: token,
-      message: '',
-      loginMsg: '',
+      msg: {
+        snackBar: '',
+        login: '',
+      },
       spinGlobal: false,
       hostname: host_name,
       pathname: path_name,
@@ -64,10 +66,10 @@ const useSiteStore = Pinia.defineStore('site', {
           document.head.appendChild(setFavicon);
         }
         console.log(getSiteResJSON);
-        // this.message = getSiteResJSON.messages[0];
+        // this.msg.snackBar = getSiteResJSON.messages[0];
       } catch (error) {
         console.log(error.toString());
-        this.message = error.toString();
+        this.msg.snackBar = error.toString();
       }
     },
     getCookie(accessToken, sessionID) {
@@ -104,7 +106,7 @@ const useSiteStore = Pinia.defineStore('site', {
         if (getLoginJSON.success && getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.site]) {
           this.getUserContent('POST');
           console.log(getLoginJSON);
-          this.message = getLoginJSON.messages[0];
+          this.msg.snackBar = getLoginJSON.messages[0];
           this.user = getLoginJSON.data.user;
           this.loggedIn = true;
           document.body.style.backgroundColor = '#FFFFFF';
@@ -120,7 +122,7 @@ const useSiteStore = Pinia.defineStore('site', {
         console.log(getLoginJSON);
       } catch (error) {
         console.log(error.toString());
-        this.message = error.toString();
+        this.msg.snackBar = error.toString();
       }
     },
     async getUserContent(method) {
@@ -148,7 +150,7 @@ const useSiteStore = Pinia.defineStore('site', {
         }
       } catch (error) {
         console.log(error.toString());
-        this.message = error.toString();
+        this.msg.snackBar = error.toString();
       }
     },
     async postLogin() {
@@ -174,15 +176,16 @@ const useSiteStore = Pinia.defineStore('site', {
           this.accessToken = logInResJSON.data.accesstoken;
           this.sessionID = logInResJSON.data.session_id;
           this.getLoginUser();
+          this.msg.login = '';
         } else {
-          this.loginMsg = logInResJSON.messages[0];
+          this.msg.login = logInResJSON.messages[0];
           this.deleteCookie();
         }
-        this.message = logInResJSON.messages[0];
+        this.msg.snackBar = logInResJSON.messages[0];
         this.spinGlobal = false;
       } catch (error) {
         this.error = error.toString();
-        this.message = this.error;
+        this.msg.snackBar = this.error;
         this.spinGlobal = false;
       }
     },
@@ -202,10 +205,10 @@ const useSiteStore = Pinia.defineStore('site', {
           this.email = '';
           this.password = '';
         }
-        this.message = logOutResJSON.messages[0];
+        this.msg.snackBar = logOutResJSON.messages[0];
       } catch (error) {
         this.error = error.toString();
-        this.message = this.error;
+        this.msg.snackBar = this.error;
       }
     },
   },

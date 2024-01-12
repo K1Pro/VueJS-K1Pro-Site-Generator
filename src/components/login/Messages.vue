@@ -22,9 +22,7 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, ['content']),
   },
 
-  created() {
-    console.log('Messages');
-  },
+  created() {},
 };
 </script>
 

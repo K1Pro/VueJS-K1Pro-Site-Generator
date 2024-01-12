@@ -65,7 +65,7 @@
 export default {
   name: 'Element Order',
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'site', 'content', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'site', 'content', 'endPts']),
   },
 
   data() {
@@ -79,8 +79,8 @@ export default {
         this.site.params.htmlElements.splice(this.site.params.htmlElements.length - 1, 0, createdElement);
       } else {
         !this.selectedCreateElType
-          ? (this.message = 'Element type required')
-          : (this.message = 'Element name required');
+          ? (this.msg.snackBar = 'Element type required')
+          : (this.msg.snackBar = 'Element name required');
       }
     },
     deleteEl(elementIndex) {

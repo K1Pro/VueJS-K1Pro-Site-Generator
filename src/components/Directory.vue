@@ -44,7 +44,7 @@ export default {
   name: 'Directory',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['windowWidth', 'respWidth', 'site', 'endPts', 'message']),
+    ...Pinia.mapWritableState(useSiteStore, ['windowWidth', 'respWidth', 'site', 'endPts', 'msg']),
 
     directoryGridDynamicCol() {
       const side = (99 - this.site.scannedDirs.length * 10) / 2;
@@ -63,7 +63,7 @@ export default {
 
   created() {
     if (this.site.isValid === false || this.site.isValid === null) {
-      this.message = 'Invalid site';
+      this.msg.snackBar = 'Invalid site';
     }
     this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
     this.directoryGridStaticCol =

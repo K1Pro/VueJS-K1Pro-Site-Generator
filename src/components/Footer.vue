@@ -116,7 +116,7 @@ export default {
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'pathname', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'pathname', 'site', 'endPts']),
   },
 
   methods: {
@@ -141,10 +141,10 @@ export default {
         if (postMsgResJSON.success) {
         }
         console.log(postMsgResJSON);
-        this.message = postMsgResJSON.messages[0];
+        this.msg.snackBar = postMsgResJSON.messages[0];
       } catch (error) {
         console.log(error.toString());
-        this.message = error.toString();
+        this.msg.snackBar = error.toString();
       }
     },
     async updateCaptcha() {
@@ -156,7 +156,7 @@ export default {
         this.msgDate = getServerTimeJSON.YmdHis;
       } catch (error) {
         console.log(error.toString());
-        this.message = 'Captcha error - refresh page';
+        this.msg.snackBar = 'Captcha error - refresh page';
       }
     },
   },

@@ -115,7 +115,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'windowWidth', 'respWidth', 'site']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'windowWidth', 'respWidth', 'site']),
 
     gridTemplateColumnsFull() {
       const side = (99 - this.elValue['icon-slider-items'].length * 10) / 2;

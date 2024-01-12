@@ -35,7 +35,7 @@ export default {
   name: 'Background Image',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'site', 'endPts', 'selectedPhoto']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'site', 'endPts', 'selectedPhoto']),
   },
 
   props: ['elKey', 'elValue', 'elIndex'],
@@ -49,7 +49,7 @@ export default {
       if (this.selectedPhoto) {
         this.site.params.htmlElements[this.elIndex]['background-image']['url'] = this.selectedPhoto;
       } else {
-        this.message = 'Search for image first';
+        this.msg.snackBar = 'Search for image first';
       }
     },
   },

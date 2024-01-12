@@ -56,7 +56,7 @@ export default {
       'loggedIn',
       'email',
       'password',
-      'message',
+      'msg',
       'site',
       'endPts',
       'getSite',
@@ -87,11 +87,11 @@ export default {
         const patchParamsJSON = await response.json();
         if (patchParamsJSON.success) {
           console.log(patchParamsJSON);
-          this.message = patchParamsJSON.messages[0];
+          this.msg.snackBar = patchParamsJSON.messages[0];
         }
       } catch (error) {
         console.log(error.toString());
-        this.message = error.toString();
+        this.msg.snackBar = error.toString();
       }
     },
   },

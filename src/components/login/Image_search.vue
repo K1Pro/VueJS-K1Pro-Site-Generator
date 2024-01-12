@@ -51,7 +51,7 @@ export default {
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
-      'message',
+      'msg',
       'site',
       'content',
       'endPts',
@@ -103,7 +103,7 @@ export default {
           this.getUserContent('PATCH');
         }
       } catch (error) {
-        this.message = error.toString();
+        this.msg.snackBar = error.toString();
       }
     },
 

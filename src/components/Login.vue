@@ -15,7 +15,7 @@
       v-model="password"
       @keyup.enter="postLogin"
     />
-    <div v-if="loginMsg" class="validation-message">{{ loginMsg }}</div>
+    <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
     <br />
     <button type="button" @click.prevent="loginFn">
       <i v-if="spinLogin && spinGlobal" class="spin fa-sharp fa-solid fa-circle-notch"></i>
@@ -40,10 +40,9 @@ export default {
       'accessToken',
       'sessionID',
       'loggedIn',
-      'loginMsg',
       'email',
       'password',
-      'message',
+      'msg',
       'spinGlobal',
       'site',
       'user',

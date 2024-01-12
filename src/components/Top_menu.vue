@@ -143,7 +143,7 @@ export default {
   components: { Element_select, Element_select_options },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'message', 'windowWidth', 'respWidth', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'windowWidth', 'respWidth', 'site', 'endPts']),
   },
 
   data() {
@@ -183,7 +183,7 @@ export default {
           this.menuChange = '';
         } else {
           this.menuChange = '';
-          this.message = 'Maximum 10 menu items';
+          this.msg.snackBar = 'Maximum 10 menu items';
         }
       }
     },
