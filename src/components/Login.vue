@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-    <template v-if="loggedIn == null"></template>
     <input
       type="text"
       name="username"
