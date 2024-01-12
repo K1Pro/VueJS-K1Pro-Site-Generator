@@ -32,3 +32,26 @@ a {
   padding: 2px;
   font-weight: bold;
 }
+
+.invalid {
+  border: 2px solid red;
+  color: red;
+}
+
+.invalid::placeholder {
+  color: red;
+  opacity: 1; /* Firefox */
+}
+
+.invalid::-ms-input-placeholder {
+  /* Edge 12 -18 */
+  color: red;
+}
+
+/* input:invalid:required {
+  background-image: linear-gradient(to right, pink, lightgreen);
+}
+
+input:valid {
+  border: 2px solid black;
+} */

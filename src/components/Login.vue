@@ -1,29 +1,38 @@
 <template>
   <div class="login">
     <template v-if="loggedIn == null"></template>
-    <!-- <template v-else-if="loggedIn">
-      <p>{{ this.user.Username }} is logged in</p>
-      <button type="button" @click.prevent="deleteLogin">Log Out</button>
-    </template>
-    <template v-else> -->
-    <input type="text" name="email" placeholder="Username" autocomplete="email" v-model="email" /><br />
+    <input
+      type="text"
+      name="username"
+      placeholder="Username"
+      autocomplete="email"
+      :class="{
+        invalid: isUsernameValid,
+      }"
+      v-model="email"
+      @keyup="removeInvalidLoginFn"
+      @keyup.enter="postLogin"
+    /><br />
     <input
       type="password"
       name="password"
-      minlength="8"
       placeholder="Password"
+      autocomplete="current-password"
+      :class="{
+        invalid: isPasswordValid,
+      }"
       v-model="password"
+      @keyup="removeInvalidLoginFn"
       @keyup.enter="postLogin"
     />
     <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
     <br />
-    <button type="button" @click.prevent="loginFn">
+    <button @click.prevent="loginFn">
       <i v-if="spinLogin && spinGlobal" class="spin fa-sharp fa-solid fa-circle-notch"></i>
       <span v-else>Log In</span>
     </button>
     <p></p>
-    <button type="button">Reset</button>
-    <!-- </template> -->
+    <button>Reset</button>
   </div>
 </template>
 
@@ -32,38 +41,61 @@ export default {
   name: 'Login',
 
   data() {
-    return { spinLogin: false };
+    return {
+      spinLogin: false,
+      allInputsError: 'All inputs required',
+      loginUsernameErr: 'Username cannot be blank',
+      loginPasswordErr: 'Password cannot be blank',
+    };
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, [
-      'accessToken',
-      'sessionID',
-      'loggedIn',
-      'email',
-      'password',
-      'msg',
-      'spinGlobal',
-      'site',
-      'user',
-      'endPts',
-      'deleteCookie',
-      'getLoginUser',
-      'postLogin',
-    ]),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'email', 'password', 'msg', 'spinGlobal', 'postLogin']),
+    isUsernameValid() {
+      return (
+        this.msg.login.toLowerCase().includes('incorrect') ||
+        (this.email.length < 1 && (this.msg.login == this.allInputsError || this.msg.login == this.loginUsernameErr))
+      );
+    },
+    isPasswordValid() {
+      return (
+        this.msg.login.toLowerCase().includes('incorrect') ||
+        (this.password.length < 1 && (this.msg.login == this.allInputsError || this.msg.login == this.loginPasswordErr))
+      );
+    },
   },
 
   methods: {
     loginFn() {
-      this.spinLogin = true;
-      this.postLogin();
+      if (this.email != '' && this.password != '') {
+        this.msg.login = '';
+        this.spinLogin = true;
+        this.postLogin();
+      } else {
+        if (this.email == '' && this.password == '') {
+          this.msg.snackBar = this.allInputsError;
+          this.msg.login = this.allInputsError;
+        } else if (this.email == '') {
+          this.msg.snackBar = this.loginUsernameErr;
+          this.msg.login = this.loginUsernameErr;
+        } else if (this.password == '') {
+          this.msg.snackBar = this.loginPasswordErr;
+          this.msg.login = this.loginPasswordErr;
+        }
+      }
+    },
+    removeInvalidLoginFn(event) {
+      if (this.msg.login.toLowerCase().includes(event.target.name)) {
+        if (event.target.value.length < 1) {
+          event.target.classList.add('invalid');
+        } else {
+          event.target.classList.remove('invalid');
+        }
+      }
     },
   },
 
   watch: {
-    accessToken(newToken, oldToken) {
-      console.log('token changed');
-    },
     spinGlobal(newSpin, oldSpin) {
       if (newSpin == false) {
         this.spinLogin = false;
