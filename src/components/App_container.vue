@@ -16,6 +16,12 @@
         :elIndex="htmlIndex"
       ></background_video>
       <icon_slider v-if="elKey == 'icon-slider'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></icon_slider>
+      <product_card
+        v-if="elKey == 'product-card'"
+        :elKey="elKey"
+        :elValue="elValue"
+        :elIndex="htmlIndex"
+      ></product_card>
     </template>
   </template>
   <foot></foot>
@@ -28,6 +34,7 @@ import Top_menu from './Top_menu.vue';
 import Background_image from './Background_image.vue';
 import Background_video from './Background_video.vue';
 import Icon_slider from './Icon_slider.vue';
+import Product_card from './Product_card.vue';
 
 export default {
   name: 'App Container',
@@ -39,6 +46,7 @@ export default {
     Background_image,
     Background_video,
     Icon_slider,
+    Product_card,
   },
 
   computed: {
