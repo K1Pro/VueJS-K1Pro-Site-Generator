@@ -2,17 +2,49 @@
   <div class="contact-us">
     <h2>Contact Us</h2>
     <div class="footer-contact-container">
-      <input type="text" placeholder="Name" v-model="msgName" />
-      <input type="text" placeholder="Email" v-model="msgEmail" />
-      <textarea rows="3" placeholder="Message" v-model="msgMessage"></textarea>
+      <input
+        type="text"
+        name="Name"
+        class="cntctInpts"
+        placeholder="Name"
+        v-model="msgName"
+        @keyup="removeInvalidContactUsFn"
+      />
+      <input
+        type="text"
+        name="Email"
+        class="cntctInpts"
+        placeholder="Email"
+        v-model="msgEmail"
+        @keyup="removeInvalidContactUsFn"
+      />
+      <textarea
+        rows="3"
+        name="Message"
+        class="cntctInpts"
+        placeholder="Message"
+        v-model="msgMessage"
+        @keyup="removeInvalidContactUsFn"
+      ></textarea>
       <div class="footer-captcha">
         <img :src="endPts.captchaURL + msgDate + '.jpg'" />
         <button @click="updateCaptcha">
-          <i class="fa-solid fa-arrows-rotate"></i>
+          <i :class="{ spin: spinUpdateCaptcha }" class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <input type="text" placeholder="Verify captcha..." v-model="msgCaptcha" />
+        <input
+          type="text"
+          name="Captcha"
+          :class="{ invalid: msg_captcha == 'Refresh captcha' || msg_captcha == 'Incorrect captcha' }"
+          class="cntctInpts"
+          placeholder="Verify captcha..."
+          v-model="msgCaptcha"
+          @keyup="removeInvalidContactUsFn"
+        />
       </div>
-      <button @click="postMsg">Send</button>
+      <button @click.prevent="postMsg">
+        <i v-if="spinContactUsSend" class="spin fa-sharp fa-solid fa-circle-notch"></i>
+        <span v-else>Send</span>
+      </button>
     </div>
   </div>
 </template>
@@ -28,12 +60,9 @@ export default {
       msgMessage: '',
       msgCaptcha: '',
       msgDate: now,
-      spinContactUs: false,
-      allInputsError: 'All inputs required',
-      contactUsNameErr: 'Name cannot be blank',
-      contactUsEmailErr: 'Email cannot be blank',
-      contactUsMessageErr: 'Message cannot be blank',
-      contactUsCaptchaErr: 'Captcha cannot be blank',
+      spinContactUsSend: false,
+      spinUpdateCaptcha: false,
+      msg_captcha: '',
     };
   },
 
@@ -43,42 +72,80 @@ export default {
 
   methods: {
     async postMsg() {
-      try {
-        const response = await fetch(this.endPts.servrURL + this.endPts.messages, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            Name: this.msgName,
-            Email: this.msgEmail,
-            Message: this.msgMessage,
-            Captcha: this.msgCaptcha,
-            Date: this.msgDate,
-            Referer: this.pathname,
-          }),
-        });
-        const postMsgResJSON = await response.json();
-        if (postMsgResJSON.success) {
+      if (this.msgName != '' && this.msgEmail != '' && this.msgMessage != '' && this.msgCaptcha != '') {
+        this.spinContactUsSend = true;
+        try {
+          const response = await fetch(this.endPts.servrURL + this.endPts.messages, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+            body: JSON.stringify({
+              Name: this.msgName,
+              Email: this.msgEmail,
+              Message: this.msgMessage,
+              Captcha: this.msgCaptcha,
+              Date: this.msgDate,
+              Referer: this.pathname,
+            }),
+          });
+          const postMsgResJSON = await response.json();
+          if (postMsgResJSON.success) {
+            this.msgName = '';
+            this.msgEmail = '';
+            this.msgMessage = '';
+            this.msgCaptcha = '';
+            this.msg_captcha = '';
+            this.updateCaptcha();
+          }
+          console.log(postMsgResJSON);
+          this.msg.snackBar = postMsgResJSON.messages[0];
+          this.msg_captcha = postMsgResJSON.messages[0];
+          this.spinContactUsSend = false;
+        } catch (error) {
+          console.log(error.toString());
+          this.msg.snackBar = error.toString();
+          this.msg_captcha = error.toString();
+          this.spinContactUsSend = false;
         }
-        console.log(postMsgResJSON);
-        this.msg.snackBar = postMsgResJSON.messages[0];
-      } catch (error) {
-        console.log(error.toString());
-        this.msg.snackBar = error.toString();
+      } else {
+        let firstEl = 0;
+        for (let cntctInpt of document.getElementsByClassName('cntctInpts')) {
+          cntctInpt.classList.remove('invalid');
+          if (cntctInpt.value == '') {
+            if (firstEl == 0) {
+              this.msg.snackBar = cntctInpt.name + ' cannot be blank';
+            }
+            firstEl++;
+            cntctInpt.classList.add('invalid');
+          }
+        }
+      }
+    },
+    removeInvalidContactUsFn(event) {
+      if (event.target.value.length < 1) {
+        event.target.classList.add('invalid');
+      } else {
+        event.target.classList.remove('invalid');
+      }
+      if (event.target.name == 'Captcha') {
+        this.msg_captcha = '';
       }
     },
     async updateCaptcha() {
+      this.spinUpdateCaptcha = true;
       try {
         const response = await fetch(this.endPts.servertimeURL, {
           method: 'GET',
         });
         const getServerTimeJSON = await response.json();
         this.msgDate = getServerTimeJSON.YmdHis;
+        this.spinUpdateCaptcha = false;
       } catch (error) {
         console.log(error.toString());
         this.msg.snackBar = 'Captcha error - refresh page';
+        this.spinUpdateCaptcha = false;
       }
     },
   },
@@ -88,6 +155,9 @@ export default {
 <style>
 .footer-contact-container {
   box-sizing: border-box;
+  /* border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px; */
 }
 
 .footer-contact-container button {
@@ -99,12 +169,6 @@ export default {
   cursor: pointer; */
   padding: 3px;
   width: 60px;
-}
-
-.footer-contact-container {
-  /* border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px; */
 }
 
 .footer-captcha {
