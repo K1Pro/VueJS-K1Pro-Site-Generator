@@ -48,6 +48,22 @@ a {
   color: red;
 }
 
+.minus {
+  border: none;
+  background: no-repeat center/100% url('../images/minus.png');
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+
+.plus {
+  border: none;
+  background: no-repeat center/100% url('../images/plus.png');
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+
 /* input:invalid:required {
   background-image: linear-gradient(to right, pink, lightgreen);
 }

@@ -52,12 +52,7 @@
           }"
         >
           <template v-if="loggedIn === true">
-            <button
-              v-if="iconIndex !== 0"
-              class="fa-solid fa-circle-minus"
-              style="color: #ff0000"
-              @click.prevent="deleteIcon(iconIndex)"
-            ></button>
+            <button v-if="iconIndex !== 0" class="minus" @click.prevent="deleteIcon(iconIndex)"></button>
             <i :style="{ color: elValue.style.iconColor }" :class="icon[1]"></i>
             <select
               :style="{
@@ -89,7 +84,7 @@
         <template v-if="loggedIn && elValue['icon-slider-items'].length < 9">
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
-              <button @click.prevent="addIcon"><i class="fa-solid fa-circle-plus" style="color: green"></i></button>
+              <button class="plus" @click.prevent="addIcon"></button>
             </div>
           </div>
         </template>
@@ -221,11 +216,7 @@ export default {
   position: absolute;
   margin-left: 25px;
   margin-top: -10px;
-  padding: 6px;
-  background-color: transparent;
-  border: none;
   cursor: pointer;
-  /* float: right; */
 }
 
 .modPosition {
