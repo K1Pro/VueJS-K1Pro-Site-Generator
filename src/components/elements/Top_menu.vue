@@ -35,6 +35,7 @@
         <template v-if="index > 1">
           <button
             class="minus"
+            style="position: absolute"
             :style="{ 'margin-top': Number(elValue.style.height) / 2 - 25 + 'px' }"
             @click.prevent="deleteMenuItem(index)"
           ></button>
@@ -51,6 +52,12 @@
           }"
           style="border: none"
         />
+        <button
+          class="plus"
+          style="margin-right: 10px"
+          v-if="index === elValue['menu-items'].length - 1"
+          @click.prevent="addItem"
+        ></button>
 
         <template v-if="index === elValue['menu-items'].length - 1">
           <!-- Modify element select and options -->
@@ -59,7 +66,6 @@
               <option value="" disabled selected>
                 Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
               </option>
-              <option value="addItem">Add Menu Item</option>
               <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
               <!-- Custom select options here -->
             </select>
@@ -152,6 +158,15 @@ export default {
   },
 
   methods: {
+    addItem() {
+      if (this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
+        this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].push('');
+        this.menuChange = '';
+      } else {
+        this.menuChange = '';
+        this.msg.snackBar = 'Maximum 10 menu items';
+      }
+    },
     highlightMenuItem(isHovering, event) {
       if (isHovering) {
         event.target.style.backgroundColor =
@@ -178,15 +193,7 @@ export default {
       this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].splice(menuItemIndex, 1);
     },
     menuAction(event) {
-      if (event.srcElement.selectedOptions[0].value == 'addItem') {
-        if (this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
-          this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].push('');
-          this.menuChange = '';
-        } else {
-          this.menuChange = '';
-          this.msg.snackBar = 'Maximum 10 menu items';
-        }
-      }
+      console.log(event.srcElement.selectedOptions[0].value);
     },
   },
   created() {
@@ -220,7 +227,6 @@ export default {
 }
 
 .top-menu button {
-  position: absolute;
   /* margin-left: 55px;
   margin-top: 30px; */
   cursor: pointer;
