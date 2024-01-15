@@ -32,6 +32,13 @@
       </div>
       <!-- Menu Logo -->
       <template v-for="(menuItem, index) in elValue['menu-items']">
+        <template v-if="index > 1">
+          <button
+            class="minus"
+            :style="{ 'margin-top': Number(elValue.style.height) / 2 - 25 + 'px' }"
+            @click.prevent="deleteMenuItem(index)"
+          ></button>
+        </template>
         <input
           type="text"
           :name="menuItem"
@@ -44,13 +51,7 @@
           }"
           style="border: none"
         />
-        <template v-if="index > 1">
-          <button
-            class="fa-solid fa-circle-minus"
-            style="color: #ff0000"
-            @click.prevent="deleteMenuItem(index)"
-          ></button>
-        </template>
+
         <template v-if="index === elValue['menu-items'].length - 1">
           <!-- Modify element select and options -->
           <div class="modPosition">
@@ -219,8 +220,10 @@ export default {
 }
 
 .top-menu button {
-  margin: 7px 7px 7px 0px;
-  padding: 6px;
+  position: absolute;
+  /* margin-left: 55px;
+  margin-top: 30px; */
+  cursor: pointer;
 }
 
 .top-menu {
