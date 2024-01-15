@@ -83,8 +83,8 @@
 </template>
 
 <script>
-import Login from './Login.vue';
-import Contact_us from './Contact_us.vue';
+import Login from './footer/Login.vue';
+import Contact_us from './footer/Contact_us.vue';
 
 export default {
   name: 'Footer',

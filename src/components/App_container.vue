@@ -28,13 +28,13 @@
 </template>
 
 <script>
-import Headline from './Headline.vue';
-import Foot from './Footer.vue';
-import Top_menu from './Top_menu.vue';
-import Background_image from './Background_image.vue';
-import Background_video from './Background_video.vue';
-import Icon_slider from './Icon_slider.vue';
-import Product_card from './Product_card.vue';
+import Headline from './elements/Headline.vue';
+import Foot from './elements/Footer.vue';
+import Top_menu from './elements/Top_menu.vue';
+import Background_image from './elements/Background_image.vue';
+import Background_video from './elements/Background_video.vue';
+import Icon_slider from './elements/Icon_slider.vue';
+import Product_card from './elements/Product_card.vue';
 
 export default {
   name: 'App Container',
