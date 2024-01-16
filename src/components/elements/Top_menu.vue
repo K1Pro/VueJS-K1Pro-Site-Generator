@@ -34,27 +34,32 @@
       <template v-for="(menuItem, index) in elValue['menu-items']">
         <template v-if="index > 1">
           <button
+            v-if="index < elValue['menu-items'].length"
             class="minus"
             style="position: absolute"
-            :style="{ 'margin-top': Number(elValue.style.height) / 2 - 25 + 'px' }"
+            :style="{
+              'margin-top': Number(elValue.style.height) / 2 - 25 + 'px',
+              'margin-left':
+                elValue['menu-items'][index].length > 4 ? elValue['menu-items'][index].length * 9 + 'px' : '36px',
+            }"
             @click.prevent="deleteMenuItem(index)"
           ></button>
         </template>
         <input
           type="text"
-          :name="menuItem"
-          v-model="site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]"
+          :id="'top-menu-item-' + index"
           :style="{
             width: elValue['menu-items'][index].length * 9 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
             backgroundColor: '#FFFFFF00',
             color: elValue.style.color,
           }"
+          v-model="site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]"
           style="border: none"
         />
         <button
           class="plus"
-          style="margin-right: 10px"
+          style="margin: 0px 20px"
           v-if="index === elValue['menu-items'].length - 1"
           @click.prevent="addItem"
         ></button>
@@ -154,11 +159,12 @@ export default {
   },
 
   data() {
-    return { menuChange: '' };
+    return { menuChange: '', menuItemAdded: false };
   },
 
   methods: {
     addItem() {
+      this.menuItemAdded = true;
       if (this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
         this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].push('');
         this.menuChange = '';
@@ -198,6 +204,17 @@ export default {
   },
   created() {
     if (this.windowWidth < this.respWidth) this.site.params.htmlElements[this.elIndex]['top-menu'].responsive = false;
+  },
+
+  updated() {
+    if (this.menuItemAdded) {
+      document
+        .getElementById(
+          `top-menu-item-${this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length - 1}`
+        )
+        .focus();
+      this.menuItemAdded = false;
+    }
   },
 
   watch: {
