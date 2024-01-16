@@ -51,11 +51,12 @@
           :style="{
             width: elValue['menu-items'][index].length * 9 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
-            backgroundColor: '#FFFFFF00',
+            backgroundColor: elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
             color: elValue.style.color,
+            border: elValue['menu-items'][index].length < 1 ? '2px solid rgba(0, 0, 0, 1)' : 'none',
+            'border-radius': '5px',
           }"
           v-model="site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]"
-          style="border: none"
         />
         <button
           class="plus"
@@ -207,7 +208,7 @@ export default {
   },
 
   updated() {
-    if (this.menuItemAdded) {
+    if (this.menuItemAdded && this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
       document
         .getElementById(
           `top-menu-item-${this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length - 1}`
