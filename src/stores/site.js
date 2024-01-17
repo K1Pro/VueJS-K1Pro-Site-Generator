@@ -13,7 +13,6 @@ const useSiteStore = Pinia.defineStore('site', {
       spinGlobal: false,
       hostname: host_name,
       pathname: path_name,
-      referer: protocol + host_name + '/' + path_name,
       windowWidth: 0,
       respWidth: 650,
       site: {
@@ -167,7 +166,6 @@ const useSiteStore = Pinia.defineStore('site', {
       }
     },
     async postLogin() {
-      console.log(this.referer);
       this.spinGlobal = true;
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.login, {
@@ -179,7 +177,7 @@ const useSiteStore = Pinia.defineStore('site', {
           body: JSON.stringify({
             Email: this.email.toLowerCase(),
             Password: this.password,
-            Referer: this.referer,
+            Referer: this.site.folderPath,
           }),
         });
         const logInResJSON = await response.json();

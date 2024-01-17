@@ -80,7 +80,7 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'loggedIn',
       'msg',
-      'pathname',
+      'site',
       'endPts',
     ]),
   },
@@ -109,7 +109,7 @@ export default {
                 Message: this.msgMessage,
                 Captcha: this.msgCaptcha,
                 Date: this.msgDate,
-                Referer: this.pathname,
+                Referer: this.site.folderPath,
               }),
             }
           );
