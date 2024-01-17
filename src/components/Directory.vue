@@ -4,17 +4,31 @@
       <h2>K1Pro Website Directory</h2>
     </div>
     <div class="directory-search">
-      <input type="search" id="site-search" name="search" placeholder="Search for a site..." />
+      <input
+        type="search"
+        id="site-search"
+        name="search"
+        placeholder="Search for a site..."
+      />
     </div>
     <div
       class="directory-grid-container"
       :style="{
-        gridTemplateColumns: site.scannedDirs.length < respvColAmnt ? directoryGridDynamicCol : directoryGridStaticCol,
+        gridTemplateColumns:
+          site.scannedDirs.length < respvColAmnt
+            ? directoryGridDynamicCol
+            : directoryGridStaticCol,
       }"
     >
       <template v-for="(value, gridIndex) in site.scannedDirs">
-        <div class="directory-grid-item" v-if="gridIndex === 0 || gridIndex % respvColAmnt === 0"></div>
-        <div class="directory-grid-item" v-if="gridIndex % respvColAmnt === 0 && gridIndex !== 0"></div>
+        <div
+          class="directory-grid-item"
+          v-if="gridIndex === 0 || gridIndex % respvColAmnt === 0"
+        ></div>
+        <div
+          class="directory-grid-item"
+          v-if="gridIndex % respvColAmnt === 0 && gridIndex !== 0"
+        ></div>
         <div
           class="directory-grid-item"
           :style="{
@@ -25,11 +39,16 @@
         >
           <a :href="value" target="_blank">
             <div style="height: 50%">
-              <img :src="endPts.servrURL + 'public/' + value + '/logo/logo.png'" :alt="value" height="100%" />
+              <img
+                :src="endPts.servrURL + 'public/' + value + '/logo/logo.png'"
+                :alt="value"
+                height="100%"
+              />
             </div>
             <div style="position: relative; height: 50%; padding: 0">
               <div style="position: absolute; bottom: 0">
-                {{ value.charAt(0).toUpperCase() }}{{ value.slice(1).replaceAll('-', ' ') }}
+                {{ value.charAt(0).toUpperCase()
+                }}{{ value.slice(1).replaceAll('-', ' ') }}
               </div>
             </div>
           </a>
@@ -44,11 +63,16 @@ export default {
   name: 'Directory',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['windowWidth', 'respWidth', 'site', 'endPts', 'msg']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'windowWidth',
+      'respWidth',
+      'site',
+      'endPts',
+      'msg',
+    ]),
 
     directoryGridDynamicCol() {
       const side = (99 - this.site.scannedDirs.length * 10) / 2;
-      console.log(side);
       const autos = '9% '.repeat(this.site.scannedDirs.length);
       return side + '% ' + autos + side + '%';
     },
@@ -67,14 +91,18 @@ export default {
     }
     this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
     this.directoryGridStaticCol =
-      this.windowWidth > this.respWidth ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%' : '3% 30% 30% 30% 3%';
+      this.windowWidth > this.respWidth
+        ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%'
+        : '3% 30% 30% 30% 3%';
   },
 
   watch: {
     windowWidth(newWindowWidth, oldWindowWidth) {
       this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
       this.directoryGridStaticCol =
-        this.windowWidth > this.respWidth ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%' : '3% 30% 30% 30% 3%';
+        this.windowWidth > this.respWidth
+          ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%'
+          : '3% 30% 30% 30% 3%';
     },
   },
 };

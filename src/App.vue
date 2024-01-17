@@ -7,12 +7,17 @@
         <div class="login-item1">
           <login_side_panel></login_side_panel>
         </div>
-        <div class="login-item2" :style="{ backgroundColor: site.params.body.style.backgroundColor }">
+        <div
+          class="login-item2"
+          :style="{ backgroundColor: site.params.body.style.backgroundColor }"
+        >
           <div class="inline-editor-container">
             <div class="inline-editor-title">
               <b>Inline editor:</b> <button type="button">Apply</button>&nbsp;
-              <button type="button" @click.prevent="patchParams">Update</button>&nbsp;
-              <button type="button" @click.prevent="getSite">Reset</button>&nbsp;
+              <button type="button" @click.prevent="patchParams">Update</button
+              >&nbsp;
+              <button type="button" @click.prevent="getSite">Reset</button
+              >&nbsp;
             </div>
           </div>
           <div class="inline-editor">
@@ -72,18 +77,21 @@ export default {
   methods: {
     async patchParams() {
       try {
-        const response = await fetch(this.endPts.servrURL + this.endPts.params, {
-          method: 'PATCH',
-          headers: {
-            Authorization: this.accessToken,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            site: this.site.site,
-            params: this.site.params,
-          }),
-        });
+        const response = await fetch(
+          this.endPts.servrURL + this.endPts.params,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: this.accessToken,
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+            body: JSON.stringify({
+              site: this.site.folderPath,
+              params: this.site.params,
+            }),
+          }
+        );
         const patchParamsJSON = await response.json();
         if (patchParamsJSON.success) {
           console.log(patchParamsJSON);
@@ -102,7 +110,9 @@ export default {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
     this.getSite();
-    this.email && this.password ? this.postLogin() : this.getCookie('_a_t', '_s_i');
+    this.email && this.password
+      ? this.postLogin()
+      : this.getCookie('_a_t', '_s_i');
     this.accessToken ? this.getLoginUser() : this.deleteCookie();
   },
 

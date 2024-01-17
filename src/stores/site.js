@@ -20,7 +20,7 @@ const useSiteStore = Pinia.defineStore('site', {
         isValid: valid_site,
         params: params,
         scannedDirs: scanned_dirs,
-        site: folder_path,
+        folderPath: folder_path,
       },
       user: {},
       content: {},
@@ -43,26 +43,25 @@ const useSiteStore = Pinia.defineStore('site', {
   actions: {
     async getSite() {
       try {
-        const response = await fetch(this.endPts.servrURL + this.pathname, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            hostname: window.location.hostname.toLowerCase(),
-          }),
-        });
+        const response = await fetch(
+          this.endPts.servrURL + this.site.folderPath,
+          {
+            method: 'GET',
+          }
+        );
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data;
           Object.keys(getSiteResJSON.data?.params.body.style).forEach((key) => {
-            document.body.style[key] = getSiteResJSON.data.params.body.style[key];
+            document.body.style[key] =
+              getSiteResJSON.data.params.body.style[key];
           });
-
           const setFavicon = document.createElement('link');
           setFavicon.setAttribute('rel', 'shortcut icon');
-          setFavicon.setAttribute('href', this.endPts.servrURL + this.site.params.icon);
+          setFavicon.setAttribute(
+            'href',
+            this.endPts.servrURL + this.site.params.icon
+          );
           document.head.appendChild(setFavicon);
         }
         console.log(getSiteResJSON);
@@ -73,8 +72,12 @@ const useSiteStore = Pinia.defineStore('site', {
       }
     },
     getCookie(accessToken, sessionID) {
-      this.accessToken = document.cookie.match(new RegExp(`(^| )${accessToken}=([^;]+)`))?.at(2);
-      this.sessionID = document.cookie.match(new RegExp(`(^| )${sessionID}=([^;]+)`))?.at(2);
+      this.accessToken = document.cookie
+        .match(new RegExp(`(^| )${accessToken}=([^;]+)`))
+        ?.at(2);
+      this.sessionID = document.cookie
+        .match(new RegExp(`(^| )${sessionID}=([^;]+)`))
+        ?.at(2);
     },
     deleteCookie() {
       this.accessToken = undefined;
@@ -103,7 +106,10 @@ const useSiteStore = Pinia.defineStore('site', {
           },
         });
         const getLoginJSON = await response.json();
-        if (getLoginJSON.success && getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.site]) {
+        if (
+          getLoginJSON.success &&
+          getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.folderPath]
+        ) {
           this.getUserContent('POST');
           console.log(getLoginJSON);
           this.msg.snackBar = getLoginJSON.messages[0];
@@ -112,8 +118,12 @@ const useSiteStore = Pinia.defineStore('site', {
           document.body.style.backgroundColor = '#FFFFFF';
           const tomorrow = new Date();
           tomorrow.setDate(tomorrow.getDate() + 1);
-          document.cookie = `_a_t=${this.accessToken}; expires=${tomorrow.toString()};`;
-          document.cookie = `_s_i=${this.sessionID}; expires=${tomorrow.toString()};`;
+          document.cookie = `_a_t=${
+            this.accessToken
+          }; expires=${tomorrow.toString()};`;
+          document.cookie = `_s_i=${
+            this.sessionID
+          }; expires=${tomorrow.toString()};`;
         } else {
           this.loggedIn = false;
           this.email = '';
@@ -127,18 +137,21 @@ const useSiteStore = Pinia.defineStore('site', {
     },
     async getUserContent(method) {
       try {
-        const response = await fetch(this.endPts.servrURL + this.endPts.content, {
-          method: method,
-          headers: {
-            Authorization: this.accessToken,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            site: this.site.site,
-            content: this.content,
-          }),
-        });
+        const response = await fetch(
+          this.endPts.servrURL + this.endPts.content,
+          {
+            method: method,
+            headers: {
+              Authorization: this.accessToken,
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+            body: JSON.stringify({
+              site: this.site.folderPath,
+              content: this.content,
+            }),
+          }
+        );
         const getUserContentJSON = await response.json();
         if (getUserContentJSON.success) {
           console.log(getUserContentJSON);
@@ -191,13 +204,16 @@ const useSiteStore = Pinia.defineStore('site', {
     },
     async deleteLogin() {
       try {
-        const response = await fetch(this.endPts.loginURL + this.endPts.logout + this.sessionID, {
-          method: 'DELETE',
-          headers: {
-            Authorization: this.accessToken,
-            'Cache-Control': 'no-store',
-          },
-        });
+        const response = await fetch(
+          this.endPts.loginURL + this.endPts.logout + this.sessionID,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: this.accessToken,
+              'Cache-Control': 'no-store',
+            },
+          }
+        );
         const logOutResJSON = await response.json();
         if (logOutResJSON.success) {
           this.getSite();
