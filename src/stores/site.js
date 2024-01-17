@@ -25,7 +25,7 @@ const useSiteStore = Pinia.defineStore('site', {
       user: {},
       content: {},
       endPts: {
-        servrURL: server_url,
+        siteURL: site_url,
         loginURL: login_url,
         captchaURL: captcha_url,
         servertimeURL: servertime_url,
@@ -44,7 +44,7 @@ const useSiteStore = Pinia.defineStore('site', {
     async getSite() {
       try {
         const response = await fetch(
-          this.endPts.servrURL + this.site.folderPath,
+          this.endPts.siteURL + this.site.folderPath,
           {
             method: 'GET',
           }
@@ -60,7 +60,7 @@ const useSiteStore = Pinia.defineStore('site', {
           setFavicon.setAttribute('rel', 'shortcut icon');
           setFavicon.setAttribute(
             'href',
-            this.endPts.servrURL + this.site.params.icon
+            this.endPts.siteURL + this.site.params.icon
           );
           document.head.appendChild(setFavicon);
         }
@@ -138,7 +138,7 @@ const useSiteStore = Pinia.defineStore('site', {
     async getUserContent(method) {
       try {
         const response = await fetch(
-          this.endPts.servrURL + this.endPts.content,
+          this.endPts.siteURL + this.endPts.content,
           {
             method: method,
             headers: {

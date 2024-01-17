@@ -6,7 +6,9 @@
       backgroundColor: elValue.style.backgroundColor + elValue.style.opacity,
       height:
         windowWidth < respWidth && elValue.responsive
-          ? 50 * elValue['menu-items'].length + Number(elValue.style.height) + 'px'
+          ? 50 * elValue['menu-items'].length +
+            Number(elValue.style.height) +
+            'px'
           : elValue.style.height + 'px',
       'overflow-x': loggedIn ? 'scroll' : 'hidden',
       'white-space': loggedIn ? 'nowrap' : 'normal',
@@ -28,7 +30,7 @@
           height: Number(elValue.style.height) - 20 + 'px',
         }"
       >
-        <img :src="endPts.servrURL + site.params.logo" alt="logo" />
+        <img :src="endPts.siteURL + site.params.logo" alt="logo" />
       </div>
       <!-- Menu Logo -->
       <template v-for="(menuItem, index) in elValue['menu-items']">
@@ -40,7 +42,9 @@
             :style="{
               'margin-top': Number(elValue.style.height) / 2 - 25 + 'px',
               'margin-left':
-                elValue['menu-items'][index].length > 4 ? elValue['menu-items'][index].length * 9 + 'px' : '36px',
+                elValue['menu-items'][index].length > 4
+                  ? elValue['menu-items'][index].length * 9 + 'px'
+                  : '36px',
             }"
             @click.prevent="deleteMenuItem(index)"
           ></button>
@@ -51,12 +55,18 @@
           :style="{
             width: elValue['menu-items'][index].length * 9 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
-            backgroundColor: elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
+            backgroundColor:
+              elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
             color: elValue.style.color,
-            border: elValue['menu-items'][index].length < 1 ? '2px solid rgba(0, 0, 0, 1)' : 'none',
+            border:
+              elValue['menu-items'][index].length < 1
+                ? '2px solid rgba(0, 0, 0, 1)'
+                : 'none',
             'border-radius': '5px',
           }"
-          v-model="site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]"
+          v-model="
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
+          "
         />
         <button
           class="plus"
@@ -70,9 +80,13 @@
           <div class="modPosition">
             <select name="menuChange" v-model="menuChange" @change="menuAction">
               <option value="" disabled selected>
-                Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+                Modify {{ elKey.charAt(0).toUpperCase()
+                }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
               </option>
-              <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+              <element_select
+                :selectKey="elKey"
+                :selectIndex="elIndex"
+              ></element_select>
               <!-- Custom select options here -->
             </select>
             <div class="modChange">
@@ -96,7 +110,7 @@
           height: Number(elValue.style.height) - 20 + 'px',
         }"
       >
-        <img :src="endPts.servrURL + site.params.logo" alt="logo" />
+        <img :src="endPts.siteURL + site.params.logo" alt="logo" />
       </div>
       <!-- Menu Logo -->
       <div
@@ -105,15 +119,27 @@
           float: windowWidth > respWidth ? elValue.style.alignment : 'none',
         }"
       >
-        <div v-if="windowWidth > respWidth || (windowWidth < respWidth && elValue.responsive)" class="top-menu-items">
+        <div
+          v-if="
+            windowWidth > respWidth ||
+            (windowWidth < respWidth && elValue.responsive)
+          "
+          class="top-menu-items"
+        >
           <!-- Menu Items -->
           <template v-for="menuItem in elValue['menu-items']">
             <a
               :href="'#' + menuItem"
               :style="{
                 color: elValue.style.color ? elValue.style.color : '#000000',
-                height: windowWidth < respWidth && elValue.responsive ? '50px' : elValue.style.height + 'px',
-                'line-height': windowWidth < respWidth && elValue.responsive ? '50px' : elValue.style.height + 'px',
+                height:
+                  windowWidth < respWidth && elValue.responsive
+                    ? '50px'
+                    : elValue.style.height + 'px',
+                'line-height':
+                  windowWidth < respWidth && elValue.responsive
+                    ? '50px'
+                    : elValue.style.height + 'px',
               }"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
@@ -134,7 +160,12 @@
               height: elValue.style.height + 'px',
               'line-height': elValue.style.height + 'px',
             }"
-            style="padding-left: 16px; padding-right: 16px; margin-right: -16px; margin-left: -16px"
+            style="
+              padding-left: 16px;
+              padding-right: 16px;
+              margin-right: -16px;
+              margin-left: -16px;
+            "
             @mouseover="highlightMenuItem(true, $event)"
             @mouseout="highlightMenuItem(false, $event)"
           ></i></a
@@ -156,7 +187,14 @@ export default {
   components: { Element_select, Element_select_options },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'windowWidth', 'respWidth', 'site', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'msg',
+      'windowWidth',
+      'respWidth',
+      'site',
+      'endPts',
+    ]),
   },
 
   data() {
@@ -166,8 +204,13 @@ export default {
   methods: {
     addItem() {
       this.menuItemAdded = true;
-      if (this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
-        this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].push('');
+      if (
+        this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items']
+          .length < 10
+      ) {
+        this.site.params.htmlElements[this.elIndex]['top-menu'][
+          'menu-items'
+        ].push('');
         this.menuChange = '';
       } else {
         this.menuChange = '';
@@ -177,17 +220,26 @@ export default {
     highlightMenuItem(isHovering, event) {
       if (isHovering) {
         event.target.style.backgroundColor =
-          this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor;
-        this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor == '#000000'
+          this.site.params.htmlElements[this.elIndex][
+            'top-menu'
+          ].style.backgroundColor;
+        this.site.params.htmlElements[this.elIndex]['top-menu'].style
+          .backgroundColor == '#000000'
           ? (event.target.style.backgroundColor = '#878787')
           : (event.target.style.filter = 'brightness(90%)');
       } else {
-        if (this.site.params.htmlElements[this.elIndex]['top-menu'].style.opacity != '') {
+        if (
+          this.site.params.htmlElements[this.elIndex]['top-menu'].style
+            .opacity != ''
+        ) {
           event.target.style.backgroundColor =
-            this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor + '00';
+            this.site.params.htmlElements[this.elIndex]['top-menu'].style
+              .backgroundColor + '00';
         } else {
           event.target.style.backgroundColor =
-            this.site.params.htmlElements[this.elIndex]['top-menu'].style.backgroundColor;
+            this.site.params.htmlElements[this.elIndex][
+              'top-menu'
+            ].style.backgroundColor;
         }
         event.target.style.filter = 'none';
       }
@@ -197,21 +249,34 @@ export default {
         !this.site.params.htmlElements[this.elIndex]['top-menu'].responsive;
     },
     deleteMenuItem(menuItemIndex) {
-      this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].splice(menuItemIndex, 1);
+      this.site.params.htmlElements[this.elIndex]['top-menu'][
+        'menu-items'
+      ].splice(menuItemIndex, 1);
     },
     menuAction(event) {
       console.log(event.srcElement.selectedOptions[0].value);
     },
   },
   created() {
-    if (this.windowWidth < this.respWidth) this.site.params.htmlElements[this.elIndex]['top-menu'].responsive = false;
+    if (this.windowWidth < this.respWidth)
+      this.site.params.htmlElements[this.elIndex][
+        'top-menu'
+      ].responsive = false;
   },
 
   updated() {
-    if (this.menuItemAdded && this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length < 10) {
+    if (
+      this.menuItemAdded &&
+      this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items']
+        .length < 10
+    ) {
       document
         .getElementById(
-          `top-menu-item-${this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items'].length - 1}`
+          `top-menu-item-${
+            this.site.params.htmlElements[this.elIndex]['top-menu'][
+              'menu-items'
+            ].length - 1
+          }`
         )
         .focus();
       this.menuItemAdded = false;
@@ -225,7 +290,9 @@ export default {
         (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
         (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
       )
-        this.site.params.htmlElements[this.elIndex]['top-menu'].responsive = false;
+        this.site.params.htmlElements[this.elIndex][
+          'top-menu'
+        ].responsive = false;
     },
   },
 };

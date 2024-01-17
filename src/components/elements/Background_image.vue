@@ -4,10 +4,15 @@
       class="hero-image"
       :style="{
         backgroundImage: `url(${
-          site.params.htmlElements[elIndex]['background-image']['url'].includes('http://') ||
-          site.params.htmlElements[elIndex]['background-image']['url'].includes('https://')
+          site.params.htmlElements[elIndex]['background-image']['url'].includes(
+            'http://'
+          ) ||
+          site.params.htmlElements[elIndex]['background-image']['url'].includes(
+            'https://'
+          )
             ? site.params.htmlElements[elIndex]['background-image']['url']
-            : endPts.servrURL + site.params.htmlElements[elIndex]['background-image']['url']
+            : endPts.siteURL +
+              site.params.htmlElements[elIndex]['background-image']['url']
         })`,
       }"
     >
@@ -16,7 +21,11 @@
           @click="selectSearchedImg"
           :style="{
             'margin-top': topMenu
-              ? Number(site.params.htmlElements[topMenuPos]['top-menu']['style']['height']) + 'px'
+              ? Number(
+                  site.params.htmlElements[topMenuPos]['top-menu']['style'][
+                    'height'
+                  ]
+                ) + 'px'
               : '0px',
           }"
         >
@@ -35,7 +44,13 @@ export default {
   name: 'Background Image',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'site', 'endPts', 'selectedPhoto']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'msg',
+      'site',
+      'endPts',
+      'selectedPhoto',
+    ]),
   },
 
   props: ['elKey', 'elValue', 'elIndex'],
@@ -47,7 +62,8 @@ export default {
   methods: {
     selectSearchedImg() {
       if (this.selectedPhoto) {
-        this.site.params.htmlElements[this.elIndex]['background-image']['url'] = this.selectedPhoto;
+        this.site.params.htmlElements[this.elIndex]['background-image']['url'] =
+          this.selectedPhoto;
       } else {
         this.msg.snackBar = 'Search for image first';
       }
@@ -67,7 +83,7 @@ export default {
     // const style = document.createElement('style');
     // style.type = 'text/css';
     // style.textContent = `.hero-image { background-image: url('${
-    //   this.endPts.servrURL + this.site.params.htmlElements[this.elIndex]['background-image']['url']
+    //   this.endPts.siteURL + this.site.params.htmlElements[this.elIndex]['background-image']['url']
     // }')}`;
     // document.head.appendChild(style);
   },

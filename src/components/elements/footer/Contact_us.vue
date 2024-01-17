@@ -29,12 +29,19 @@
       <div class="footer-captcha">
         <img :src="endPts.captchaURL + msgDate + '.jpg'" />
         <button @click="updateCaptcha">
-          <i :class="{ spin: spinUpdateCaptcha }" class="fa-solid fa-arrows-rotate"></i>
+          <i
+            :class="{ spin: spinUpdateCaptcha }"
+            class="fa-solid fa-arrows-rotate"
+          ></i>
         </button>
         <input
           type="text"
           name="Captcha"
-          :class="{ invalid: msg_captcha == 'Refresh captcha' || msg_captcha == 'Incorrect captcha' }"
+          :class="{
+            invalid:
+              msg_captcha == 'Refresh captcha' ||
+              msg_captcha == 'Incorrect captcha',
+          }"
           class="cntctInpts"
           placeholder="Verify captcha..."
           v-model="msgCaptcha"
@@ -42,7 +49,10 @@
         />
       </div>
       <button @click.prevent="postMsg">
-        <i v-if="spinContactUsSend" class="spin fa-sharp fa-solid fa-circle-notch"></i>
+        <i
+          v-if="spinContactUsSend"
+          class="spin fa-sharp fa-solid fa-circle-notch"
+        ></i>
         <span v-else>Send</span>
       </button>
     </div>
@@ -67,29 +77,42 @@ export default {
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'pathname', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'msg',
+      'pathname',
+      'endPts',
+    ]),
   },
 
   methods: {
     async postMsg() {
-      if (this.msgName != '' && this.msgEmail != '' && this.msgMessage != '' && this.msgCaptcha != '') {
+      if (
+        this.msgName != '' &&
+        this.msgEmail != '' &&
+        this.msgMessage != '' &&
+        this.msgCaptcha != ''
+      ) {
         this.spinContactUsSend = true;
         try {
-          const response = await fetch(this.endPts.servrURL + this.endPts.messages, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Cache-Control': 'no-store',
-            },
-            body: JSON.stringify({
-              Name: this.msgName,
-              Email: this.msgEmail,
-              Message: this.msgMessage,
-              Captcha: this.msgCaptcha,
-              Date: this.msgDate,
-              Referer: this.pathname,
-            }),
-          });
+          const response = await fetch(
+            this.endPts.siteURL + this.endPts.messages,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-store',
+              },
+              body: JSON.stringify({
+                Name: this.msgName,
+                Email: this.msgEmail,
+                Message: this.msgMessage,
+                Captcha: this.msgCaptcha,
+                Date: this.msgDate,
+                Referer: this.pathname,
+              }),
+            }
+          );
           const postMsgResJSON = await response.json();
           if (postMsgResJSON.success) {
             this.msgName = '';

@@ -77,21 +77,18 @@ export default {
   methods: {
     async patchParams() {
       try {
-        const response = await fetch(
-          this.endPts.servrURL + this.endPts.params,
-          {
-            method: 'PATCH',
-            headers: {
-              Authorization: this.accessToken,
-              'Content-Type': 'application/json',
-              'Cache-Control': 'no-store',
-            },
-            body: JSON.stringify({
-              site: this.site.folderPath,
-              params: this.site.params,
-            }),
-          }
-        );
+        const response = await fetch(this.endPts.siteURL + this.endPts.params, {
+          method: 'PATCH',
+          headers: {
+            Authorization: this.accessToken,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            site: this.site.folderPath,
+            params: this.site.params,
+          }),
+        });
         const patchParamsJSON = await response.json();
         if (patchParamsJSON.success) {
           console.log(patchParamsJSON);

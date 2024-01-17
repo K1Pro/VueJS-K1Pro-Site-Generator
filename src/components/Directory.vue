@@ -40,7 +40,7 @@
           <a :href="value" target="_blank">
             <div style="height: 50%">
               <img
-                :src="endPts.servrURL + 'public/' + value + '/logo/logo.png'"
+                :src="endPts.siteURL + 'public/' + value + '/logo/logo.png'"
                 :alt="value"
                 height="100%"
               />
