@@ -107,10 +107,12 @@ export default {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
     this.getSite();
-    this.email && this.password
-      ? this.postLogin()
-      : this.getCookie('_a_t', '_s_i');
-    this.accessToken ? this.getLoginUser() : this.deleteCookie();
+    if (this.site.isValid == 'true') {
+      this.email && this.password
+        ? this.postLogin()
+        : this.getCookie('_a_t', '_s_i');
+      this.accessToken ? this.getLoginUser() : this.deleteCookie();
+    }
   },
 
   mounted() {

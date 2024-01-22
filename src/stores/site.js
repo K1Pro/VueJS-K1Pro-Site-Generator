@@ -94,7 +94,6 @@ const useSiteStore = Pinia.defineStore('site', {
       this.windowWidth = window.innerWidth;
     },
     async getLoginUser() {
-      console.log('logging in');
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.user, {
           method: 'GET',
@@ -110,8 +109,7 @@ const useSiteStore = Pinia.defineStore('site', {
           getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.folderPath]
         ) {
           this.getUserContent('POST');
-          console.log(getLoginJSON);
-          this.msg.snackBar = getLoginJSON.messages[0];
+          this.msg.snackBar = 'Logged in';
           this.user = getLoginJSON.data.user;
           this.loggedIn = true;
           document.body.style.backgroundColor = '#FFFFFF';
@@ -124,6 +122,7 @@ const useSiteStore = Pinia.defineStore('site', {
             this.sessionID
           }; expires=${tomorrow.toString()};`;
         } else {
+          this.msg.snackBar = 'Login error 1';
           this.loggedIn = false;
           this.email = '';
           this.password = '';
@@ -131,7 +130,7 @@ const useSiteStore = Pinia.defineStore('site', {
         console.log(getLoginJSON);
       } catch (error) {
         console.log(error.toString());
-        this.msg.snackBar = error.toString();
+        this.msg.snackBar = 'Login error 2';
       }
     },
     async getUserContent(method) {
@@ -161,8 +160,7 @@ const useSiteStore = Pinia.defineStore('site', {
           }
         }
       } catch (error) {
-        console.log(error.toString());
-        this.msg.snackBar = error.toString();
+        console.log(error);
       }
     },
     async postLogin() {
@@ -188,15 +186,16 @@ const useSiteStore = Pinia.defineStore('site', {
           this.sessionID = logInResJSON.data.session_id;
           this.getLoginUser();
           this.msg.login = '';
+          this.msg.snackBar = 'Logged in';
         } else {
           this.msg.login = logInResJSON.messages[0];
           this.deleteCookie();
+          this.msg.snackBar = 'Login error 3';
         }
-        this.msg.snackBar = logInResJSON.messages[0];
         this.spinGlobal = false;
       } catch (error) {
-        this.error = error.toString();
-        this.msg.snackBar = this.error;
+        console.log(error);
+        this.msg.snackBar = 'Login error 4';
         this.spinGlobal = false;
       }
     },
@@ -219,10 +218,14 @@ const useSiteStore = Pinia.defineStore('site', {
           this.email = '';
           this.password = '';
         }
-        this.msg.snackBar = logOutResJSON.messages[0];
+        this.msg.snackBar = 'Logged out';
       } catch (error) {
-        this.error = error.toString();
-        this.msg.snackBar = this.error;
+        this.getSite();
+        this.deleteCookie();
+        this.email = '';
+        this.password = '';
+        this.msg.snackBar = 'Logged out';
+        console.log(error);
       }
     },
   },
