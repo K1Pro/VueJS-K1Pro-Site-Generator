@@ -16,10 +16,10 @@ const useSiteStore = Pinia.defineStore('site', {
       windowWidth: 0,
       respWidth: 650,
       site: {
+        folderPath: folder_path,
         isValid: valid_site,
         params: params,
         scannedDirs: scanned_dirs,
-        folderPath: folder_path,
       },
       user: {},
       content: {},
@@ -32,7 +32,6 @@ const useSiteStore = Pinia.defineStore('site', {
         login: 'sessions',
         logout: 'sessions/',
         user: 'users',
-        params: 'administrator',
         content: 'content',
         messages: 'messages',
       },
@@ -42,12 +41,9 @@ const useSiteStore = Pinia.defineStore('site', {
   actions: {
     async getSite() {
       try {
-        const response = await fetch(
-          this.endPts.siteURL + this.site.folderPath,
-          {
-            method: 'GET',
-          }
-        );
+        const response = await fetch(this.endPts.siteURL + this.pathname, {
+          method: 'GET',
+        });
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data;
@@ -122,13 +118,12 @@ const useSiteStore = Pinia.defineStore('site', {
             this.sessionID
           }; expires=${tomorrow.toString()};`;
         } else {
+          this.deleteCookie();
           this.msg.snackBar = 'Login error 1';
-          this.loggedIn = false;
-          this.email = '';
-          this.password = '';
         }
         console.log(getLoginJSON);
       } catch (error) {
+        this.deleteCookie();
         console.log(error.toString());
         this.msg.snackBar = 'Login error 2';
       }
@@ -188,12 +183,13 @@ const useSiteStore = Pinia.defineStore('site', {
           this.msg.login = '';
           this.msg.snackBar = 'Logged in';
         } else {
-          this.msg.login = logInResJSON.messages[0];
           this.deleteCookie();
+          this.msg.login = logInResJSON.messages[0];
           this.msg.snackBar = 'Login error 3';
         }
         this.spinGlobal = false;
       } catch (error) {
+        this.deleteCookie();
         console.log(error);
         this.msg.snackBar = 'Login error 4';
         this.spinGlobal = false;

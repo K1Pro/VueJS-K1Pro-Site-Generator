@@ -14,7 +14,7 @@
           <div class="inline-editor-container">
             <div class="inline-editor-title">
               <b>Inline editor:</b> <button type="button">Apply</button>&nbsp;
-              <button type="button" @click.prevent="patchParams">Update</button
+              <button type="button" @click.prevent="patchSite">Update</button
               >&nbsp;
               <button type="button" @click.prevent="getSite">Reset</button
               >&nbsp;
@@ -34,6 +34,10 @@
   <template v-else-if="site.isValid === 'root' || site.isValid === 'false'">
     <directory></directory>
   </template>
+
+  <template v-else-if="site.isValid === 'admin'"> Admin </template>
+
+  <template v-else-if="site.isValid === 'blog'"> Blog </template>
 
   <template v-else> </template>
 </template>
@@ -62,6 +66,7 @@ export default {
       'email',
       'password',
       'msg',
+      'pathname',
       'site',
       'endPts',
       'getSite',
@@ -75,9 +80,9 @@ export default {
   },
 
   methods: {
-    async patchParams() {
+    async patchSite() {
       try {
-        const response = await fetch(this.endPts.siteURL + this.endPts.params, {
+        const response = await fetch(this.endPts.siteURL + this.pathname, {
           method: 'PATCH',
           headers: {
             Authorization: this.accessToken,
@@ -85,14 +90,13 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            site: this.site.folderPath,
             params: this.site.params,
           }),
         });
-        const patchParamsJSON = await response.json();
-        if (patchParamsJSON.success) {
-          console.log(patchParamsJSON);
-          this.msg.snackBar = patchParamsJSON.messages[0];
+        const patchSiteJSON = await response.json();
+        if (patchSiteJSON.success) {
+          console.log(patchSiteJSON);
+          this.msg.snackBar = patchSiteJSON.messages[0];
         }
       } catch (error) {
         console.log(error.toString());
