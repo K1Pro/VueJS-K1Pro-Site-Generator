@@ -108,6 +108,7 @@ const useSiteStore = Pinia.defineStore('site', {
           this.msg.snackBar = 'Logged in';
           this.user = getLoginJSON.data.user;
           this.loggedIn = true;
+          this.site.isValid = 'true';
           document.body.style.backgroundColor = '#FFFFFF';
           const tomorrow = new Date();
           tomorrow.setDate(tomorrow.getDate() + 1);

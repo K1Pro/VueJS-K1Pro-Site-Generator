@@ -35,7 +35,12 @@
     <directory></directory>
   </template>
 
-  <template v-else-if="site.isValid === 'admin'"> Admin </template>
+  <template v-else-if="site.isValid === 'admin'">
+    <div id="loader-container">
+      <login></login>
+    </div>
+    ></template
+  >
 
   <template v-else-if="site.isValid === 'blog'"> Blog </template>
 
@@ -47,6 +52,7 @@ import Snackbar from './components/Snackbar.vue';
 import Directory from './components/Directory.vue';
 import Login_side_panel from './components/login/Side_panel.vue';
 import App_container from './components/App_container.vue';
+import Login from './components/elements/footer/Login.vue';
 
 export default {
   name: 'App',
@@ -56,6 +62,7 @@ export default {
     Directory,
     Login_side_panel,
     App_container,
+    Login,
   },
 
   computed: {

@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <h2 v-if="site.isValid === 'admin'">Admin login</h2>
     <input
       type="text"
       name="username"
@@ -27,7 +28,10 @@
     <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
     <br />
     <button @click.prevent="loginFn">
-      <i v-if="spinLogin && spinGlobal" class="spin fa-sharp fa-solid fa-circle-notch"></i>
+      <i
+        v-if="spinLogin && spinGlobal"
+        class="spin fa-sharp fa-solid fa-circle-notch"
+      ></i>
       <span v-else>Log In</span>
     </button>
     <p></p>
@@ -49,17 +53,29 @@ export default {
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'email', 'password', 'msg', 'spinGlobal', 'postLogin']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'email',
+      'password',
+      'msg',
+      'spinGlobal',
+      'site',
+      'postLogin',
+    ]),
     isUsernameValid() {
       return (
         this.msg.login.toLowerCase().includes('incorrect') ||
-        (this.email.length < 1 && (this.msg.login == this.allInputsError || this.msg.login == this.loginUsernameErr))
+        (this.email.length < 1 &&
+          (this.msg.login == this.allInputsError ||
+            this.msg.login == this.loginUsernameErr))
       );
     },
     isPasswordValid() {
       return (
         this.msg.login.toLowerCase().includes('incorrect') ||
-        (this.password.length < 1 && (this.msg.login == this.allInputsError || this.msg.login == this.loginPasswordErr))
+        (this.password.length < 1 &&
+          (this.msg.login == this.allInputsError ||
+            this.msg.login == this.loginPasswordErr))
       );
     },
   },
@@ -110,5 +126,12 @@ export default {
 .login button {
   width: 60px;
   padding: 3px;
+}
+
+.login input[type='text'],
+.login input[type='password'] {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
 }
 </style>
