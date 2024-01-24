@@ -11,15 +11,13 @@ const useSiteStore = Pinia.defineStore('site', {
         login: '',
       },
       spinGlobal: false,
-      hostname: host_name,
-      pathname: path_name,
       windowWidth: 0,
       respWidth: 650,
+      scannedDirs: scanned_dirs,
       site: {
         folderPath: folder_path,
         isValid: valid_site,
         params: params,
-        scannedDirs: scanned_dirs,
       },
       user: {},
       content: {},
@@ -41,16 +39,23 @@ const useSiteStore = Pinia.defineStore('site', {
   actions: {
     async getSite() {
       try {
-        const response = await fetch(this.endPts.siteURL + this.pathname, {
-          method: 'GET',
-        });
+        const response = await fetch(
+          this.endPts.siteURL + this.site.folderPath,
+          {
+            method: 'GET',
+          }
+        );
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data;
-          Object.keys(getSiteResJSON.data?.params.body.style).forEach((key) => {
-            document.body.style[key] =
-              getSiteResJSON.data.params.body.style[key];
-          });
+          if (getSiteResJSON.data?.params?.body?.style) {
+            Object.keys(getSiteResJSON.data.params.body.style).forEach(
+              (key) => {
+                document.body.style[key] =
+                  getSiteResJSON.data.params.body.style[key];
+              }
+            );
+          }
           const setFavicon = document.createElement('link');
           setFavicon.setAttribute('rel', 'shortcut icon');
           setFavicon.setAttribute(

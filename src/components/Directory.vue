@@ -15,12 +15,12 @@
       class="directory-grid-container"
       :style="{
         gridTemplateColumns:
-          site.scannedDirs.length < respvColAmnt
+          scannedDirs.length < respvColAmnt
             ? directoryGridDynamicCol
             : directoryGridStaticCol,
       }"
     >
-      <template v-for="(value, gridIndex) in site.scannedDirs">
+      <template v-for="(value, gridIndex) in scannedDirs">
         <div
           class="directory-grid-item"
           v-if="gridIndex === 0 || gridIndex % respvColAmnt === 0"
@@ -66,14 +66,15 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'windowWidth',
       'respWidth',
+      'scannedDirs',
       'site',
       'endPts',
       'msg',
     ]),
 
     directoryGridDynamicCol() {
-      const side = (99 - this.site.scannedDirs.length * 10) / 2;
-      const autos = '9% '.repeat(this.site.scannedDirs.length);
+      const side = (99 - this.scannedDirs.length * 10) / 2;
+      const autos = '9% '.repeat(this.scannedDirs.length);
       return side + '% ' + autos + side + '%';
     },
   },
@@ -86,7 +87,7 @@ export default {
   },
 
   created() {
-    if (this.site.isValid === false || this.site.isValid === null) {
+    if (this.site.isValid === 'false' || this.site.isValid === null) {
       this.msg.snackBar = 'Invalid site';
     }
     this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;

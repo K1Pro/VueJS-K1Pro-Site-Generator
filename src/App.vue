@@ -1,7 +1,7 @@
 <template>
   <snackbar> </snackbar>
 
-  <template v-if="site.isValid === 'true'">
+  <template v-if="site.isValid === 'true' && site.params?.htmlElements">
     <template v-if="loggedIn === true">
       <div class="login-container">
         <div class="login-item1">
@@ -44,7 +44,7 @@
 
   <template v-else-if="site.isValid === 'blog'"> Blog </template>
 
-  <template v-else> </template>
+  <template v-else>Nothing</template>
 </template>
 
 <script>
@@ -73,7 +73,6 @@ export default {
       'email',
       'password',
       'msg',
-      'pathname',
       'site',
       'endPts',
       'getSite',
@@ -89,17 +88,20 @@ export default {
   methods: {
     async patchSite() {
       try {
-        const response = await fetch(this.endPts.siteURL + this.pathname, {
-          method: 'PATCH',
-          headers: {
-            Authorization: this.accessToken,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            params: this.site.params,
-          }),
-        });
+        const response = await fetch(
+          this.endPts.siteURL + this.site.folderPath,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: this.accessToken,
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+            body: JSON.stringify({
+              params: this.site.params,
+            }),
+          }
+        );
         const patchSiteJSON = await response.json();
         if (patchSiteJSON.success) {
           console.log(patchSiteJSON);
@@ -117,7 +119,13 @@ export default {
   created() {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
-    this.getSite();
+    if (
+      this.site.isValid != 'admin' &&
+      this.site.isValid != 'root' &&
+      this.site.isValid != 'false'
+    ) {
+      this.getSite();
+    }
     if (this.site.isValid == 'true') {
       this.email && this.password
         ? this.postLogin()
