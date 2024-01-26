@@ -10,8 +10,12 @@
       />
       <select name="image-searched" @change="selectSearch">
         <template v-if="content.searched">
-          <option v-for="searched in Object.keys(content.searched)" :value="searched">
-            {{ searched.charAt(0).toUpperCase() }}{{ searched.slice(1).replaceAll('-', ' ') }}
+          <option
+            v-for="searched in Object.keys(content.searched)"
+            :value="searched"
+          >
+            {{ searched.charAt(0).toUpperCase()
+            }}{{ searched.slice(1).replaceAll('-', ' ') }}
           </option>
         </template></select
       ><button @click="imageSearch">Search</button>
@@ -24,7 +28,10 @@
           v-for="images in imgSrchArr1stPart"
           :src="images.src.medium"
           :style="{
-            outline: images.src.large2x == selectedPhoto ? '8px solid LawnGreen' : 'none',
+            outline:
+              images.src.large2x == selectedPhoto
+                ? '8px solid LawnGreen'
+                : 'none',
             outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
           }"
           @click="selectImg($event, images.src.large2x)"
@@ -35,7 +42,10 @@
           v-for="images in imgSrchArr2ndPart"
           :src="images.src.medium"
           :style="{
-            outline: images.src.large2x == selectedPhoto ? '8px solid LawnGreen' : 'none',
+            outline:
+              images.src.large2x == selectedPhoto
+                ? '8px solid LawnGreen'
+                : 'none',
             outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
           }"
           @click="selectImg($event, images.src.large2x)"
@@ -60,7 +70,10 @@ export default {
       'getUserContent',
     ]),
     imgSrchArr1stPart() {
-      return this.searchedPhotos?.photos?.slice(0, this.searchedPhotos?.photos.length / 2);
+      return this.searchedPhotos?.photos?.slice(
+        0,
+        this.searchedPhotos?.photos.length / 2
+      );
     },
 
     imgSrchArr2ndPart() {
@@ -78,9 +91,15 @@ export default {
   methods: {
     async imageSearch() {
       const prevSrchTtlRslts =
-        this.content.searched?.[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')]?.total_results;
-      const prevSrchTtlRsltsMax = prevSrchTtlRslts ? Math.floor(prevSrchTtlRslts / 80) : 1;
-      const randomPage = Math.floor(Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1);
+        this.content.searched?.[
+          this.imageSearchInput.toLowerCase().replaceAll(' ', '-')
+        ]?.total_results;
+      const prevSrchTtlRsltsMax = prevSrchTtlRslts
+        ? Math.floor(prevSrchTtlRslts / 80)
+        : 1;
+      const randomPage = Math.floor(
+        Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1
+      );
 
       try {
         const response = await fetch(
@@ -95,10 +114,17 @@ export default {
           }
         );
         const imageSearchJSON = await response.json();
-        if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
+        if (
+          imageSearchJSON &&
+          Number.isInteger(+imageSearchJSON.total_results)
+        ) {
           this.searchedPhotos = imageSearchJSON;
-          this.content['most_recent_search'] = this.imageSearchInput.toLowerCase().replaceAll(' ', '-');
-          this.content.searched[this.imageSearchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
+          this.content['most_recent_search'] = this.imageSearchInput
+            .toLowerCase()
+            .replaceAll(' ', '-');
+          this.content.searched[
+            this.imageSearchInput.toLowerCase().replaceAll(' ', '-')
+          ] = imageSearchJSON;
           console.log(imageSearchJSON);
           this.getUserContent('PATCH');
         }
@@ -115,11 +141,15 @@ export default {
       this.searchedPhotos = this.content.searched[event.target.value];
       this.imageSearchInput =
         event.srcElement.selectedOptions[0]._value.charAt(0).toUpperCase() +
-        event.srcElement.selectedOptions[0]._value.slice(1).toLowerCase().replaceAll('_', ' ');
-      this.content.most_recent_search = event.srcElement.selectedOptions[0]._value
-        .replaceAll(' ', '_')
-        .toLowerCase()
-        .trim();
+        event.srcElement.selectedOptions[0]._value
+          .slice(1)
+          .toLowerCase()
+          .replaceAll('_', ' ');
+      this.content.most_recent_search =
+        event.srcElement.selectedOptions[0]._value
+          .replaceAll(' ', '_')
+          .toLowerCase()
+          .trim();
       // this.patchUserData(null, 'MostRecentSearch', this.imageSearchInput.replaceAll(' ', '_').toLowerCase().trim());
     },
   },
@@ -130,7 +160,10 @@ export default {
         : {};
     this.imageSearchInput = this.content.most_recent_search
       ? this.content.most_recent_search.charAt(0).toUpperCase() +
-        this.content.most_recent_search.slice(1).toLowerCase().replaceAll('-', ' ')
+        this.content.most_recent_search
+          .slice(1)
+          .toLowerCase()
+          .replaceAll('-', ' ')
       : '';
   },
 };
@@ -146,14 +179,18 @@ export default {
 } */
 .image-search input[type='search'] {
   padding: 5px;
-
   position: relative;
   width: 65%;
   background: white;
+  /* background: transparent; */
   margin-left: 2px;
   border: 0;
   margin-right: -66%;
   z-index: 2;
+}
+
+.image-search input[type='search']:focus {
+  outline: none;
 }
 
 .image-search select {

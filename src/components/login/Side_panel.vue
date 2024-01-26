@@ -60,7 +60,9 @@
         <image_search></image_search>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'camera'"></div>
+      <div class="tabcontent" v-if="activeTab === 'video'">
+        <video_search></video_search>
+      </div>
 
       <div class="tabcontent" v-if="activeTab === 'file-lines'">
         <text_generation></text_generation>
@@ -76,6 +78,7 @@
 <script>
 import Background_settings from './Background_settings.vue';
 import Image_search from './Image_search.vue';
+import Video_search from './Video_search.vue';
 import Text_generation from './Text_generation.vue';
 import Messages from './Messages.vue';
 
@@ -85,6 +88,7 @@ export default {
   components: {
     Background_settings,
     Image_search,
+    Video_search,
     Text_generation,
     Messages,
   },
