@@ -9,13 +9,13 @@
         @keyup.enter="imageSearch"
       />
       <select name="image-searched" @change="selectSearch">
-        <template v-if="content.searched">
+        <template v-if="content.imagesSearched">
           <option
-            v-for="searched in Object.keys(content.searched)"
-            :value="searched"
+            v-for="imageSearch in Object.keys(content.imagesSearched)"
+            :value="imageSearch"
           >
-            {{ searched.charAt(0).toUpperCase()
-            }}{{ searched.slice(1).replaceAll('-', ' ') }}
+            {{ imageSearch.charAt(0).toUpperCase()
+            }}{{ imageSearch.slice(1).replaceAll('-', ' ') }}
           </option>
         </template></select
       ><button @click="imageSearch">Search</button>
@@ -91,7 +91,7 @@ export default {
   methods: {
     async imageSearch() {
       const prevSrchTtlRslts =
-        this.content.searched?.[
+        this.content.imagesSearched?.[
           this.imageSearchInput.toLowerCase().replaceAll(' ', '-')
         ]?.total_results;
       const prevSrchTtlRsltsMax = prevSrchTtlRslts
@@ -119,14 +119,16 @@ export default {
           Number.isInteger(+imageSearchJSON.total_results)
         ) {
           this.searchedPhotos = imageSearchJSON;
-          this.content['most_recent_search'] = this.imageSearchInput
+          this.content['mostRecentImageSearch'] = this.imageSearchInput
             .toLowerCase()
             .replaceAll(' ', '-');
-          this.content.searched[
+          if (this.content.imagesSearched === null)
+            this.content.imagesSearched = {};
+          this.content.imagesSearched[
             this.imageSearchInput.toLowerCase().replaceAll(' ', '-')
           ] = imageSearchJSON;
           console.log(imageSearchJSON);
-          this.getUserContent('PATCH');
+          this.getUserContent('PATCH', 'image');
         }
       } catch (error) {
         this.msg.snackBar = error.toString();
@@ -138,14 +140,14 @@ export default {
     },
 
     selectSearch(event) {
-      this.searchedPhotos = this.content.searched[event.target.value];
+      this.searchedPhotos = this.content.imagesSearched[event.target.value];
       this.imageSearchInput =
         event.srcElement.selectedOptions[0]._value.charAt(0).toUpperCase() +
         event.srcElement.selectedOptions[0]._value
           .slice(1)
           .toLowerCase()
           .replaceAll('_', ' ');
-      this.content.most_recent_search =
+      this.content.mostRecentImageSearch =
         event.srcElement.selectedOptions[0]._value
           .replaceAll(' ', '_')
           .toLowerCase()
@@ -155,12 +157,12 @@ export default {
   },
   created() {
     this.searchedPhotos =
-      this.content.most_recent_search && this.content.searched
-        ? this.content.searched[this.content.most_recent_search]
+      this.content.mostRecentImageSearch && this.content.imagesSearched
+        ? this.content.imagesSearched[this.content.mostRecentImageSearch]
         : {};
-    this.imageSearchInput = this.content.most_recent_search
-      ? this.content.most_recent_search.charAt(0).toUpperCase() +
-        this.content.most_recent_search
+    this.imageSearchInput = this.content.mostRecentImageSearch
+      ? this.content.mostRecentImageSearch.charAt(0).toUpperCase() +
+        this.content.mostRecentImageSearch
           .slice(1)
           .toLowerCase()
           .replaceAll('-', ' ')

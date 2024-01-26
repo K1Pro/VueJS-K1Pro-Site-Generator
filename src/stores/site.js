@@ -34,6 +34,7 @@ const useSiteStore = Pinia.defineStore('site', {
         messages: 'messages',
       },
       selectedPhoto: '',
+      selectedVideo: '',
     };
   },
   actions: {
@@ -109,7 +110,7 @@ const useSiteStore = Pinia.defineStore('site', {
           getLoginJSON.success &&
           getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.folderPath]
         ) {
-          this.getUserContent('POST');
+          this.getUserContent('POST', null);
           this.msg.snackBar = 'Logged in';
           this.user = getLoginJSON.data.user;
           this.loggedIn = true;
@@ -134,7 +135,20 @@ const useSiteStore = Pinia.defineStore('site', {
         this.msg.snackBar = 'Login error 2';
       }
     },
-    async getUserContent(method) {
+    async getUserContent(method, contentType) {
+      let content;
+      if (contentType == 'image') {
+        content = {
+          mostRecentImageSearch: this.content.mostRecentImageSearch,
+          imagesSearched: this.content.imagesSearched,
+        };
+      } else if (contentType == 'video') {
+        content = {
+          mostRecentVideoSearch: this.content.mostRecentVideoSearch,
+          videosSearched: this.content.videosSearched,
+        };
+      }
+
       try {
         const response = await fetch(
           this.endPts.siteURL + this.endPts.content,
@@ -147,18 +161,15 @@ const useSiteStore = Pinia.defineStore('site', {
             },
             body: JSON.stringify({
               site: this.site.folderPath,
-              content: this.content,
+              content: content,
+              contentType: contentType,
             }),
           }
         );
         const getUserContentJSON = await response.json();
         if (getUserContentJSON.success) {
+          if (method == 'POST') this.content = getUserContentJSON.data;
           console.log(getUserContentJSON);
-          if (getUserContentJSON.data.content) {
-            this.content = getUserContentJSON.data.content;
-            this.content.default = getUserContentJSON.data.default;
-            this.content.messages = getUserContentJSON.data.messages;
-          }
         }
       } catch (error) {
         console.log(error);
