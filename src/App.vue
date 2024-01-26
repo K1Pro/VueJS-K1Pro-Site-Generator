@@ -119,13 +119,6 @@ export default {
   created() {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
-    if (
-      this.site.isValid != 'admin' &&
-      this.site.isValid != 'root' &&
-      this.site.isValid != 'false'
-    ) {
-      this.getSite();
-    }
     if (this.site.isValid == 'true') {
       this.email && this.password
         ? this.postLogin()

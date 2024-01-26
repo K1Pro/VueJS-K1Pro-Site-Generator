@@ -15,19 +15,21 @@
       class="directory-grid-container"
       :style="{
         gridTemplateColumns:
-          scannedDirs.length < respvColAmnt
+          Object.entries(scannedDirs).length < respvColAmnt
             ? directoryGridDynamicCol
             : directoryGridStaticCol,
       }"
     >
-      <template v-for="(value, gridIndex) in scannedDirs">
+      <template
+        v-for="([dirKey, dirValue], dirIndex) in Object.entries(scannedDirs)"
+      >
         <div
           class="directory-grid-item"
-          v-if="gridIndex === 0 || gridIndex % respvColAmnt === 0"
+          v-if="dirIndex === 0 || dirIndex % respvColAmnt === 0"
         ></div>
         <div
           class="directory-grid-item"
-          v-if="gridIndex % respvColAmnt === 0 && gridIndex !== 0"
+          v-if="dirIndex % respvColAmnt === 0 && dirIndex !== 0"
         ></div>
         <div
           class="directory-grid-item"
@@ -37,18 +39,22 @@
             backgroundColor: 'lightgrey',
           }"
         >
-          <a :href="value" target="_blank">
+          <a :href="dirKey" target="_blank">
             <div style="height: 50%">
               <img
-                :src="endPts.siteURL + 'public/' + value + '/logo/logo.png'"
-                :alt="value"
+                :src="endPts.siteURL + dirValue.logo"
+                :alt="dirKey"
                 height="100%"
               />
             </div>
             <div style="position: relative; height: 50%; padding: 0">
               <div style="position: absolute; bottom: 0">
-                {{ value.charAt(0).toUpperCase()
-                }}{{ value.slice(1).replaceAll('-', ' ') }}
+                {{
+                  dirValue.site
+                    ? dirValue.site
+                    : dirKey.charAt(0).toUpperCase() +
+                      dirKey.slice(1).replaceAll(/-|_/g, ' ').trim()
+                }}
               </div>
             </div>
           </a>
@@ -73,8 +79,8 @@ export default {
     ]),
 
     directoryGridDynamicCol() {
-      const side = (99 - this.scannedDirs.length * 10) / 2;
-      const autos = '9% '.repeat(this.scannedDirs.length);
+      const side = (99 - Object.entries(this.scannedDirs).length * 10) / 2;
+      const autos = '9% '.repeat(Object.entries(this.scannedDirs).length);
       return side + '% ' + autos + side + '%';
     },
   },
