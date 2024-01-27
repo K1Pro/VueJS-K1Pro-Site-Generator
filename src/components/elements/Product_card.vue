@@ -31,20 +31,40 @@
       </div>
       <!-- Modify element select and options -->
     </template>
-    <template v-for="(productcard, cardIndex) in elValue['product-card-items']">
-      <div
-        class="product-card-card"
-        :style="{ 'background-color': elValue.style.cardColor }"
+    <div
+      class="product-card-container"
+      :style="{
+        gridTemplateColumns:
+          windowWidth > respWidth
+            ? gridTemplateColumnsFull
+            : gridTemplateColumnsMobile,
+      }"
+    >
+      <div class="product-card-item"></div>
+      <template
+        v-for="(productcard, cardIndex) in elValue['product-card-items']"
       >
-        <img :src="productcard[0]" :alt="productcard[1]" style="width: 100%" />
-        <div class="product-card-text">
-          <div class="product-card-header">{{ productcard[1] }}</div>
-          <p>
-            {{ productcard[2] }}
-          </p>
+        <div
+          class="product-card-item"
+          :style="{ 'background-color': elValue.style.cardColor }"
+        >
+          <div class="product-card-group">
+            <img
+              :src="productcard[0]"
+              :alt="productcard[1]"
+              style="width: 100%"
+            />
+            <div class="product-card-text">
+              <div class="product-card-header">{{ productcard[1] }}</div>
+              <p>
+                {{ productcard[2] }}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
+      <div class="product-card-item"></div>
+    </div>
   </div>
 </template>
 
@@ -69,6 +89,16 @@ export default {
       'respWidth',
       'site',
     ]),
+
+    gridTemplateColumnsFull() {
+      const side = (99 - this.elValue['product-card-items'].length * 21) / 2;
+      const autos = '20% '.repeat(this.elValue['product-card-items'].length);
+      return side + '% ' + autos + side + '%';
+    },
+
+    gridTemplateColumnsMobile() {
+      return '0% 32% 32% 32% 0%';
+    },
   },
 
   data() {
@@ -87,12 +117,27 @@ export default {
 .product-card {
   position: relative;
 }
+
+.product-card-container {
+  display: grid;
+  column-gap: 1%;
+}
+
+.product-card-item {
+  overflow: visible;
+  /* padding: 20px 0px; */
+  text-align: left;
+}
+
 .product-card-card {
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
   max-width: 250px;
   margin: auto;
   text-align: left;
   /* background-color: white; */
+}
+.product-card-group {
+  /* padding: 12px; */
 }
 .product-card-text {
   padding: 12px;

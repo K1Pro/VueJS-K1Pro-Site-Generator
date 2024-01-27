@@ -15,9 +15,13 @@
       <div class="modPosition">
         <select name="menuChange" v-model="menuChange" @change="menuAction">
           <option value="" disabled selected>
-            Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+            Modify {{ elKey.charAt(0).toUpperCase()
+            }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
           </option>
-          <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+          <element_select
+            :selectKey="elKey"
+            :selectIndex="elIndex"
+          ></element_select>
           <!-- Custom select options here -->
         </select>
         <div class="modChange">
@@ -31,16 +35,19 @@
       <!-- Modify element select and options -->
     </template>
     <div
-      class="grid-container"
+      class="icon-slider-container"
       :style="{
-        gridTemplateColumns: windowWidth > respWidth ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
+        gridTemplateColumns:
+          windowWidth > respWidth
+            ? gridTemplateColumnsFull
+            : gridTemplateColumnsMobile,
       }"
     >
-      <div class="grid-item"></div>
+      <div class="icon-slider-item"></div>
       <template v-for="(icon, iconIndex) in elValue['icon-slider-items']">
         <div
           v-if="iconIndex < respvIconAmnt"
-          class="grid-item"
+          class="icon-slider-item"
           :style="{
             'background-color': elValue.style.slideColor,
             border: '1px solid ' + elValue.style.borderColor,
@@ -52,20 +59,32 @@
           }"
         >
           <template v-if="loggedIn === true">
-            <button v-if="iconIndex !== 0" class="minus" @click.prevent="deleteIcon(iconIndex)"></button>
+            <button
+              v-if="iconIndex !== 0"
+              class="minus"
+              @click.prevent="deleteIcon(iconIndex)"
+            ></button>
             <i :style="{ color: elValue.style.iconColor }" :class="icon[1]"></i>
             <select
               :style="{
                 width: '100%',
               }"
-              v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][1]"
+              v-model="
+                site.params.htmlElements[elIndex][elKey]['icon-slider-items'][
+                  iconIndex
+                ][1]
+              "
             >
               <icon_slider_options></icon_slider_options>
             </select>
             <input
               type="text"
               placeholder="text here..."
-              v-model="site.params.htmlElements[elIndex][elKey]['icon-slider-items'][iconIndex][0]"
+              v-model="
+                site.params.htmlElements[elIndex][elKey]['icon-slider-items'][
+                  iconIndex
+                ][0]
+              "
               :style="{
                 color: elValue.style.iconColor,
                 'background-color': elValue.style.slideColor,
@@ -73,14 +92,17 @@
             />
           </template>
           <template v-else>
-            <div class="grid-item-icon">
-              <i :style="{ color: elValue.style.iconColor }" :class="icon[1]"></i>
+            <div class="icon-slider-icon">
+              <i
+                :style="{ color: elValue.style.iconColor }"
+                :class="icon[1]"
+              ></i>
             </div>
-            <div class="grid-item-text">{{ icon[0] }}</div>
+            <div class="icon-slider-text">{{ icon[0] }}</div>
           </template>
         </div>
       </template>
-      <div class="grid-item">
+      <div class="icon-slider-item">
         <template v-if="loggedIn && elValue['icon-slider-items'].length < 9">
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
@@ -110,7 +132,12 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'windowWidth', 'respWidth', 'site']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'windowWidth',
+      'respWidth',
+      'site',
+    ]),
 
     gridTemplateColumnsFull() {
       const side = (99 - this.elValue['icon-slider-items'].length * 10) / 2;
@@ -132,17 +159,25 @@ export default {
 
   methods: {
     addIcon() {
-      this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].push(['', 'fa-solid fa-question']);
+      this.site.params.htmlElements[this.elIndex][this.elKey][
+        'icon-slider-items'
+      ].push(['', 'fa-solid fa-question']);
       this.respvIconAmnt =
         this.windowWidth > this.respWidth
-          ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+          ? this.site.params.htmlElements[this.elIndex][this.elKey][
+              'icon-slider-items'
+            ].length
           : 3;
     },
     deleteIcon(iconIndex) {
-      this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].splice(iconIndex, 1);
+      this.site.params.htmlElements[this.elIndex][this.elKey][
+        'icon-slider-items'
+      ].splice(iconIndex, 1);
       this.respvIconAmnt =
         this.windowWidth > this.respWidth
-          ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+          ? this.site.params.htmlElements[this.elIndex][this.elKey][
+              'icon-slider-items'
+            ].length
           : 3;
     },
     menuAction(event) {
@@ -153,7 +188,9 @@ export default {
   created() {
     this.respvIconAmnt =
       this.windowWidth > this.respWidth
-        ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+        ? this.site.params.htmlElements[this.elIndex][this.elKey][
+            'icon-slider-items'
+          ].length
         : 3;
   },
 
@@ -161,7 +198,9 @@ export default {
     windowWidth(newWindowWidth, oldWindowWidth) {
       this.respvIconAmnt =
         this.windowWidth > this.respWidth
-          ? this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length
+          ? this.site.params.htmlElements[this.elIndex][this.elKey][
+              'icon-slider-items'
+            ].length
           : 3;
     },
   },
@@ -172,6 +211,12 @@ export default {
 .icon-slider {
   position: relative;
 }
+
+.icon-slider-container {
+  display: grid;
+  column-gap: 1%;
+}
+
 .icon-slider-modify-container {
   display: table;
   height: 100%;
@@ -182,37 +227,32 @@ export default {
   text-align: center;
 }
 
-.grid-container {
-  display: grid;
-  column-gap: 1%;
-}
-
-.grid-item {
+.icon-slider-item {
   overflow: visible;
   height: 100px;
   padding: 20px 0px;
 }
 
-.grid-item-icon {
+.icon-slider-icon {
   height: 50%;
 }
 
-.grid-item-text {
+.icon-slider-text {
   height: 50%;
   font-size: 20px;
 }
 
-.grid-item input[type='text'] {
+.icon-slider-item input[type='text'] {
   padding: 5px;
   border-style: none;
   width: 85%;
 }
 
-.grid-item select {
+.icon-slider-item select {
   padding: 5px;
 }
 
-.grid-item button {
+.icon-slider-item button {
   position: absolute;
   margin-left: 25px;
   margin-top: -10px;
@@ -245,7 +285,7 @@ export default {
 }
 
 @media only screen and (min-width: 650px) {
-  .grid-item-text {
+  .icon-slider-text {
     font-size: 1.4vw;
   }
 }
