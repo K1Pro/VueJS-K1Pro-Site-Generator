@@ -1,55 +1,103 @@
 <template>
-  <div class="product-card">
-    <div class="card">
-      <img
-        src="https://images.pexels.com/photos/225250/pexels-photo-225250.jpeg?auto=compress&cs=tinysrgb&h=700"
-        alt="Denim Jeans"
-        style="width: 100%"
-      />
-      <h1>Server config</h1>
-      <!-- <p class="price">$19.99</p> -->
-      <p>We specialize in server configuration lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
-      <p>
-        <!-- <button>Add to Cart</button> -->
-      </p>
-    </div>
+  <div
+    :name="elValue.name"
+    :class="elKey"
+    :style="{
+      'padding-bottom': elValue.style['padding-bottom'] + 'px',
+      'background-color': elValue.style.backgroundColor,
+    }"
+  >
+    <template v-if="loggedIn === true">
+      <!-- Modify element select and options -->
+      <div class="modPosition">
+        <select name="menuChange" v-model="menuChange" @change="menuAction">
+          <option value="" disabled selected>
+            Modify {{ elKey.charAt(0).toUpperCase()
+            }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+          </option>
+          <element_select
+            :selectKey="elKey"
+            :selectIndex="elIndex"
+          ></element_select>
+          <!-- Custom select options here -->
+        </select>
+        <div class="modChange">
+          <element_select_options
+            :selectKey="elKey"
+            :selectIndex="elIndex"
+            :selectChange="menuChange"
+          ></element_select_options>
+        </div>
+      </div>
+      <!-- Modify element select and options -->
+    </template>
+    <template v-for="(productcard, cardIndex) in elValue['product-card-items']">
+      <div
+        class="product-card-card"
+        :style="{ 'background-color': elValue.style.cardColor }"
+      >
+        <img :src="productcard[0]" :alt="productcard[1]" style="width: 100%" />
+        <div class="product-card-text">
+          <div class="product-card-header">{{ productcard[1] }}</div>
+          <p>
+            {{ productcard[2] }}
+          </p>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import Element_select from './../login/Element_select.vue';
+import Element_select_options from './../login/Element_select_options.vue';
+
 export default {
   name: 'Product Card',
+
+  components: {
+    Element_select,
+    Element_select_options,
+  },
+
+  props: ['elKey', 'elValue', 'elIndex'],
+
+  computed: {
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'windowWidth',
+      'respWidth',
+      'site',
+    ]),
+  },
+
+  data() {
+    return {
+      menuChange: '',
+    };
+  },
+
+  created() {
+    console.log(this.elValue);
+  },
 };
 </script>
 
 <style>
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
+.product-card {
+  position: relative;
+}
+.product-card-card {
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+  max-width: 250px;
   margin: auto;
-  text-align: center;
-  font-family: arial;
-  background-color: white;
+  text-align: left;
+  /* background-color: white; */
 }
-
-.price {
-  color: grey;
-  font-size: 22px;
-}
-
-.card button {
-  border: none;
-  outline: 0;
+.product-card-text {
   padding: 12px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
 }
-
-.card button:hover {
-  opacity: 0.7;
+.product-card-header {
+  font-size: 30px;
 }
 </style>
