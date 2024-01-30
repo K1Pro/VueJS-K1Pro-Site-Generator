@@ -126,13 +126,13 @@ const useSiteStore = Pinia.defineStore('site', {
           }; expires=${tomorrow.toString()};`;
         } else {
           this.deleteCookie();
-          this.msg.snackBar = 'Login error 1';
+          this.msg.snackBar = getLoginJSON.messages[0];
         }
         console.log(getLoginJSON);
       } catch (error) {
         this.deleteCookie();
         console.log(error.toString());
-        this.msg.snackBar = 'Login error 2';
+        this.msg.snackBar = 'Login error 1';
       }
     },
     async getUserContent(method, contentType) {
@@ -202,14 +202,14 @@ const useSiteStore = Pinia.defineStore('site', {
         } else {
           this.deleteCookie();
           this.msg.login = logInResJSON.messages[0];
-          this.msg.snackBar = 'Login error 3';
+          this.msg.snackBar = logInResJSON.messages[0];
         }
         console.log(logInResJSON);
         this.spinGlobal = false;
       } catch (error) {
         this.deleteCookie();
         console.log(error);
-        this.msg.snackBar = 'Login error 4';
+        this.msg.snackBar = 'Login error 2';
         this.spinGlobal = false;
       }
     },

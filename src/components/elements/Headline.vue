@@ -4,7 +4,7 @@
     :class="elKey"
     :style="{
       backgroundColor: elValue.style.backgroundColor,
-      fontSize: loggedIn ? '18px' : elValue.style.fontSize + 'px',
+      fontSize: loggedIn ? '18px' : elValue.style.textSize + 'px',
       height: elValue.style.height + 'px',
       'border-width': loggedIn ? '1px 1px 0px 1px' : 'none',
       'border-style': loggedIn ? 'dashed' : 'none',
@@ -20,9 +20,16 @@
           v-model="site.params.htmlElements[elIndex]['headline']['text']"
           :style="{
             width: '100%',
-            backgroundColor: site.params.htmlElements[elIndex]['headline']['style']['backgroundColor'],
-            color: site.params.htmlElements[elIndex]['headline']['style']['color'],
-            fontSize: site.params.htmlElements[elIndex]['headline']['style']['fontSize'] + 'px',
+            backgroundColor:
+              site.params.htmlElements[elIndex]['headline']['style'][
+                'backgroundColor'
+              ],
+            color:
+              site.params.htmlElements[elIndex]['headline']['style']['color'],
+            fontSize:
+              site.params.htmlElements[elIndex]['headline']['style'][
+                'textSize'
+              ] + 'px',
             height: elValue.style.height + 'px',
           }"
         />
@@ -30,9 +37,13 @@
         <div class="modPosition">
           <select name="menuChange" v-model="menuChange" @change="menuAction">
             <option value="" disabled selected>
-              Modify {{ elKey.charAt(0).toUpperCase() }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+              Modify {{ elKey.charAt(0).toUpperCase()
+              }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
             </option>
-            <element_select :selectKey="elKey" :selectIndex="elIndex"></element_select>
+            <element_select
+              :selectKey="elKey"
+              :selectIndex="elIndex"
+            ></element_select>
             <!-- Custom select options here -->
           </select>
           <div class="modChange">

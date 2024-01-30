@@ -52,7 +52,6 @@
             'background-color': elValue.style.slideColor,
             border: '1px solid ' + elValue.style.borderColor,
             'text-align': loggedIn ? 'center' : 'center',
-            'font-size': loggedIn ? '30px' : '30px',
             'border-radius': elValue.style.borderRadius + 'px',
             color: elValue.style.iconColor,
             // padding: loggedIn ? '0px' : '20px',
@@ -64,7 +63,13 @@
               class="minus"
               @click.prevent="deleteIcon(iconIndex)"
             ></button>
-            <i :style="{ color: elValue.style.iconColor }" :class="icon[1]"></i>
+            <i
+              :style="{
+                color: elValue.style.iconColor,
+                'font-size': elValue.style.iconSize + 'px',
+              }"
+              :class="icon[1]"
+            ></i>
             <select
               :style="{
                 width: '100%',
@@ -88,17 +93,28 @@
               :style="{
                 color: elValue.style.iconColor,
                 'background-color': elValue.style.slideColor,
+                'font-size': elValue.style.textSize + 'px',
               }"
             />
           </template>
           <template v-else>
             <div class="icon-slider-icon">
               <i
-                :style="{ color: elValue.style.iconColor }"
+                :style="{
+                  color: elValue.style.iconColor,
+                  'font-size': elValue.style.iconSize + 'px',
+                }"
                 :class="icon[1]"
               ></i>
             </div>
-            <div class="icon-slider-text">{{ icon[0] }}</div>
+            <div
+              class="icon-slider-text"
+              :style="{
+                'font-size': elValue.style.textSize + 'px',
+              }"
+            >
+              {{ icon[0] }}
+            </div>
           </template>
         </div>
       </template>
@@ -228,18 +244,20 @@ export default {
 }
 
 .icon-slider-item {
-  overflow: visible;
+  overflow: hidden;
   height: 100px;
   padding: 20px 0px;
 }
 
 .icon-slider-icon {
   height: 50%;
+  margin-bottom: 12px;
 }
 
 .icon-slider-text {
   height: 50%;
-  font-size: 20px;
+  padding: 0px 10px;
+  /* font-size: 20px; */
 }
 
 .icon-slider-item input[type='text'] {
@@ -286,7 +304,7 @@ export default {
 
 @media only screen and (min-width: 650px) {
   .icon-slider-text {
-    font-size: 1.4vw;
+    /* font-size: 1.4vw; */
   }
 }
 </style>
