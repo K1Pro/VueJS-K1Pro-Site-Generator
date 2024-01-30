@@ -204,6 +204,7 @@ const useSiteStore = Pinia.defineStore('site', {
           this.msg.login = logInResJSON.messages[0];
           this.msg.snackBar = 'Login error 3';
         }
+        console.log(logInResJSON);
         this.spinGlobal = false;
       } catch (error) {
         this.deleteCookie();

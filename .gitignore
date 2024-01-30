@@ -11,6 +11,8 @@
 *.env
 *.htaccess
 *.sync.ffs_db
+*.ttf
+*.sfd
 /index.php
 /sync.ffs_db
 /src/assets/js/pinia

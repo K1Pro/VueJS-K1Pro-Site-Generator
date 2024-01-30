@@ -97,7 +97,7 @@ export default {
     },
 
     gridTemplateColumnsMobile() {
-      return '0% 32% 32% 32% 0%';
+      return '100%';
     },
   },
 
