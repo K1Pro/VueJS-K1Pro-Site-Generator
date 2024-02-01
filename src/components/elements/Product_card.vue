@@ -54,11 +54,38 @@
               :alt="productcard[1]"
               style="width: 100%"
             />
-            <div class="product-card-text">
-              <div class="product-card-header">{{ productcard[1] }}</div>
-              <p>
-                {{ productcard[2] }}
-              </p>
+            <div
+              class="product-card-text"
+              :style="{ padding: loggedIn ? '0px' : '12px' }"
+            >
+              <template v-if="loggedIn === true">
+                <input
+                  type="text"
+                  placeholder="Title"
+                  v-model="
+                    site.params.htmlElements[elIndex][elKey][
+                      'product-card-items'
+                    ][cardIndex][1]
+                  "
+                />
+                <textarea
+                  rows="10"
+                  placeholder="Description"
+                  v-model="
+                    site.params.htmlElements[elIndex][elKey][
+                      'product-card-items'
+                    ][cardIndex][2]
+                  "
+                ></textarea>
+              </template>
+              <template v-else>
+                <div class="product-card-header">
+                  {{ productcard[1] }}
+                </div>
+                <p>
+                  {{ productcard[2] }}
+                </p>
+              </template>
             </div>
           </div>
         </div>
@@ -140,7 +167,10 @@ export default {
   /* padding: 12px; */
 }
 .product-card-text {
-  padding: 12px;
+  /* padding: 12px; */
+}
+.product-card-text textarea {
+  width: 95%;
 }
 .product-card-header {
   font-size: 30px;
