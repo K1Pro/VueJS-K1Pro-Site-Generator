@@ -1,19 +1,19 @@
 <template>
   <div class="body-background">
-    <div>Logo:</div>
+    <select name="page-media" style="border: none" v-model="pageMedia">
+      <option value="logo">Logo:</option>
+      <option value="icon">Icon:</option>
+    </select>
     <input type="file" />
     <hr />
-    <div>Icon:</div>
-    <input type="file" />
+    <select name="page-style" style="border: none">
+      <option value="backgroundColor">Background Color:</option>
+      <option value="textColor">Text Color:</option>
+    </select>
+    <input type="color" v-model="site.params.body.style[pageStyle]" />
     <hr />
-    <div>Background:</div>
-    <input type="color" v-model="site.params.body.style.backgroundColor" />
-    <hr />
-    <div>Text Color:</div>
-    <input type="color" />
-    <hr />
-    <div>Font:</div>
-    <select name="Font">
+    Font:
+    <select name="Font" style="border: none">
       <option value="Arial">Arial</option>
       <option value="Courier">Courier</option>
       <option value="Times New Roman">Times New Roman</option>
@@ -34,6 +34,10 @@ export default {
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, ['site']),
+  },
+
+  data() {
+    return { pageMedia: 'logo', pageStyle: 'backgroundColor' };
   },
 
   methods: {},
