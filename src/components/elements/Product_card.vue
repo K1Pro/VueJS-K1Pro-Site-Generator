@@ -5,6 +5,9 @@
     :style="{
       'padding-bottom': elValue.style['padding-bottom'] + 'px',
       'background-color': elValue.style.backgroundColor,
+      'border-width': loggedIn ? '1px 1px 0px 1px' : 'none',
+      'border-style': loggedIn ? 'dashed' : 'none',
+      'border-color': loggedIn ? 'black' : 'none',
     }"
   >
     <template v-if="loggedIn === true">
@@ -49,11 +52,7 @@
           :style="{ 'background-color': elValue.style.cardColor }"
         >
           <div class="product-card-group">
-            <img
-              :src="productcard[0]"
-              :alt="productcard[1]"
-              style="width: 100%"
-            />
+            <img :src="productcard[0]" :alt="productcard[1]" />
             <div
               class="product-card-text"
               :style="{ padding: loggedIn ? '0px' : '12px' }"
@@ -69,7 +68,7 @@
                   "
                 />
                 <textarea
-                  rows="10"
+                  rows="5"
                   placeholder="Description"
                   v-model="
                     site.params.htmlElements[elIndex][elKey][
@@ -152,27 +151,22 @@ export default {
 
 .product-card-item {
   overflow: visible;
-  /* padding: 20px 0px; */
   text-align: left;
 }
-
-.product-card-card {
-  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
-  max-width: 250px;
-  margin: auto;
-  text-align: left;
-  /* background-color: white; */
+.product-card-group img {
+  width: 100%;
 }
-.product-card-group {
-  /* padding: 12px; */
+.product-card-text textarea,
+.product-card-text input {
+  width: 96%;
+  padding: 2%;
+  border: 0px;
+  background: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  resize: none;
 }
-.product-card-text {
-  /* padding: 12px; */
-}
-.product-card-text textarea {
-  width: 95%;
-}
-.product-card-header {
+.product-card-header,
+.product-card-text input {
   font-size: 30px;
 }
 </style>

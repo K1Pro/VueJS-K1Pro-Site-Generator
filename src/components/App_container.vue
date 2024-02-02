@@ -1,23 +1,40 @@
 <template>
   <template v-for="(htmlElements, htmlIndex) in site.params.htmlElements">
-    <template v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)">
-      <headline v-if="elKey == 'headline'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></headline>
-      <top_menu v-if="elKey == 'top-menu'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></top_menu>
+    <template
+      v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)"
+    >
+      <headline
+        v-if="elKey == 'headline' && elValue.enabled"
+        :elKey="elKey"
+        :elValue="elValue"
+        :elIndex="htmlIndex"
+      ></headline>
+      <top_menu
+        v-if="elKey == 'top-menu' && elValue.enabled"
+        :elKey="elKey"
+        :elValue="elValue"
+        :elIndex="htmlIndex"
+      ></top_menu>
       <background_image
-        v-if="elKey == 'background-image'"
+        v-if="elKey == 'background-image' && elValue.enabled"
         :elKey="elKey"
         :elValue="elValue"
         :elIndex="htmlIndex"
       ></background_image>
       <background_video
-        v-if="elKey == 'background-video'"
+        v-if="elKey == 'background-video' && elValue.enabled"
         :elKey="elKey"
         :elValue="elValue"
         :elIndex="htmlIndex"
       ></background_video>
-      <icon_slider v-if="elKey == 'icon-slider'" :elKey="elKey" :elValue="elValue" :elIndex="htmlIndex"></icon_slider>
+      <icon_slider
+        v-if="elKey == 'icon-slider' && elValue.enabled"
+        :elKey="elKey"
+        :elValue="elValue"
+        :elIndex="htmlIndex"
+      ></icon_slider>
       <product_card
-        v-if="elKey == 'product-card'"
+        v-if="elKey == 'product-card' && elValue.enabled"
         :elKey="elKey"
         :elValue="elValue"
         :elIndex="htmlIndex"

@@ -6,7 +6,7 @@
     </select>
     <input type="file" />
     <hr />
-    <select name="page-style" style="border: none">
+    <select name="page-style" style="border: none" v-model="pageStyle">
       <option value="backgroundColor">Background Color:</option>
       <option value="textColor">Text Color:</option>
     </select>
@@ -47,6 +47,10 @@ export default {
 <style>
 .body-background select {
   /* margin: 7px 8px 7px 0px; */
-  padding: 5px;
+  padding: 0px;
+  font-size: 16px;
+}
+.body-background select:focus {
+  outline: none;
 }
 </style>

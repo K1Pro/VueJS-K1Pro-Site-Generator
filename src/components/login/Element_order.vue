@@ -1,7 +1,10 @@
 <template>
   <div class="element-order">
     <template v-for="(element, elementIndex) in site.params.htmlElements">
-      <div v-if="elementIndex === site.params.htmlElements.length - 1" class="element-order-items">
+      <div
+        v-if="elementIndex === site.params.htmlElements.length - 1"
+        class="element-order-items"
+      >
         <!-- Add new element -->
         <select name="addElement" v-model="selectedCreateElType">
           <option value="" disabled selected>Create</option>
@@ -12,7 +15,8 @@
               })"
               :value="defaultName"
             >
-              {{ defaultName.charAt(0).toUpperCase() }}{{ defaultName.slice(1).replaceAll('-', ' ') }}
+              {{ defaultName.charAt(0).toUpperCase()
+              }}{{ defaultName.slice(1).replaceAll('-', ' ') }}
             </option>
           </template>
         </select>
@@ -21,16 +25,39 @@
           <i class="fa-solid fa-circle-plus" style="color: green"></i>
         </div>
       </div>
-      <div v-for="elementName in Object.keys(element)" :name="elementName" class="element-order-items">
-        {{ elementName.charAt(0).toUpperCase() }}{{ elementName.slice(1).replaceAll('-', ' ') }}
+      <div
+        v-for="elementName in Object.keys(element)"
+        :name="elementName"
+        class="element-order-items"
+      >
+        {{ elementName.charAt(0).toUpperCase()
+        }}{{ elementName.slice(1).replaceAll('-', ' ') }}
         <!-- Delete Button -->
-        <div v-if="elementName !== 'footer'" @click.prevent="deleteEl(elementIndex)">
+        <div
+          v-if="elementName !== 'footer'"
+          @click.prevent="deleteEl(elementIndex)"
+        >
           <i class="fa-solid fa-circle-minus" style="color: #ff0000"></i>
         </div>
         <!-- Enable/Disable Button -->
-        <div v-if="elementName !== 'footer'">
-          <input type="checkbox" checked="checked" />
+        <div>
+          <input
+            v-if="site.params.htmlElements[elementIndex][elementName].enabled"
+            type="checkbox"
+            checked="checked"
+            v-model="
+              site.params.htmlElements[elementIndex][elementName].enabled
+            "
+          />
+          <input
+            v-else
+            type="checkbox"
+            v-model="
+              site.params.htmlElements[elementIndex][elementName].enabled
+            "
+          />
         </div>
+
         <!-- Down Button -->
         <div
           v-if="
@@ -49,7 +76,9 @@
             elementName !== 'top-menu' &&
             elementName !== 'background-image' &&
             elementName !== 'footer' &&
-            !site.params.htmlElements?.[elementIndex - 1]?.['background-image'] &&
+            !site.params.htmlElements?.[elementIndex - 1]?.[
+              'background-image'
+            ] &&
             !site.params.htmlElements?.[elementIndex - 1]?.['top-menu'] &&
             site.params.htmlElements?.[elementIndex - 1]
           "
@@ -65,7 +94,13 @@
 export default {
   name: 'Element Order',
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'msg', 'site', 'content', 'endPts']),
+    ...Pinia.mapWritableState(useSiteStore, [
+      'loggedIn',
+      'msg',
+      'site',
+      'content',
+      'endPts',
+    ]),
   },
 
   data() {
@@ -74,9 +109,17 @@ export default {
   methods: {
     createEl() {
       if (this.selectedCreateElType && this.selectedCreateElName) {
-        const createdElement = { [this.selectedCreateElType]: this.content.default[this.selectedCreateElType] };
-        createdElement[this.selectedCreateElType].name = this.selectedCreateElName;
-        this.site.params.htmlElements.splice(this.site.params.htmlElements.length - 1, 0, createdElement);
+        const createdElement = {
+          [this.selectedCreateElType]:
+            this.content.default[this.selectedCreateElType],
+        };
+        createdElement[this.selectedCreateElType].name =
+          this.selectedCreateElName;
+        this.site.params.htmlElements.splice(
+          this.site.params.htmlElements.length - 1,
+          0,
+          createdElement
+        );
       } else {
         !this.selectedCreateElType
           ? (this.msg.snackBar = 'Element type required')
@@ -84,9 +127,14 @@ export default {
       }
     },
     deleteEl(elementIndex) {
-      const removeUniqEl = this.site.params.htmlElementsUniqList.filter((uniqElements) => {
-        return uniqElements !== Object.keys(this.site.params.htmlElements[elementIndex])[0];
-      });
+      const removeUniqEl = this.site.params.htmlElementsUniqList.filter(
+        (uniqElements) => {
+          return (
+            uniqElements !==
+            Object.keys(this.site.params.htmlElements[elementIndex])[0]
+          );
+        }
+      );
       this.site.params.htmlElementsUniqList = removeUniqEl;
       this.site.params.htmlElements.splice(elementIndex, 1);
     },
