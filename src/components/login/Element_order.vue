@@ -34,10 +34,12 @@
         <!-- Down Button -->
         <div
           v-if="
+            // !content.defaultHtmlUniqElements?.includes(elementName) && // this is causing a delay in loading
             elementName !== 'top-menu' &&
             elementName !== 'background-image' &&
             elementName !== 'footer' &&
-            !site.params.htmlElements?.[elementIndex + 1]?.['footer']
+            !site.params.htmlElements?.[elementIndex + 1]?.['footer'] &&
+            site.params.htmlElements?.[elementIndex + 1]
           "
           @click.prevent="moveDown(elementIndex)"
         >
@@ -150,9 +152,10 @@ export default {
           ) {
             createdElPosition = htmlElPostion - 1;
           } else {
-            createdElPosition = createdElPosition + htmlElPostion + 1;
+            createdElPosition = htmlElPostion;
           }
         } else if (htmlElPostion < 0) {
+          createdElPosition = createdElPosition + htmlElPostion + 1;
         }
 
         this.site.params.htmlElements.splice(
