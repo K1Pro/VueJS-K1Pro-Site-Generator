@@ -39,9 +39,9 @@
         :elValue="elValue"
         :elIndex="htmlIndex"
       ></product_card>
+      <foot v-if="elKey == 'footer' && elValue.enabled"></foot>
     </template>
   </template>
-  <foot></foot>
 </template>
 
 <script>

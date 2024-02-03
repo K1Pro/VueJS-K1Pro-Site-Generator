@@ -143,15 +143,16 @@ export default {
           this.siteHtmlAllElementsArr.includes('footer')
         ) {
           createdElPosition--;
-        } else if (htmlElPostion !== undefined) {
+        } else if (htmlElPostion >= 0) {
           if (
             !this.siteHtmlAllElementsArr.includes('top-menu') &&
             this.selectedCreateElType != 'top-menu'
           ) {
             createdElPosition = htmlElPostion - 1;
           } else {
-            createdElPosition = htmlElPostion;
+            createdElPosition = createdElPosition + htmlElPostion + 1;
           }
+        } else if (htmlElPostion < 0) {
         }
 
         this.site.params.htmlElements.splice(
