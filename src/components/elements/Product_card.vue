@@ -1,6 +1,5 @@
 <template>
   <div
-    :name="elValue.name"
     :class="elKey"
     :style="{
       'padding-bottom': elValue.style['padding-bottom'] + 'px',
@@ -52,6 +51,9 @@
           :style="{ 'background-color': elValue.style.cardColor }"
         >
           <div class="product-card-group">
+            <button v-if="loggedIn" @click="selectImg(cardIndex)">
+              Select Image
+            </button>
             <img :src="productcard[0]" :alt="productcard[1]" />
             <div
               class="product-card-text"
@@ -114,6 +116,7 @@ export default {
       'windowWidth',
       'respWidth',
       'site',
+      'selectedPhoto',
     ]),
 
     gridTemplateColumnsFull() {
@@ -127,14 +130,22 @@ export default {
     },
   },
 
+  methods: {
+    selectImg(imgIndex) {
+      if (this.selectedPhoto) {
+        this.site.params.htmlElements[this.elIndex]['product-card'][
+          'product-card-items'
+        ][imgIndex][0] = this.selectedPhoto;
+      } else {
+        this.msg.snackBar = 'Search for image first';
+      }
+    },
+  },
+
   data() {
     return {
       menuChange: '',
     };
-  },
-
-  created() {
-    console.log(this.elValue);
   },
 };
 </script>
@@ -153,8 +164,14 @@ export default {
   overflow: visible;
   text-align: left;
 }
+.product-card-group button {
+  position: relative;
+  z-index: 1;
+  height: 22px;
+}
 .product-card-group img {
   width: 100%;
+  margin-top: -22px;
 }
 .product-card-text textarea,
 .product-card-text input {

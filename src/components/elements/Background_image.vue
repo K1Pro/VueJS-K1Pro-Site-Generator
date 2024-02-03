@@ -29,7 +29,7 @@
               : '0px',
           }"
         >
-          Select Gallery Image
+          Select Image
         </button>
         <!-- <h1 style="font-size: 50px">Bartosz Kwasniewski</h1>
         <p>Programista</p>

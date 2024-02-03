@@ -1,6 +1,5 @@
 <template>
   <div
-    :name="elValue.name"
     :class="elKey"
     :style="{
       backgroundColor: elValue.style.backgroundColor + elValue.style.opacity,

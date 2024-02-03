@@ -1,6 +1,5 @@
 <template>
   <div
-    :name="elValue.name"
     :class="elKey"
     :style="{
       'padding-bottom': elValue.style['padding-bottom'] + 'px',

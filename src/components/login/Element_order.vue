@@ -2,30 +2,6 @@
   <div class="element-order">
     <template v-for="(element, elementIndex) in site.params.htmlElements">
       <div
-        v-if="elementIndex === site.params.htmlElements.length - 1"
-        class="element-order-items"
-      >
-        <!-- Add new element -->
-        <select name="addElement" v-model="selectedCreateElType">
-          <option value="" disabled selected>Create</option>
-          <template v-if="content.default">
-            <option
-              v-for="defaultName in Object.keys(content.default).filter((e) => {
-                return !site.params.htmlElementsUniqList.includes(e);
-              })"
-              :value="defaultName"
-            >
-              {{ defaultName.charAt(0).toUpperCase()
-              }}{{ defaultName.slice(1).replaceAll('-', ' ') }}
-            </option>
-          </template>
-        </select>
-        <input type="text" placeholder="Name" v-model="selectedCreateElName" />
-        <div @click.prevent="createEl(elementIndex)">
-          <i class="fa-solid fa-circle-plus" style="color: green"></i>
-        </div>
-      </div>
-      <div
         v-for="elementName in Object.keys(element)"
         :name="elementName"
         class="element-order-items"
@@ -33,10 +9,7 @@
         {{ elementName.charAt(0).toUpperCase()
         }}{{ elementName.slice(1).replaceAll('-', ' ') }}
         <!-- Delete Button -->
-        <div
-          v-if="elementName !== 'footer'"
-          @click.prevent="deleteEl(elementIndex)"
-        >
+        <div @click.prevent="deleteEl(elementIndex)">
           <i class="fa-solid fa-circle-minus" style="color: #ff0000"></i>
         </div>
         <!-- Enable/Disable Button -->
@@ -85,8 +58,36 @@
           @click.prevent="moveUp(elementIndex)"
         >
           <i class="fa-solid fa-circle-up" :name="elementIndex"></i>
-        </div></div
-    ></template>
+        </div>
+      </div>
+      <div
+        v-if="elementIndex === site.params.htmlElements.length - 1"
+        class="element-order-items"
+      >
+        <!-- Add new element // return !content.defaultHtmlUniqElements.includes(e); -->
+        <select name="addElement" v-model="selectedCreateElType">
+          <option value="" disabled selected>Create</option>
+          <template
+            v-if="
+              content.defaultHtmlElements &&
+              content.defaultHtmlAllElements &&
+              content.defaultHtmlUniqElements
+            "
+          >
+            <option
+              v-for="siteHtmlUniqElements in siteHtmlUniqElementsArr"
+              :value="siteHtmlUniqElements"
+            >
+              {{ siteHtmlUniqElements.charAt(0).toUpperCase()
+              }}{{ siteHtmlUniqElements.slice(1).replaceAll('-', ' ') }}
+            </option>
+          </template>
+        </select>
+        <div @click.prevent="createEl(elementIndex)">
+          <i class="fa-solid fa-circle-plus" style="color: green"></i>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -101,41 +102,68 @@ export default {
       'content',
       'endPts',
     ]),
+    siteHtmlAllElementsArr() {
+      let siteHtmlAllElementsArray = [];
+      this.site.params.htmlElements.forEach((el) =>
+        siteHtmlAllElementsArray.push(Object.keys(el)[0])
+      );
+      return siteHtmlAllElementsArray;
+    },
+    siteHtmlUniqElementsArr() {
+      let siteHtmlUniqElementsArray = [];
+      this.content.defaultHtmlAllElements.forEach((el) => {
+        if (
+          !this.content.defaultHtmlUniqElements.includes(el) ||
+          !this.siteHtmlAllElementsArr.includes(el)
+        ) {
+          siteHtmlUniqElementsArray.push(el);
+        }
+      });
+      return siteHtmlUniqElementsArray;
+    },
   },
 
   data() {
-    return { selectedCreateElType: '', selectedCreateElName: '' };
+    return {
+      selectedCreateElType: '',
+    };
   },
   methods: {
     createEl() {
-      if (this.selectedCreateElType && this.selectedCreateElName) {
+      if (this.selectedCreateElType) {
         const createdElement = {
           [this.selectedCreateElType]:
-            this.content.default[this.selectedCreateElType],
+            this.content.defaultHtmlElements[this.selectedCreateElType],
         };
-        createdElement[this.selectedCreateElType].name =
-          this.selectedCreateElName;
+        const htmlElPostion =
+          this.content.defaultHtmlElements[this.selectedCreateElType].position;
+        let createdElPosition = this.site.params.htmlElements.length;
+        if (
+          htmlElPostion === undefined &&
+          this.siteHtmlAllElementsArr.includes('footer')
+        ) {
+          createdElPosition--;
+        } else if (htmlElPostion !== undefined) {
+          if (
+            !this.siteHtmlAllElementsArr.includes('top-menu') &&
+            this.selectedCreateElType != 'top-menu'
+          ) {
+            createdElPosition = htmlElPostion - 1;
+          } else {
+            createdElPosition = htmlElPostion;
+          }
+        }
+
         this.site.params.htmlElements.splice(
-          this.site.params.htmlElements.length - 1,
+          createdElPosition,
           0,
           createdElement
         );
       } else {
-        !this.selectedCreateElType
-          ? (this.msg.snackBar = 'Element type required')
-          : (this.msg.snackBar = 'Element name required');
+        this.msg.snackBar = 'Element type required';
       }
     },
     deleteEl(elementIndex) {
-      const removeUniqEl = this.site.params.htmlElementsUniqList.filter(
-        (uniqElements) => {
-          return (
-            uniqElements !==
-            Object.keys(this.site.params.htmlElements[elementIndex])[0]
-          );
-        }
-      );
-      this.site.params.htmlElementsUniqList = removeUniqEl;
       this.site.params.htmlElements.splice(elementIndex, 1);
     },
     moveDown(elementIndex) {
