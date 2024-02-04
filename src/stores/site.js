@@ -124,6 +124,12 @@ const useSiteStore = Pinia.defineStore('site', {
           document.cookie = `_s_i=${
             this.sessionID
           }; expires=${tomorrow.toString()};`;
+          document.cookie = `_a_t=${
+            this.accessToken
+          }; path=/admin; expires=${tomorrow.toString()};`;
+          document.cookie = `_s_i=${
+            this.sessionID
+          }; path=/admin; expires=${tomorrow.toString()};`;
         } else {
           this.deleteCookie();
           this.msg.snackBar = getLoginJSON.messages[0];

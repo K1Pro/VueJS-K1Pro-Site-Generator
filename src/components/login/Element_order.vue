@@ -34,10 +34,7 @@
         <!-- Down Button -->
         <div
           v-if="
-            // !content.defaultHtmlUniqElements?.includes(elementName) && // this is causing a delay in loading
-            elementName !== 'top-menu' &&
-            elementName !== 'background-image' &&
-            elementName !== 'footer' &&
+            !staticHtmlElements.includes(elementName) &&
             !site.params.htmlElements?.[elementIndex + 1]?.['footer'] &&
             site.params.htmlElements?.[elementIndex + 1]
           "
@@ -48,9 +45,7 @@
         <!-- Up Button -->
         <div
           v-if="
-            elementName !== 'top-menu' &&
-            elementName !== 'background-image' &&
-            elementName !== 'footer' &&
+            !staticHtmlElements.includes(elementName) &&
             !site.params.htmlElements?.[elementIndex - 1]?.[
               'background-image'
             ] &&
@@ -128,6 +123,7 @@ export default {
   data() {
     return {
       selectedCreateElType: '',
+      staticHtmlElements: ['top-menu', 'background-image', 'footer'],
     };
   },
   methods: {
