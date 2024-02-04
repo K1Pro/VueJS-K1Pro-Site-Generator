@@ -51,10 +51,14 @@
           :style="{ 'background-color': elValue.style.cardColor }"
         >
           <div class="product-card-group">
+            <img
+              :src="productcard[0]"
+              :alt="productcard[1]"
+              :style="{ 'margin-bottom': loggedIn ? '-26px' : '0px' }"
+            />
             <button v-if="loggedIn" @click="selectImg(cardIndex)">
               Select Image
             </button>
-            <img :src="productcard[0]" :alt="productcard[1]" />
             <div
               class="product-card-text"
               :style="{ padding: loggedIn ? '0px' : '12px' }"
@@ -113,6 +117,7 @@ export default {
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
       'loggedIn',
+      'msg',
       'windowWidth',
       'respWidth',
       'site',
@@ -171,7 +176,8 @@ export default {
 }
 .product-card-group img {
   width: 100%;
-  margin-top: -22px;
+  height: 350px;
+  object-fit: cover;
 }
 .product-card-text textarea,
 .product-card-text input {
@@ -185,5 +191,10 @@ export default {
 .product-card-header,
 .product-card-text input {
   font-size: 30px;
+}
+@media only screen and (min-width: 650px) {
+  .product-card-group img {
+    height: 250px;
+  }
 }
 </style>
