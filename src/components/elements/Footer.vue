@@ -3,19 +3,26 @@
     class="footer"
     :style="{
       top: '0px',
-      color: site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['color'],
+      color:
+        site.params.htmlElements[site.params.htmlElements.length - 1]['footer'][
+          'style'
+        ]['color'],
       'border-width': loggedIn ? '1px 1px 0px 1px' : '1px 0px 0px 0px',
       'border-style': loggedIn ? 'dashed' : 'solid',
       'border-color': loggedIn
         ? 'black'
-        : site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['borderColor'],
+        : site.params.htmlElements[site.params.htmlElements.length - 1][
+            'footer'
+          ]['style']['borderColor'],
     }"
   >
     <div
       class="footer-container"
       :style="{
         'background-color':
-          site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['backgroundColor'],
+          site.params.htmlElements[site.params.htmlElements.length - 1][
+            'footer'
+          ]['style']['backgroundColor'],
       }"
     >
       <!-- :style="{'background-color': }"  next is here get order first of index-->
@@ -32,10 +39,12 @@
       <div class="footer-item3">
         <h2>Description</h2>
         <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged.
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book. It has survived not only
+          five centuries, but also the leap into electronic typesetting,
+          remaining essentially unchanged.
         </p>
       </div>
 
@@ -49,7 +58,11 @@
           <div>
             Text Color: <br /><input
               type="color"
-              v-model="site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['color']"
+              v-model="
+                site.params.htmlElements[site.params.htmlElements.length - 1][
+                  'footer'
+                ]['style']['color']
+              "
             />
           </div>
           <hr />
@@ -57,7 +70,9 @@
             Background Color: <br /><input
               type="color"
               v-model="
-                site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['backgroundColor']
+                site.params.htmlElements[site.params.htmlElements.length - 1][
+                  'footer'
+                ]['style']['backgroundColor']
               "
             />
           </div>
@@ -65,7 +80,11 @@
           <div>
             Border Color: <br /><input
               type="color"
-              v-model="site.params.htmlElements[site.params.htmlElements.length - 1]['footer']['style']['borderColor']"
+              v-model="
+                site.params.htmlElements[site.params.htmlElements.length - 1][
+                  'footer'
+                ]['style']['borderColor']
+              "
             />
           </div>
           <hr />

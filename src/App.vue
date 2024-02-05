@@ -42,7 +42,11 @@
     ></template
   >
 
-  <template v-else-if="site.isValid === 'blog'"> Blog </template>
+  <template v-else-if="site.isValid === 'blog'">
+    <template v-if="loggedIn !== true">
+      <blog_container></blog_container>
+    </template>
+  </template>
 
   <template v-else>Nothing</template>
 </template>
@@ -52,6 +56,7 @@ import Snackbar from './components/Snackbar.vue';
 import Directory from './components/Directory.vue';
 import Login_side_panel from './components/login/Side_panel.vue';
 import App_container from './components/App_container.vue';
+import Blog_container from './components/Blog_container.vue';
 import Login from './components/elements/footer/Login.vue';
 
 export default {
@@ -62,6 +67,7 @@ export default {
     Directory,
     Login_side_panel,
     App_container,
+    Blog_container,
     Login,
   },
 

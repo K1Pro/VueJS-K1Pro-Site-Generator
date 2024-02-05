@@ -33,6 +33,12 @@
           @click="openTab"
         ></button>
         <button
+          :class="{ tabactive: activeTab == 'comment-dots' }"
+          class="tablinks fa fa-comment-dots"
+          title="Blog"
+          @click="openTab"
+        ></button>
+        <button
           :class="{ tabactive: activeTab == 'envelope' }"
           class="tablinks fa fa-envelope"
           title="Messages"
@@ -68,6 +74,10 @@
         <text_generation></text_generation>
       </div>
 
+      <div class="tabcontent" v-if="activeTab === 'comment-dots'">
+        <blog_settings></blog_settings>
+      </div>
+
       <div class="tabcontent" v-if="activeTab === 'envelope'">
         <messages></messages>
       </div>
@@ -80,6 +90,7 @@ import Background_settings from './Background_settings.vue';
 import Image_search from './Image_search.vue';
 import Video_search from './Video_search.vue';
 import Text_generation from './Text_generation.vue';
+import Blog_settings from './Blog_settings.vue';
 import Messages from './Messages.vue';
 
 export default {
@@ -90,6 +101,7 @@ export default {
     Image_search,
     Video_search,
     Text_generation,
+    Blog_settings,
     Messages,
   },
 
