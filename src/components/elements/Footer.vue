@@ -25,9 +25,62 @@
           ]['style']['backgroundColor'],
       }"
     >
-      <!-- :style="{'background-color': }"  next is here get order first of index-->
-      <div class="footer-item1"></div>
-      <div class="footer-item2">
+      <div class="footer-item0"></div>
+      <div
+        v-for="(siteFooterItem, siteFooterIndex) in site.params.htmlElements[
+          elIndex
+        ].footer['footer-items']"
+        :class="'footer-item' + Number(siteFooterIndex + 1)"
+      >
+        <select v-if="loggedIn">
+          <option value="disabled" disabled selected>Choose type:</option>
+          <option value="none">None</option>
+          <template
+            v-for="defaultFooterItem in content.defaultHtmlElements?.footer[
+              'footer-items'
+            ]"
+          >
+            <option
+              v-if="siteFooterItem != defaultFooterItem"
+              :value="defaultFooterItem"
+            >
+              {{ defaultFooterItem.charAt(0).toUpperCase()
+              }}{{ defaultFooterItem.slice(1).replaceAll('-', ' ') }}
+            </option>
+          </template>
+        </select>
+        <template v-if="siteFooterItem == 'About Us'">
+          <h2>About Us</h2>
+          <p>
+            {{ site.params.author }}<br />
+            {{ site.params.phone }}<br />
+            <a href="mailto:test@test.com">{{ site.params.email }}</a>
+          </p></template
+        >
+
+        <template v-if="siteFooterItem == 'Description'">
+          <h2>Description</h2>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged.
+          </p></template
+        >
+
+        <template v-if="siteFooterItem == 'Contact Us'">
+          <contact_us></contact_us
+        ></template>
+
+        <template v-if="siteFooterItem == 'Login'">
+          <h2>Login</h2>
+          <login> </login>
+        </template>
+      </div>
+      <!-- <div class="footer-item2">
+
         <h2>About Us</h2>
         <p>
           {{ site.params.author }}<br />
@@ -52,51 +105,19 @@
         <contact_us></contact_us>
       </div>
 
-      <template v-if="loggedIn">
-        <div class="footer-item5">
-          <h2>Modify Footer</h2>
-          <div>
-            Text Color: <br /><input
-              type="color"
-              v-model="
-                site.params.htmlElements[site.params.htmlElements.length - 1][
-                  'footer'
-                ]['style']['color']
-              "
-            />
-          </div>
-          <hr />
-          <div>
-            Background Color: <br /><input
-              type="color"
-              v-model="
-                site.params.htmlElements[site.params.htmlElements.length - 1][
-                  'footer'
-                ]['style']['backgroundColor']
-              "
-            />
-          </div>
-          <hr />
-          <div>
-            Border Color: <br /><input
-              type="color"
-              v-model="
-                site.params.htmlElements[site.params.htmlElements.length - 1][
-                  'footer'
-                ]['style']['borderColor']
-              "
-            />
-          </div>
-          <hr />
-        </div>
-      </template>
-      <template v-else>
-        <div class="footer-item5">
-          <h2>Login</h2>
-          <login> </login>
-        </div>
-      </template>
-      <div class="footer-item6"></div>
+      <div class="footer-item5">
+        <h2>Login</h2>
+        <login> </login>
+      </div> -->
+
+      <div
+        :class="
+          'footer-item' +
+          Number(
+            site.params.htmlElements[elIndex].footer['footer-items'].length + 1
+          )
+        "
+      ></div>
     </div>
   </div>
 </template>
@@ -113,12 +134,14 @@ export default {
     Contact_us,
   },
 
+  props: ['elKey', 'elValue', 'elIndex'],
+
   data() {
     return {};
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'site']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'site', 'content']),
   },
 
   methods: {},
@@ -158,6 +181,7 @@ export default {
   /* padding: 10px; */
 }
 
+.footer-item0,
 .footer-item1,
 .footer-item2,
 .footer-item3,

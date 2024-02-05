@@ -33,8 +33,8 @@
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'comment-dots' }"
-          class="tablinks fa fa-comment-dots"
+          :class="{ tabactive: activeTab == 'square-poll-horizontal' }"
+          class="tablinks fa fa-square-poll-horizontal"
           title="Blog"
           @click="openTab"
         ></button>
@@ -74,7 +74,7 @@
         <text_generation></text_generation>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'comment-dots'">
+      <div class="tabcontent" v-if="activeTab === 'square-poll-horizontal'">
         <blog_settings></blog_settings>
       </div>
 
