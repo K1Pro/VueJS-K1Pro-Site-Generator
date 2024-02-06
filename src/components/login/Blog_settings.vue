@@ -7,11 +7,12 @@ export default {
   name: 'Blog Settings',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['site']),
+    ...Pinia.mapWritableState(useSiteStore, ['site', 'pageEditor']),
   },
 
   created() {
     console.log('Blog settings');
+    this.pageEditor = 'Blog';
   },
 };
 </script>

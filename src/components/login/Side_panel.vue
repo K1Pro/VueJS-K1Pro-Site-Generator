@@ -11,7 +11,13 @@
         <button
           :class="{ tabactive: activeTab == 'gear' }"
           class="tablinks fa fa-gear"
-          title="Page settings"
+          title="Web site"
+          @click="openTab"
+        ></button>
+        <button
+          :class="{ tabactive: activeTab == 'square-poll-horizontal' }"
+          class="tablinks fa fa-square-poll-horizontal"
+          title="Blog"
           @click="openTab"
         ></button>
         <button
@@ -30,12 +36,6 @@
           :class="{ tabactive: activeTab == 'file-lines' }"
           class="tablinks fa fa-file-lines"
           title="Text search"
-          @click="openTab"
-        ></button>
-        <button
-          :class="{ tabactive: activeTab == 'square-poll-horizontal' }"
-          class="tablinks fa fa-square-poll-horizontal"
-          title="Blog"
           @click="openTab"
         ></button>
         <button

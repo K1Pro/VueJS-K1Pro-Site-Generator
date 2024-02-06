@@ -21,7 +21,8 @@
             </div>
           </div>
           <div class="inline-editor">
-            <app_container></app_container>
+            <app_container v-if="pageEditor == 'Website'"></app_container>
+            <blog_container v-else="pageEditor == 'Blog'"></blog_container>
           </div>
         </div>
       </div>
@@ -81,6 +82,7 @@ export default {
       'msg',
       'site',
       'endPts',
+      'pageEditor',
       'getSite',
       'getCookie',
       'deleteCookie',

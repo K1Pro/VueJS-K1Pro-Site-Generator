@@ -26,6 +26,7 @@ const useSiteStore = Pinia.defineStore('site', {
       },
       user: {},
       content: content,
+      pageEditor: 'Web site',
       endPts: {
         siteURL: site_url,
         loginURL: login_url,
