@@ -37,7 +37,7 @@
       class="product-card-container"
       :style="{
         gridTemplateColumns:
-          windowWidth > respWidth
+          windowWidth > respWidth.md
             ? gridTemplateColumnsFull
             : gridTemplateColumnsMobile,
       }"

@@ -34,7 +34,7 @@
         <!-- Down Button -->
         <div
           v-if="
-            !staticHtmlElements.includes(elementName) &&
+            !content.htmlStaticElements.includes(elementName) &&
             !site.params.htmlElements?.[elementIndex + 1]?.['footer'] &&
             site.params.htmlElements?.[elementIndex + 1]
           "
@@ -45,7 +45,7 @@
         <!-- Up Button -->
         <div
           v-if="
-            !staticHtmlElements.includes(elementName) &&
+            !content.htmlStaticElements.includes(elementName) &&
             !site.params.htmlElements?.[elementIndex - 1]?.[
               'background-image'
             ] &&
@@ -61,14 +61,14 @@
         v-if="elementIndex === site.params.htmlElements.length - 1"
         class="element-order-items"
       >
-        <!-- Add new element // return !content.defaultHtmlUniqElements.includes(e); -->
+        <!-- Add new element // return !content.htmlUniqElements.includes(e); -->
         <select name="addElement" v-model="selectedCreateElType">
           <option value="" disabled selected>Create</option>
           <template
             v-if="
-              content.defaultHtmlElements &&
-              content.defaultHtmlAllElements &&
-              content.defaultHtmlUniqElements
+              content.htmlElements &&
+              content.htmlAllElements &&
+              content.htmlUniqElements
             "
           >
             <option
@@ -108,9 +108,9 @@ export default {
     },
     siteHtmlUniqElementsArr() {
       let siteHtmlUniqElementsArray = [];
-      this.content.defaultHtmlAllElements.forEach((el) => {
+      this.content.htmlAllElements.forEach((el) => {
         if (
-          !this.content.defaultHtmlUniqElements.includes(el) ||
+          !this.content.htmlUniqElements.includes(el) ||
           !this.siteHtmlAllElementsArr.includes(el)
         ) {
           siteHtmlUniqElementsArray.push(el);
@@ -123,7 +123,6 @@ export default {
   data() {
     return {
       selectedCreateElType: '',
-      staticHtmlElements: ['top-menu', 'background-image', 'footer'],
     };
   },
   methods: {
@@ -131,10 +130,10 @@ export default {
       if (this.selectedCreateElType) {
         const createdElement = {
           [this.selectedCreateElType]:
-            this.content.defaultHtmlElements[this.selectedCreateElType],
+            this.content.htmlElements[this.selectedCreateElType],
         };
         const htmlElPostion =
-          this.content.defaultHtmlElements[this.selectedCreateElType].position;
+          this.content.htmlElements[this.selectedCreateElType].position;
         let createdElPosition = this.site.params.htmlElements.length;
         if (
           htmlElPostion === undefined &&

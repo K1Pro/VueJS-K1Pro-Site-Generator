@@ -96,18 +96,18 @@ export default {
     if (this.site.isValid === 'false' || this.site.isValid === null) {
       this.msg.snackBar = 'Invalid site';
     }
-    this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
+    this.respvColAmnt = this.windowWidth > this.respWidth.md ? 9 : 3;
     this.directoryGridStaticCol =
-      this.windowWidth > this.respWidth
+      this.windowWidth > this.respWidth.md
         ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%'
         : '3% 30% 30% 30% 3%';
   },
 
   watch: {
     windowWidth(newWindowWidth, oldWindowWidth) {
-      this.respvColAmnt = this.windowWidth > this.respWidth ? 9 : 3;
+      this.respvColAmnt = this.windowWidth > this.respWidth.md ? 9 : 3;
       this.directoryGridStaticCol =
-        this.windowWidth > this.respWidth
+        this.windowWidth > this.respWidth.md
           ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%'
           : '3% 30% 30% 30% 3%';
     },

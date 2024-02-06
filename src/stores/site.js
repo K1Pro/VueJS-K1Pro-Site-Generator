@@ -12,7 +12,12 @@ const useSiteStore = Pinia.defineStore('site', {
       },
       spinGlobal: false,
       windowWidth: 0,
-      respWidth: 650,
+      respWidth: {
+        sm: 576,
+        md: 650,
+        lg: 992,
+        xl: 1140,
+      },
       scannedDirs: scanned_dirs,
       site: {
         folderPath: folder_path,
@@ -20,7 +25,7 @@ const useSiteStore = Pinia.defineStore('site', {
         params: params,
       },
       user: {},
-      content: {},
+      content: content,
       endPts: {
         siteURL: site_url,
         loginURL: login_url,

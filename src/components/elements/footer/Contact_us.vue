@@ -1,6 +1,6 @@
 <template>
   <div class="contact-us">
-    <h2>Contact Us</h2>
+    <h2 v-if="!loggedIn">Contact Us</h2>
     <div class="footer-contact-container">
       <input
         type="text"

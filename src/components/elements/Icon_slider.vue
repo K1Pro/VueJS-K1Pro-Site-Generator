@@ -37,7 +37,7 @@
       class="icon-slider-container"
       :style="{
         gridTemplateColumns:
-          windowWidth > respWidth
+          windowWidth > respWidth.md
             ? gridTemplateColumnsFull
             : gridTemplateColumnsMobile,
       }"
@@ -178,7 +178,7 @@ export default {
         'icon-slider-items'
       ].push(['', 'fa-solid fa-question']);
       this.respvIconAmnt =
-        this.windowWidth > this.respWidth
+        this.windowWidth > this.respWidth.md
           ? this.site.params.htmlElements[this.elIndex][this.elKey][
               'icon-slider-items'
             ].length
@@ -189,7 +189,7 @@ export default {
         'icon-slider-items'
       ].splice(iconIndex, 1);
       this.respvIconAmnt =
-        this.windowWidth > this.respWidth
+        this.windowWidth > this.respWidth.md
           ? this.site.params.htmlElements[this.elIndex][this.elKey][
               'icon-slider-items'
             ].length
@@ -202,7 +202,7 @@ export default {
 
   created() {
     this.respvIconAmnt =
-      this.windowWidth > this.respWidth
+      this.windowWidth > this.respWidth.md
         ? this.site.params.htmlElements[this.elIndex][this.elKey][
             'icon-slider-items'
           ].length
@@ -212,7 +212,7 @@ export default {
   watch: {
     windowWidth(newWindowWidth, oldWindowWidth) {
       this.respvIconAmnt =
-        this.windowWidth > this.respWidth
+        this.windowWidth > this.respWidth.md
           ? this.site.params.htmlElements[this.elIndex][this.elKey][
               'icon-slider-items'
             ].length

@@ -4,7 +4,7 @@
     :style="{
       backgroundColor: elValue.style.backgroundColor + elValue.style.opacity,
       height:
-        windowWidth < respWidth && elValue.responsive
+        windowWidth < respWidth.md && elValue.responsive
           ? 50 * elValue['menu-items'].length +
             Number(elValue.style.height) +
             'px'
@@ -23,7 +23,7 @@
     <template v-else-if="loggedIn">
       <!-- Menu Logo -->
       <div
-        v-if="windowWidth > respWidth"
+        v-if="windowWidth > respWidth.md"
         class="logo"
         :style="{
           height: Number(elValue.style.height) - 20 + 'px',
@@ -115,13 +115,13 @@
       <div
         class="top-menu-alignment"
         :style="{
-          float: windowWidth > respWidth ? elValue.style.alignment : 'none',
+          float: windowWidth > respWidth.md ? elValue.style.alignment : 'none',
         }"
       >
         <div
           v-if="
-            windowWidth > respWidth ||
-            (windowWidth < respWidth && elValue.responsive)
+            windowWidth > respWidth.md ||
+            (windowWidth < respWidth.md && elValue.responsive)
           "
           class="top-menu-items"
         >
@@ -132,11 +132,11 @@
               :style="{
                 color: elValue.style.color ? elValue.style.color : '#000000',
                 height:
-                  windowWidth < respWidth && elValue.responsive
+                  windowWidth < respWidth.md && elValue.responsive
                     ? '50px'
                     : elValue.style.height + 'px',
                 'line-height':
-                  windowWidth < respWidth && elValue.responsive
+                  windowWidth < respWidth.md && elValue.responsive
                     ? '50px'
                     : elValue.style.height + 'px',
               }"
@@ -150,7 +150,7 @@
       </div>
 
       <!-- Menu Hamburger Button -->
-      <template v-if="windowWidth < respWidth">
+      <template v-if="windowWidth < respWidth.md">
         <a @click.prevent="toggleRespMenu" class="top-menu-icon"
           ><i
             class="fa fa-bars"
@@ -257,7 +257,7 @@ export default {
     },
   },
   created() {
-    if (this.windowWidth < this.respWidth)
+    if (this.windowWidth < this.respWidth.md)
       this.site.params.htmlElements[this.elIndex][
         'top-menu'
       ].responsive = false;
@@ -286,8 +286,10 @@ export default {
     windowWidth(newWindowWidth, oldWindowWidth) {
       // This closes the responsive menu if window width changes from mobile to full and vice-versa.
       if (
-        (newWindowWidth > this.respWidth && oldWindowWidth < this.respWidth) ||
-        (newWindowWidth < this.respWidth && oldWindowWidth > this.respWidth)
+        (newWindowWidth > this.respWidth.md &&
+          oldWindowWidth < this.respWidth.md) ||
+        (newWindowWidth < this.respWidth.md &&
+          oldWindowWidth > this.respWidth.md)
       )
         this.site.params.htmlElements[this.elIndex][
           'top-menu'
