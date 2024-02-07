@@ -10,25 +10,22 @@
         :elIndex="htmlIndex"
       ></top_menu> </template
   ></template>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
-  <div>Here is your blog</div>
+  <blog_menu></blog_menu>
+  <div class="blog-content">Here is your blog content</div>
+  <subscribe></subscribe>
 </template>
 
 <script>
 import Top_menu from './elements/Top_menu.vue';
+import Blog_menu from './elements/blog/Menu.vue';
+import Subscribe from './elements/blog/Subscribe.vue';
 export default {
   name: 'Blog Container',
 
   components: {
     Top_menu,
+    Blog_menu,
+    Subscribe,
   },
 
   computed: {
@@ -38,4 +35,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.blog-content {
+  position: relative;
+  padding: 10px;
+}
+</style>
