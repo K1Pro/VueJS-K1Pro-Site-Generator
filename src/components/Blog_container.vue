@@ -29,7 +29,6 @@ export default {
   },
 
   computed: {
-    // ...Pinia.mapStores(useSiteStore),
     ...Pinia.mapWritableState(useSiteStore, ['site']),
   },
 };

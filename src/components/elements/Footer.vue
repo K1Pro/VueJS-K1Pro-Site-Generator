@@ -1,6 +1,7 @@
 <template>
   <div
     class="footer"
+    id="Video"
     :style="{
       top: '0px',
       color:

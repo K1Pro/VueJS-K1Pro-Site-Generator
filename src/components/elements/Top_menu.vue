@@ -128,7 +128,7 @@
           <!-- Menu Items -->
           <template v-for="menuItem in elValue['menu-items']">
             <a
-              :href="'#' + menuItem"
+              :href="menuItem != 'Blog' ? '#' + menuItem : 'javascript:void(0)'"
               :style="{
                 color: elValue.style.color ? elValue.style.color : '#000000',
                 height:
@@ -142,6 +142,7 @@
               }"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
+              @click="clickMenuItem"
               >{{ menuItem }}</a
             >
           </template>
@@ -241,6 +242,17 @@ export default {
             ].style.backgroundColor;
         }
         event.target.style.filter = 'none';
+      }
+    },
+    clickMenuItem(event) {
+      this.toggleRespMenu();
+      console.log(event.target.innerHTML);
+      if (event.target.innerHTML == 'Blog') {
+        this.site.isValid = 'blog';
+        window.history.pushState(null, null, this.site.folderPath + '/blog');
+      } else {
+        this.site.isValid = 'true';
+        window.history.pushState(null, null, null);
       }
     },
     toggleRespMenu() {
