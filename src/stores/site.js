@@ -28,6 +28,8 @@ const useSiteStore = Pinia.defineStore('site', {
       content: content,
       pageEditor: 'Web site',
       endPts: {
+        href: href,
+        url_hash: window.location.hash,
         siteURL: site_url,
         loginURL: login_url,
         captchaURL: captcha_url,

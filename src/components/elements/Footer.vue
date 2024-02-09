@@ -1,7 +1,6 @@
 <template>
   <div
     class="footer"
-    id="Video"
     :style="{
       top: '0px',
       color:
@@ -17,6 +16,7 @@
           ]['style']['borderColor'],
     }"
   >
+    <a id="Video" ref="Video"></a>
     <template
       class="footer-container"
       :style="{
@@ -202,6 +202,12 @@ export default {
         event.srcElement.selectedOptions[0].value
       );
     },
+  },
+
+  mounted() {
+    window.scrollTo(this.$refs.Video);
+    if (this.$refs.Video.id == window.location.hash.slice(1))
+      window.scrollTo(0, this.$refs.Video.getBoundingClientRect().y);
   },
 };
 </script>

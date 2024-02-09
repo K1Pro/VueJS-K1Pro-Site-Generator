@@ -2,9 +2,6 @@
   <div
     class="blog-menu"
     :style="{
-      backgroundColor:
-        site.params.htmlElements[0]['top-menu'].style.backgroundColor +
-        site.params.htmlElements[0]['top-menu'].style.opacity,
       'padding-top': blogContentMarginTop,
     }"
   >
@@ -67,6 +64,7 @@ export default {
 
 <style>
 .blog-menu {
+  background-color: #ffffff00;
   padding-bottom: 10px;
   width: 100%;
   z-index: 4;

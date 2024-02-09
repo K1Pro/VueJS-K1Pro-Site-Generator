@@ -4,12 +4,7 @@
       <h2>K1Pro Website Directory</h2>
     </div>
     <div class="directory-search">
-      <input
-        type="search"
-        id="site-search"
-        name="search"
-        placeholder="Search for a site..."
-      />
+      <input type="search" name="search" placeholder="Search for a site..." />
     </div>
     <div
       class="directory-grid-container"

@@ -11,7 +11,7 @@
           : elValue.style.height + 'px',
       'overflow-x': loggedIn ? 'scroll' : 'hidden',
       'white-space': loggedIn ? 'nowrap' : 'normal',
-      position: loggedIn ? 'relative' : 'absolute',
+      position: loggedIn ? 'relative' : 'fixed',
       'margin-bottom': loggedIn ? '-' + elValue.style.height + 'px' : '0px',
       'text-align': loggedIn ? elValue.style.alignment : 'left',
       'border-width': loggedIn ? '1px 1px 1px 1px' : 'none',
@@ -246,13 +246,12 @@ export default {
     },
     clickMenuItem(event) {
       this.toggleRespMenu();
-      console.log(event.target.innerHTML);
       if (event.target.innerHTML == 'Blog') {
         this.site.isValid = 'blog';
-        window.history.pushState(null, null, this.site.folderPath + '/blog');
+        window.history.pushState(null, null, this.endPts.href + '/blog');
       } else {
         this.site.isValid = 'true';
-        window.history.pushState(null, null, null);
+        window.history.pushState(null, null, this.endPts.href);
       }
     },
     toggleRespMenu() {

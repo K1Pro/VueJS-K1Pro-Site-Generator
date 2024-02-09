@@ -127,6 +127,7 @@ export default {
   created() {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
+
     if (this.site.isValid == 'true' || this.site.isValid == 'admin') {
       this.email && this.password
         ? this.postLogin()
