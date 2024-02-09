@@ -14,9 +14,9 @@
       position: loggedIn ? 'relative' : 'fixed',
       'margin-bottom': loggedIn ? '-' + elValue.style.height + 'px' : '0px',
       'text-align': loggedIn ? elValue.style.alignment : 'left',
-      'border-width': loggedIn ? '1px 1px 1px 1px' : 'none',
-      'border-style': loggedIn ? 'dashed' : 'none',
-      'border-color': loggedIn ? 'black' : 'none',
+      'border-width': loggedIn ? '1px 1px 1px 1px' : '0px 0px 1px 0px',
+      'border-style': loggedIn ? 'dashed' : 'solid',
+      'border-color': loggedIn ? 'black' : 'black',
     }"
   >
     <template v-if="loggedIn === null"></template>
@@ -154,7 +154,7 @@
       <template v-if="windowWidth < respWidth.md">
         <a @click.prevent="toggleRespMenu" class="top-menu-icon"
           ><i
-            class="fa fa-bars"
+            :class="elValue.responsive ? 'fa fa-xmark' : 'fa fa-bars'"
             :style="{
               color: elValue.style.color,
               height: elValue.style.height + 'px',

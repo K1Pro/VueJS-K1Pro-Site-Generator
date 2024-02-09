@@ -16,8 +16,12 @@
           ]['style']['borderColor'],
     }"
   >
-    <a id="Video" ref="Video"></a>
-    <template
+    <a
+      v-if="site.params.htmlElements[elIndex][this.elKey].anchor != ''"
+      :id="site.params.htmlElements[elIndex][this.elKey].anchor + elIndex"
+      :ref="site.params.htmlElements[elIndex][this.elKey].anchor + elIndex"
+    ></a>
+    <div
       class="footer-container"
       :style="{
         'background-color':
@@ -116,7 +120,7 @@
           )
         "
       ></div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -205,9 +209,19 @@ export default {
   },
 
   mounted() {
-    window.scrollTo(this.$refs.Video);
-    if (this.$refs.Video.id == window.location.hash.slice(1))
-      window.scrollTo(0, this.$refs.Video.getBoundingClientRect().y);
+    if (
+      this.$refs[
+        this.site.params.htmlElements[this.elIndex][this.elKey].anchor +
+          this.elIndex
+      ]?.id == window.location.hash.slice(1)
+    )
+      window.scrollTo(
+        0,
+        this[
+          site.params.htmlElements[this.elIndex][[this.elKey]].anchor +
+            this.elIndex
+        ].Video.getBoundingClientRect().y
+      );
   },
 };
 </script>

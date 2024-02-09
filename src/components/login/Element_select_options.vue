@@ -7,6 +7,23 @@
         site.params.htmlElements[selectIndex][selectKey]['style'][selectChange]
       "
   /></template>
+  <template v-if="selectChange == 'anchor'">
+    <select
+      :name="selectKey + '_' + selectChange"
+      v-model="
+        site.params.htmlElements[selectIndex][selectKey]['style']['anchor']
+      "
+    >
+      <option value="" disabled selected>Choose</option>
+      <option
+        v-for="topMenuItems in site.params.htmlElements[0]['top-menu'][
+          'menu-items'
+        ]"
+      >
+        {{ topMenuItems }}
+      </option>
+    </select></template
+  >
   <template v-if="selectChange == 'height'">
     <input
       type="range"
