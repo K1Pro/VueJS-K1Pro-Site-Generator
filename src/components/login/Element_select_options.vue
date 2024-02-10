@@ -13,15 +13,47 @@
       v-model="
         site.params.htmlElements[selectIndex][selectKey]['style']['anchor']
       "
+      @change="updateAnchor"
     >
-      <option value="" disabled selected>Choose</option>
       <option
-        v-for="topMenuItems in site.params.htmlElements[0]['top-menu'][
+        :value="
+          site.params.htmlElements[selectIndex][selectKey]['style']['anchor']
+            ? site.params.htmlElements[selectIndex][selectKey]['style'][
+                'anchor'
+              ]
+            : ''
+        "
+        disabled
+        selected
+      >
+        {{
+          site.params.htmlElements[selectIndex][selectKey]['style']['anchor']
+            ? site.params.htmlElements[selectIndex][selectKey]['style'][
+                'anchor'
+              ]
+            : 'Choose'
+        }}
+      </option>
+      <option v-if="chosenAnchor" value="">None</option>
+      <template
+        v-for="topMenuItem in site.params.htmlElements[0]['top-menu'][
           'menu-items'
         ]"
       >
-        {{ topMenuItems }}
-      </option>
+        <option
+          v-if="
+            !site.params.htmlElements[0]['top-menu']['anchors-used'].includes(
+              topMenuItem
+            ) &&
+            topMenuItem != 'Blog' &&
+            topMenuItem != 'blog' &&
+            topMenuItem != 'Admin' &&
+            topMenuItem != 'admin'
+          "
+        >
+          {{ topMenuItem }}
+        </option>
+      </template>
     </select></template
   >
   <template v-if="selectChange == 'height'">
@@ -145,6 +177,12 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, ['site']),
   },
 
+  data() {
+    return {
+      chosenAnchor: '',
+    };
+  },
+
   methods: {
     changeMenuOpacity(event) {
       event.target.value == 100
@@ -159,6 +197,46 @@ export default {
       this.site.params.htmlElements[this.selectIndex][this.selectKey]['style'][
         'alignment'
       ] = event.target.value;
+    },
+    updateAnchor(event) {
+      this.chosenAnchor = event.srcElement.selectedOptions[0].value;
+      this.site.params.htmlElements[this.selectIndex][this.selectKey]['style'][
+        'anchor'
+      ] = event.srcElement.selectedOptions[0].value;
+      if (event.srcElement.selectedOptions[0].value) {
+        this.site.params.htmlElements[0]['top-menu']['anchors-used'].push(
+          event.srcElement.selectedOptions[0].value
+        );
+      }
+    },
+  },
+  created() {
+    if (
+      this.site.params.htmlElements[this.selectIndex][this.selectKey]['style'][
+        'anchor'
+      ]
+    ) {
+      this.chosenAnchor =
+        this.site.params.htmlElements[this.selectIndex][this.selectKey][
+          'style'
+        ]['anchor'];
+      console.log(
+        this.site.params.htmlElements[this.selectIndex][this.selectKey][
+          'style'
+        ]['anchor']
+      );
+    }
+  },
+  watch: {
+    chosenAnchor(newAnchor, oldAnchor) {
+      console.log(oldAnchor);
+      if (oldAnchor) {
+        const newAnchorUsed = this.site.params.htmlElements[0]['top-menu'][
+          'anchors-used'
+        ].filter((el) => el !== oldAnchor);
+        this.site.params.htmlElements[0]['top-menu']['anchors-used'] =
+          newAnchorUsed;
+      }
     },
   },
 };
