@@ -1,6 +1,8 @@
 <template>
   <snackbar> </snackbar>
 
+  <a id="Home" ref="Home"></a>
+
   <template v-if="site.isValid === 'true' && site.params?.htmlElements">
     <template v-if="loggedIn === true">
       <div class="login-container">
@@ -139,6 +141,8 @@ export default {
   mounted() {
     this.updateScreenWidth();
     this.onScreenResize();
+    if (this.$refs.Home.id == window.location.hash.slice(1))
+      window.scrollTo(0, 0);
   },
 };
 </script>

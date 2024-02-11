@@ -170,13 +170,7 @@ export default {
       this.$refs[
         this.site.params.htmlElements[this.elIndex][this.elKey].style.anchor
       ]?.id == window.location.hash.slice(1)
-    ) {
-      console.log(
-        this.$refs[
-          this.site.params.htmlElements[this.elIndex][[this.elKey]].style.anchor
-        ].getBoundingClientRect().y -
-          this.site.params.htmlElements[0]['top-menu'].style.height
-      );
+    )
       window.scrollTo(
         0,
         this.$refs[
@@ -184,7 +178,6 @@ export default {
         ].getBoundingClientRect().y -
           this.site.params.htmlElements[0]['top-menu'].style.height
       );
-    }
   },
 };
 </script>
