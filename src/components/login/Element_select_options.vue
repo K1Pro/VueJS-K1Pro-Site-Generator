@@ -42,9 +42,7 @@
       >
         <option
           v-if="
-            !site.params.htmlElements[0]['top-menu']['anchors-used'].includes(
-              topMenuItem
-            ) &&
+            !site.params.anchors.includes(topMenuItem) &&
             topMenuItem != 'Blog' &&
             topMenuItem != 'blog' &&
             topMenuItem != 'Admin' &&
@@ -204,7 +202,7 @@ export default {
         'anchor'
       ] = event.srcElement.selectedOptions[0].value;
       if (event.srcElement.selectedOptions[0].value) {
-        this.site.params.htmlElements[0]['top-menu']['anchors-used'].push(
+        this.site.params.anchors.push(
           event.srcElement.selectedOptions[0].value
         );
       }
@@ -231,11 +229,10 @@ export default {
     chosenAnchor(newAnchor, oldAnchor) {
       console.log(oldAnchor);
       if (oldAnchor) {
-        const newAnchorUsed = this.site.params.htmlElements[0]['top-menu'][
-          'anchors-used'
-        ].filter((el) => el !== oldAnchor);
-        this.site.params.htmlElements[0]['top-menu']['anchors-used'] =
-          newAnchorUsed;
+        const newAnchorUsed = this.site.params.anchors.filter(
+          (el) => el !== oldAnchor
+        );
+        this.site.params.anchors = newAnchorUsed;
       }
     },
   },
