@@ -75,18 +75,46 @@
           :style="{
             width: elValue.style.links[index].length * 9 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
-            backgroundColor: '#FFFFFF',
+            backgroundColor:
+              site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+                index
+              ] == 'Blog' ||
+              site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+                index
+              ] == 'Home'
+                ? 'lightgrey'
+                : 'white',
             color: elValue.style.color,
             border: '1px solid rgba(0, 0, 0, 1)',
             'border-radius': '0px',
           }"
           :placeholder="
-            '#' +
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+              index
+            ] == 'Blog' ||
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+              index
+            ] == 'Home'
+              ? site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+                  index
+                ]
+              : '#' +
+                site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+                  index
+                ]
           "
           v-model="
             site.params.htmlElements[elIndex]['top-menu'].style.links[index]
           "
+          :disabled="
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+              index
+            ] == 'Blog' ||
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+              index
+            ] == 'Home'
+          "
+          @keyup="removeAnchor"
         />
         <button
           v-if="
@@ -309,6 +337,26 @@ export default {
     },
     menuAction(event) {
       console.log(event.srcElement.selectedOptions[0].value);
+    },
+    removeAnchor(event) {
+      if (
+        this.site.params.anchors.includes(event.target.placeholder.slice(1))
+      ) {
+        const existingAnchors = this.site.params.anchors.filter(
+          (el) => el !== event.target.placeholder.slice(1)
+        );
+        this.site.params.anchors = existingAnchors;
+        this.site.params.htmlElements.forEach((el, index) => {
+          if (
+            event.target.placeholder.slice(1) ==
+            Object.entries(el)[0][1]?.style?.anchor
+          ) {
+            this.site.params.htmlElements[index][
+              Object.entries(el)[0][0]
+            ].style.anchor = '';
+          }
+        });
+      }
     },
   },
   created() {
