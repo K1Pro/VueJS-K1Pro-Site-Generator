@@ -11,6 +11,18 @@
       'padding-bottom': elValue.style['padding-bottom'] + 'px',
     }"
   >
+    <template
+      v-if="site.params.htmlElements[elIndex][elKey].style.anchor != ''"
+    >
+      <a
+        :style="{
+          'scroll-margin-top':
+            site.params.htmlElements[0]['top-menu'].style.height + 'px',
+        }"
+        :id="site.params.htmlElements[elIndex][elKey].style.anchor"
+        :ref="site.params.htmlElements[elIndex][elKey].style.anchor"
+      ></a>
+    </template>
     <div class="headline-container">
       <template v-if="loggedIn === true">
         <input
@@ -97,6 +109,21 @@ export default {
   },
 
   created() {},
+
+  mounted() {
+    if (
+      this.$refs[
+        this.site.params.htmlElements[this.elIndex][this.elKey].style.anchor
+      ]?.id == window.location.hash.slice(1)
+    )
+      window.scrollTo(
+        0,
+        this.$refs[
+          this.site.params.htmlElements[this.elIndex][[this.elKey]].style.anchor
+        ].getBoundingClientRect().y -
+          this.site.params.htmlElements[0]['top-menu'].style.height
+      );
+  },
 };
 </script>
 

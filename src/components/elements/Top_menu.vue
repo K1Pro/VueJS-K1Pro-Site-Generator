@@ -33,7 +33,7 @@
       </div>
       <!-- Menu Logo -->
       <template v-for="(menuItem, index) in elValue['menu-items']">
-        <template v-if="index > 1">
+        <template v-if="index > 1 && menuChange != 'links'">
           <button
             v-if="index < elValue['menu-items'].length"
             class="minus"
@@ -49,6 +49,7 @@
           ></button>
         </template>
         <input
+          v-if="menuChange != 'links'"
           type="text"
           :id="'top-menu-item-' + index"
           :style="{
@@ -67,10 +68,32 @@
             site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
           "
         />
+        <input
+          v-else="menuChange == 'links'"
+          type="text"
+          :id="'top-menu-item-' + index"
+          :style="{
+            width: elValue.style.links[index].length * 9 + 'px',
+            'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
+            backgroundColor: '#FFFFFF',
+            color: elValue.style.color,
+            border: '1px solid rgba(0, 0, 0, 1)',
+            'border-radius': '0px',
+          }"
+          :placeholder="
+            '#' +
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
+          "
+          v-model="
+            site.params.htmlElements[elIndex]['top-menu'].style.links[index]
+          "
+        />
         <button
+          v-if="
+            index === elValue['menu-items'].length - 1 && menuChange != 'links'
+          "
           class="plus"
           style="margin: 0px 20px"
-          v-if="index === elValue['menu-items'].length - 1"
           @click.prevent="addItem"
         ></button>
 
@@ -318,7 +341,7 @@ export default {
 
 .top-menu input[type='text'] {
   min-width: 30px;
-  margin: 7px -1px 7px 8px;
+  margin: 7px 0px 7px 8px;
   padding: 5px;
   text-align: left;
 }

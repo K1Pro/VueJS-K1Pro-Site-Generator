@@ -36,17 +36,22 @@
       </option>
       <option v-if="chosenAnchor" value="">None</option>
       <template
-        v-for="topMenuItem in site.params.htmlElements[0]['top-menu'][
-          'menu-items'
-        ]"
+        v-for="(topMenuItem, topMenuIndex) in site.params.htmlElements[0][
+          'top-menu'
+        ]['menu-items']"
       >
         <option
           v-if="
             !site.params.anchors.includes(topMenuItem) &&
+            !site.params.htmlElements[0]['top-menu'].style.links[
+              topMenuIndex
+            ] != '' &&
             topMenuItem != 'Blog' &&
             topMenuItem != 'blog' &&
             topMenuItem != 'Admin' &&
-            topMenuItem != 'admin'
+            topMenuItem != 'admin' &&
+            topMenuItem != 'Home' &&
+            topMenuItem != 'home'
           "
         >
           {{ topMenuItem }}

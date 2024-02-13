@@ -9,6 +9,18 @@
       'border-color': loggedIn ? 'black' : 'none',
     }"
   >
+    <template
+      v-if="site.params.htmlElements[elIndex][elKey].style.anchor != ''"
+    >
+      <a
+        :style="{
+          'scroll-margin-top':
+            site.params.htmlElements[0]['top-menu'].style.height + 'px',
+        }"
+        :id="site.params.htmlElements[elIndex][elKey].style.anchor"
+        :ref="site.params.htmlElements[elIndex][elKey].style.anchor"
+      ></a>
+    </template>
     <template v-if="loggedIn === true">
       <!-- Modify element select and options -->
       <div class="modPosition">
@@ -207,6 +219,21 @@ export default {
             'icon-slider-items'
           ].length
         : 3;
+  },
+
+  mounted() {
+    if (
+      this.$refs[
+        this.site.params.htmlElements[this.elIndex][this.elKey].style.anchor
+      ]?.id == window.location.hash.slice(1)
+    )
+      window.scrollTo(
+        0,
+        this.$refs[
+          this.site.params.htmlElements[this.elIndex][[this.elKey]].style.anchor
+        ].getBoundingClientRect().y -
+          this.site.params.htmlElements[0]['top-menu'].style.height
+      );
   },
 
   watch: {
