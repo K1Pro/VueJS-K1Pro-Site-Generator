@@ -122,7 +122,7 @@
           "
           class="plus"
           style="margin: 0px 20px"
-          @click.prevent="addItem"
+          @click.prevent="addItem(index)"
         ></button>
 
         <template v-if="index === elValue['menu-items'].length - 1">
@@ -273,7 +273,7 @@ export default {
   },
 
   methods: {
-    addItem() {
+    addItem(itemIndex) {
       this.menuItemAdded = true;
       if (
         this.site.params.htmlElements[this.elIndex]['top-menu']['menu-items']
@@ -282,6 +282,9 @@ export default {
         this.site.params.htmlElements[this.elIndex]['top-menu'][
           'menu-items'
         ].push('');
+        this.site.params.htmlElements[this.elIndex]['top-menu'].style.links[
+          itemIndex + 1
+        ] = '';
         this.menuChange = '';
       } else {
         this.menuChange = '';
@@ -334,6 +337,9 @@ export default {
       this.site.params.htmlElements[this.elIndex]['top-menu'][
         'menu-items'
       ].splice(menuItemIndex, 1);
+      this.site.params.htmlElements[this.elIndex][
+        'top-menu'
+      ].style.links.splice(menuItemIndex, 1);
     },
     menuAction(event) {
       console.log(event.srcElement.selectedOptions[0].value);
