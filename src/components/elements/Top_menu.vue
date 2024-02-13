@@ -149,8 +149,9 @@
           class="top-menu-items"
         >
           <!-- Menu Items -->
-          <template v-for="menuItem in elValue['menu-items']">
+          <template v-for="(menuItem, menuIndex) in elValue['menu-items']">
             <a
+              v-if="elValue.style.links[menuIndex] == ''"
               :href="menuItem != 'Blog' ? '#' + menuItem : 'javascript:void(0)'"
               :style="{
                 color: elValue.style.color ? elValue.style.color : '#000000',
@@ -166,6 +167,25 @@
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
               @click="clickMenuItem"
+              >{{ menuItem }}</a
+            >
+            <a
+              v-else
+              :href="elValue.style.links[menuIndex]"
+              :style="{
+                color: elValue.style.color ? elValue.style.color : '#000000',
+                height:
+                  windowWidth < respWidth.md && elValue.responsive
+                    ? '50px'
+                    : elValue.style.height + 'px',
+                'line-height':
+                  windowWidth < respWidth.md && elValue.responsive
+                    ? '50px'
+                    : elValue.style.height + 'px',
+              }"
+              @mouseover="highlightMenuItem(true, $event)"
+              @mouseout="highlightMenuItem(false, $event)"
+              target="_blank"
               >{{ menuItem }}</a
             >
           </template>
@@ -269,6 +289,7 @@ export default {
     },
     clickMenuItem(event) {
       this.toggleRespMenu();
+      console.log(event.target);
       if (event.target.innerHTML == 'Blog') {
         this.site.isValid = 'blog';
         window.history.pushState(null, null, this.endPts.href + '/blog');
