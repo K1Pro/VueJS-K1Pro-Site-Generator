@@ -43,7 +43,7 @@
         <option
           v-if="
             !site.params.anchors.includes(topMenuItem) &&
-            !site.params.htmlElements[0]['top-menu'].style.links[
+            !site.params.htmlElements[0]?.['top-menu']?.style.links[
               topMenuIndex
             ] != '' &&
             topMenuItem != 'Blog' &&

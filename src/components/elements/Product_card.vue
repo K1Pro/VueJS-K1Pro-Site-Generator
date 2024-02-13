@@ -14,8 +14,10 @@
     >
       <a
         :style="{
-          'scroll-margin-top':
-            site.params.htmlElements[0]['top-menu'].style.height + 'px',
+          'scroll-margin-top': site.params.htmlElements[0]['top-menu']?.style
+            .height
+            ? site.params.htmlElements[0]['top-menu'].style.height + 'px'
+            : '0px',
         }"
         :id="site.params.htmlElements[elIndex][elKey].style.anchor"
         :ref="site.params.htmlElements[elIndex][elKey].style.anchor"
