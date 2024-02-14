@@ -118,6 +118,8 @@ const useSiteStore = Pinia.defineStore('site', {
           getLoginJSON.success &&
           getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.folderPath]
         ) {
+          this.email = '';
+          this.password = '';
           this.getUserContent('POST', null);
           this.msg.snackBar = 'Logged in';
           this.user = getLoginJSON.data.user;

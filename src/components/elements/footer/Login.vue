@@ -6,6 +6,7 @@
       name="username"
       placeholder="Username"
       autocomplete="email"
+      :disabled="loggedIn"
       :class="{
         invalid: isUsernameValid,
       }"
@@ -18,6 +19,7 @@
       name="password"
       placeholder="Password"
       autocomplete="current-password"
+      :disabled="loggedIn"
       :class="{
         invalid: isPasswordValid,
       }"
@@ -27,7 +29,7 @@
     />
     <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
     <br />
-    <button @click.prevent="loginFn">
+    <button :disabled="loggedIn" @click.prevent="loginFn">
       <i
         v-if="spinLogin && spinGlobal"
         class="spin fa-sharp fa-solid fa-circle-notch"
@@ -35,7 +37,7 @@
       <span v-else>Log In</span>
     </button>
     <p></p>
-    <button>Reset</button>
+    <button :disabled="loggedIn">Reset</button>
   </div>
 </template>
 
