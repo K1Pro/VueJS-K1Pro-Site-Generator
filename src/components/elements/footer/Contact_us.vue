@@ -7,6 +7,7 @@
         name="Name"
         class="cntctInpts"
         placeholder="Name"
+        :disabled="loggedIn"
         v-model="msgName"
         @keyup="removeInvalidContactUsFn"
       />
@@ -15,6 +16,7 @@
         name="Email"
         class="cntctInpts"
         placeholder="Email"
+        :disabled="loggedIn"
         v-model="msgEmail"
         @keyup="removeInvalidContactUsFn"
       />
@@ -23,12 +25,13 @@
         name="Message"
         class="cntctInpts"
         placeholder="Message"
+        :disabled="loggedIn"
         v-model="msgMessage"
         @keyup="removeInvalidContactUsFn"
       ></textarea>
       <div class="footer-captcha">
         <img :src="endPts.captchaURL + msgDate + '.jpg'" />
-        <button @click="updateCaptcha">
+        <button :disabled="loggedIn" @click="updateCaptcha">
           <i
             :class="{ spin: spinUpdateCaptcha }"
             class="fa-solid fa-arrows-rotate"
@@ -37,6 +40,7 @@
         <input
           type="text"
           name="Captcha"
+          :disabled="loggedIn"
           :class="{
             invalid:
               msg_captcha == 'Refresh captcha' ||
@@ -48,7 +52,7 @@
           @keyup="removeInvalidContactUsFn"
         />
       </div>
-      <button @click.prevent="postMsg">
+      <button :disabled="loggedIn" @click.prevent="postMsg">
         <i
           v-if="spinContactUsSend"
           class="spin fa-sharp fa-solid fa-circle-notch"
