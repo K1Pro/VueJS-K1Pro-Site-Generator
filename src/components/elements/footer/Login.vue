@@ -11,7 +11,7 @@
       }"
       v-model="email"
       @keyup="removeInvalidLoginFn"
-      @keyup.enter="postLogin"
+      @keyup.enter="loginFn"
     /><br />
     <input
       type="password"
@@ -23,7 +23,7 @@
       }"
       v-model="password"
       @keyup="removeInvalidLoginFn"
-      @keyup.enter="postLogin"
+      @keyup.enter="loginFn"
     />
     <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
     <br />

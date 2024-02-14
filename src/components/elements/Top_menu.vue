@@ -53,7 +53,7 @@
           type="text"
           :id="'top-menu-item-' + index"
           :style="{
-            width: elValue['menu-items'][index].length * 9 + 'px',
+            width: elValue['menu-items'][index].length * 7 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
             backgroundColor:
               elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
@@ -73,7 +73,9 @@
           type="text"
           :id="'top-menu-item-' + index"
           :style="{
-            width: elValue.style.links[index].length * 9 + 'px',
+            width: elValue.style.links[index]
+              ? elValue.style.links[index].length * 7 + 'px'
+              : elValue['menu-items'][index].length * 7 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
             backgroundColor:
               site.params.htmlElements[elIndex]['top-menu']['menu-items'][
@@ -89,19 +91,7 @@
             'border-radius': '0px',
           }"
           :placeholder="
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
-              index
-            ] == 'Blog' ||
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
-              index
-            ] == 'Home'
-              ? site.params.htmlElements[elIndex]['top-menu']['menu-items'][
-                  index
-                ]
-              : '#' +
-                site.params.htmlElements[elIndex]['top-menu']['menu-items'][
-                  index
-                ]
+            site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
           "
           v-model="
             site.params.htmlElements[elIndex]['top-menu'].style.links[index]
@@ -419,6 +409,18 @@ export default {
   margin: 7px 0px 7px 8px;
   padding: 5px;
   text-align: left;
+  font-family: monospace, monospace;
+  /* letter-spacing: 1px; */
+}
+
+.top-menu input[type='text']::placeholder {
+  color: red;
+  opacity: 1; /* Firefox */
+}
+
+.top-menu input[type='text']::-ms-input-placeholder {
+  /* Edge 12 -18 */
+  color: red;
 }
 
 .top-menu button {
