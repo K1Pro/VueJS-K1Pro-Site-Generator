@@ -49,6 +49,7 @@ export default {
       allInputsError: 'All inputs required',
       loginUsernameErr: 'Username cannot be blank',
       loginPasswordErr: 'Password cannot be blank',
+      loginUsernamePasswordErr: 'Username or password is incorrect',
     };
   },
 
@@ -82,7 +83,11 @@ export default {
 
   methods: {
     loginFn() {
-      if (this.email != '' && this.password != '') {
+      if (
+        this.email != '' &&
+        this.password != '' &&
+        this.password.length < 20
+      ) {
         this.msg.login = '';
         this.spinLogin = true;
         this.postLogin();
@@ -96,6 +101,11 @@ export default {
         } else if (this.password == '') {
           this.msg.snackBar = this.loginPasswordErr;
           this.msg.login = this.loginPasswordErr;
+        } else if (this.password.length >= 20) {
+          this.email = '';
+          this.password = '';
+          this.msg.snackBar = this.loginUsernamePasswordErr;
+          this.msg.login = this.loginUsernamePasswordErr;
         }
       }
     },

@@ -217,6 +217,10 @@ const useSiteStore = Pinia.defineStore('site', {
           this.deleteCookie();
           this.msg.login = logInResJSON.messages[0];
           this.msg.snackBar = logInResJSON.messages[0];
+          if (logInResJSON.messages[0].toLowerCase().includes('incorrect')) {
+            this.email = '';
+            this.password = '';
+          }
         }
         console.log(logInResJSON);
         this.spinGlobal = false;
