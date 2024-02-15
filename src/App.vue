@@ -3,7 +3,12 @@
 
   <a id="Home" ref="Home"></a>
 
-  <template v-if="site.isValid === 'true' && site.params?.htmlElements">
+  <template
+    v-if="
+      (site.isValid === 'true' || site.isValid === 'blog') &&
+      site.params?.htmlElements
+    "
+  >
     <template v-if="loggedIn === true">
       <div class="login-container">
         <div class="login-item1">
@@ -23,8 +28,7 @@
             </div>
           </div>
           <div class="inline-editor">
-            <app_container v-if="pageEditor == 'Website'"></app_container>
-            <blog_container v-else="pageEditor == 'Blog'"></blog_container>
+            <app_container></app_container>
           </div>
         </div>
       </div>
@@ -45,12 +49,6 @@
     ></template
   >
 
-  <template v-else-if="site.isValid === 'blog'">
-    <template v-if="loggedIn !== true">
-      <blog_container></blog_container>
-    </template>
-  </template>
-
   <template v-else>Nothing</template>
 </template>
 
@@ -59,7 +57,6 @@ import Snackbar from './components/Snackbar.vue';
 import Directory from './components/Directory.vue';
 import Login_side_panel from './components/login/Side_panel.vue';
 import App_container from './components/App_container.vue';
-import Blog_container from './components/Blog_container.vue';
 import Login from './components/elements/footer/Login.vue';
 
 export default {
@@ -70,7 +67,6 @@ export default {
     Directory,
     Login_side_panel,
     App_container,
-    Blog_container,
     Login,
   },
 
@@ -84,7 +80,6 @@ export default {
       'msg',
       'site',
       'endPts',
-      'pageEditor',
       'getSite',
       'getCookie',
       'deleteCookie',

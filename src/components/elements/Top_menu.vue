@@ -259,7 +259,7 @@ export default {
   },
 
   data() {
-    return { menuChange: '', menuItemAdded: false };
+    return { menuChange: '', menuItemAdded: false, pageClick: false };
   },
 
   methods: {
@@ -309,7 +309,7 @@ export default {
       }
     },
     clickMenuItem(event) {
-      this.toggleRespMenu();
+      // this.toggleRespMenu();
       console.log(event.target);
       if (event.target.innerHTML == 'Blog') {
         this.site.isValid = 'blog';
@@ -320,8 +320,13 @@ export default {
       }
     },
     toggleRespMenu() {
-      this.site.params.htmlElements[this.elIndex]['top-menu'].responsive =
-        !this.site.params.htmlElements[this.elIndex]['top-menu'].responsive;
+      if (
+        this.site.params.htmlElements[this.elIndex]['top-menu'].responsive ===
+        false
+      )
+        this.site.params.htmlElements[this.elIndex][
+          'top-menu'
+        ].responsive = true;
     },
     deleteMenuItem(menuItemIndex) {
       this.site.params.htmlElements[this.elIndex]['top-menu'][
@@ -354,12 +359,42 @@ export default {
         });
       }
     },
+    handleScroll() {
+      this.site.params.htmlElements[this.elIndex][
+        'top-menu'
+      ].responsive = false;
+      this.pageClick = false;
+    },
+    handleClick() {
+      console.log('<========>');
+      console.log('click1');
+      if (
+        this.site.params.htmlElements[this.elIndex]['top-menu'].responsive ===
+        true
+      ) {
+        console.log('click2');
+        if (this.pageClick === true) {
+          this.site.params.htmlElements[this.elIndex][
+            'top-menu'
+          ].responsive = false;
+          this.pageClick = false;
+          console.log('page click becomes false');
+        } else {
+          this.pageClick = true;
+          console.log('page click becomes true');
+        }
+      }
+    },
   },
   created() {
     if (this.windowWidth < this.respWidth.md)
       this.site.params.htmlElements[this.elIndex][
         'top-menu'
       ].responsive = false;
+    this.pageClick = false;
+
+    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('click', this.handleClick);
   },
 
   updated() {
@@ -389,10 +424,12 @@ export default {
           oldWindowWidth < this.respWidth.md) ||
         (newWindowWidth < this.respWidth.md &&
           oldWindowWidth > this.respWidth.md)
-      )
+      ) {
         this.site.params.htmlElements[this.elIndex][
           'top-menu'
         ].responsive = false;
+        this.pageClick = false;
+      }
     },
   },
 };
