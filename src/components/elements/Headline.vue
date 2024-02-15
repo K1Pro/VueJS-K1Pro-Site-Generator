@@ -92,31 +92,20 @@ export default {
   },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'site']),
+    ...Pinia.mapWritableState(useSiteStore, ['loggedIn', 'site', 'endPts']),
   },
 
   methods: {
     menuAction(event) {
       console.log(event.srcElement.selectedOptions[0].value);
-      //     if (event.srcElement.selectedOptions[0].value == 'addItem') {
-      //     if (this.site.params.htmlElements[this.selectIndex]['top-menu']['menu-items'].length < 10) {
-      //       this.site.params.htmlElements[this.selectIndex]['top-menu']['menu-items'].push('');
-      //       this.menuChange = '';
-      //     } else {
-      //       this.menuChange = '';
-      //       this.msg.snackBar = 'Maximum 10 menu items';
-      //     }
-      //   }
     },
   },
-
-  created() {},
 
   mounted() {
     if (
       this.$refs[
         this.site.params.htmlElements[this.elIndex][this.elKey].style.anchor
-      ]?.id == window.location.hash.slice(1)
+      ]?.id == this.endPts.urlHash
     )
       window.scrollTo(
         0,

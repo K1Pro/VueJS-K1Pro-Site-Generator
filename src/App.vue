@@ -1,7 +1,7 @@
 <template>
   <snackbar> </snackbar>
 
-  <a id="Home" ref="Home"></a>
+  <a id="home" ref="home"></a>
 
   <template
     v-if="
@@ -119,8 +119,6 @@ export default {
     },
   },
 
-  watch: {},
-
   created() {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
@@ -136,8 +134,7 @@ export default {
   mounted() {
     this.updateScreenWidth();
     this.onScreenResize();
-    if (this.$refs.Home.id == window.location.hash.slice(1))
-      window.scrollTo(0, 0);
+    if (this.$refs.home.id == this.endPts.urlHash) window.scrollTo(0, 0);
   },
 };
 </script>

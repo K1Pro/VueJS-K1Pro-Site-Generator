@@ -158,6 +158,7 @@ export default {
       'respWidth',
       'site',
       'content',
+      'endPts',
     ]),
 
     gridTemplateLogIn() {
@@ -221,7 +222,7 @@ export default {
     if (
       this.$refs[
         this.site.params.htmlElements[this.elIndex][this.elKey].style.anchor
-      ]?.id == window.location.hash.slice(1)
+      ]?.id == this.endPts.urlHash
     )
       window.scrollTo(
         0,

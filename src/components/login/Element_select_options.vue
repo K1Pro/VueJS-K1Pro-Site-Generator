@@ -42,17 +42,15 @@
       >
         <option
           v-if="
-            !site.params.anchors.includes(topMenuItem) &&
+            !site.params.anchors.includes(topMenuItem.toLowerCase()) &&
             !site.params.htmlElements[0]?.['top-menu']?.style.links[
               topMenuIndex
             ] != '' &&
-            topMenuItem != 'Blog' &&
-            topMenuItem != 'blog' &&
-            topMenuItem != 'Admin' &&
-            topMenuItem != 'admin' &&
-            topMenuItem != 'Home' &&
-            topMenuItem != 'home'
+            topMenuItem.toLowerCase() != 'blog' &&
+            topMenuItem.toLowerCase() != 'admin' &&
+            topMenuItem.toLowerCase() != 'home'
           "
+          :value="topMenuItem.toLowerCase()"
         >
           {{ topMenuItem }}
         </option>

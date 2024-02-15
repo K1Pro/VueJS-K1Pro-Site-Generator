@@ -169,8 +169,11 @@
           <!-- Menu Items -->
           <template v-for="(menuItem, menuIndex) in elValue['menu-items']">
             <a
-              v-if="elValue.style.links[menuIndex] == ''"
-              :href="menuItem != 'Blog' ? '#' + menuItem : 'javascript:void(0)'"
+              :href="
+                elValue.style.links[menuIndex]
+                  ? elValue.style.links[menuIndex]
+                  : '#' + menuItem.toLowerCase()
+              "
               :style="{
                 color: elValue.style.color ? elValue.style.color : '#000000',
                 height:
@@ -182,28 +185,10 @@
                     ? '50px'
                     : elValue.style.height + 'px',
               }"
+              :target="elValue.style.links[menuIndex] ? '_blank' : '_self'"
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
               @click="clickMenuItem"
-              >{{ menuItem }}</a
-            >
-            <a
-              v-else
-              :href="elValue.style.links[menuIndex]"
-              :style="{
-                color: elValue.style.color ? elValue.style.color : '#000000',
-                height:
-                  windowWidth < respWidth.md && elValue.responsive
-                    ? '50px'
-                    : elValue.style.height + 'px',
-                'line-height':
-                  windowWidth < respWidth.md && elValue.responsive
-                    ? '50px'
-                    : elValue.style.height + 'px',
-              }"
-              @mouseover="highlightMenuItem(true, $event)"
-              @mouseout="highlightMenuItem(false, $event)"
-              target="_blank"
               >{{ menuItem }}</a
             >
           </template>
@@ -310,15 +295,20 @@ export default {
     },
     clickMenuItem(event) {
       // this.toggleRespMenu();
-      console.log(event.target);
-      if (event.target.innerHTML == 'Blog') {
-        this.site.isValid = 'blog';
-        window.history.pushState(null, null, this.endPts.href + '/blog');
-      } else {
-        this.site.isValid = 'true';
-        window.history.pushState(null, null, this.endPts.href);
+      if (event.target.target == '_self') {
+        setTimeout(() => {
+          window.history.pushState(
+            null,
+            null,
+            this.endPts.href + '/' + event.target.innerHTML.toLowerCase()
+          );
+        }, 1);
+        this.site.isValid =
+          event.target.innerHTML.toLowerCase() == 'blog' ? 'blog' : 'true';
+        this.endPts.urlHash = event.target.innerHTML.toLowerCase();
       }
     },
+
     toggleRespMenu() {
       if (
         this.site.params.htmlElements[this.elIndex]['top-menu'].responsive ===
@@ -328,6 +318,7 @@ export default {
           'top-menu'
         ].responsive = true;
     },
+
     deleteMenuItem(menuItemIndex) {
       this.site.params.htmlElements[this.elIndex]['top-menu'][
         'menu-items'
@@ -336,9 +327,11 @@ export default {
         'top-menu'
       ].style.links.splice(menuItemIndex, 1);
     },
+
     menuAction(event) {
       console.log(event.srcElement.selectedOptions[0].value);
     },
+
     removeAnchor(event) {
       if (
         this.site.params.anchors.includes(event.target.placeholder.slice(1))
@@ -359,29 +352,26 @@ export default {
         });
       }
     },
+
     handleScroll() {
       this.site.params.htmlElements[this.elIndex][
         'top-menu'
       ].responsive = false;
       this.pageClick = false;
     },
+
     handleClick() {
-      console.log('<========>');
-      console.log('click1');
       if (
         this.site.params.htmlElements[this.elIndex]['top-menu'].responsive ===
         true
       ) {
-        console.log('click2');
         if (this.pageClick === true) {
           this.site.params.htmlElements[this.elIndex][
             'top-menu'
           ].responsive = false;
           this.pageClick = false;
-          console.log('page click becomes false');
         } else {
           this.pageClick = true;
-          console.log('page click becomes true');
         }
       }
     },
