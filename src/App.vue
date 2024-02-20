@@ -78,13 +78,12 @@ export default {
       'email',
       'password',
       'msg',
+      'windowWidth',
       'site',
       'endPts',
       'getSite',
       'getCookie',
       'deleteCookie',
-      'onScreenResize',
-      'updateScreenWidth',
       'getLoginUser',
       'postLogin',
     ]),
@@ -116,6 +115,14 @@ export default {
         console.log(error.toString());
         this.msg.snackBar = error.toString();
       }
+    },
+    updateScreenWidth() {
+      this.windowWidth = window.innerWidth;
+    },
+    onScreenResize() {
+      window.addEventListener('resize', () => {
+        this.updateScreenWidth();
+      });
     },
   },
 

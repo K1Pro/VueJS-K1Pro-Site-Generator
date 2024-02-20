@@ -94,14 +94,6 @@ const useSiteStore = Pinia.defineStore('site', {
       document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${this.cookiePath};`;
       document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${this.cookiePath};`;
     },
-    onScreenResize() {
-      window.addEventListener('resize', () => {
-        this.updateScreenWidth();
-      });
-    },
-    updateScreenWidth() {
-      this.windowWidth = window.innerWidth;
-    },
     async getLoginUser() {
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.user, {
