@@ -83,15 +83,8 @@
           </select>
 
           <template v-if="siteFooterItem == 'About Us'">
-            <h2 v-if="!loggedIn">About Us</h2>
-            <p>
-              {{ site.params.author }}<br />
-              {{ site.params.phone }}<br />
-              <a :href="'mailto:' + site.params.email">{{
-                site.params.email
-              }}</a>
-            </p></template
-          >
+            <about_us></about_us>
+          </template>
 
           <template v-if="siteFooterItem == 'Description'">
             <h2 v-if="!loggedIn">Description</h2>
@@ -134,6 +127,7 @@
 </template>
 
 <script>
+import About_us from './footer/About_us.vue';
 import Login from './footer/Login.vue';
 import Contact_us from './footer/Contact_us.vue';
 
@@ -141,6 +135,7 @@ export default {
   name: 'Footer',
 
   components: {
+    About_us,
     Login,
     Contact_us,
   },
