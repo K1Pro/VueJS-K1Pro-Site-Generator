@@ -87,20 +87,12 @@
           </template>
 
           <template v-if="siteFooterItem == 'Description'">
-            <h2 v-if="!loggedIn">Description</h2>
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged.
-            </p></template
-          >
+            <description></description>
+          </template>
 
           <template v-if="siteFooterItem == 'Contact Us'">
-            <contact_us></contact_us
-          ></template>
+            <contact_us></contact_us>
+          </template>
 
           <template v-if="siteFooterItem == 'Login'">
             <h2 v-if="!loggedIn">Login</h2>
@@ -128,6 +120,7 @@
 
 <script>
 import About_us from './footer/About_us.vue';
+import Description from './footer/Description.vue';
 import Login from './footer/Login.vue';
 import Contact_us from './footer/Contact_us.vue';
 
@@ -136,6 +129,7 @@ export default {
 
   components: {
     About_us,
+    Description,
     Login,
     Contact_us,
   },
