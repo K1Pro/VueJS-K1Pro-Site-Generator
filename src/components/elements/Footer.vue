@@ -95,7 +95,6 @@
           </template>
 
           <template v-if="siteFooterItem == 'Login'">
-            <h2 v-if="!loggedIn">Login</h2>
             <login> </login>
           </template>
 
@@ -121,8 +120,8 @@
 <script>
 import About_us from './footer/About_us.vue';
 import Description from './footer/Description.vue';
-import Login from './footer/Login.vue';
 import Contact_us from './footer/Contact_us.vue';
+import Login from './footer/Login.vue';
 
 export default {
   name: 'Footer',

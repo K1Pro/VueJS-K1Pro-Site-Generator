@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <h2 v-if="!loggedIn">Login</h2>
     <h2 v-if="site.isValid === 'admin'">Admin login</h2>
     <input
       type="text"
