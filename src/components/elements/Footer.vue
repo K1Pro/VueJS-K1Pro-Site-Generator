@@ -285,6 +285,13 @@ export default {
   resize: vertical;
 }
 
+.footer select {
+  background-color: #00000000;
+  border: none;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
 .footer input[type='submit']:hover {
   /* background-color: #45a049; */
 }
