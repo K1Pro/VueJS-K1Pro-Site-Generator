@@ -1,11 +1,11 @@
 const useSiteStore = Pinia.defineStore('site', {
   state: () => {
     return {
-      accessToken: '',
-      sessionID: '',
+      sessionID: session_id,
+      accessToken: token,
       loggedIn: false,
-      email: email,
-      password: token,
+      email: '',
+      password: '',
       msg: {
         snackBar: '',
         login: '',
@@ -28,6 +28,7 @@ const useSiteStore = Pinia.defineStore('site', {
       content: content,
       endPts: {
         href: href,
+        url: url,
         urlHash: url_hash,
         siteURL: site_url,
         loginURL: login_url,
@@ -42,6 +43,7 @@ const useSiteStore = Pinia.defineStore('site', {
       },
       selectedPhoto: '',
       selectedVideo: '',
+      appName: app_name,
     };
   },
   actions: {
@@ -107,7 +109,7 @@ const useSiteStore = Pinia.defineStore('site', {
         const getLoginJSON = await response.json();
         if (
           getLoginJSON.success &&
-          getLoginJSON.data.user.AppPermissions.SiteGenAI[this.site.folderPath]
+          getLoginJSON.data.user.AppPermissions.SiteGT[this.site.folderPath]
         ) {
           this.email = '';
           this.password = '';
@@ -194,7 +196,9 @@ const useSiteStore = Pinia.defineStore('site', {
           body: JSON.stringify({
             Email: this.email.toLowerCase(),
             Password: this.password,
-            Referer: this.site.folderPath,
+            AddAuth: this.site.folderPath,
+            Referer: this.endPts.url,
+            AppName: this.appName,
           }),
         });
         const logInResJSON = await response.json();

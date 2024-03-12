@@ -74,15 +74,13 @@ export default {
     // ...Pinia.mapStores(useSiteStore),
     ...Pinia.mapWritableState(useSiteStore, [
       'accessToken',
+      'sessionID',
       'loggedIn',
-      'email',
-      'password',
       'msg',
       'windowWidth',
       'site',
       'endPts',
       'getSite',
-      'getCookie',
       'deleteCookie',
       'getLoginUser',
       'postLogin',
@@ -131,10 +129,9 @@ export default {
     loaderElement.remove();
 
     if (this.site.isValid == 'true' || this.site.isValid == 'admin') {
-      this.email && this.password
-        ? this.postLogin()
-        : this.getCookie('_a_t', '_s_i');
-      this.accessToken ? this.getLoginUser() : this.deleteCookie();
+      this.accessToken && this.sessionID
+        ? this.getLoginUser()
+        : this.deleteCookie();
     }
   },
 
