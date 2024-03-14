@@ -1,12 +1,12 @@
 <template>
-  <div class="login-side-panel">
-    <div class="tabtitlecontainer">
-      <div class="tabtitle">
+  <div class="side-panel">
+    <div class="tab-title-container">
+      <div class="tab-title">
         <b>Settings: </b>
       </div>
     </div>
 
-    <div class="tabcontainer">
+    <div class="tab-body-container">
       <div class="tab">
         <button
           :class="{ tabactive: activeTab == 'gear' }"
@@ -58,27 +58,27 @@
         ></button>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'gear'">
+      <div class="tab-content" v-if="activeTab === 'gear'">
         <background_settings style="padding: 10px"></background_settings>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'camera'">
+      <div class="tab-content" v-if="activeTab === 'camera'">
         <image_search></image_search>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'video'">
+      <div class="tab-content" v-if="activeTab === 'video'">
         <video_search></video_search>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'file-lines'">
+      <div class="tab-content" v-if="activeTab === 'file-lines'">
         <text_generation></text_generation>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'square-poll-horizontal'">
+      <div class="tab-content" v-if="activeTab === 'square-poll-horizontal'">
         <blog_settings></blog_settings>
       </div>
 
-      <div class="tabcontent" v-if="activeTab === 'envelope'">
+      <div class="tab-content" v-if="activeTab === 'envelope'">
         <messages></messages>
       </div>
     </div>
@@ -122,18 +122,18 @@ export default {
 
 <style>
 /* Style the tab */
-.tabtitlecontainer {
+.tab-title-container {
   display: table;
   height: 6vh;
 }
 
-.tabtitle {
+.tab-title {
   display: table-cell;
   padding-left: 10px;
   vertical-align: middle;
 }
 
-.tabcontainer {
+.tab-body-container {
   height: 100%;
   display: flex;
 }
@@ -176,7 +176,7 @@ export default {
 }
 
 /* Style the tab content */
-.tabcontent {
+.tab-content {
   box-sizing: border-box;
   float: left;
   /* padding: 0px 12px; */
