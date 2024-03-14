@@ -10,12 +10,12 @@
     "
   >
     <template v-if="loggedIn === true">
-      <div class="login-container">
-        <div class="login-item1">
+      <div class="app-grid-container">
+        <div class="app-grid-item1">
           <login_side_panel></login_side_panel>
         </div>
         <div
-          class="login-item2"
+          class="app-grid-item2"
           :style="{ backgroundColor: site.params.body.style.backgroundColor }"
         >
           <div class="inline-editor-container">
@@ -83,7 +83,6 @@ export default {
       'getSite',
       'deleteCookie',
       'getLoginUser',
-      'postLogin',
     ]),
   },
 
@@ -144,14 +143,14 @@ export default {
 </script>
 
 <style>
-.login-container {
+.app-grid-container {
   display: grid;
   grid-template-columns: 100%;
   /* background-color: #2196f3; */
   /* padding: 2vh; */
   /* column-gap: 2vh; */
 }
-.login-item1 {
+.app-grid-item1 {
   background-color: rgb(255, 255, 255);
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* padding: 20px; */
@@ -161,7 +160,7 @@ export default {
   overflow-x: hidden;
 }
 
-.login-item2 {
+.app-grid-item2 {
   /* background-color: rgb(255, 255, 255); */
   /* border: 1px solid rgba(0, 0, 0, 0.8); */
   /* padding: 20px; */
@@ -191,7 +190,7 @@ export default {
 }
 
 @media only screen and (min-width: 650px) {
-  .login-container {
+  .app-grid-container {
     grid-template-columns: 25% 75%;
     height: 100vh;
   }
