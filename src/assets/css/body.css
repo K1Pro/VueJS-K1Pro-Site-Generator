@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* scrollbar width */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* background: #f1f1f1; original - looked good too */
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  /* background: #305eac; original - looked good too */
+  background: #a8a8a8;
+}
+
+a {
+  cursor: pointer;
+}

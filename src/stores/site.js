@@ -34,6 +34,7 @@ const useSiteStore = Pinia.defineStore('site', {
         loginURL: login_url,
         captchaURL: captcha_url,
         servertimeURL: servertime_url,
+        resetPasswordUrl: resetpassword_url,
         cookiePath: cookie_path,
         login: 'sessions',
         logout: 'sessions/',

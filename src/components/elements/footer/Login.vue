@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h2 v-if="!loggedIn">Login</h2>
+    <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
     <h2 v-if="site.isValid === 'admin'">Admin login</h2>
     <input
       type="text"
@@ -38,7 +38,7 @@
       <span v-else>Log In</span>
     </button>
     <p></p>
-    <button :disabled="loggedIn">Reset</button>
+    <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
   </div>
 </template>
 
@@ -64,6 +64,7 @@ export default {
       'msg',
       'spinGlobal',
       'site',
+      'endPts',
       'postLogin',
     ]),
     isUsernameValid() {
@@ -121,6 +122,9 @@ export default {
         }
       }
     },
+    goToURL() {
+      window.location.href = this.endPts.resetPasswordUrl;
+    },
   },
 
   watch: {
@@ -131,19 +135,21 @@ export default {
     },
   },
 
-  created() {},
+  created() {
+    console.log(this.endPts.resetPasswordUrl);
+  },
 };
 </script>
 
 <style>
 .login button {
-  width: 60px;
+  width: 100%;
   padding: 3px;
 }
 
 .login input[type='text'],
 .login input[type='password'] {
-  width: 100%;
+  /* width: 100%; */
   padding: 5px;
   margin-bottom: 10px;
 }

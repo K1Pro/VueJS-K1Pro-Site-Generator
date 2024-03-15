@@ -195,7 +195,7 @@ export default {
   border-radius: 4px;
   cursor: pointer; */
   padding: 3px;
-  width: 60px;
+  width: 100%;
 }
 
 .footer-captcha {
