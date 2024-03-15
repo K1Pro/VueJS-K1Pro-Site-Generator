@@ -9,51 +9,51 @@
     <div class="tab-body-container">
       <div class="tab">
         <button
-          :class="{ tabactive: activeTab == 'gear' }"
-          class="tablinks fa fa-gear"
           title="Web site"
+          :class="{ 'tab-active': activeTab == 'gear' }"
+          class="fa fa-gear"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'square-poll-horizontal' }"
-          class="tablinks fa fa-square-poll-horizontal"
           title="Blog"
+          :class="{ 'tab-active': activeTab == 'square-poll-horizontal' }"
+          class="fa fa-square-poll-horizontal"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'camera' }"
-          class="tablinks fa fa-camera"
           title="Photo search"
+          :class="{ 'tab-active': activeTab == 'camera' }"
+          class="fa fa-camera"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'video' }"
-          class="tablinks fa fa-video"
           title="Video search"
+          :class="{ 'tab-active': activeTab == 'video' }"
+          class="fa fa-video"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'file-lines' }"
-          class="tablinks fa fa-file-lines"
           title="Text search"
+          :class="{ 'tab-active': activeTab == 'file-lines' }"
+          class="fa fa-file-lines"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'envelope' }"
-          class="tablinks fa fa-envelope"
           title="Messages"
+          :class="{ 'tab-active': activeTab == 'envelope' }"
+          class="fa fa-envelope"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'user-gear' }"
-          class="tablinks fa fa-user-gear"
           title="User settings"
+          :class="{ 'tab-active': activeTab == 'user-gear' }"
+          class="fa fa-user-gear"
           @click="openTab"
         ></button>
         <button
-          :class="{ tabactive: activeTab == 'arrow-right-from-bracket' }"
-          class="tablinks fa-solid fa-arrow-right-from-bracket"
           title="Log out"
+          :class="{ 'tab-active': activeTab == 'arrow-right-from-bracket' }"
+          class="fa-solid fa-arrow-right-from-bracket"
           @click.prevent="deleteLogin"
         ></button>
       </div>
@@ -114,14 +114,14 @@ export default {
   },
   methods: {
     openTab(event) {
-      this.activeTab = event.target.className.split('fa-')[1];
+      if (event.target.className.split('fa-')[1] != this.activeTab)
+        this.activeTab = event.target.className.split('fa-')[1];
     },
   },
 };
 </script>
 
 <style>
-/* Style the tab */
 .tab-title-container {
   display: table;
   height: 6vh;
@@ -134,57 +134,49 @@ export default {
 }
 
 .tab-body-container {
-  height: 100%;
   display: flex;
+  height: 100%;
 }
 .tab {
   box-sizing: border-box;
   float: left;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
   width: 50px;
   height: 94vh;
+  border-right: 1px solid black;
+  background-color: #f1f1f1;
 }
 
-/* Style the buttons inside the tab */
 .tab button {
   display: block;
-  /* background-color: inherit; this prevents active button to remain highlighted */
   color: black;
   padding: 22px 13px;
   width: 100%;
   border: none;
   outline: none;
   text-align: left;
-  cursor: pointer;
+  cursor: default;
   transition: 0.3s;
   font-size: 20px;
+  border-bottom: 1px solid black;
 }
 
-/* Change background color of buttons on hover */
-.tab button:hover {
+.tab button:hover:not(.tab-active) {
   background-color: #ddd;
+  cursor: pointer;
 }
 
-/* Create an active/current "tab button" class */
-/* .tab button.active {
-  background-color: #ccc;
-} */
-
-.tabactive {
+.tab-active {
   background-color: #bbbbbb;
 }
 
-/* Style the tab content */
 .tab-content {
   box-sizing: border-box;
-  float: left;
-  /* padding: 0px 12px; */
-  border: 1px solid #ccc;
-  /* width: 85%; */
   flex-grow: 1;
+  float: left;
+  border: 1px solid #ccc;
   border-left: none;
   height: 94vh;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>

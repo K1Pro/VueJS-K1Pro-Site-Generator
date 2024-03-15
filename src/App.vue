@@ -146,27 +146,16 @@ export default {
 .app-grid-container {
   display: grid;
   grid-template-columns: 100%;
-  /* background-color: #2196f3; */
-  /* padding: 2vh; */
-  /* column-gap: 2vh; */
 }
 .app-grid-item1 {
-  background-color: rgb(255, 255, 255);
-  /* border: 1px solid rgba(0, 0, 0, 0.8); */
-  /* padding: 20px; */
-  /* text-align: center; */
   height: 100%;
+  background-color: rgb(255, 255, 255);
   overflow-y: hidden;
   overflow-x: hidden;
 }
 
 .app-grid-item2 {
-  /* background-color: rgb(255, 255, 255); */
-  /* border: 1px solid rgba(0, 0, 0, 0.8); */
-  /* padding: 20px; */
-  /* text-align: center; */
   height: 100%;
-  /* overflow: hidden; */
 }
 
 .inline-editor-container {
@@ -174,7 +163,6 @@ export default {
   height: 6vh;
   width: 100%;
   background-color: white;
-  /* border-bottom: 1px solid black; */
 }
 
 .inline-editor-title {
