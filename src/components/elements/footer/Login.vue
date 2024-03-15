@@ -1,7 +1,13 @@
 <template>
-  <div class="login">
+  <div
+    class="login"
+    :style="{
+      width: site.isValid === 'admin' ? '250px' : 'auto',
+      height: site.isValid === 'admin' ? '300px' : 'auto',
+    }"
+  >
     <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
-    <h2 v-if="site.isValid === 'admin'">Admin login</h2>
+    <h2 v-if="site.isValid === 'admin'">Admin Login</h2>
     <input
       type="text"
       name="username"
@@ -10,6 +16,9 @@
       :disabled="loggedIn"
       :class="{
         invalid: isUsernameValid,
+      }"
+      :style="{
+        width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
       }"
       v-model="email"
       @keyup="removeInvalidLoginFn"
@@ -20,17 +29,20 @@
       name="password"
       placeholder="Password"
       autocomplete="current-password"
+      minlength="8"
       :disabled="loggedIn"
       :class="{
         invalid: isPasswordValid,
+      }"
+      :style="{
+        width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
       }"
       v-model="password"
       @keyup="removeInvalidLoginFn"
       @keyup.enter="loginFn"
     />
-    <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
     <br />
-    <button :disabled="loggedIn" @click.prevent="loginFn">
+    <button :disabled="loggedIn || spinLogin" @click.prevent="loginFn">
       <i
         v-if="spinLogin && spinGlobal"
         class="spin fa-sharp fa-solid fa-circle-notch"
@@ -39,6 +51,9 @@
     </button>
     <p></p>
     <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
+    <br />
+    <br />
+    <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
   </div>
 </template>
 
@@ -149,7 +164,6 @@ export default {
 
 .login input[type='text'],
 .login input[type='password'] {
-  /* width: 100%; */
   padding: 5px;
   margin-bottom: 10px;
 }

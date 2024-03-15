@@ -46,8 +46,7 @@
     <div id="loader-container">
       <login></login>
     </div>
-    ></template
-  >
+  </template>
 
   <template v-else>Nothing</template>
 </template>
