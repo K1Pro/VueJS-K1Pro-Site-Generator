@@ -14,6 +14,7 @@
       name="username"
       placeholder="Username"
       autocomplete="email"
+      v-model="email"
       :disabled="loggedIn"
       :class="{
         invalid: isUsernameValid,
@@ -21,7 +22,6 @@
       :style="{
         width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
       }"
-      v-model="email"
       @keyup="removeInvalidLoginFn"
       @keyup.enter="loginFn"
     />
@@ -31,6 +31,7 @@
       placeholder="Password"
       autocomplete="current-password"
       minlength="8"
+      v-model="password"
       :disabled="loggedIn"
       :class="{
         invalid: isPasswordValid,
@@ -38,7 +39,6 @@
       :style="{
         width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
       }"
-      v-model="password"
       @keyup="removeInvalidLoginFn"
       @keyup.enter="loginFn"
     />
@@ -70,6 +70,8 @@ export default {
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
+      'sessionID',
+      'accessToken',
       'loggedIn',
       'email',
       'password',
@@ -77,7 +79,9 @@ export default {
       'spinGlobal',
       'site',
       'endPts',
-      'postLogin',
+      'appName',
+      'deleteCookie',
+      'getLoginUser',
     ]),
     isUsernameValid() {
       return (
@@ -125,6 +129,52 @@ export default {
         }
       }
     },
+
+    async postLogin() {
+      this.spinGlobal = true;
+      try {
+        const response = await fetch(this.endPts.loginURL + this.endPts.login, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            Email: this.email.toLowerCase(),
+            Password: this.password,
+            AddAuth: this.site.folderPath,
+            Referer: this.endPts.url,
+            AppName: this.appName,
+          }),
+        });
+        const logInResJSON = await response.json();
+        if (logInResJSON.success) {
+          console.log('<-- Login Info -->');
+          console.log(logInResJSON);
+          this.accessToken = logInResJSON.data.accesstoken;
+          this.sessionID = logInResJSON.data.session_id;
+          this.getLoginUser();
+          this.msg.login = '';
+          this.msg.snackBar = 'Logged in';
+        } else {
+          this.deleteCookie();
+          this.msg.login = logInResJSON.messages[0];
+          this.msg.snackBar = logInResJSON.messages[0];
+          if (logInResJSON.messages[0].toLowerCase().includes('incorrect')) {
+            this.email = '';
+            this.password = '';
+          }
+        }
+        console.log(logInResJSON);
+        this.spinGlobal = false;
+      } catch (error) {
+        this.deleteCookie();
+        console.log(error);
+        this.msg.snackBar = 'Login error 2';
+        this.spinGlobal = false;
+      }
+    },
+
     removeInvalidLoginFn(event) {
       if (this.msg.login.toLowerCase().includes(event.target.name)) {
         if (event.target.value.length < 1) {
@@ -134,6 +184,7 @@ export default {
         }
       }
     },
+
     goToURL() {
       window.location.href = this.endPts.resetPasswordUrl;
     },
@@ -145,10 +196,6 @@ export default {
         this.spinLogin = false;
       }
     },
-  },
-
-  created() {
-    console.log(this.endPts.resetPasswordUrl);
   },
 };
 </script>

@@ -185,50 +185,7 @@ const useSiteStore = Pinia.defineStore('site', {
         console.log(error);
       }
     },
-    async postLogin() {
-      this.spinGlobal = true;
-      try {
-        const response = await fetch(this.endPts.loginURL + this.endPts.login, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            Email: this.email.toLowerCase(),
-            Password: this.password,
-            AddAuth: this.site.folderPath,
-            Referer: this.endPts.url,
-            AppName: this.appName,
-          }),
-        });
-        const logInResJSON = await response.json();
-        if (logInResJSON.success) {
-          console.log('<-- Login Info -->');
-          console.log(logInResJSON);
-          this.accessToken = logInResJSON.data.accesstoken;
-          this.sessionID = logInResJSON.data.session_id;
-          this.getLoginUser();
-          this.msg.login = '';
-          this.msg.snackBar = 'Logged in';
-        } else {
-          this.deleteCookie();
-          this.msg.login = logInResJSON.messages[0];
-          this.msg.snackBar = logInResJSON.messages[0];
-          if (logInResJSON.messages[0].toLowerCase().includes('incorrect')) {
-            this.email = '';
-            this.password = '';
-          }
-        }
-        console.log(logInResJSON);
-        this.spinGlobal = false;
-      } catch (error) {
-        this.deleteCookie();
-        console.log(error);
-        this.msg.snackBar = 'Login error 2';
-        this.spinGlobal = false;
-      }
-    },
+
     async deleteLogin() {
       try {
         const response = await fetch(
