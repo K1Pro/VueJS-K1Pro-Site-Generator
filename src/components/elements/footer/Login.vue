@@ -7,7 +7,8 @@
     }"
   >
     <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
-    <h2 v-if="site.isValid === 'admin'">Admin Login</h2>
+    <h2 v-if="site.isValid === 'admin'">{{ site.params.site }} Admin Login</h2>
+
     <input
       type="text"
       name="username"
@@ -23,7 +24,7 @@
       v-model="email"
       @keyup="removeInvalidLoginFn"
       @keyup.enter="loginFn"
-    /><br />
+    />
     <input
       type="password"
       name="password"
@@ -41,7 +42,6 @@
       @keyup="removeInvalidLoginFn"
       @keyup.enter="loginFn"
     />
-    <br />
     <button :disabled="loggedIn || spinLogin" @click.prevent="loginFn">
       <i
         v-if="spinLogin && spinGlobal"
@@ -49,10 +49,7 @@
       ></i>
       <span v-else>Log In</span>
     </button>
-    <p></p>
     <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
-    <br />
-    <br />
     <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
   </div>
 </template>
@@ -160,6 +157,7 @@ export default {
 .login button {
   width: 100%;
   padding: 3px;
+  margin-bottom: 10px;
 }
 
 .login input[type='text'],
