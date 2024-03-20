@@ -43,10 +43,7 @@
       @keyup.enter="loginFn"
     />
     <button :disabled="loggedIn || spinLogin" @click.prevent="loginFn">
-      <i
-        v-if="spinLogin && spinGlobal"
-        class="spin fa-sharp fa-solid fa-circle-notch"
-      ></i>
+      <i v-if="spinLogin" class="spin fa-sharp fa-solid fa-circle-notch"></i>
       <span v-else>Log In</span>
     </button>
     <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
@@ -61,7 +58,7 @@ export default {
   data() {
     return {
       spinLogin: false,
-      allInputsError: 'All inputs required',
+      allInputsError: 'Username and password required',
       loginUsernameErr: 'Username cannot be blank',
       loginPasswordErr: 'Password cannot be blank',
       loginUsernamePasswordErr: 'Username or password is incorrect',
@@ -76,7 +73,6 @@ export default {
       'email',
       'password',
       'msg',
-      'spinGlobal',
       'site',
       'endPts',
       'appName',
@@ -131,7 +127,7 @@ export default {
     },
 
     async postLogin() {
-      this.spinGlobal = true;
+      this.spinLogin = true;
       try {
         const response = await fetch(this.endPts.loginURL + this.endPts.login, {
           method: 'POST',
@@ -166,12 +162,12 @@ export default {
           }
         }
         console.log(logInResJSON);
-        this.spinGlobal = false;
+        this.spinLogin = false;
       } catch (error) {
         this.deleteCookie();
         console.log(error);
         this.msg.snackBar = 'Login error 2';
-        this.spinGlobal = false;
+        this.spinLogin = false;
       }
     },
 
@@ -186,20 +182,11 @@ export default {
     },
 
     goToURL() {
-      window.location.href = this.endPts.resetPasswordUrl;
-    },
-  },
-
-  watch: {
-    spinGlobal(newSpin, oldSpin) {
-      if (newSpin == false) {
-        this.spinLogin = false;
-      }
+      window.location.href = this.endPts.accountResetURL;
     },
   },
 };
 </script>
-
 <style>
 .login button {
   width: 100%;

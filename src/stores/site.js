@@ -10,7 +10,6 @@ const useSiteStore = Pinia.defineStore('site', {
         snackBar: '',
         login: '',
       },
-      spinGlobal: false,
       windowWidth: 0,
       respWidth: {
         sm: 576,
@@ -34,7 +33,7 @@ const useSiteStore = Pinia.defineStore('site', {
         loginURL: login_url,
         captchaURL: captcha_url,
         servertimeURL: servertime_url,
-        resetPasswordUrl: resetpassword_url,
+        accountResetURL: accountreset_url,
         cookiePath: cookie_path,
         login: 'sessions',
         logout: 'sessions/',

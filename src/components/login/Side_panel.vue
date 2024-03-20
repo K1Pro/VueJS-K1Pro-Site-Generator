@@ -142,7 +142,7 @@ export default {
   float: left;
   width: 50px;
   height: 94vh;
-  border-right: 1px solid black;
+  border-right: 1px solid darkgrey;
   background-color: #f1f1f1;
 }
 
@@ -157,7 +157,7 @@ export default {
   cursor: default;
   transition: 0.3s;
   font-size: 20px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid darkgrey;
 }
 
 .tab button:hover:not(.tab-active) {
