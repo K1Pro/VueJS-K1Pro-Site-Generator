@@ -3,11 +3,16 @@
     class="login"
     :style="{
       width: site.isValid === 'admin' ? '250px' : 'auto',
-      height: site.isValid === 'admin' ? '300px' : 'auto',
+      height: site.isValid === 'admin' ? '350px' : 'auto',
     }"
   >
-    <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
-    <h2 v-if="site.isValid === 'admin'">{{ site.params.site }} Admin Login</h2>
+    <h3 v-if="!loggedIn && site.isValid !== 'admin'">Login</h3>
+    <template v-if="site.isValid === 'admin'">
+      <div class="login-icon">
+        <i class="fa-solid fa-desktop"></i>
+      </div>
+      <h3>{{ site.params.site }} Admin Login</h3>
+    </template>
 
     <input
       type="text"
@@ -188,6 +193,11 @@ export default {
 };
 </script>
 <style>
+.login-icon {
+  font-size: 100px;
+  width: 250px;
+  text-align: center;
+}
 .login button {
   width: 100%;
   padding: 3px;
