@@ -9,7 +9,7 @@ export default {
   name: 'Snackbar',
 
   computed: {
-    ...Pinia.mapWritableState(useAccountStore, ['msg']),
+    ...Pinia.mapWritableState(useSiteStore, ['msg']),
   },
 
   watch: {
