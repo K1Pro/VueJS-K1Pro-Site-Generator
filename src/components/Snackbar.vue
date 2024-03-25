@@ -1,6 +1,8 @@
 <template>
   <Transition name="slide-fade">
-    <div v-if="msg.snackBar" class="snackbar">{{ msg.snackBar }}</div>
+    <div v-if="msg.snackBar && loggedIn" class="snackbar">
+      {{ msg.snackBar }}
+    </div>
   </Transition>
 </template>
 
@@ -9,7 +11,7 @@ export default {
   name: 'Snackbar',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['msg']),
+    ...Pinia.mapWritableState(useSiteStore, ['msg', 'loggedIn']),
   },
 
   watch: {
