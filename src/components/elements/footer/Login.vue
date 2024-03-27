@@ -4,6 +4,8 @@
     :style="{
       width: site.isValid === 'admin' ? '250px' : 'auto',
       height: site.isValid === 'admin' ? '350px' : 'auto',
+      'background-color': site.isValid === 'admin' ? 'white' : '#FFFFFF00',
+      padding: site.isValid === 'admin' ? '20px' : '0',
     }"
   >
     <h3 v-if="!loggedIn && site.isValid !== 'admin'">Login</h3>
@@ -11,7 +13,7 @@
       <div class="login-icon">
         <i class="fa-solid fa-desktop"></i>
       </div>
-      <h3>{{ site.params.site }} Admin</h3>
+      <h3>{{ site.params.site }}</h3>
     </template>
 
     <input
@@ -193,6 +195,9 @@ export default {
 };
 </script>
 <style>
+.login h3 {
+  text-align: center;
+}
 .login-icon {
   font-size: 100px;
   width: 250px;
