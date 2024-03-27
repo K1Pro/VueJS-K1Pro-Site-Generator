@@ -1,67 +1,86 @@
 <template>
-  <div
-    class="login"
-    :style="{
-      width: site.isValid === 'admin' ? '250px' : 'auto',
-      height: site.isValid === 'admin' ? '350px' : 'auto',
-      'background-color': site.isValid === 'admin' ? 'white' : '#FFFFFF00',
-      padding: site.isValid === 'admin' ? '20px' : '0',
-    }"
-  >
-    <h3 v-if="!loggedIn && site.isValid !== 'admin'">Login</h3>
-    <template v-if="site.isValid === 'admin'">
-      <div class="login-icon">
-        <i class="fa-solid fa-desktop"></i>
-      </div>
-      <h3>{{ site.params.site }}</h3>
-    </template>
-
-    <input
-      type="text"
-      name="username"
-      placeholder="Username"
-      autocomplete="email"
-      v-model="email"
-      :disabled="loggedIn"
-      :class="{
-        invalid: isUsernameValid,
-      }"
-      :style="{
-        width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
-      }"
-      @keyup="removeInvalidLoginFn"
-      @keyup.enter="loginFn"
-    />
-    <input
-      type="password"
-      name="password"
-      placeholder="Password"
-      autocomplete="current-password"
-      minlength="8"
-      v-model="password"
-      :disabled="loggedIn"
-      :class="{
-        invalid: isPasswordValid,
-      }"
-      :style="{
-        width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
-      }"
-      @keyup="removeInvalidLoginFn"
-      @keyup.enter="loginFn"
-    />
-    <button :disabled="loggedIn || spinLogin" @click.prevent="loginFn">
-      <i v-if="spinLogin" class="spin fa-sharp fa-solid fa-circle-notch"></i>
-      <span v-else>Log In</span>
-    </button>
-    <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
+  <div class="login">
     <div
-      v-if="msg.login"
-      style="margin-bottom: -25px"
-      class="validation-message"
+      class="login-title"
+      v-if="site.isValid === 'admin' && !loggedIn"
+      style="
+        color: rgb(0, 0, 0);
+        font-size: 18px;
+        background-color: white;
+        width: 270px;
+        padding: 10px;
+        border-bottom: 1px solid grey;
+      "
     >
-      {{ msg.login }}
+      <i class="ba-icons ba-k1pro"></i>
+      K1Pro LLC
     </div>
-    <h6>© {{ new Date().getFullYear() }} K1Pro LLC</h6>
+
+    <div
+      class="login-body"
+      :style="{
+        width: site.isValid === 'admin' ? '250px' : 'auto',
+
+        'background-color': site.isValid === 'admin' ? 'white' : '#FFFFFF00',
+        padding: site.isValid === 'admin' ? '20px' : '0',
+      }"
+    >
+      <h3 v-if="!loggedIn && site.isValid !== 'admin'">Login</h3>
+      <template v-if="site.isValid === 'admin'">
+        <div class="login-icon">
+          <i class="fa-solid fa-desktop"></i>
+        </div>
+        <h3>{{ site.params.site }}</h3>
+      </template>
+
+      <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        autocomplete="email"
+        v-model="email"
+        :disabled="loggedIn"
+        :class="{
+          invalid: isUsernameValid,
+        }"
+        :style="{
+          width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
+        }"
+        @keyup="removeInvalidLoginFn"
+        @keyup.enter="loginFn"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        minlength="8"
+        v-model="password"
+        :disabled="loggedIn"
+        :class="{
+          invalid: isPasswordValid,
+        }"
+        :style="{
+          width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
+        }"
+        @keyup="removeInvalidLoginFn"
+        @keyup.enter="loginFn"
+      />
+      <button :disabled="loggedIn || spinLogin" @click.prevent="loginFn">
+        <i v-if="spinLogin" class="spin fa-sharp fa-solid fa-circle-notch"></i>
+        <span v-else>Log In</span>
+      </button>
+      <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
+      <div
+        :style="{ 'margin-bottom': msg.login ? '15px' : '30px' }"
+        class="validation-message"
+      >
+        {{ msg.login ? msg.login : '' }}
+      </div>
+      <div style="padding: 0px; font-size: 12px">
+        © {{ new Date().getFullYear() }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -202,22 +221,25 @@ export default {
 };
 </script>
 <style>
-.login h3 {
-  text-align: center;
+.login {
+  border: 1px solid grey;
+}
+.login-body h3 {
+  /* text-align: center; */
 }
 .login-icon {
   font-size: 100px;
   width: 250px;
   text-align: center;
 }
-.login button {
+.login-body button {
   width: 100%;
   padding: 3px;
   margin-bottom: 10px;
 }
 
-.login input[type='text'],
-.login input[type='password'] {
+.login-body input[type='text'],
+.login-body input[type='password'] {
   padding: 5px;
   margin-bottom: 10px;
 }
