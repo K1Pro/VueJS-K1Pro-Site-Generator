@@ -54,7 +54,14 @@
       <span v-else>Log In</span>
     </button>
     <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
-    <div v-if="msg.login" class="validation-message">{{ msg.login }}</div>
+    <div
+      v-if="msg.login"
+      style="margin-bottom: -25px"
+      class="validation-message"
+    >
+      {{ msg.login }}
+    </div>
+    <h6>© {{ new Date().getFullYear() }} K1Pro LLC</h6>
   </div>
 </template>
 
