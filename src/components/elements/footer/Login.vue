@@ -11,7 +11,7 @@
       <div class="login-icon">
         <i class="fa-solid fa-desktop"></i>
       </div>
-      <h3>{{ site.params.site }} Admin Login</h3>
+      <h3>{{ site.params.site }} Admin</h3>
     </template>
 
     <input
