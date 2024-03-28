@@ -1,34 +1,35 @@
 <template>
-  <div class="login">
+  <div
+    class="login"
+    :style="{ border: site.isValid === 'admin' ? '1px solid grey' : '0px' }"
+  >
     <div
       class="login-title"
       v-if="site.isValid === 'admin' && !loggedIn"
       style="
         color: rgb(0, 0, 0);
-        font-size: 18px;
         background-color: white;
         width: 270px;
         padding: 10px;
         border-bottom: 1px solid grey;
       "
     >
-      <i class="ba-icons ba-k1pro"></i>
-      K1Pro LLC
+      <i style="font-size: 30px" class="ba-icons ba-k1pro-regular"></i>
+      <span style="font-size: 18px">Pro - {{ appName }}</span>
     </div>
 
     <div
       class="login-body"
       :style="{
         width: site.isValid === 'admin' ? '250px' : 'auto',
-
         'background-color': site.isValid === 'admin' ? 'white' : '#FFFFFF00',
-        padding: site.isValid === 'admin' ? '20px' : '0',
+        padding: site.isValid === 'admin' ? '10px 20px 20px 20px' : '0',
       }"
     >
-      <h3 v-if="!loggedIn && site.isValid !== 'admin'">Login</h3>
+      <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
       <template v-if="site.isValid === 'admin'">
         <div class="login-icon">
-          <i class="fa-solid fa-desktop"></i>
+          <i class="ba-icons ba-k1pro-sitegt"></i>
         </div>
         <h3>{{ site.params.site }}</h3>
       </template>
@@ -72,13 +73,20 @@
       </button>
       <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
       <div
-        :style="{ 'margin-bottom': msg.login ? '15px' : '30px' }"
+        :style="{
+          'margin-bottom': msg.login ? '0px' : '25px',
+          padding: msg.login ? '5px' : '0px',
+        }"
         class="validation-message"
       >
         {{ msg.login ? msg.login : '' }}
       </div>
-      <div style="padding: 0px; font-size: 12px">
-        © {{ new Date().getFullYear() }}
+      <div
+        v-if="site.isValid === 'admin'"
+        class="login-copyright"
+        style="padding: 15px 0px 0px 0px; font-size: 12px"
+      >
+        © {{ new Date().getFullYear() }} K1Pro | All Rights Reserved
       </div>
     </div>
   </div>
@@ -111,6 +119,7 @@ export default {
       'appName',
       'deleteCookie',
       'getLoginUser',
+      'appName',
     ]),
     isUsernameValid() {
       return (
@@ -222,14 +231,22 @@ export default {
 </script>
 <style>
 .login {
-  border: 1px solid grey;
+  border-radius: 5px;
 }
-.login-body h3 {
-  /* text-align: center; */
+.login-title {
+  border-radius: 5px 5px 0px 0px;
+}
+.login-body {
+  border-radius: 0px 0px 5px 5px;
+}
+.login-copyright,
+.login h3 {
+  text-align: center;
 }
 .login-icon {
+  padding: 0px;
   font-size: 100px;
-  width: 250px;
+  /* width: 250px; */
   text-align: center;
 }
 .login-body button {
