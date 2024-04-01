@@ -68,6 +68,7 @@ export default {
       'windowWidth',
       'respWidth',
       'scannedDirs',
+      'isValid',
       'site',
       'endPts',
       'msg',
@@ -88,7 +89,7 @@ export default {
   },
 
   created() {
-    if (this.site.isValid === 'false' || this.site.isValid === null) {
+    if (this.isValid === 'false' || this.isValid === null) {
       this.msg.snackBar = 'Invalid site';
     }
     this.respvColAmnt = this.windowWidth > this.respWidth.md ? 9 : 3;

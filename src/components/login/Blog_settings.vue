@@ -7,12 +7,12 @@ export default {
   name: 'Blog Settings',
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['site']),
+    ...Pinia.mapWritableState(useSiteStore, ['isValid', 'site']),
   },
 
   created() {
     console.log('Blog settings');
-    this.site.isValid = 'blog';
+    this.isValid = 'blog';
   },
 };
 </script>

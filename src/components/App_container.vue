@@ -3,7 +3,7 @@
     <template
       v-for="([elKey, elValue], elementIndex) in Object.entries(htmlElements)"
     >
-      <template v-if="site.isValid === 'true' || site.isValid === 'blog'">
+      <template v-if="isValid === 'true' || isValid === 'blog'">
         <top_menu
           v-if="elKey == 'top-menu' && elValue.enabled"
           :elKey="elKey"
@@ -11,7 +11,7 @@
           :elIndex="htmlIndex"
         ></top_menu>
       </template>
-      <template v-if="site.isValid === 'true'">
+      <template v-if="isValid === 'true'">
         <headline
           v-if="elKey == 'headline' && elValue.enabled"
           :elKey="elKey"
@@ -51,7 +51,7 @@
       </template>
     </template>
   </template>
-  <template v-if="site.isValid === 'blog'">
+  <template v-if="isValid === 'blog'">
     <blog_menu></blog_menu>
     <div class="blog-content">Here is your blog content</div>
     <subscribe></subscribe>
@@ -86,7 +86,7 @@ export default {
 
   computed: {
     // ...Pinia.mapStores(useSiteStore),
-    ...Pinia.mapWritableState(useSiteStore, ['site']),
+    ...Pinia.mapWritableState(useSiteStore, ['isValid', 'site']),
   },
 };
 </script>

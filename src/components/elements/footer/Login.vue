@@ -1,15 +1,15 @@
 <template>
   <div class="login">
-    <div class="login-title" v-if="site.isValid === 'admin' && !loggedIn">
+    <div class="login-title" v-if="isValid === 'admin' && !loggedIn">
       <i style="font-size: 30px" class="ba-icons ba-k1pro-regular"></i>
       <span style="font-size: 18px">Pro - {{ appName }}</span>
     </div>
-    <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
+    <h2 v-if="!loggedIn && isValid !== 'admin'">Login</h2>
     <div
       class="login-body"
       :style="{
-        width: site.isValid === 'admin' ? '250px' : 'auto',
-        padding: site.isValid === 'admin' ? '10px 20px 20px 20px' : '0',
+        width: isValid === 'admin' ? '250px' : 'auto',
+        padding: isValid === 'admin' ? '10px 20px 20px 20px' : '0',
       }"
     >
       <input
@@ -23,7 +23,7 @@
           invalid: isUsernameValid,
         }"
         :style="{
-          width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
+          width: isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
         }"
         @keyup="removeInvalidLoginFn"
         @keyup.enter="loginFn"
@@ -41,7 +41,7 @@
           invalid: isPasswordValid,
         }"
         :style="{
-          width: site.isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
+          width: isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
         }"
         @keyup="removeInvalidLoginFn"
         @keyup.enter="loginFn"
@@ -68,7 +68,7 @@
         {{ msg.login ? msg.login : '' }}
       </div>
 
-      <div v-if="site.isValid === 'admin'" class="login-copyright">
+      <div v-if="isValid === 'admin'" class="login-copyright">
         © {{ new Date().getFullYear() }} K1Pro | All Rights Reserved
       </div>
     </div>
@@ -97,6 +97,7 @@ export default {
       'email',
       'password',
       'msg',
+      'isValid',
       'site',
       'endPts',
       'appName',
@@ -221,13 +222,6 @@ export default {
 .login-body {
   text-align: center;
 }
-.login-remember {
-  text-align: left;
-  padding: 0px 5px 5px 0px;
-}
-.login-remember input {
-  margin: 5px 5px 5px 2px;
-}
 .login-body button {
   width: 100%;
   padding: 3px;
@@ -237,6 +231,13 @@ export default {
 .login-body input[type='password'] {
   padding: 5px;
   margin-bottom: 10px;
+}
+.login-remember {
+  text-align: left;
+  padding: 0px 5px 5px 0px;
+}
+.login-remember input {
+  margin: 5px 5px 5px 2px;
 }
 .login-copyright {
   font-size: 12px;

@@ -33,7 +33,7 @@ export default {
   components: { Element_order },
 
   computed: {
-    ...Pinia.mapWritableState(useSiteStore, ['site']),
+    ...Pinia.mapWritableState(useSiteStore, ['isValid', 'site']),
   },
 
   data() {
@@ -43,7 +43,7 @@ export default {
   methods: {},
 
   created() {
-    this.site.isValid = 'true';
+    this.isValid = 'true';
   },
 };
 </script>

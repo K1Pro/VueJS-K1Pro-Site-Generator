@@ -5,8 +5,7 @@
 
   <template
     v-if="
-      (site.isValid === 'true' || site.isValid === 'blog') &&
-      site.params?.htmlElements
+      (isValid === 'true' || isValid === 'blog') && site.params?.htmlElements
     "
   >
     <template v-if="loggedIn === true">
@@ -38,11 +37,11 @@
     </template>
   </template>
 
-  <template v-else-if="site.isValid === 'root' || site.isValid === 'false'">
+  <template v-else-if="isValid === 'root' || isValid === 'false'">
     <directory></directory>
   </template>
 
-  <template v-else-if="site.isValid === 'admin'">
+  <template v-else-if="isValid === 'admin'">
     <div id="loader-container">
       <login></login>
     </div>
@@ -77,6 +76,7 @@ export default {
       'loggedIn',
       'msg',
       'windowWidth',
+      'isValid',
       'site',
       'endPts',
       'getSite',
@@ -126,7 +126,7 @@ export default {
     const loaderElement = document.getElementById('loader-container');
     loaderElement.remove();
 
-    if (this.site.isValid == 'true' || this.site.isValid == 'admin') {
+    if (this.isValid == 'true' || this.isValid == 'admin') {
       this.accessToken && this.sessionID
         ? this.getLoginUser()
         : this.deleteCookie();

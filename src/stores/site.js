@@ -18,9 +18,9 @@ const useSiteStore = Pinia.defineStore('site', {
         xl: 1140,
       },
       scannedDirs: scanned_dirs,
+      isValid: valid_site,
       site: {
         folderPath: folder_path,
-        isValid: valid_site,
         params: params,
       },
       user: {},
@@ -58,11 +58,29 @@ const useSiteStore = Pinia.defineStore('site', {
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data;
+          if (this.endPts.urlHash == 'admin') this.isValid = 'admin';
           if (getSiteResJSON.data?.params?.body?.style) {
             Object.keys(getSiteResJSON.data.params.body.style).forEach(
               (key) => {
-                document.body.style[key] =
-                  getSiteResJSON.data.params.body.style[key];
+                // this should be also found in loader.js
+                if (isValid == 'admin' && key == 'backgroundColor') {
+                  if (
+                    getSiteResJSON.data.params.body.style.backgroundColor ==
+                    '#ffffff'
+                  ) {
+                    getSiteResJSON.data.params.body.style.backgroundColor =
+                      '#777777';
+                  }
+                  document.body.style.backgroundImage =
+                    'linear-gradient(125deg, ' +
+                    getSiteResJSON.data.params.body.style.backgroundColor +
+                    '75 0 65%, ' +
+                    getSiteResJSON.data.params.body.style.backgroundColor +
+                    ' 65% 100%)';
+                } else {
+                  document.body.style[key] =
+                    getSiteResJSON.data.params.body.style[key];
+                }
               }
             );
           }
@@ -117,7 +135,7 @@ const useSiteStore = Pinia.defineStore('site', {
           this.msg.snackBar = 'Logged in';
           this.user = getLoginJSON.data.user;
           this.loggedIn = true;
-          this.site.isValid = 'true';
+          this.isValid = 'true';
           document.body.style.backgroundColor = '#FFFFFF';
           const tomorrow = new Date();
           tomorrow.setDate(tomorrow.getDate() + 1);
@@ -198,12 +216,10 @@ const useSiteStore = Pinia.defineStore('site', {
           }
         );
         const logOutResJSON = await response.json();
-        if (logOutResJSON.success) {
-          this.getSite();
-          this.deleteCookie();
-          this.email = '';
-          this.password = '';
-        }
+        this.getSite();
+        this.deleteCookie();
+        this.email = '';
+        this.password = '';
         this.msg.snackBar = 'Logged out';
       } catch (error) {
         this.getSite();

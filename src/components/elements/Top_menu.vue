@@ -238,6 +238,7 @@ export default {
       'msg',
       'windowWidth',
       'respWidth',
+      'isValid',
       'site',
       'endPts',
     ]),
@@ -303,7 +304,7 @@ export default {
             this.endPts.href + '/' + event.target.innerHTML.toLowerCase()
           );
         }, 1);
-        this.site.isValid =
+        this.isValid =
           event.target.innerHTML.toLowerCase() == 'blog' ? 'blog' : 'true';
         this.endPts.urlHash = event.target.innerHTML.toLowerCase();
       }
