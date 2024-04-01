@@ -1,39 +1,17 @@
 <template>
-  <div
-    class="login"
-    :style="{ border: site.isValid === 'admin' ? '1px solid grey' : '0px' }"
-  >
-    <div
-      class="login-title"
-      v-if="site.isValid === 'admin' && !loggedIn"
-      style="
-        color: rgb(0, 0, 0);
-        background-color: white;
-        width: 270px;
-        padding: 10px;
-        border-bottom: 1px solid grey;
-      "
-    >
+  <div class="login">
+    <div class="login-title" v-if="site.isValid === 'admin' && !loggedIn">
       <i style="font-size: 30px" class="ba-icons ba-k1pro-regular"></i>
       <span style="font-size: 18px">Pro - {{ appName }}</span>
     </div>
-
+    <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
     <div
       class="login-body"
       :style="{
         width: site.isValid === 'admin' ? '250px' : 'auto',
-        'background-color': site.isValid === 'admin' ? 'white' : '#FFFFFF00',
         padding: site.isValid === 'admin' ? '10px 20px 20px 20px' : '0',
       }"
     >
-      <h2 v-if="!loggedIn && site.isValid !== 'admin'">Login</h2>
-      <template v-if="site.isValid === 'admin'">
-        <div class="login-icon">
-          <i class="ba-icons ba-k1pro-sitegt"></i>
-        </div>
-        <h3>{{ site.params.site }}</h3>
-      </template>
-
       <input
         type="text"
         name="username"
@@ -50,6 +28,7 @@
         @keyup="removeInvalidLoginFn"
         @keyup.enter="loginFn"
       />
+
       <input
         type="password"
         name="password"
@@ -67,11 +46,18 @@
         @keyup="removeInvalidLoginFn"
         @keyup.enter="loginFn"
       />
+
       <button :disabled="loggedIn || spinLogin" @click.prevent="loginFn">
         <i v-if="spinLogin" class="spin fa-sharp fa-solid fa-circle-notch"></i>
         <span v-else>Log In</span>
       </button>
+
       <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
+
+      <div class="login-remember">
+        <input type="checkbox" name="remember" />Remember me?
+      </div>
+
       <div
         :style="{
           'margin-bottom': msg.login ? '0px' : '25px',
@@ -81,11 +67,8 @@
       >
         {{ msg.login ? msg.login : '' }}
       </div>
-      <div
-        v-if="site.isValid === 'admin'"
-        class="login-copyright"
-        style="padding: 15px 0px 0px 0px; font-size: 12px"
-      >
+
+      <div v-if="site.isValid === 'admin'" class="login-copyright">
         © {{ new Date().getFullYear() }} K1Pro | All Rights Reserved
       </div>
     </div>
@@ -208,7 +191,7 @@ export default {
       } catch (error) {
         this.deleteCookie();
         console.log(error);
-        this.msg.snackBar = 'Login error 2';
+        this.msg.snackBar = 'Login error';
         this.spinLogin = false;
       }
     },
@@ -230,34 +213,33 @@ export default {
 };
 </script>
 <style>
-.login {
-  border-radius: 5px;
-}
 .login-title {
-  border-radius: 5px 5px 0px 0px;
+  width: 250px;
+  padding: 20px;
+  color: rgb(0, 0, 0);
 }
 .login-body {
-  border-radius: 0px 0px 5px 5px;
-}
-.login-copyright,
-.login h3 {
   text-align: center;
 }
-.login-icon {
-  padding: 0px;
-  font-size: 100px;
-  /* width: 250px; */
-  text-align: center;
+.login-remember {
+  text-align: left;
+  padding: 0px 5px 5px 0px;
+}
+.login-remember input {
+  margin: 5px 5px 5px 2px;
 }
 .login-body button {
   width: 100%;
   padding: 3px;
   margin-bottom: 10px;
 }
-
 .login-body input[type='text'],
 .login-body input[type='password'] {
   padding: 5px;
   margin-bottom: 10px;
+}
+.login-copyright {
+  font-size: 12px;
+  padding: 15px 0px 0px 0px;
 }
 </style>
