@@ -4,7 +4,9 @@
       <i style="font-size: 30px" class="ba-icons ba-k1pro-regular"></i>
       <span style="font-size: 18px">Pro - {{ appName }}</span>
     </div>
+
     <h2 v-if="!loggedIn && isValid !== 'admin'">Login</h2>
+
     <div
       class="login-body"
       :style="{
@@ -60,7 +62,7 @@
 
       <div
         :style="{
-          'margin-bottom': msg.login ? '0px' : '25px',
+          'margin-bottom': msg.login ? '0px' : '35px',
           padding: msg.login ? '5px' : '0px',
         }"
         class="validation-message"
@@ -69,7 +71,7 @@
       </div>
 
       <div v-if="isValid === 'admin'" class="login-copyright">
-        © {{ new Date().getFullYear() }} K1Pro | All Rights Reserved
+        © {{ server.fullDateTime.getFullYear() }} K1Pro | All Rights Reserved
       </div>
     </div>
   </div>
@@ -104,6 +106,7 @@ export default {
       'deleteCookie',
       'getLoginUser',
       'appName',
+      'server',
     ]),
     isUsernameValid() {
       return (
@@ -217,14 +220,13 @@ export default {
 .login-title {
   width: 250px;
   padding: 20px;
-  color: rgb(0, 0, 0);
 }
 .login-body {
   text-align: center;
 }
 .login-body button {
   width: 100%;
-  padding: 3px;
+  padding: 5px;
   margin-bottom: 10px;
 }
 .login-body input[type='text'],
@@ -233,11 +235,18 @@ export default {
   margin-bottom: 10px;
 }
 .login-remember {
+  padding: 6px;
   text-align: left;
-  padding: 0px 5px 5px 0px;
+  font-size: 12px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  background-color: white;
+  border-radius: 2px;
+  margin-bottom: 10px;
 }
 .login-remember input {
-  margin: 5px 5px 5px 2px;
+  margin: 0px 5px 0px 5px;
 }
 .login-copyright {
   font-size: 12px;

@@ -41,6 +41,9 @@ const useSiteStore = Pinia.defineStore('site', {
         content: 'content',
         messages: 'messages',
       },
+      server: {
+        fullDateTime: fullDateTime,
+      },
       selectedPhoto: '',
       selectedVideo: '',
       appName: app_name,
