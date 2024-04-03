@@ -11,6 +11,7 @@
         v-model="msgName"
         @keyup="removeInvalidContactUsFn"
       />
+
       <input
         type="text"
         name="Email"
@@ -20,6 +21,7 @@
         v-model="msgEmail"
         @keyup="removeInvalidContactUsFn"
       />
+
       <textarea
         rows="3"
         name="Message"
@@ -29,29 +31,42 @@
         v-model="msgMessage"
         @keyup="removeInvalidContactUsFn"
       ></textarea>
-      <div class="footer-captcha">
-        <img :src="endPts.captchaURL + msgDate + '.jpg'" />
-        <button :disabled="loggedIn" @click="updateCaptcha">
-          <i
-            :class="{ spin: spinUpdateCaptcha }"
-            class="fa-solid fa-arrows-rotate"
-          ></i>
-        </button>
-        <input
-          type="text"
-          name="Captcha"
-          :disabled="loggedIn"
-          :class="{
-            invalid:
-              msg_captcha == 'Refresh captcha' ||
-              msg_captcha == 'Incorrect captcha',
-          }"
-          class="cntctInpts"
-          placeholder="Verify captcha..."
-          v-model="msgCaptcha"
-          @keyup="removeInvalidContactUsFn"
-        />
-      </div>
+
+      <img
+        :src="endPts.captchaURL + msgDate + '.jpg'"
+        :style="{
+          height: captchaImgHeight,
+        }"
+        ref="captchaImage"
+      />
+
+      <input
+        type="text"
+        name="Captcha"
+        :disabled="loggedIn"
+        :class="{
+          invalid:
+            msg_captcha == 'Refresh captcha' ||
+            msg_captcha == 'Incorrect captcha',
+        }"
+        class="cntctInpts"
+        style="width: calc(100% - 30px)"
+        placeholder="Verify captcha..."
+        v-model="msgCaptcha"
+        @keyup="removeInvalidContactUsFn"
+      />
+
+      <button
+        style="width: 30px; height: 30px"
+        :disabled="loggedIn"
+        @click="updateCaptcha"
+      >
+        <i
+          :class="{ spin: spinUpdateCaptcha }"
+          class="fa-solid fa-arrows-rotate"
+        ></i>
+      </button>
+
       <button :disabled="loggedIn" @click.prevent="postMsg">
         <i
           v-if="spinContactUsSend"
@@ -73,10 +88,11 @@ export default {
       msgEmail: '',
       msgMessage: '',
       msgCaptcha: '',
-      msgDate: now,
+      msgDate: captcha_time,
       spinContactUsSend: false,
       spinUpdateCaptcha: false,
       msg_captcha: '',
+      captchaImgHeight: '0px',
     };
   },
 
@@ -84,6 +100,7 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'loggedIn',
       'msg',
+      'windowWidth',
       'site',
       'endPts',
     ]),
@@ -150,7 +167,9 @@ export default {
         }
       }
     },
+
     removeInvalidContactUsFn(event) {
+      console.log(event);
       if (event.target.value.length < 1) {
         event.target.classList.add('invalid');
       } else {
@@ -160,6 +179,7 @@ export default {
         this.msg_captcha = '';
       }
     },
+
     async updateCaptcha() {
       this.spinUpdateCaptcha = true;
       try {
@@ -175,6 +195,26 @@ export default {
         this.spinUpdateCaptcha = false;
       }
     },
+
+    updateCaptchaImgHeight() {
+      if (this.$refs.captchaImage.width < 175) {
+        this.captchaImgHeight = '4vw';
+      } else {
+        this.captchaImgHeight = '50px';
+      }
+    },
+  },
+
+  mounted() {
+    setTimeout(() => {
+      this.updateCaptchaImgHeight();
+    }, 1);
+  },
+
+  watch: {
+    windowWidth() {
+      this.updateCaptchaImgHeight();
+    },
   },
 };
 </script>
@@ -182,48 +222,20 @@ export default {
 <style>
 .footer-contact-container {
   box-sizing: border-box;
-  /* border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px; */
 }
-
 .footer-contact-container button {
-  /* background-color: #04aa6d;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer; */
-  padding: 3px;
+  padding: 5px;
   width: 100%;
 }
-
-.footer-captcha {
-  width: 50%;
-  position: relative;
-  padding: 0px 1.25px;
-}
-
-.footer-captcha img {
+.footer-contact-container img {
+  /* height: 50px; */
+  width: calc(100% - 2px);
   margin: 0px;
-  width: 100%;
-}
-
-.footer-captcha button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: auto;
-}
-
-.footer-captcha input[type='text'] {
-  margin-top: -5px;
-}
-
-@media only screen and (min-width: 650px) {
-  .footer-captcha {
-    width: 75%;
-    position: relative;
-  }
+  padding: 0px;
+  object-fit: cover;
+  border-width: 1px 1px 0px 1px;
+  border-style: solid;
+  border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  margin-bottom: -5px;
 }
 </style>

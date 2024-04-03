@@ -239,14 +239,14 @@ export default {
   text-align: left;
   font-size: 12px;
   border-width: 1px;
+  border-radius: 2px;
   border-style: solid;
   border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
   background-color: white;
-  border-radius: 2px;
   margin-bottom: 10px;
 }
 .login-remember input {
-  margin: 0px 5px 0px 5px;
+  margin: 0px 5px 0px 0px;
 }
 .login-copyright {
   font-size: 12px;
