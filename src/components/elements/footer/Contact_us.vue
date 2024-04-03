@@ -32,13 +32,7 @@
         @keyup="removeInvalidContactUsFn"
       ></textarea>
 
-      <img
-        :src="endPts.captchaURL + msgDate + '.jpg'"
-        :style="{
-          height: captchaImgHeight,
-        }"
-        ref="captchaImage"
-      />
+      <img :src="endPts.captchaURL + msgDate + '.jpg'" />
 
       <input
         type="text"
@@ -92,7 +86,6 @@ export default {
       spinContactUsSend: false,
       spinUpdateCaptcha: false,
       msg_captcha: '',
-      captchaImgHeight: '0px',
     };
   },
 
@@ -100,7 +93,6 @@ export default {
     ...Pinia.mapWritableState(useSiteStore, [
       'loggedIn',
       'msg',
-      'windowWidth',
       'site',
       'endPts',
     ]),
@@ -195,26 +187,6 @@ export default {
         this.spinUpdateCaptcha = false;
       }
     },
-
-    updateCaptchaImgHeight() {
-      if (this.$refs.captchaImage.width < 175) {
-        this.captchaImgHeight = '4vw';
-      } else {
-        this.captchaImgHeight = '50px';
-      }
-    },
-  },
-
-  mounted() {
-    setTimeout(() => {
-      this.updateCaptchaImgHeight();
-    }, 1);
-  },
-
-  watch: {
-    windowWidth() {
-      this.updateCaptchaImgHeight();
-    },
   },
 };
 </script>
@@ -228,7 +200,9 @@ export default {
   width: 100%;
 }
 .footer-contact-container img {
-  /* height: 50px; */
+  max-height: 50px;
+  min-height: 30px;
+  height: 15vw;
   width: calc(100% - 2px);
   margin: 0px;
   padding: 0px;
@@ -237,5 +211,11 @@ export default {
   border-style: solid;
   border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
   margin-bottom: -5px;
+}
+
+@media only screen and (min-width: 650px) {
+  .footer-contact-container img {
+    height: 4.5vw;
+  }
 }
 </style>
