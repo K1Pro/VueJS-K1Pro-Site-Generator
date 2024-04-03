@@ -30,9 +30,13 @@
         :disabled="loggedIn"
         v-model="msgMessage"
         @keyup="removeInvalidContactUsFn"
+        style="border-width: 1px"
       ></textarea>
 
-      <img :src="endPts.captchaURL + msgDate + '.jpg'" />
+      <img
+        :src="endPts.captchaURL + msgDate + '.jpg'"
+        :style="{ opacity: loggedIn ? 0.5 : 1 }"
+      />
 
       <input
         type="text"
@@ -61,13 +65,27 @@
         ></i>
       </button>
 
-      <button :disabled="loggedIn" @click.prevent="postMsg">
+      <button
+        style="margin-bottom: 10px"
+        :disabled="loggedIn"
+        @click.prevent="postMsg"
+      >
         <i
           v-if="spinContactUsSend"
           class="spin fa-sharp fa-solid fa-circle-notch"
         ></i>
         <span v-else>Send</span>
       </button>
+
+      <div
+        :style="{
+          'margin-bottom': msg_captcha ? '0px' : '25px',
+          padding: msg_captcha ? '5px' : '0px',
+        }"
+        class="validation-message"
+      >
+        {{ msg_captcha ? msg_captcha : '' }}
+      </div>
     </div>
   </div>
 </template>
@@ -152,6 +170,7 @@ export default {
           if (cntctInpt.value == '') {
             if (firstEl == 0) {
               this.msg.snackBar = cntctInpt.name + ' cannot be blank';
+              this.msg_captcha = cntctInpt.name + ' cannot be blank';
             }
             firstEl++;
             cntctInpt.classList.add('invalid');
@@ -207,6 +226,7 @@ export default {
   border-width: 1px 1px 0px 1px;
   border-style: solid;
   border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  margin-top: -5px;
   margin-bottom: -5px;
 }
 

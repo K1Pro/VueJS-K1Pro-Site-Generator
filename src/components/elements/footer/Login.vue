@@ -10,7 +10,7 @@
     <div
       class="login-body"
       :style="{
-        width: isValid === 'admin' ? '250px' : 'auto',
+        width: isValid === 'admin' ? '290px' : 'auto',
         padding: isValid === 'admin' ? '10px 20px 20px 20px' : '0',
       }"
     >
@@ -50,8 +50,9 @@
 
       <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
 
-      <div class="login-remember">
-        <input type="checkbox" name="remember" />Remember me?
+      <div class="login-remember" :style="{ opacity: loggedIn ? 0.5 : 1 }">
+        <input type="checkbox" name="remember" :disabled="loggedIn" />Remember
+        me?
       </div>
 
       <div
@@ -212,7 +213,7 @@ export default {
 </script>
 <style>
 .login-title {
-  width: 250px;
+  width: 290px;
   padding: 20px;
 }
 .login-body {
@@ -230,6 +231,8 @@ export default {
   margin-bottom: 10px;
 }
 .login-remember {
+  white-space: nowrap;
+  overflow: hidden;
   padding: 6px;
   text-align: left;
   font-size: 12px;
