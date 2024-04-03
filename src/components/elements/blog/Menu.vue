@@ -5,20 +5,10 @@
       'padding-top': blogContentMarginTop,
     }"
   >
-    <select
-      :style="{
-        width:
-          this.windowWidth > this.respWidth.md ? '120px' : 'calc(33vw - 10px)',
-      }"
-      style="margin-left: 10px"
-    >
+    <select>
       <option value="" disabled selected>Blog category:</option>
     </select>
     <input
-      :style="{
-        width:
-          this.windowWidth > this.respWidth.md ? '120px' : 'calc(33vw - 10px)',
-      }"
       style="margin-left: 10px"
       type="month"
       min="2018-03"
@@ -27,8 +17,6 @@
     />
     <input
       :style="{
-        width:
-          this.windowWidth > this.respWidth.md ? '120px' : 'calc(33vw - 20px)',
         'margin-right': this.windowWidth > this.respWidth.md ? '10px' : '0px',
       }"
       style="margin-left: 10px"
@@ -70,5 +58,19 @@ export default {
   z-index: 4;
   overflow-y: hidden;
   text-align: center;
+}
+.blog-menu select,
+.blog-menu input[type='month'] {
+  width: calc(33vw - 10px);
+}
+.blog-menu input[type='search'] {
+  width: calc(33vw - 20px);
+}
+@media only screen and (min-width: 650px) {
+  .blog-menu select,
+  .blog-menu input[type='month'],
+  .blog-menu input[type='search'] {
+    width: 120px;
+  }
 }
 </style>

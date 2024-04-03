@@ -210,7 +210,6 @@ export default {
 .Gallery {
   /* padding: 20px 20px; */
   padding: 0px;
-  box-sizing: border-box;
   /* overflow-y: scroll;
   overflow-x: hidden; */
   /* text-align: center; */

@@ -277,10 +277,6 @@ export default {
 .footer textarea {
   width: 100%;
   padding: 5px;
-  /* border: 1px solid #ccc; */
-  /* border-radius: 4px; */
-  box-sizing: border-box;
-  /* margin-top: 6px; */
   margin-bottom: 10px;
   resize: vertical;
 }

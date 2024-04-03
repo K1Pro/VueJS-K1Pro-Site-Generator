@@ -26,7 +26,7 @@
         v-if="windowWidth > respWidth.md"
         class="logo"
         :style="{
-          height: Number(elValue.style.height) - 20 + 'px',
+          height: elValue.style.height + 'px',
         }"
       >
         <img :src="endPts.siteURL + site.params.logo" alt="logo" />
@@ -53,7 +53,7 @@
           type="text"
           :id="'top-menu-item-' + index"
           :style="{
-            width: elValue['menu-items'][index].length * 7 + 'px',
+            width: elValue['menu-items'][index].length * 9 + 'px',
             'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
             backgroundColor:
               elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
@@ -147,7 +147,7 @@
       <div
         class="logo"
         :style="{
-          height: Number(elValue.style.height) - 20 + 'px',
+          height: elValue.style.height + 'px',
         }"
       >
         <img :src="endPts.siteURL + site.params.logo" alt="logo" />

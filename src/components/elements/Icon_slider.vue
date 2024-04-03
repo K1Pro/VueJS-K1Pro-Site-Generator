@@ -274,7 +274,7 @@ export default {
 
 .icon-slider-item {
   overflow: hidden;
-  height: 100px;
+  height: 140px;
   padding: 20px 0px;
 }
 

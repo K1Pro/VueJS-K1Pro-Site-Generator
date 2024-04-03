@@ -24,9 +24,6 @@
         :class="{
           invalid: isUsernameValid,
         }"
-        :style="{
-          width: isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
-        }"
         @keyup="removeInvalidLoginFn"
         @keyup.enter="loginFn"
       />
@@ -41,9 +38,6 @@
         :disabled="loggedIn"
         :class="{
           invalid: isPasswordValid,
-        }"
-        :style="{
-          width: isValid === 'admin' ? 'calc(100% - 14px)' : '100%',
         }"
         @keyup="removeInvalidLoginFn"
         @keyup.enter="loginFn"
@@ -231,6 +225,7 @@ export default {
 }
 .login-body input[type='text'],
 .login-body input[type='password'] {
+  width: 100%;
   padding: 5px;
   margin-bottom: 10px;
 }

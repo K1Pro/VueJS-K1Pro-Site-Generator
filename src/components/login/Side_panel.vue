@@ -138,7 +138,6 @@ export default {
   height: 100%;
 }
 .tab {
-  box-sizing: border-box;
   float: left;
   width: 50px;
   height: 94vh;
@@ -170,7 +169,6 @@ export default {
 }
 
 .tab-content {
-  box-sizing: border-box;
   flex-grow: 1;
   float: left;
   border: 1px solid #ccc;

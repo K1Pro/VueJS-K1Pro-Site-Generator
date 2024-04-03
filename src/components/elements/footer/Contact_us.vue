@@ -192,9 +192,6 @@ export default {
 </script>
 
 <style>
-.footer-contact-container {
-  box-sizing: border-box;
-}
 .footer-contact-container button {
   padding: 5px;
   width: 100%;
@@ -203,7 +200,7 @@ export default {
   max-height: 50px;
   min-height: 30px;
   height: 15vw;
-  width: calc(100% - 2px);
+  width: 100%;
   margin: 0px;
   padding: 0px;
   object-fit: cover;
