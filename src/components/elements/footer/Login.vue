@@ -66,7 +66,12 @@
         <span v-else>Log In</span>
       </button>
 
-      <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>
+      <form :action="endPts.accountResetURL" method="post">
+        <input type="hidden" name="appName" :value="appName" />
+        <input type="hidden" name="referer" :value="endPts.url" />
+        <input type="submit" value="Reset" />
+        <!-- <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>-->
+      </form>
 
       <div class="login-remember" :style="{ opacity: loggedIn ? 0.5 : 1 }">
         <input type="checkbox" name="remember" :disabled="loggedIn" />Remember
@@ -244,7 +249,8 @@ export default {
 .login-body {
   text-align: center;
 }
-.login-body button {
+.login-body button,
+.login-body input[type='submit'] {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
