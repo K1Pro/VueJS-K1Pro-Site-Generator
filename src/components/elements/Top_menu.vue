@@ -298,7 +298,7 @@ export default {
       // this.toggleRespMenu();
       if (event.target.target == '_self') {
         setTimeout(() => {
-          window.history.pushState(
+          window.history.replaceState(
             null,
             null,
             this.endPts.href + '/' + event.target.innerHTML.toLowerCase()
