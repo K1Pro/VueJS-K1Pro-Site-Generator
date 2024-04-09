@@ -1,4 +1,7 @@
-<template>
+export default {
+  name: 'Messages',
+
+  template: /*html*/ `
   <div class="messages">
     Messages:
     <template v-for="(message, messageIndex) in content.messages">
@@ -12,25 +15,23 @@
       <div>{{ message.Message }}</div>
     </template>
   </div>
-</template>
-
-<script>
-export default {
-  name: 'Messages',
+  `,
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, ['content']),
   },
 
-  created() {},
+  mounted() {
+    style(
+      'Messages',
+      /*css*/ `
+      .messages {
+        padding: 10px;
+      }
+      .messages h4 {
+        background-color: lightgoldenrodyellow;
+      }
+      `
+    );
+  },
 };
-</script>
-
-<style>
-.messages {
-  padding: 10px;
-}
-.messages h4 {
-  background-color: lightgoldenrodyellow;
-}
-</style>

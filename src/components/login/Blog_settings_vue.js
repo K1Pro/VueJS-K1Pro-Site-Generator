@@ -1,24 +1,26 @@
-<template>
-  <div class="blog-settings">Blog Settings</div>
-</template>
-
-<script>
 export default {
   name: 'Blog Settings',
+
+  template: /*html*/ `
+    <div class="blog-settings">Blog Settings</div>
+  `,
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, ['isValid', 'site']),
   },
 
   created() {
-    console.log('Blog settings');
     this.isValid = 'blog';
   },
-};
-</script>
 
-<style>
+  mounted() {
+    style(
+      'Blog-Settings',
+      /*css*/ `
 .blog-settings {
   padding: 10px;
 }
-</style>
+      `
+    );
+  },
+};

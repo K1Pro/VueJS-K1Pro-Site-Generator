@@ -1,98 +1,97 @@
-<template>
-  <div class="contact-us">
-    <h2 v-if="!loggedIn">Contact Us</h2>
-    <div class="footer-contact-container">
-      <input
-        type="text"
-        name="Name"
-        class="cntctInpts"
-        placeholder="Name"
-        :disabled="loggedIn"
-        v-model="msgName"
-        @keyup="removeInvalidContactUsFn"
-      />
-
-      <input
-        type="text"
-        name="Email"
-        class="cntctInpts"
-        placeholder="Email"
-        :disabled="loggedIn"
-        v-model="msgEmail"
-        @keyup="removeInvalidContactUsFn"
-      />
-
-      <textarea
-        rows="3"
-        name="Message"
-        class="cntctInpts"
-        placeholder="Message"
-        :disabled="loggedIn"
-        v-model="msgMessage"
-        @keyup="removeInvalidContactUsFn"
-        style="border-width: 1px"
-      ></textarea>
-
-      <img
-        :src="endPts.captchaURL + msgDate + '.jpg'"
-        :style="{ opacity: loggedIn ? 0.5 : 1 }"
-      />
-
-      <input
-        type="text"
-        name="Captcha"
-        :disabled="loggedIn"
-        :class="{
-          invalid:
-            msg_captcha == 'Refresh captcha' ||
-            msg_captcha == 'Incorrect captcha',
-        }"
-        class="cntctInpts"
-        style="width: calc(100% - 30px)"
-        placeholder="Verify captcha..."
-        v-model="msgCaptcha"
-        @keyup="removeInvalidContactUsFn"
-      />
-
-      <button
-        style="width: 30px; height: 30px"
-        :disabled="loggedIn"
-        @click="updateCaptcha"
-      >
-        <i
-          :class="{ spin: spinUpdateCaptcha }"
-          class="fa-solid fa-arrows-rotate"
-        ></i>
-      </button>
-
-      <button
-        style="margin-bottom: 10px"
-        :disabled="loggedIn"
-        @click.prevent="postMsg"
-      >
-        <i
-          v-if="spinContactUsSend"
-          class="spin fa-sharp fa-solid fa-circle-notch"
-        ></i>
-        <span v-else>Send</span>
-      </button>
-
-      <div
-        :style="{
-          'margin-bottom': msg_captcha ? '0px' : '25px',
-          padding: msg_captcha ? '5px' : '0px',
-        }"
-        class="validation-message"
-      >
-        {{ msg_captcha ? msg_captcha : '' }}
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
 export default {
   name: 'Contact Us',
+
+  template: /*html*/ `
+    <div class="contact-us">
+      <h2 v-if="!loggedIn">Contact Us</h2>
+      <div class="footer-contact-container">
+        <input
+          type="text"
+          name="Name"
+          class="cntctInpts"
+          placeholder="Name"
+          :disabled="loggedIn"
+          v-model="msgName"
+          @keyup="removeInvalidContactUsFn"
+        />
+
+        <input
+          type="text"
+          name="Email"
+          class="cntctInpts"
+          placeholder="Email"
+          :disabled="loggedIn"
+          v-model="msgEmail"
+          @keyup="removeInvalidContactUsFn"
+        />
+
+        <textarea
+          rows="3"
+          name="Message"
+          class="cntctInpts"
+          placeholder="Message"
+          :disabled="loggedIn"
+          v-model="msgMessage"
+          @keyup="removeInvalidContactUsFn"
+          style="border-width: 1px"
+        ></textarea>
+
+        <img
+          :src="endPts.captchaURL + msgDate + '.jpg'"
+          :style="{ opacity: loggedIn ? 0.5 : 1 }"
+        />
+
+        <input
+          type="text"
+          name="Captcha"
+          :disabled="loggedIn"
+          :class="{
+            invalid:
+              msg_captcha == 'Refresh captcha' ||
+              msg_captcha == 'Incorrect captcha',
+          }"
+          class="cntctInpts"
+          style="width: calc(100% - 30px)"
+          placeholder="Verify captcha..."
+          v-model="msgCaptcha"
+          @keyup="removeInvalidContactUsFn"
+        />
+
+        <button
+          style="width: 30px; height: 30px"
+          :disabled="loggedIn"
+          @click="updateCaptcha"
+        >
+          <i
+            :class="{ spin: spinUpdateCaptcha }"
+            class="fa-solid fa-arrows-rotate"
+          ></i>
+        </button>
+
+        <button
+          style="margin-bottom: 10px"
+          :disabled="loggedIn"
+          @click.prevent="postMsg"
+        >
+          <i
+            v-if="spinContactUsSend"
+            class="spin fa-sharp fa-solid fa-circle-notch"
+          ></i>
+          <span v-else>Send</span>
+        </button>
+
+        <div
+          :style="{
+            'margin-bottom': msg_captcha ? '0px' : '25px',
+            padding: msg_captcha ? '5px' : '0px',
+          }"
+          class="validation-message"
+        >
+          {{ msg_captcha ? msg_captcha : '' }}
+        </div>
+      </div>
+    </div>
+  `,
 
   data() {
     return {
@@ -186,9 +185,9 @@ export default {
       } else {
         event.target.classList.remove('invalid');
       }
-      if (event.target.name == 'Captcha') {
-        this.msg_captcha = '';
-      }
+      // if (event.target.name == 'Captcha') {
+      //   this.msg_captcha = '';
+      // }
     },
 
     async updateCaptcha() {
@@ -207,10 +206,18 @@ export default {
       }
     },
   },
-};
-</script>
 
-<style>
+  mounted() {
+    style(
+      'Contact-Us',
+      /*css*/ `
+.footer-contact-container input[type='text'],
+.footer-contact-container textarea {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  resize: vertical;
+}
 .footer-contact-container button {
   padding: 5px;
   width: 100%;
@@ -235,4 +242,7 @@ export default {
     height: 4.5vw;
   }
 }
-</style>
+      `
+    );
+  },
+};

@@ -1,4 +1,7 @@
-<template>
+export default {
+  name: 'Video Search',
+
+  template: /*html*/ `
   <div class="video-search">
     <div class="video-search-search-button">
       <input
@@ -38,11 +41,7 @@
       </video>
     </template>
   </div>
-</template>
-
-<script>
-export default {
-  name: 'Video Search',
+  `,
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
@@ -139,10 +138,11 @@ export default {
           .replaceAll('-', ' ')
       : '';
   },
-};
-</script>
 
-<style>
+  mounted() {
+    style(
+      'Video-Search',
+      /*css*/ `
 .video-search-search-button {
   padding-left: 10px;
   padding-top: 10px;
@@ -228,4 +228,7 @@ export default {
   /* outline: 4px solid white;
     outline-offset: -4px; */
 }
-</style>
+      `
+    );
+  },
+};

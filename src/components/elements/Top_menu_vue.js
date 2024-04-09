@@ -1,5 +1,11 @@
-<template>
-  <div
+import Element_select from './../login/Element_select_vue.js';
+import Element_select_options from './../login/Element_select_options_vue.js';
+
+export default {
+  name: 'Top Menu',
+
+  template: /*html*/ `
+    <div
     :class="elKey"
     :style="{
       backgroundColor: elValue.style.backgroundColor + elValue.style.opacity,
@@ -17,216 +23,208 @@
       'border-width': loggedIn ? '1px 1px 1px 1px' : '0px 0px 1px 0px',
       'border-style': loggedIn ? 'dashed' : 'solid',
       'border-color': loggedIn ? 'black' : 'black',
-    }"
-  >
-    <template v-if="loggedIn === null"></template>
-    <template v-else-if="loggedIn">
-      <!-- Menu Logo -->
-      <div
-        v-if="windowWidth > respWidth.md"
-        class="logo"
-        :style="{
-          height: elValue.style.height + 'px',
-        }"
-      >
-        <img :src="endPts.siteURL + site.params.logo" alt="logo" />
-      </div>
-      <!-- Menu Logo -->
-      <template v-for="(menuItem, index) in elValue['menu-items']">
-        <template v-if="index > 1 && menuChange != 'links'">
-          <button
-            v-if="index < elValue['menu-items'].length"
-            class="minus"
-            style="position: absolute"
-            :style="{
-              'margin-top': Number(elValue.style.height) / 2 - 25 + 'px',
-              'margin-left':
-                elValue['menu-items'][index].length > 4
-                  ? elValue['menu-items'][index].length * 9 + 'px'
-                  : '36px',
-            }"
-            @click.prevent="deleteMenuItem(index)"
-          ></button>
-        </template>
-        <input
-          v-if="menuChange != 'links'"
-          type="text"
-          :id="'top-menu-item-' + index"
+    }">
+      <template v-if="loggedIn === null"></template>
+      <template v-else-if="loggedIn">
+        <!-- Menu Logo -->
+        <div
+          v-if="windowWidth > respWidth.md"
+          class="logo"
           :style="{
-            width: elValue['menu-items'][index].length * 9 + 'px',
-            'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
-            backgroundColor:
-              elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
-            color: elValue.style.color,
-            border:
-              elValue['menu-items'][index].length < 1
-                ? '2px solid rgba(0, 0, 0, 1)'
-                : 'none',
-            'border-radius': '5px',
+            height: elValue.style.height + 'px',
           }"
-          v-model="
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
-          "
-        />
-        <input
-          v-else="menuChange == 'links'"
-          type="text"
-          :id="'top-menu-item-' + index"
-          :style="{
-            width: elValue.style.links[index]
-              ? elValue.style.links[index].length * 7 + 'px'
-              : elValue['menu-items'][index].length * 7 + 'px',
-            'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
-            backgroundColor:
+        >
+          <img :src="endPts.siteURL + site.params.logo" alt="logo" />
+        </div>
+        <!-- Menu Logo -->
+        <template v-for="(menuItem, index) in elValue['menu-items']">
+          <template v-if="index > 1 && menuChange != 'links'">
+            <button
+              v-if="index < elValue['menu-items'].length"
+              class="minus"
+              style="position: absolute"
+              :style="{
+                'margin-top': Number(elValue.style.height) / 2 - 25 + 'px',
+                'margin-left':
+                  elValue['menu-items'][index].length > 4
+                    ? elValue['menu-items'][index].length * 9 + 'px'
+                    : '36px',
+              }"
+              @click.prevent="deleteMenuItem(index)"
+            ></button>
+          </template>
+          <input
+            v-if="menuChange != 'links'"
+            type="text"
+            :id="'top-menu-item-' + index"
+            :style="{
+              width: elValue['menu-items'][index].length * 9 + 'px',
+              'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
+              backgroundColor:
+                elValue['menu-items'][index].length < 1 ? '#FFFFFF' : '#FFFFFF00',
+              color: elValue.style.color,
+              border:
+                elValue['menu-items'][index].length < 1
+                  ? '2px solid rgba(0, 0, 0, 1)'
+                  : 'none',
+              'border-radius': '5px',
+            }"
+            v-model="
+              site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
+            "
+          />
+          <input
+            v-else="menuChange == 'links'"
+            type="text"
+            :id="'top-menu-item-' + index"
+            :style="{
+              width: elValue.style.links[index]
+                ? elValue.style.links[index].length * 7 + 'px'
+                : elValue['menu-items'][index].length * 7 + 'px',
+              'margin-top': Number(elValue.style.height) / 2 - 10 + 'px',
+              backgroundColor:
+                site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+                  index
+                ] == 'Blog' ||
+                site.params.htmlElements[elIndex]['top-menu']['menu-items'][
+                  index
+                ] == 'Home'
+                  ? 'lightgrey'
+                  : 'white',
+              color: elValue.style.color,
+              border: '1px solid rgba(0, 0, 0, 1)',
+              'border-radius': '0px',
+            }"
+            :placeholder="
+              site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
+            "
+            v-model="
+              site.params.htmlElements[elIndex]['top-menu'].style.links[index]
+            "
+            :disabled="
               site.params.htmlElements[elIndex]['top-menu']['menu-items'][
                 index
               ] == 'Blog' ||
               site.params.htmlElements[elIndex]['top-menu']['menu-items'][
                 index
               ] == 'Home'
-                ? 'lightgrey'
-                : 'white',
-            color: elValue.style.color,
-            border: '1px solid rgba(0, 0, 0, 1)',
-            'border-radius': '0px',
-          }"
-          :placeholder="
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][index]
-          "
-          v-model="
-            site.params.htmlElements[elIndex]['top-menu'].style.links[index]
-          "
-          :disabled="
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
-              index
-            ] == 'Blog' ||
-            site.params.htmlElements[elIndex]['top-menu']['menu-items'][
-              index
-            ] == 'Home'
-          "
-          @keyup="removeAnchor"
-        />
-        <button
-          v-if="
-            index === elValue['menu-items'].length - 1 && menuChange != 'links'
-          "
-          class="plus"
-          style="margin: 0px 20px"
-          @click.prevent="addItem(index)"
-        ></button>
+            "
+            @keyup="removeAnchor"
+          />
+          <button
+            v-if="
+              index === elValue['menu-items'].length - 1 && menuChange != 'links'
+            "
+            class="plus"
+            style="margin: 0px 20px"
+            @click.prevent="addItem(index)"
+          ></button>
 
-        <template v-if="index === elValue['menu-items'].length - 1">
-          <!-- Modify element select and options -->
-          <div class="modPosition">
-            <select name="menuChange" v-model="menuChange" @change="menuAction">
-              <option value="" disabled selected>
-                Modify {{ elKey.charAt(0).toUpperCase()
-                }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
-              </option>
-              <element_select
-                :selectKey="elKey"
-                :selectIndex="elIndex"
-              ></element_select>
-              <!-- Custom select options here -->
-            </select>
-            <div class="modChange">
-              <element_select_options
-                :selectKey="elKey"
-                :selectIndex="elIndex"
-                :selectChange="menuChange"
-              ></element_select_options>
+          <template v-if="index === elValue['menu-items'].length - 1">
+            <!-- Modify element select and options -->
+            <div class="modPosition">
+              <select name="menuChange" v-model="menuChange" @change="menuAction">
+                <option value="" disabled selected>
+                  Modify {{ elKey.charAt(0).toUpperCase()
+                  }}{{ elKey.slice(1).toLowerCase().replaceAll('_', ' ') }}
+                </option>
+                <element_select
+                  :selectKey="elKey"
+                  :selectIndex="elIndex"
+                ></element_select>
+                <!-- Custom select options here -->
+              </select>
+              <div class="modChange">
+                <element_select_options
+                  :selectKey="elKey"
+                  :selectIndex="elIndex"
+                  :selectChange="menuChange"
+                ></element_select_options>
+              </div>
             </div>
-          </div>
-          <!-- Modify element select and options -->
+            <!-- Modify element select and options -->
+          </template>
         </template>
       </template>
-    </template>
-    <!-- Rendered Menu -->
-    <template v-else>
-      <!-- Menu Logo -->
-      <div
-        class="logo"
-        :style="{
-          height: elValue.style.height + 'px',
-        }"
-      >
-        <img :src="endPts.siteURL + site.params.logo" alt="logo" />
-      </div>
-      <!-- Menu Logo -->
-      <div
-        class="top-menu-alignment"
-        :style="{
-          float: windowWidth > respWidth.md ? elValue.style.alignment : 'none',
-        }"
-      >
+      <!-- Rendered Menu -->
+      <template v-else>
+        <!-- Menu Logo -->
         <div
-          v-if="
-            windowWidth > respWidth.md ||
-            (windowWidth < respWidth.md && elValue.responsive)
-          "
-          class="top-menu-items"
+          class="logo"
+          :style="{
+            height: elValue.style.height + 'px',
+          }"
         >
-          <!-- Menu Items -->
-          <template v-for="(menuItem, menuIndex) in elValue['menu-items']">
-            <a
-              :href="
-                elValue.style.links[menuIndex]
-                  ? elValue.style.links[menuIndex]
-                  : '#' + menuItem.toLowerCase()
-              "
+          <img :src="endPts.siteURL + site.params.logo" alt="logo" />
+        </div>
+        <!-- Menu Logo -->
+        <div
+          class="top-menu-alignment"
+          :style="{
+            float: windowWidth > respWidth.md ? elValue.style.alignment : 'none',
+          }"
+        >
+          <div
+            v-if="
+              windowWidth > respWidth.md ||
+              (windowWidth < respWidth.md && elValue.responsive)
+            "
+            class="top-menu-items"
+          >
+            <!-- Menu Items -->
+            <template v-for="(menuItem, menuIndex) in elValue['menu-items']">
+              <a
+                :href="
+                  elValue.style.links[menuIndex]
+                    ? elValue.style.links[menuIndex]
+                    : '#' + menuItem.toLowerCase()
+                "
+                :style="{
+                  color: elValue.style.color ? elValue.style.color : '#000000',
+                  height:
+                    windowWidth < respWidth.md && elValue.responsive
+                      ? '50px'
+                      : elValue.style.height + 'px',
+                  'line-height':
+                    windowWidth < respWidth.md && elValue.responsive
+                      ? '50px'
+                      : elValue.style.height + 'px',
+                }"
+                :target="elValue.style.links[menuIndex] ? '_blank' : '_self'"
+                @mouseover="highlightMenuItem(true, $event)"
+                @mouseout="highlightMenuItem(false, $event)"
+                @click="clickMenuItem"
+                >{{ menuItem }}</a
+              >
+            </template>
+            <!-- Menu Items -->
+          </div>
+        </div>
+
+        <!-- Menu Hamburger Button -->
+        <template v-if="windowWidth < respWidth.md">
+          <a @click.prevent="toggleRespMenu" class="top-menu-icon"
+            ><i
+              :class="elValue.responsive ? 'fa fa-xmark' : 'fa fa-bars'"
               :style="{
-                color: elValue.style.color ? elValue.style.color : '#000000',
-                height:
-                  windowWidth < respWidth.md && elValue.responsive
-                    ? '50px'
-                    : elValue.style.height + 'px',
-                'line-height':
-                  windowWidth < respWidth.md && elValue.responsive
-                    ? '50px'
-                    : elValue.style.height + 'px',
+                color: elValue.style.color,
+                height: elValue.style.height + 'px',
+                'line-height': elValue.style.height + 'px',
               }"
-              :target="elValue.style.links[menuIndex] ? '_blank' : '_self'"
+              style="
+                padding-left: 16px;
+                padding-right: 16px;
+                margin-right: -16px;
+                margin-left: -16px;
+              "
               @mouseover="highlightMenuItem(true, $event)"
               @mouseout="highlightMenuItem(false, $event)"
-              @click="clickMenuItem"
-              >{{ menuItem }}</a
-            >
-          </template>
-          <!-- Menu Items -->
-        </div>
-      </div>
-
-      <!-- Menu Hamburger Button -->
-      <template v-if="windowWidth < respWidth.md">
-        <a @click.prevent="toggleRespMenu" class="top-menu-icon"
-          ><i
-            :class="elValue.responsive ? 'fa fa-xmark' : 'fa fa-bars'"
-            :style="{
-              color: elValue.style.color,
-              height: elValue.style.height + 'px',
-              'line-height': elValue.style.height + 'px',
-            }"
-            style="
-              padding-left: 16px;
-              padding-right: 16px;
-              margin-right: -16px;
-              margin-left: -16px;
-            "
-            @mouseover="highlightMenuItem(true, $event)"
-            @mouseout="highlightMenuItem(false, $event)"
-          ></i></a
-      ></template>
-      <!-- Menu Hamburger Button -->
-    </template>
-  </div>
-</template>
-
-<script>
-import Element_select from './../login/Element_select.vue';
-import Element_select_options from './../login/Element_select_options.vue';
-
-export default {
-  name: 'Top Menu',
+            ></i></a
+        ></template>
+        <!-- Menu Hamburger Button -->
+      </template>
+    </div>
+  `,
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -423,10 +421,11 @@ export default {
       }
     },
   },
-};
-</script>
 
-<style>
+  mounted() {
+    style(
+      'Top-Menu',
+      /*css*/ `
 .top-menu select {
   margin: 7px 8px 7px 16px;
   padding: 5px;
@@ -537,4 +536,7 @@ img {
     float: right;
   } */
 }
-</style>
+      `
+    );
+  },
+};

@@ -66,7 +66,7 @@ const useSiteStore = Pinia.defineStore('site', {
             Object.keys(getSiteResJSON.data.params.body.style).forEach(
               (key) => {
                 // this should be also found in loader.js
-                if (isValid == 'admin' && key == 'backgroundColor') {
+                if (this.isValid == 'admin' && key == 'backgroundColor') {
                   if (
                     getSiteResJSON.data.params.body.style.backgroundColor ==
                     '#ffffff'

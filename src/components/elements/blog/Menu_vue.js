@@ -1,35 +1,33 @@
-<template>
-  <div
+export default {
+  name: 'Blog Menu',
+
+  template: /*html*/ `
+    <div
     class="blog-menu"
     :style="{
       'padding-top': blogContentMarginTop,
-    }"
-  >
-    <select>
-      <option value="" disabled selected>Blog category:</option>
-    </select>
-    <input
-      style="margin-left: 10px"
-      type="month"
-      min="2018-03"
-      max="2024-02"
-      value="2024-02"
-    />
-    <input
-      :style="{
-        'margin-right': this.windowWidth > this.respWidth.md ? '10px' : '0px',
-      }"
-      style="margin-left: 10px"
-      type="search"
-      placeholder="Search blog..."
-      name="search"
-    />
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'Blog Menu',
+    }">
+      <select>
+        <option value="" disabled selected>Blog category:</option>
+      </select>
+      <input
+        style="margin-left: 10px"
+        type="month"
+        min="2018-03"
+        max="2024-02"
+        value="2024-02"
+      />
+      <input
+        :style="{
+          'margin-right': this.windowWidth > this.respWidth.md ? '10px' : '0px',
+        }"
+        style="margin-left: 10px"
+        type="search"
+        placeholder="Search blog..."
+        name="search"
+      />
+    </div>
+  `,
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
@@ -47,10 +45,11 @@ export default {
         : '10px';
     },
   },
-};
-</script>
 
-<style>
+  mounted() {
+    style(
+      'Blog-Menu',
+      /*css*/ `
 .blog-menu {
   background-color: #ffffff00;
   padding-bottom: 10px;
@@ -73,4 +72,7 @@ export default {
     width: 120px;
   }
 }
-</style>
+      `
+    );
+  },
+};

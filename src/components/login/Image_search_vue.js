@@ -1,63 +1,62 @@
-<template>
-  <div class="image-search">
-    <div class="image-search-search-button">
-      <input
-        type="search"
-        name="image-search"
-        placeholder="Image search..."
-        v-model="imageSearchInput"
-        @keyup.enter="imageSearch"
-      />
-      <select name="image-searched" @change="selectSearch">
-        <template v-if="content.imagesSearched">
-          <option
-            v-for="imageSearch in Object.keys(content.imagesSearched)"
-            :value="imageSearch"
-          >
-            {{ imageSearch.charAt(0).toUpperCase()
-            }}{{ imageSearch.slice(1).replaceAll('-', ' ') }}
-          </option>
-        </template></select
-      ><button @click="imageSearch">Search</button>
-    </div>
-  </div>
-  <div class="Gallery">
-    <div v-if="this.searchedPhotos" class="Gallery-Row">
-      <div class="Gallery-Column">
-        <img
-          v-for="images in imgSrchArr1stPart"
-          :src="images.src.medium"
-          :style="{
-            outline:
-              images.src.large2x == selectedPhoto
-                ? '8px solid LawnGreen'
-                : 'none',
-            outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
-          }"
-          @click="selectImg($event, images.src.large2x)"
-        />
-      </div>
-      <div class="Gallery-Column">
-        <img
-          v-for="images in imgSrchArr2ndPart"
-          :src="images.src.medium"
-          :style="{
-            outline:
-              images.src.large2x == selectedPhoto
-                ? '8px solid LawnGreen'
-                : 'none',
-            outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
-          }"
-          @click="selectImg($event, images.src.large2x)"
-        />
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
 export default {
   name: 'Image Search',
+
+  template: /*html*/ `
+    <div class="image-search">
+      <div class="image-search-search-button">
+        <input
+          type="search"
+          name="image-search"
+          placeholder="Image search..."
+          v-model="imageSearchInput"
+          @keyup.enter="imageSearch"
+        />
+        <select name="image-searched" @change="selectSearch">
+          <template v-if="content.imagesSearched">
+            <option
+              v-for="imageSearch in Object.keys(content.imagesSearched)"
+              :value="imageSearch"
+            >
+              {{ imageSearch.charAt(0).toUpperCase()
+              }}{{ imageSearch.slice(1).replaceAll('-', ' ') }}
+            </option>
+          </template></select
+        ><button @click="imageSearch">Search</button>
+      </div>
+    </div>
+    <div class="Gallery">
+      <div v-if="this.searchedPhotos" class="Gallery-Row">
+        <div class="Gallery-Column">
+          <img
+            v-for="images in imgSrchArr1stPart"
+            :src="images.src.medium"
+            :style="{
+              outline:
+                images.src.large2x == selectedPhoto
+                  ? '8px solid LawnGreen'
+                  : 'none',
+              outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
+            }"
+            @click="selectImg($event, images.src.large2x)"
+          />
+        </div>
+        <div class="Gallery-Column">
+          <img
+            v-for="images in imgSrchArr2ndPart"
+            :src="images.src.medium"
+            :style="{
+              outline:
+                images.src.large2x == selectedPhoto
+                  ? '8px solid LawnGreen'
+                  : 'none',
+              outlineOffset: images.src.large2x == selectedPhoto ? '-8px' : '0',
+            }"
+            @click="selectImg($event, images.src.large2x)"
+          />
+        </div>
+      </div>
+    </div>
+  `,
 
   computed: {
     ...Pinia.mapWritableState(useSiteStore, [
@@ -168,10 +167,11 @@ export default {
           .replaceAll('-', ' ')
       : '';
   },
-};
-</script>
 
-<style>
+  mounted() {
+    style(
+      'Image-Search',
+      /*css*/ `
 .image-search-search-button {
   padding-left: 10px;
   padding-top: 10px;
@@ -242,4 +242,7 @@ export default {
   /* outline: 4px solid white;
   outline-offset: -4px; */
 }
-</style>
+      `
+    );
+  },
+};

@@ -1,5 +1,13 @@
-<template>
-  <div
+import About_us from './footer/About_us_vue.js';
+import Description from './footer/Description_vue.js';
+import Contact_us from './footer/Contact_us_vue.js';
+import Login from './footer/Login_vue.js';
+
+export default {
+  name: 'Footer',
+
+  template: /*html*/ `
+    <div
     class="footer"
     :style="{
       top: '0px',
@@ -14,117 +22,105 @@
         : site.params.htmlElements[site.params.htmlElements.length - 1][
             'footer'
           ]['style']['borderColor'],
-    }"
-  >
-    <template
-      v-if="site.params.htmlElements[elIndex][elKey].style.anchor != ''"
-    >
-      <a
-        :style="{
-          'scroll-margin-top': site.params.htmlElements[0]['top-menu']?.style
-            .height
-            ? site.params.htmlElements[0]['top-menu'].style.height + 'px'
-            : '0px',
-        }"
-        :id="site.params.htmlElements[elIndex][elKey].style.anchor"
-        :ref="site.params.htmlElements[elIndex][elKey].style.anchor"
-      ></a>
-    </template>
-    <div
-      class="footer-container"
-      :style="{
-        'background-color':
-          site.params.htmlElements[site.params.htmlElements.length - 1][
-            'footer'
-          ]['style']['backgroundColor'],
-        gridTemplateColumns: loggedIn ? gridTemplateLogIn : gridTemplateLogOut,
-      }"
-    >
-      <div class="footer-item0"></div>
-      <template
-        v-for="(siteFooterItem, siteFooterIndex) in site.params.htmlElements[
-          elIndex
-        ].footer['footer-items']"
-      >
-        <div
-          v-if="(!loggedIn && siteFooterItem != 'none') || loggedIn"
-          :class="'footer-item' + Number(siteFooterIndex + 1)"
-        >
-          <select
-            v-if="loggedIn"
-            @change="changeOrder($event, siteFooterIndex)"
-          >
-            <!-- <option value="disabled" disabled selected>
-              {{ content.htmlElements.footer['footer-items'][siteFooterIndex] }}
-            </option> -->
-            <option value="none">None</option>
-
-            <template
-              v-for="defaultFooterItem in content.htmlElements.footer[
-                'footer-items'
-              ]"
-            >
-              <option
-                v-if="siteFooterItem == defaultFooterItem"
-                :value="defaultFooterItem"
-                selected
-              >
-                {{ defaultFooterItem.charAt(0).toUpperCase()
-                }}{{ defaultFooterItem.slice(1).replaceAll('-', ' ') }}
-              </option>
-              <option
-                v-if="siteFooterItem != defaultFooterItem"
-                :value="defaultFooterItem"
-              >
-                {{ defaultFooterItem.charAt(0).toUpperCase()
-                }}{{ defaultFooterItem.slice(1).replaceAll('-', ' ') }}
-              </option>
-            </template>
-          </select>
-
-          <template v-if="siteFooterItem == 'About Us'">
-            <about_us></about_us>
-          </template>
-
-          <template v-if="siteFooterItem == 'Description'">
-            <description></description>
-          </template>
-
-          <template v-if="siteFooterItem == 'Contact Us'">
-            <contact_us></contact_us>
-          </template>
-
-          <template v-if="siteFooterItem == 'Login'">
-            <login> </login>
-          </template>
-
-          <template v-if="siteFooterItem == 'Map'"> Map</template>
-
-          <template v-if="siteFooterItem == 'Links'"> Links</template>
-
-          <template v-if="siteFooterItem == 'none'"> None </template>
-        </div>
+    }">
+      <template v-if="site.params.htmlElements[elIndex][elKey].style.anchor != ''">
+        <a
+          :style="{
+            'scroll-margin-top': site.params.htmlElements[0]['top-menu']?.style
+              .height
+              ? site.params.htmlElements[0]['top-menu'].style.height + 'px'
+              : '0px',
+          }"
+          :id="site.params.htmlElements[elIndex][elKey].style.anchor"
+          :ref="site.params.htmlElements[elIndex][elKey].style.anchor"
+        ></a>
       </template>
       <div
-        :class="
-          'footer-item' +
-          Number(
-            site.params.htmlElements[elIndex].footer['footer-items'].length + 1
-          )
-        "
-      ></div>
+        class="footer-container"
+        :style="{
+          'background-color':
+            site.params.htmlElements[site.params.htmlElements.length - 1][
+              'footer'
+            ]['style']['backgroundColor'],
+          gridTemplateColumns: loggedIn ? gridTemplateLogIn : gridTemplateLogOut,
+        }"
+      >
+        <div class="footer-item0"></div>
+        <template
+          v-for="(siteFooterItem, siteFooterIndex) in site.params.htmlElements[
+            elIndex
+          ].footer['footer-items']"
+        >
+          <div
+            v-if="(!loggedIn && siteFooterItem != 'none') || loggedIn"
+            :class="'footer-item' + Number(siteFooterIndex + 1)"
+          >
+            <select
+              v-if="loggedIn"
+              @change="changeOrder($event, siteFooterIndex)"
+            >
+              <!-- <option value="disabled" disabled selected>
+                {{ content.htmlElements.footer['footer-items'][siteFooterIndex] }}
+              </option> -->
+              <option value="none">None</option>
+
+              <template
+                v-for="defaultFooterItem in content.htmlElements.footer[
+                  'footer-items'
+                ]"
+              >
+                <option
+                  v-if="siteFooterItem == defaultFooterItem"
+                  :value="defaultFooterItem"
+                  selected
+                >
+                  {{ defaultFooterItem.charAt(0).toUpperCase()
+                  }}{{ defaultFooterItem.slice(1).replaceAll('-', ' ') }}
+                </option>
+                <option
+                  v-if="siteFooterItem != defaultFooterItem"
+                  :value="defaultFooterItem"
+                >
+                  {{ defaultFooterItem.charAt(0).toUpperCase()
+                  }}{{ defaultFooterItem.slice(1).replaceAll('-', ' ') }}
+                </option>
+              </template>
+            </select>
+
+            <template v-if="siteFooterItem == 'About Us'">
+              <about_us></about_us>
+            </template>
+
+            <template v-if="siteFooterItem == 'Description'">
+              <description></description>
+            </template>
+
+            <template v-if="siteFooterItem == 'Contact Us'">
+              <contact_us></contact_us>
+            </template>
+
+            <template v-if="siteFooterItem == 'Login'">
+              <login> </login>
+            </template>
+
+            <template v-if="siteFooterItem == 'Map'"> Map</template>
+
+            <template v-if="siteFooterItem == 'Links'"> Links</template>
+
+            <template v-if="siteFooterItem == 'none'"> None </template>
+          </div>
+        </template>
+        <div
+          :class="
+            'footer-item' +
+            Number(
+              site.params.htmlElements[elIndex].footer['footer-items'].length + 1
+            )
+          "
+        ></div>
+      </div>
     </div>
-  </div>
-</template>
-
-<script>
-import About_us from './footer/About_us.vue';
-import Description from './footer/Description.vue';
-import Contact_us from './footer/Contact_us.vue';
-import Login from './footer/Login.vue';
-
-export default {
-  name: 'Footer',
+  `,
 
   components: {
     About_us,
@@ -219,11 +215,10 @@ export default {
         ].getBoundingClientRect().y -
           this.site.params.htmlElements[0]['top-menu'].style.height
       );
-  },
-};
-</script>
 
-<style>
+    style(
+      'Footer',
+      /*css*/ `
 .footer {
   /* border-top: 1px solid rgba(0, 0, 0, 0.8); */
   position: relative;
@@ -271,25 +266,15 @@ export default {
   text-overflow: clip;
 }
 
-.footer input[type='text'],
-.footer input[type='password'],
-.footer select,
-.footer textarea {
+.footer select {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
   resize: vertical;
-}
-
-.footer select {
   background-color: #00000000;
   border: none;
   font-size: 1.5em;
   font-weight: bold;
-}
-
-.footer input[type='submit']:hover {
-  /* background-color: #45a049; */
 }
 
 @media only screen and (min-width: 650px) {
@@ -319,4 +304,7 @@ export default {
     padding: 10px 30px;
   }
 }
-</style>
+        `
+    );
+  },
+};
