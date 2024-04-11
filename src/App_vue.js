@@ -51,7 +51,7 @@ export default {
     </template>
 
     <template v-else-if="isValid === 'admin'">
-      <div id="loader-container">
+      <div id="login-container">
         <login></login>
       </div>
     </template>

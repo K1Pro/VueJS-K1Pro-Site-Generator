@@ -5,7 +5,7 @@ export default {
     <div class="login">
       <div class="login-title" v-if="isValid === 'admin' && !loggedIn">
         <i style="font-size: 30px" class="ba-icons ba-k1pro-regular"></i>
-        <span style="font-size: 18px">Pro - {{ appName }}</span>
+        <span style="font-size: 18px">Pro {{ appName }}</span>
       </div>
 
       <h2 v-if="!loggedIn && isValid !== 'admin'">Login</h2>
@@ -18,8 +18,8 @@ export default {
         }"
       >
         <div class="login-username">
-          <i class="fa-solid fa-user"></i
-          ><input
+          <i class="fa-solid fa-user"></i>
+          <input
             type="text"
             name="username"
             placeholder="Username"
