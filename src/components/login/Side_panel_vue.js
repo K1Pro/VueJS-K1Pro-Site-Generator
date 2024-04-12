@@ -63,7 +63,7 @@ export default {
           <button
             title="Log out"
             :class="{ 'tab-active': activeTab == 'arrow-right-from-bracket' }"
-            class="fa-solid fa-arrow-right-from-bracket"
+            class="fa fa-sign-out"
             @click.prevent="deleteLogin"
           ></button>
         </div>

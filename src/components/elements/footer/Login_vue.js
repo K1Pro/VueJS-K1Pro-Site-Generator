@@ -71,7 +71,7 @@ export default {
           <input type="hidden" name="appName" :value="appName" />
           <input type="hidden" name="referer" :value="endPts.url" />
           <input type="submit" value="Reset" :disabled="loggedIn" />
-          <!-- <button @click="goToURL" type="button" :disabled="loggedIn">Reset</button>-->
+          <!-- <button @click="goToURL" :disabled="loggedIn">Reset</button>-->
         </form>
 
         <div class="login-remember" :style="{ opacity: loggedIn ? 0.5 : 1 }">
