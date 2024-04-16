@@ -99,7 +99,7 @@ export default {
       msgEmail: '',
       msgMessage: '',
       msgCaptcha: '',
-      msgDate: captcha_time,
+      msgDate: server_datetime_YmdHis,
       spinContactUsSend: false,
       spinUpdateCaptcha: false,
       msg_captcha: '',
@@ -193,11 +193,11 @@ export default {
     async updateCaptcha() {
       this.spinUpdateCaptcha = true;
       try {
-        const response = await fetch(this.endPts.servertimeURL, {
+        const response = await fetch(time_url, {
           method: 'GET',
         });
         const getServerTimeJSON = await response.json();
-        this.msgDate = getServerTimeJSON.YmdHis;
+        this.msgDate = getServerTimeJSON.data.server_Time_YmdHis;
         this.spinUpdateCaptcha = false;
       } catch (error) {
         console.log(error.toString());
