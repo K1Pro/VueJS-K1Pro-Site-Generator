@@ -4,7 +4,7 @@ const useSiteStore = Pinia.defineStore('site', {
       sessionID: session_id,
       accessToken: token,
       loggedIn: false,
-      email: '',
+      username: '',
       password: '',
       msg: {
         snackBar: '',
@@ -131,7 +131,7 @@ const useSiteStore = Pinia.defineStore('site', {
           getLoginJSON.success &&
           getLoginJSON.data.user.AppPermissions.SiteGT[this.site.folderPath]
         ) {
-          this.email = '';
+          this.username = '';
           this.password = '';
           this.getUserContent('POST', null);
           this.msg.snackBar = 'Logged in';
@@ -220,13 +220,13 @@ const useSiteStore = Pinia.defineStore('site', {
         const logOutResJSON = await response.json();
         this.getSite();
         this.deleteCookie();
-        this.email = '';
+        this.username = '';
         this.password = '';
         this.msg.snackBar = 'Logged out';
       } catch (error) {
         this.getSite();
         this.deleteCookie();
-        this.email = '';
+        this.username = '';
         this.password = '';
         this.msg.snackBar = 'Logged out';
         console.log(error);
