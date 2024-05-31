@@ -51,35 +51,35 @@
       class="icon-slider-container"
       :style="{
         gridTemplateColumns:
-          windowWidth > 400
+          windowWidth >= 400
             ? gridTemplateColumnsFull
             : gridTemplateColumnsMobile,
       }"
     >
-      <div class="icon-slider-item">
-        <div style="float: right">
+      <div>
+        <div
+          v-if="showIconScroll && 0 <= iconStart"
+          class="icon-slider-prev"
+          :style="{
+            'background-color': elValue.style.slideColor,
+            border: '1px solid ' + elValue.style.borderColor,
+            'border-radius': elValue.style.borderRadius + 'px',
+            color: elValue.style.iconColor,
+          }"
+        >
           <i
             v-if="showIconScroll && 0 < iconStart"
-            class="fa-solid fa-circle-chevron-left"
-            style="
-              margin-top: 30px;
-              cursor: pointer;
-              background-color: white;
-              border-radius: 16px;
-            "
+            class="fa-solid fa-chevron-left"
+            style="cursor: pointer"
             @click="decreaseScroll"
           ></i>
           <i
             v-if="showIconScroll && 0 == iconStart"
-            class="fa-solid fa-circle-chevron-left"
-            style="
-              margin-top: 30px;
-              color: grey;
-              background-color: white;
-              border-radius: 16px;
-            "
+            class="fa-solid fa-chevron-left"
+            :style="{ color: elValue.style.iconColor + '50' }"
           ></i>
         </div>
+        <div v-else class="icon-slider-item"></div>
       </div>
       <template v-for="(icon, iconIndex) in elValue['icon-slider-items']">
         <div
@@ -148,31 +148,42 @@
                 "
               ></i>
             </div>
-            <div
-              class="icon-slider-text"
-              :style="{
-                'font-size': elValue.style.textSize + 'px',
-              }"
-            >
-              {{ elValue['icon-slider-items']?.[+iconStart + iconIndex]?.[0] }}
+            <div style="padding: 0px 10px">
+              <div
+                class="icon-slider-text"
+                :style="{
+                  'font-size': elValue.style.textSize + 'px',
+                }"
+              >
+                {{
+                  elValue['icon-slider-items']?.[+iconStart + iconIndex]?.[0]
+                }}
+              </div>
             </div>
           </template>
         </div>
       </template>
-      <div class="icon-slider-item">
-        <div style="float: left">
+      <div>
+        <div
+          v-if="
+            showIconScroll &&
+            elValue['icon-slider-items'].length - respvIconAmnt >= iconStart
+          "
+          class="icon-slider-next"
+          :style="{
+            'background-color': elValue.style.slideColor,
+            border: '1px solid ' + elValue.style.borderColor,
+            'border-radius': elValue.style.borderRadius + 'px',
+            color: elValue.style.iconColor,
+          }"
+        >
           <i
             v-if="
               showIconScroll &&
               elValue['icon-slider-items'].length - respvIconAmnt > iconStart
             "
-            class="fa-solid fa-circle-chevron-right"
-            style="
-              margin-top: 30px;
-              cursor: pointer;
-              background-color: white;
-              border-radius: 16px;
-            "
+            class="fa-solid fa-chevron-right"
+            style="cursor: pointer"
             @click="increaseScroll"
           ></i>
           <i
@@ -180,13 +191,8 @@
               showIconScroll &&
               elValue['icon-slider-items'].length - respvIconAmnt == iconStart
             "
-            class="fa-solid fa-circle-chevron-right"
-            style="
-              margin-top: 30px;
-              color: grey;
-              background-color: white;
-              border-radius: 16px;
-            "
+            class="fa-solid fa-chevron-right"
+            :style="{ color: elValue.style.iconColor + '50' }"
           ></i>
           <template v-if="loggedIn && elValue['icon-slider-items'].length < 9">
             <div class="icon-slider-modify-container">
@@ -196,6 +202,7 @@
             </div>
           </template>
         </div>
+        <div v-else class="icon-slider-item"></div>
       </div>
     </div>
   </div>
@@ -230,11 +237,13 @@ export default {
       return Math.floor((this.windowWidth - 100) / 100);
     },
     showIconScroll() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown;
+      return this.windowWidth < 400 && this.iconSliderItemAmount <= 3
+        ? false
+        : this.iconSliderItemAmount > this.windowWidthRoundDown;
     },
     respvIconAmnt() {
       return this.iconSliderItemAmount > this.windowWidthRoundDown &&
-        this.windowWidth > 400
+        this.windowWidth >= 400
         ? this.windowWidthRoundDown
         : this.iconSliderItemAmount > this.windowWidthRoundDown &&
           this.windowWidth < 400
@@ -251,10 +260,10 @@ export default {
         'calc(' +
         100 / this.respvIconAmnt +
         '% - ' +
-        60 / this.respvIconAmnt +
+        70 / this.respvIconAmnt +
         'px) '
       ).repeat(this.respvIconAmnt);
-      return '20px ' + autos + '20px';
+      return '25px ' + autos + '25px';
     },
   },
 
@@ -364,12 +373,12 @@ export default {
 
 .icon-slider-icon {
   height: 50%;
-  margin-bottom: 12px;
+  /* margin-bottom: 12px; */
 }
 
 .icon-slider-text {
+  overflow: hidden;
   height: 50%;
-  padding: 0px 10px;
   /* font-size: 20px; */
 }
 .icon-slider-item i {
@@ -389,6 +398,20 @@ export default {
   margin-left: 25px;
   margin-top: -10px;
   cursor: pointer;
+}
+
+.icon-slider-prev {
+  height: 140px;
+  float: right;
+  padding: 60px 5px 0px 5px;
+  margin: 0px;
+}
+
+.icon-slider-next {
+  height: 140px;
+  float: left;
+  padding: 60px 5px 0px 5px;
+  margin: 0px;
 }
 
 .modPosition {
