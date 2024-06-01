@@ -95,46 +95,58 @@
           }"
         >
           <template v-if="loggedIn === true">
-            <button
-              v-if="iconIndex !== 0"
-              class="minus"
-              @click.prevent="deleteIcon(iconIndex)"
-            ></button>
-            <i
-              :style="{
-                color: elValue.style.iconColor,
-                'font-size': elValue.style.iconSize + 'px',
-              }"
-              :class="
-                elValue['icon-slider-items']?.[+iconStart + iconIndex]?.[1]
-              "
-            ></i>
-            <select
-              :style="{
-                width: '100%',
-              }"
-              v-model="
-                site.params.htmlElements[elIndex][elKey]['icon-slider-items'][
-                  iconIndex
-                ][1]
-              "
-            >
-              <icon_slider_options></icon_slider_options>
-            </select>
-            <input
-              type="text"
-              placeholder="text here..."
-              v-model="
-                site.params.htmlElements[elIndex][elKey]['icon-slider-items'][
-                  iconIndex
-                ][0]
-              "
-              :style="{
-                color: elValue.style.iconColor,
-                'background-color': elValue.style.slideColor,
-                'font-size': elValue.style.textSize + 'px',
-              }"
-            />
+            <template v-if="iconIndex != respvIconAmnt - iconSliderMaxAmount">
+              {{ +iconStart + iconIndex }}
+              <button
+                v-if="iconIndex !== 0"
+                class="minus"
+                @click.prevent="deleteIcon(+iconStart + iconIndex)"
+              ></button>
+              <i
+                :style="{
+                  color: elValue.style.iconColor,
+                  'font-size': elValue.style.iconSize + 'px',
+                }"
+                :class="
+                  elValue['icon-slider-items']?.[+iconStart + iconIndex]?.[1]
+                "
+              ></i>
+              <select
+                :style="{
+                  width: '100%',
+                }"
+                v-model="
+                  site.params.htmlElements[elIndex][elKey]['icon-slider-items'][
+                    +iconStart + iconIndex
+                  ][1]
+                "
+              >
+                <icon_slider_options></icon_slider_options>
+              </select>
+              <input
+                type="text"
+                placeholder="text here..."
+                v-model="
+                  site.params.htmlElements[elIndex][elKey]['icon-slider-items'][
+                    +iconStart + iconIndex
+                  ][0]
+                "
+                :style="{
+                  color: elValue.style.iconColor,
+                  'background-color': elValue.style.slideColor,
+                  'font-size': elValue.style.textSize + 'px',
+                }"
+              />
+            </template>
+            <template v-else>
+              <template v-if="elValue['icon-slider-items'].length < 9">
+                <div class="icon-slider-modify-container">
+                  <div class="icon-slider-modify">
+                    <button class="plus" @click.prevent="addIcon"></button>
+                  </div>
+                </div>
+              </template>
+            </template>
           </template>
           <template v-else>
             <div class="icon-slider-icon">
@@ -167,7 +179,10 @@
         <div
           v-if="
             showIconScroll &&
-            elValue['icon-slider-items'].length - respvIconAmnt >= iconStart
+            elValue['icon-slider-items'].length +
+              iconSliderModifyAmount -
+              respvIconAmnt >=
+              iconStart
           "
           class="icon-slider-next"
           :style="{
@@ -180,7 +195,11 @@
           <i
             v-if="
               showIconScroll &&
-              elValue['icon-slider-items'].length - respvIconAmnt > iconStart
+              elValue['icon-slider-items'].length +
+                iconSliderModifyAmount -
+                respvIconAmnt >
+                iconStart &&
+              respvIconAmnt + iconStart < 9
             "
             class="fa-solid fa-chevron-right"
             style="cursor: pointer"
@@ -188,19 +207,16 @@
           ></i>
           <i
             v-if="
-              showIconScroll &&
-              elValue['icon-slider-items'].length - respvIconAmnt == iconStart
+              (showIconScroll &&
+                elValue['icon-slider-items'].length +
+                  iconSliderModifyAmount -
+                  respvIconAmnt ==
+                  iconStart) ||
+              respvIconAmnt + iconStart >= 9
             "
             class="fa-solid fa-chevron-right"
             :style="{ color: elValue.style.iconColor + '50' }"
           ></i>
-          <template v-if="loggedIn && elValue['icon-slider-items'].length < 9">
-            <div class="icon-slider-modify-container">
-              <div class="icon-slider-modify">
-                <button class="plus" @click.prevent="addIcon"></button>
-              </div>
-            </div>
-          </template>
         </div>
         <div v-else class="icon-slider-item"></div>
       </div>
@@ -233,8 +249,20 @@ export default {
       // prettier-ignore
       return this.site.params.htmlElements[this.elIndex][this.elKey]['icon-slider-items'].length;
     },
+    iconSliderModifyAmount() {
+      return this.loggedIn ? 1 : 0;
+    },
+    iconSliderMaxAmount() {
+      return this.site.params.htmlElements[this.elIndex][this.elKey][
+        'icon-slider-items'
+      ].length < 9
+        ? 1
+        : 0;
+    },
     windowWidthRoundDown() {
-      return Math.floor((this.windowWidth - 100) / 100);
+      return this.loggedIn && this.windowWidth > this.respWidth.md
+        ? Math.floor((this.windowWidth * 0.75 - 100) / 100)
+        : Math.floor((this.windowWidth - 100) / 100);
     },
     showIconScroll() {
       return this.windowWidth < 400 && this.iconSliderItemAmount <= 3
@@ -285,6 +313,12 @@ export default {
       this.site.params.htmlElements[this.elIndex][this.elKey][
         'icon-slider-items'
       ].push(['', 'fa-solid fa-question']);
+      // I have to adjust this when adding new icons so no errors come up possible without a 1 or with a 1.
+      this.iconStart =
+        this.iconSliderItemAmount -
+        this.respvIconAmnt +
+        1 -
+        this.iconSliderModifyAmount;
       // this.respvIconAmnt =
       //   this.windowWidth > this.respWidth.md
       //     ? this.site.params.htmlElements[this.elIndex][this.elKey][
@@ -293,6 +327,13 @@ export default {
       //     : 3;
     },
     deleteIcon(iconIndex) {
+      console.log(iconIndex);
+      console.log(
+        this.site.params.htmlElements[this.elIndex][this.elKey][
+          'icon-slider-items'
+        ][iconIndex]
+      );
+      //work on this here because there is an after after splicing
       this.site.params.htmlElements[this.elIndex][this.elKey][
         'icon-slider-items'
       ].splice(iconIndex, 1);
@@ -398,6 +439,11 @@ export default {
   margin-left: 25px;
   margin-top: -10px;
   cursor: pointer;
+}
+.icon-slider-modify button {
+  position: relative;
+  margin-left: 40px;
+  margin-top: 0px;
 }
 
 .icon-slider-prev {
