@@ -145,7 +145,6 @@
             'background-color': elValue.style.slideColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
-            color: elValue.style.iconColor,
           }"
         >
           <div class="icon-slider-modify-container">
