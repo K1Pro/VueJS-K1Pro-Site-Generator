@@ -11,7 +11,7 @@
           v-if="showIconScroll"
           class="icon-slider-prev"
           :style="{
-            'background-color': elValue.style.slideColor,
+            'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
             color: elValue.style.iconColor,
@@ -37,7 +37,7 @@
           v-if="site.htmlElmnts[elKey]['items'][iconStart + iconIndex - 1]"
           class="icon-slider-item"
           :style="{
-            'background-color': elValue.style.slideColor,
+            'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
             color: elValue.style.iconColor,
@@ -76,7 +76,7 @@
         <div
           v-else-if="iconSliderItemAmount < 10"
           :style="{
-            'background-color': elValue.style.slideColor,
+            'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
           }"
@@ -94,7 +94,7 @@
           v-if="showIconScroll"
           class="icon-slider-next"
           :style="{
-            'background-color': elValue.style.slideColor,
+            'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
             color: elValue.style.iconColor,

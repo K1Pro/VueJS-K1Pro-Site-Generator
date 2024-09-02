@@ -13,17 +13,18 @@
       }"
     >
       <div class="product-card-item"></div>
-      <template v-for="(productcard, cardIndex) in elValue['product-card-items']">
-        <div class="product-card-item" :style="{ 'background-color': elValue.style.cardColor }">
+      <template v-for="(productcard, cardIndex) in elValue['items']">
+        <div class="product-card-item" :style="{ 'background-color': site.body.style.primaryColor }">
           <div class="product-card-group">
             <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
             <div class="product-card-text" :style="{ padding: '12px' }">
-              <div class="product-card-header">
-                {{ productcard[1] }}
-              </div>
-              <p>
-                {{ productcard[2] }}
-              </p>
+              <input type="text" class="product-card-header" v-model="site.htmlElmnts[elKey].items[cardIndex][1]" />
+              <span
+                spellcheck="false"
+                contenteditable="plaintext-only"
+                v-on:blur="updateProductCardDesc($event.target.innerHTML, cardIndex)"
+                >{{ productcard[2] }}</span
+              >
             </div>
           </div>
         </div>
@@ -43,13 +44,19 @@ export default {
 
   computed: {
     gridTemplateColumnsFull() {
-      const side = (99 - this.elValue['product-card-items'].length * 21) / 2;
-      const autos = '20% '.repeat(this.elValue['product-card-items'].length);
+      const side = (99 - this.elValue['items'].length * 21) / 2;
+      const autos = '20% '.repeat(this.elValue['items'].length);
       return side + '% ' + autos + side + '%';
     },
 
     gridTemplateColumnsMobile() {
       return '100%';
+    },
+  },
+
+  methods: {
+    updateProductCardDesc(event, indx) {
+      this.site.htmlElmnts[this.elKey].items[indx][2] = event;
     },
   },
 };
@@ -81,7 +88,6 @@ export default {
   height: 350px;
   object-fit: cover;
 }
-.product-card-text textarea,
 .product-card-text input {
   width: 96%;
   padding: 2%;
@@ -90,9 +96,27 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   resize: none;
 }
+.product-card-text span[contenteditable] {
+  min-height: 32px;
+  display: block; /* not sure if this is needed */
+}
+.product-card-text span[contenteditable]:focus {
+  outline: none;
+}
+.product-card-text span[contenteditable]:empty::before {
+  min-height: 32px;
+  content: 'Enter description';
+  display: inline-block;
+  color: grey;
+}
+.product-card-text span[contenteditable]:empty:focus::before {
+  content: 'Start typing';
+  color: grey;
+}
 .product-card-header,
 .product-card-text input {
   font-size: 30px;
+  overflow: hidden;
 }
 @media only screen and (min-width: 650px) {
   .product-card-group img {

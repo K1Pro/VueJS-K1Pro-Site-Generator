@@ -16,8 +16,8 @@
       }"
     >
       <div class="product-card-item"></div>
-      <template v-for="(productcard, cardIndex) in elValue['product-card-items']">
-        <div class="product-card-item" :style="{ 'background-color': elValue.style.cardColor }">
+      <template v-for="(productcard, cardIndex) in elValue['items']">
+        <div class="product-card-item" :style="{ 'background-color': site.body.style.primaryColor }">
           <div class="product-card-group">
             <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
             <div class="product-card-text" :style="{ padding: '12px' }">
@@ -40,14 +40,14 @@
 export default {
   name: 'Product Card',
 
-  inject: ['respWidth', 'wndw'],
+  inject: ['respWidth', 'site', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
     gridTemplateColumnsFull() {
-      const side = (99 - this.elValue['product-card-items'].length * 21) / 2;
-      const autos = '20% '.repeat(this.elValue['product-card-items'].length);
+      const side = (99 - this.elValue['items'].length * 21) / 2;
+      const autos = '20% '.repeat(this.elValue['items'].length);
       return side + '% ' + autos + side + '%';
     },
 
@@ -94,6 +94,7 @@ export default {
 .product-card-header,
 .product-card-text input {
   font-size: 30px;
+  overflow: hidden;
 }
 @media only screen and (min-width: 650px) {
   .product-card-group img {

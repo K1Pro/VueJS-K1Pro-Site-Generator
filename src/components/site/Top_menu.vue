@@ -72,7 +72,7 @@ export default {
       return elStyles;
     },
     elUl() {
-      return { width: this.grid.wdth + 'px' };
+      return { backgroundColor: this.site.body.style.primaryColor, width: this.grid.wdth + 'px' };
     },
     elLi() {
       return {

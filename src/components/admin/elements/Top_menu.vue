@@ -81,6 +81,7 @@ export default {
     },
     elUl() {
       return {
+        backgroundColor: this.site.body.style.primaryColor,
         width: this.wndw.wdth < this.respWidth.md ? this.grid.wdth + 'px' : this.grid.wdth - 16 + 'px',
         height: this.elValue.style.height * 2 + (this.elValue.style.fontSize * 3 + 20) + 'px',
       };
