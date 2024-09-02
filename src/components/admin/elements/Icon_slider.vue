@@ -3,7 +3,7 @@
     <div
       class="icon-slider-container"
       :style="{
-        gridTemplateColumns: wndw.wdth >= 400 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
+        gridTemplateColumns: grid.wdth >= 400 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
       }"
     >
       <div>
@@ -34,7 +34,21 @@
 
       <template v-for="iconIndex in respvIconAmnt">
         <div
-          v-if="site.htmlElmnts[elKey]['items'][iconStart + iconIndex - 1]"
+          v-if="iconIndex === respvIconAmnt"
+          :style="{
+            'background-color': site.body.style.primaryColor,
+            border: '1px solid ' + elValue.style.borderColor,
+            'border-radius': elValue.style.borderRadius + 'px',
+          }"
+        >
+          <div class="icon-slider-modify-container">
+            <div class="icon-slider-modify">
+              <button class="plus" @click.prevent="addIcon"></button>
+            </div>
+          </div>
+        </div>
+        <div
+          v-else
           class="icon-slider-item"
           :style="{
             'background-color': site.body.style.primaryColor,
@@ -62,30 +76,6 @@
             placeholder="text here..."
             v-model="site.htmlElmnts[elKey].items[iconStart + iconIndex - 1][0]"
           />
-          <!-- <div style="padding: 0px 10px">
-            <div
-              class="icon-slider-text"
-              :style="{
-                'font-size': elValue.style.textSize + 'px',
-              }"
-            >
-              {{ elValue['items'][iconStart + iconIndex - 1][0] }}
-            </div>
-          </div> -->
-        </div>
-        <div
-          v-else-if="iconSliderItemAmount < 10"
-          :style="{
-            'background-color': site.body.style.primaryColor,
-            border: '1px solid ' + elValue.style.borderColor,
-            'border-radius': elValue.style.borderRadius + 'px',
-          }"
-        >
-          <div class="icon-slider-modify-container">
-            <div class="icon-slider-modify">
-              <button class="plus" @click.prevent="addIcon"></button>
-            </div>
-          </div>
         </div>
       </template>
 
@@ -122,7 +112,7 @@
 export default {
   name: 'Icon Slider',
 
-  inject: ['grid', 'respWidth', 'wndw', 'site', 'endPts'],
+  inject: ['grid', 'respWidth', 'site', 'endPts'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -137,27 +127,31 @@ export default {
       return this.iconSliderItemAmount > this.windowWidthRoundDown;
     },
     respvIconAmnt() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown && this.wndw.wdth >= 400
+      return this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth >= 400
         ? this.windowWidthRoundDown
-        : this.iconSliderItemAmount > this.windowWidthRoundDown && this.wndw.wdth < 400
+        : this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth < 400
         ? 3
         : this.iconSliderItemAmount;
     },
     gridTemplateColumnsFull() {
-      const autos = '100px '.repeat(this.respvIconAmnt);
+      const autos = 'repeat(' + this.respvIconAmnt + ', 100px) ';
       return 'auto ' + autos + 'auto';
     },
     gridTemplateColumnsMobile() {
-      const autos = ('calc(' + 100 / this.respvIconAmnt + '% - ' + 70 / this.respvIconAmnt + 'px) ').repeat(
-        this.respvIconAmnt
-      );
+      const autos =
+        'repeat(' +
+        this.respvIconAmnt +
+        ', calc(' +
+        100 / this.respvIconAmnt +
+        '% - ' +
+        70 / this.respvIconAmnt +
+        'px)) ';
       return '25px ' + autos + '25px';
     },
   },
 
   data() {
     return {
-      menuChange: '',
       iconStart: 0,
     };
   },

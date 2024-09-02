@@ -2,11 +2,11 @@
   <ul class="top-menu" :style="[elUl, el.Ul]">
     <li :style="logoLi" @mouseover="highlightMenuItem($event, true)" @mouseout="highlightMenuItem($event, false)">
       <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" class="top-menu-logo-img" />
-      <a class="top-menu-icon" v-if="this.grid.wdth < this.respWidth.md" :style="logoA" @click="toggleRespMenu">
+      <a class="top-menu-icon" v-if="this.wndw.wdth < this.respWidth.md" :style="logoA" @click="toggleRespMenu">
         <i :class="responsive ? 'fa fa-xmark' : 'fa fa-bars'"></i>
       </a>
     </li>
-    <template v-if="grid.wdth > respWidth.md || (grid.wdth < respWidth.md && responsive)">
+    <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
       <li
         v-for="(menuItem, menuItemIndex) in menuItems"
         :style="elLi"
@@ -42,7 +42,7 @@
 export default {
   name: 'Top Menu',
 
-  inject: ['grid', 'respWidth', 'site', 'endPts'],
+  inject: ['wndw', 'respWidth', 'site', 'endPts'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -72,21 +72,24 @@ export default {
       return elStyles;
     },
     elUl() {
-      return { backgroundColor: this.site.body.style.primaryColor, width: this.grid.wdth + 'px' };
+      return {
+        backgroundColor: this.site.body.style.primaryColor,
+        // width: this.wndw.wdth + 'px'
+      };
     },
     elLi() {
       return {
-        float: this.grid.wdth < this.respWidth.md ? 'none' : this.elValue.style?.alignment,
+        float: this.wndw.wdth < this.respWidth.md ? 'none' : this.elValue.style?.alignment,
       };
     },
     elA() {
       return {
-        padding: this.grid.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 1 + 'px 20px',
+        padding: this.wndw.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 1 + 'px 20px',
         fontSize: this.elValue.style.fontSize + 'px',
       };
     },
     logoLi() {
-      return { float: this.grid.wdth < this.respWidth.md ? 'none' : 'left' };
+      return { float: this.wndw.wdth < this.respWidth.md ? 'none' : 'left' };
     },
     logoImg() {
       return {
@@ -97,17 +100,17 @@ export default {
       return { fontSize: this.elValue.style.fontSize + 'px', padding: this.elValue.style.height + 1 + 'px 20px' };
     },
     menuItems() {
-      return this.elValue.style?.alignment == 'right' && this.grid.wdth < this.respWidth.md
+      return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
         ? this.elValue.items
         : this.menuItemsRev;
     },
     menuTypes() {
-      return this.elValue.style?.alignment == 'right' && this.grid.wdth < this.respWidth.md
+      return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
         ? this.elValue.types
         : this.menuTypesRev;
     },
     menuLinks() {
-      return this.elValue.style?.alignment == 'right' && this.grid.wdth < this.respWidth.md
+      return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
         ? this.elValue.links
         : this.menuLinksRev;
     },
@@ -149,7 +152,7 @@ export default {
   },
 
   watch: {
-    'grid.wdth'(newWindowWidth, oldWindowWidth) {
+    'wndw.wdth'(newWindowWidth, oldWindowWidth) {
       if (
         (newWindowWidth > this.respWidth.md && oldWindowWidth < this.respWidth.md) ||
         (newWindowWidth < this.respWidth.md && oldWindowWidth > this.respWidth.md)
@@ -164,6 +167,7 @@ export default {
 
 <style>
 .top-menu {
+  width: 100%;
   position: fixed;
   z-index: 4;
   list-style-type: none;

@@ -2,7 +2,7 @@
   <snackbar :msg @deleteMsg="msg = null"></snackbar>
 
   <div class="app-grid-container" :style="appGridContainer">
-    <div class="app-grid-item1">
+    <div class="app-grid-item1" ref="appGridItem1">
       <sidemenu
         :sideMenuItems
         :wndw
@@ -19,7 +19,7 @@
       v-on:dblclick="resetGrid"
     ></div>
 
-    <div class="app-grid-item2" :style="{ 'background-color': site.body.style.backgroundColor }">
+    <div class="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
       <template v-for="(pageElmnt, pageIndex) in site.pages[page.slctd]">
         <component
           :is="site.htmlElmnts[pageElmnt[0]].type"
@@ -106,8 +106,11 @@ export default {
     grid() {
       return {
         wdth:
-          this.wndw.wdth < this.respWidth.md ? this.wndw.wdth - 11 : this.wndw.wdth * (this.appGridItem2Width / 100),
+          this.wndw.wdth < this.respWidth.md
+            ? this.$refs.appGridItem1?.clientWidth
+            : this.$refs.appGridItem2?.clientWidth,
         hght: this.wndw.hght,
+        size: this.userSettings.layout['grid-size'],
       };
     },
   },
@@ -270,6 +273,9 @@ export default {
 }
 .app-grid-item1 {
   background-color: white;
+}
+.dimensions {
+  position: absolute;
 }
 @media only screen and (min-width: 768px) {
   /* .app-grid-container {

@@ -1,5 +1,6 @@
 <template>
   <div class="top-menu" :style="[elUl, el.Ul]">
+    <div class="dimensions">{{ grid.wdth }} px</div>
     <div class="top-menu-logo">
       <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" />
     </div>
@@ -82,7 +83,7 @@ export default {
     elUl() {
       return {
         backgroundColor: this.site.body.style.primaryColor,
-        width: this.wndw.wdth < this.respWidth.md ? this.grid.wdth + 'px' : this.grid.wdth - 16 + 'px',
+        // width: this.grid.wdth + 'px',
         height: this.elValue.style.height * 2 + (this.elValue.style.fontSize * 3 + 20) + 'px',
       };
     },
@@ -93,7 +94,7 @@ export default {
     },
     elA() {
       return {
-        padding: this.elValue.style.height + 1 + 'px 20px',
+        padding: this.elValue.style.height + 'px 20px',
         fontSize: this.elValue.style.fontSize + 'px',
       };
     },
@@ -120,6 +121,7 @@ export default {
 
 <style>
 .top-menu {
+  width: 100%;
   z-index: 4;
   list-style-type: none;
   display: inline-block;

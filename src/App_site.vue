@@ -40,7 +40,6 @@ export default {
   provide() {
     return {
       site: Vue.computed(() => this.site),
-      grid: Vue.computed(() => this.grid),
       respWidth: this.respWidth,
       endPts: this.endPts,
     };
@@ -51,9 +50,6 @@ export default {
       const pagesLowerCase = {};
       Object.entries(params.pages).map(([key, value]) => (pagesLowerCase[key.toLowerCase()] = value));
       return pagesLowerCase;
-    },
-    grid() {
-      return { wdth: this.wndw.wdth, hght: this.wndw.hght };
     },
   },
 };
