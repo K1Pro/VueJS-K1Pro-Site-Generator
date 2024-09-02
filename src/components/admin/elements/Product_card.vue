@@ -2,7 +2,6 @@
   <div
     class="product-card"
     :style="{
-      'background-color': elValue.style.backgroundColor,
       borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
     }"
   >

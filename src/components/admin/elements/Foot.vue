@@ -1,18 +1,9 @@
 <template>
-  <div
-    class="footer"
-    :style="{
-      top: '0px',
-      color: site.htmlElmnts[elKey]['style']['color'],
-      'border-width': '1px 0px 0px 0px',
-      'border-style': 'solid',
-      'border-color': site.htmlElmnts[elKey]['style']['borderColor'],
-    }"
-  >
+  <div class="footer">
     <div
       class="footer-container"
       :style="{
-        'background-color': site.htmlElmnts[elKey]['style']['backgroundColor'],
+        'background-color': site.body.style.primaryColor,
         gridTemplateColumns: gridTemplateLogOut,
       }"
     >
@@ -66,6 +57,9 @@ export default {
   /* border-top: 1px solid rgba(0, 0, 0, 0.8); */
   position: relative;
   width: 100%;
+  border-width: 0px 3px 3px 3px;
+  border-style: dashed;
+  border-color: rgb(115, 115, 115);
   /* text-align: left;
     padding: 0vw 3vw;
     background-color: grey;

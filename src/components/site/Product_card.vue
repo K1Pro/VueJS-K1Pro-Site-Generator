@@ -1,14 +1,5 @@
 <template>
-  <div
-    class="product-card"
-    :style="{
-      'padding-bottom': elValue.style['padding-bottom'] + 'px',
-      'background-color': elValue.style.backgroundColor,
-      'border-width': 'none',
-      'border-style': 'none',
-      'border-color': 'none',
-    }"
-  >
+  <div class="product-card">
     <div
       class="product-card-container"
       :style="{
@@ -62,12 +53,10 @@ export default {
 .product-card {
   position: relative;
 }
-
 .product-card-container {
   display: grid;
   column-gap: 1%;
 }
-
 .product-card-item {
   overflow: visible;
   text-align: left;

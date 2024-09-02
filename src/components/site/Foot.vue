@@ -1,18 +1,9 @@
 <template>
-  <div
-    class="footer"
-    :style="{
-      top: '0px',
-      color: site.htmlElmnts[elKey]['style']['color'],
-      'border-width': '1px 0px 0px 0px',
-      'border-style': 'solid',
-      'border-color': site.htmlElmnts[elKey]['style']['borderColor'],
-    }"
-  >
+  <div class="footer">
     <div
       class="footer-container"
       :style="{
-        'background-color': site.htmlElmnts[elKey]['style']['backgroundColor'],
+        'background-color': site.body.style.primaryColor,
         gridTemplateColumns: gridTemplateLogOut,
       }"
     >
