@@ -1,0 +1,57 @@
+<template>
+  <div class="website">
+    <button type="button" @click="patchSite" style="width: calc(50% - 10px)">Update</button>
+    <button type="button" @click="getSite" style="width: calc(50%); margin-left: 10px">Reset</button>
+    <hr />
+    <element_order></element_order>
+    <hr />
+    <select style="width: 100%" v-model="pageStyle">
+      <option disabled selected value="">Website settings</option>
+      <option v-for="style in Object.keys(site.body.style).sort()" :value="style">
+        {{
+          style
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .toLowerCase()
+            .trim()
+        }}
+      </option>
+    </select>
+    <p v-if="pageStyle.toLowerCase().includes('color')">
+      <input type="color" v-model="site.body.style[pageStyle]" />
+    </p>
+    <p v-else-if="pageStyle.toLowerCase().includes('opacity') || pageStyle.toLowerCase().includes('margin')">
+      <input type="range" v-model="site.body.style[pageStyle]" />{{ site.body.style[pageStyle] }}%
+    </p>
+    <p v-else-if="pageStyle != ''"><select v-model="site.body.style[pageStyle]"></select></p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Web site',
+
+  inject: ['getSite', 'patchSite', 'site'],
+
+  data() {
+    return { pageMedia: 'logo', pageStyle: '' };
+  },
+};
+</script>
+
+<style>
+.website select {
+  /* margin: 7px 8px 7px 0px; */
+  /* margin-left: -5px; */
+  padding: 0px;
+  font-size: 16px;
+}
+.website select:focus {
+  outline: none;
+}
+.website p input {
+  width: 100%;
+}
+.website p input[type='range'] {
+  width: calc(100% - 50px);
+}
+</style>
