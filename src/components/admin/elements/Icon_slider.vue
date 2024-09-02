@@ -53,12 +53,7 @@
             ></i>
           </div>
 
-          <select
-            :style="{
-              width: '100%',
-            }"
-            v-model="site.htmlElmnts[elKey].items[iconStart + iconIndex - 1][1]"
-          >
+          <select v-model="site.htmlElmnts[elKey].items[iconStart + iconIndex - 1][1]">
             <icon_slider_options></icon_slider_options>
           </select>
 
@@ -221,12 +216,16 @@ export default {
   height: 50%;
 }
 .icon-slider-item input[type='text'] {
+  width: 85%;
   padding: 5px;
   border-style: none;
-  width: 85%;
+  background: transparent;
 }
 .icon-slider-item select {
-  padding: 5px;
+  width: 85%;
+  padding: 5px 2px;
+  border-style: none;
+  background: transparent;
 }
 .icon-slider-item button {
   position: absolute;

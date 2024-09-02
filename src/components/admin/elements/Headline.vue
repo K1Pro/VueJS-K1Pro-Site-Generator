@@ -17,7 +17,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['site', 'endPts', 'page'],
+  inject: ['site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -25,8 +25,7 @@ export default {
     return {
       mouseYCoord: null,
       newInputHeight: null,
-      startingInputHeightFontSize:
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.textSize,
+      startingInputHeightFontSize: this.site.htmlElmnts[this.elKey].style.textSize,
     };
   },
   methods: {
@@ -34,8 +33,7 @@ export default {
       if (this.mouseYCoord === null) this.mouseYCoord = event.clientY;
       const newInputHeight = -1 * (this.mouseYCoord - event.clientY);
       if (window.innerHeight > event.clientY && this.mouseYCoord - this.startingInputHeightFontSize + 7 < event.clientY)
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.textSize =
-          this.startingInputHeightFontSize + newInputHeight;
+        this.site.htmlElmnts[this.elKey].style.textSize = this.startingInputHeightFontSize + newInputHeight;
     },
     startResizeInput() {
       document.body.classList.add('prevent-select');
@@ -47,8 +45,7 @@ export default {
       this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
       this.mouseYCoord = null;
       this.newInputHeight = null;
-      this.startingInputHeightFontSize =
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.textSize;
+      this.startingInputHeightFontSize = this.site.htmlElmnts[this.elKey].style.textSize;
       document.removeEventListener('mousemove', this.resizeInput, true);
       document.removeEventListener('mouseup', this.stopResizeInput, true);
       document.body.classList.remove('ns-resize');

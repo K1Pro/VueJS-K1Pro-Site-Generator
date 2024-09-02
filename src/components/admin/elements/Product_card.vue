@@ -3,9 +3,7 @@
     class="product-card"
     :style="{
       'background-color': elValue.style.backgroundColor,
-      'border-width': 'none',
-      'border-style': 'none',
-      'border-color': 'none',
+      borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
     }"
   >
     <div
@@ -39,11 +37,6 @@
 export default {
   name: 'Product Card',
 
-  // components: {
-  //   Element_select,
-  //   Element_select_options,
-  // },
-
   inject: ['endPts', 'grid', 'respWidth', 'selectedPhoto', 'site', 'showMsg', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
@@ -65,6 +58,8 @@ export default {
 <style>
 .product-card {
   position: relative;
+  border-style: dashed;
+  border-color: rgb(115, 115, 115);
 }
 
 .product-card-container {
