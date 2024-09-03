@@ -112,7 +112,7 @@
 export default {
   name: 'Icon Slider',
 
-  inject: ['grid', 'respWidth', 'site', 'endPts'],
+  inject: ['grid', 'respWidth', 'site', 'endPts', 'undoRedo'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -171,6 +171,9 @@ export default {
 
   watch: {
     respvIconAmnt() {
+      this.iconStart = 0;
+    },
+    undoRedo() {
       this.iconStart = 0;
     },
   },

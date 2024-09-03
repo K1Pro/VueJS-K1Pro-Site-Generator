@@ -1,11 +1,11 @@
 <template>
-  <div class="top-menu" :style="[elUl, el.Ul]">
+  <div class="top-menu" :style="[elUl]">
     <div class="dimensions">{{ grid.wdth }} px</div>
     <div class="top-menu-logo">
       <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" />
     </div>
     <div :style="[elLi]">
-      <div v-for="(menuItem, menuItemIndex) in elValue.items" class="top-menu-links" :style="[elA, el.A]">
+      <div v-for="(menuItem, menuItemIndex) in elValue.items" class="top-menu-links" :style="[elA]">
         <span class="top-menu-link" :style="{ fontSize: elValue.style.fontSize + 'px' }">{{ menuItem }}</span>
         <div class="top-menu-link-items">
           <template v-if="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link'">
@@ -13,6 +13,7 @@
               type="text"
               v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
               :style="{
+                color: this.site.body.style.textColor,
                 fontSize: elValue.style.fontSize + 'px',
                 'margin-top': '-' + (elValue.style.fontSize + 4) + 'px',
               }"
@@ -23,32 +24,38 @@
               v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
               :ref="'menuItemsSelect' + menuItemIndex"
               :style="{
+                color: this.site.body.style.textColor,
                 fontSize: elValue.style.fontSize + 'px',
                 'margin-top': '-' + (elValue.style.fontSize + 4) + 'px',
               }"
             >
-              <option value="Choose page" selected>Choose page</option>
-              <option v-for="page in Object.keys(site.pages)">{{ page }}</option>
+              <option value="Choose page" selected :style="{ color: this.site.body.style.textColor }">
+                Choose page
+              </option>
+              <option v-for="page in Object.keys(site.pages)" :style="{ color: this.site.body.style.textColor }">
+                {{ page }}
+              </option>
             </select></template
           >
         </div>
         <div class="top-menu-link-type">
           <select
             v-model="site.htmlElmnts[elKey].types[menuItemIndex]"
-            :style="{ fontSize: elValue.style.fontSize + 'px' }"
+            :style="{ color: this.site.body.style.textColor, fontSize: elValue.style.fontSize + 'px' }"
             @change="changeLink($event, menuItemIndex)"
           >
-            <option>Page</option>
-            <!-- <option>Anchor</option> -->
-            <option>Link</option>
+            <option :style="{ color: this.site.body.style.textColor }">Page</option>
+            <!-- <option :style="{ color: this.site.body.style.textColor }">Anchor</option> -->
+            <option :style="{ color: this.site.body.style.textColor }">Link</option>
           </select>
         </div>
         <div class="top-menu-link-links">
           <input
             type="text"
-            v-model="site.htmlElmnts[elKey].links[menuItemIndex]"
-            :style="{ fontSize: elValue.style.fontSize + 'px' }"
+            :placeholder="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link' ? 'Link text...' : ''"
+            :style="{ color: this.site.body.style.textColor, fontSize: elValue.style.fontSize + 'px' }"
             :disabled="site.htmlElmnts[elKey].types[menuItemIndex] != 'Link'"
+            v-model="site.htmlElmnts[elKey].links[menuItemIndex]"
           />
         </div>
       </div>
@@ -60,7 +67,7 @@
 export default {
   name: 'Top Menu',
 
-  inject: ['endPts', 'grid', 'patchSite', 'respWidth', 'site', 'wndw'],
+  inject: ['endPts', 'grid', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -69,22 +76,11 @@ export default {
   },
 
   computed: {
-    el() {
-      const elStyles = {};
-      Object.entries(this.elValue.style).forEach(([elStyleKey, elStyleValue]) => {
-        if (elStyleKey.includes('-')) {
-          elStyles[elStyleKey.split('-')[0]]
-            ? (elStyles[elStyleKey.split('-')[0]][elStyleKey.split('-')[1]] = elStyleValue)
-            : (elStyles[elStyleKey.split('-')[0]] = { [elStyleKey.split('-')[1]]: elStyleValue });
-        }
-      });
-      return elStyles;
-    },
     elUl() {
       return {
         backgroundColor: this.site.body.style.primaryColor,
-        // width: this.grid.wdth + 'px',
         height: this.elValue.style.height * 2 + (this.elValue.style.fontSize * 3 + 20) + 'px',
+        borderBottom: '1px solid black',
       };
     },
     elLi() {
@@ -94,6 +90,7 @@ export default {
     },
     elA() {
       return {
+        color: this.site.body.style.textColor,
         padding: this.elValue.style.height + 'px 20px',
         fontSize: this.elValue.style.fontSize + 'px',
       };
@@ -145,6 +142,8 @@ export default {
 .top-menu-link {
   padding-left: 2px;
   padding-right: 25px;
+  color: #000; /* Fallback for older browsers */
+  color: rgba(0, 0, 0, 0);
 }
 .top-menu-link-items,
 .top-menu-link-links,
@@ -157,5 +156,7 @@ export default {
 .top-menu-link-type select {
   flex-grow: 1;
   width: 0;
+  border-style: none;
+  background: transparent;
 }
 </style>

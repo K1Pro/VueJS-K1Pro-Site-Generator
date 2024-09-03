@@ -1,5 +1,5 @@
 <template>
-  <ul class="top-menu" :style="[elUl, el.Ul]">
+  <ul class="top-menu" :style="[elUl]">
     <li :style="logoLi" @mouseover="highlightMenuItem($event, true)" @mouseout="highlightMenuItem($event, false)">
       <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" class="top-menu-logo-img" />
       <a class="top-menu-icon" v-if="this.wndw.wdth < this.respWidth.md" :style="logoA" @click="toggleRespMenu">
@@ -15,20 +15,20 @@
       >
         <a
           v-if="menuTypes[menuItemIndex] == 'Page'"
-          :style="[elA, el.A]"
+          :style="[elA]"
           :href="endPts.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
-          :style="[elA, el.A]"
+          :style="[elA]"
           :href="endPts.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Link'"
           target="_blank"
-          :style="[elA, el.A]"
+          :style="[elA]"
           :href="'https://' + menuLinks[menuItemIndex].toLowerCase()"
           >{{ menuItem }}</a
         >
@@ -60,21 +60,9 @@ export default {
   },
 
   computed: {
-    el() {
-      const elStyles = {};
-      Object.entries(this.elValue.style).forEach(([elStyleKey, elStyleValue]) => {
-        if (elStyleKey.includes('-')) {
-          elStyles[elStyleKey.split('-')[0]]
-            ? (elStyles[elStyleKey.split('-')[0]][elStyleKey.split('-')[1]] = elStyleValue)
-            : (elStyles[elStyleKey.split('-')[0]] = { [elStyleKey.split('-')[1]]: elStyleValue });
-        }
-      });
-      return elStyles;
-    },
     elUl() {
       return {
         backgroundColor: this.site.body.style.primaryColor,
-        // width: this.wndw.wdth + 'px'
       };
     },
     elLi() {
@@ -84,6 +72,7 @@ export default {
     },
     elA() {
       return {
+        color: this.site.body.style.textColor,
         padding: this.wndw.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 1 + 'px 20px',
         fontSize: this.elValue.style.fontSize + 'px',
       };

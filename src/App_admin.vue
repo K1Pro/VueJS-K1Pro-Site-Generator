@@ -67,6 +67,7 @@ export default {
         content: 'content',
         messages: 'messages',
       },
+      undoRedo: 0,
     };
   },
 
@@ -81,6 +82,7 @@ export default {
       user: Vue.computed(() => this.user),
       selectedVideo: Vue.computed(() => this.selectedVideo),
       grid: Vue.computed(() => this.grid),
+      undoRedo: Vue.computed(() => this.undoRedo),
       // static
       respWidth: this.respWidth,
       endPts: this.endPts,
@@ -149,6 +151,7 @@ export default {
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data.params;
+          this.undoRedo++;
           console.log(getSiteResJSON.data.params);
           // if (getSiteResJSON.data?.params?.body?.style) {
           //   Object.keys(getSiteResJSON.data.params.body.style).forEach((key) => {
