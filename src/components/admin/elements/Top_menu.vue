@@ -1,6 +1,6 @@
 <template>
   <div class="top-menu" :style="[elUl]">
-    <div class="dimensions">{{ grid.wdth }} px</div>
+    <span class="dimensions">{{ grid.wdth }} px</span>
     <div class="top-menu-logo">
       <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" />
     </div>
@@ -9,30 +9,16 @@
         <span class="top-menu-link" :style="{ fontSize: elValue.style.fontSize + 'px' }">{{ menuItem }}</span>
         <div class="top-menu-link-items">
           <template v-if="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link'">
-            <input
-              type="text"
-              v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
-              :style="{
-                color: this.site.body.style.textColor,
-                fontSize: elValue.style.fontSize + 'px',
-                'margin-top': '-' + (elValue.style.fontSize + 4) + 'px',
-              }"
-            />
+            <input type="text" v-model="site.htmlElmnts[elKey].items[menuItemIndex]" :style="[items]" />
           </template>
           <template v-else>
             <select
               v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
               :ref="'menuItemsSelect' + menuItemIndex"
-              :style="{
-                color: this.site.body.style.textColor,
-                fontSize: elValue.style.fontSize + 'px',
-                'margin-top': '-' + (elValue.style.fontSize + 4) + 'px',
-              }"
+              :style="[items]"
             >
-              <option value="Choose page" selected :style="{ color: this.site.body.style.textColor }">
-                Choose page
-              </option>
-              <option v-for="page in Object.keys(site.pages)" :style="{ color: this.site.body.style.textColor }">
+              <option value="Choose page" selected>Choose page</option>
+              <option v-for="page in Object.keys(site.pages)">
                 {{ page }}
               </option>
             </select></template
@@ -41,19 +27,19 @@
         <div class="top-menu-link-type">
           <select
             v-model="site.htmlElmnts[elKey].types[menuItemIndex]"
-            :style="{ color: this.site.body.style.textColor, fontSize: elValue.style.fontSize + 'px' }"
+            :style="[typeAndLinks]"
             @change="changeLink($event, menuItemIndex)"
           >
-            <option :style="{ color: this.site.body.style.textColor }">Page</option>
-            <!-- <option :style="{ color: this.site.body.style.textColor }">Anchor</option> -->
-            <option :style="{ color: this.site.body.style.textColor }">Link</option>
+            <option>Page</option>
+            <!-- <option>Anchor</option> -->
+            <option>Link</option>
           </select>
         </div>
         <div class="top-menu-link-links">
           <input
             type="text"
             :placeholder="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link' ? 'Link text...' : ''"
-            :style="{ color: this.site.body.style.textColor, fontSize: elValue.style.fontSize + 'px' }"
+            :style="[typeAndLinks]"
             :disabled="site.htmlElmnts[elKey].types[menuItemIndex] != 'Link'"
             v-model="site.htmlElmnts[elKey].links[menuItemIndex]"
           />
@@ -90,7 +76,6 @@ export default {
     },
     elA() {
       return {
-        color: this.site.body.style.textColor,
         padding: this.elValue.style.height + 'px 20px',
         fontSize: this.elValue.style.fontSize + 'px',
       };
@@ -100,6 +85,15 @@ export default {
         padding: this.elValue.style.fontSize + 19 + 'px 10px',
         height: this.elValue.style.height * 2 + (this.elValue.style.fontSize * 3 + 19) + 'px',
       };
+    },
+    items() {
+      return {
+        fontSize: this.elValue.style.fontSize + 'px',
+        marginTop: '-' + (this.elValue.style.fontSize + 4) + 'px',
+      };
+    },
+    typeAndLinks() {
+      return { fontSize: this.elValue.style.fontSize + 'px' };
     },
   },
   methods: {

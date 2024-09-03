@@ -17,7 +17,7 @@
       </option>
     </select>
     <p v-if="pageStyle.toLowerCase().includes('color')">
-      <input type="color" v-model="site.body.style[pageStyle]" />
+      <input type="color" v-model="site.body.style[pageStyle]" @input="changeColor($event.target.value, pageStyle)" />
     </p>
     <p v-else-if="pageStyle.toLowerCase().includes('opacity') || pageStyle.toLowerCase().includes('margin')">
       <input type="range" v-model="site.body.style[pageStyle]" />{{ site.body.style[pageStyle] }}%
@@ -34,6 +34,21 @@ export default {
 
   data() {
     return { pageMedia: 'logo', pageStyle: '' };
+  },
+  methods: {
+    changeColor(event, pageStyle) {
+      if (pageStyle == 'textColor') {
+        const appGridItem2 = document.getElementById('app-grid-item2');
+        const allElements = [
+          ...Array.from(appGridItem2.getElementsByTagName('input')),
+          ...Array.from(appGridItem2.getElementsByTagName('select')),
+          ...Array.from(appGridItem2.getElementsByTagName('i')),
+        ];
+        allElements.forEach((el) => {
+          el.style.color = event;
+        });
+      }
+    },
   },
 };
 </script>

@@ -14,7 +14,6 @@
             'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
-            color: elValue.style.iconColor,
           }"
         >
           <i
@@ -26,7 +25,7 @@
           <i
             v-if="showIconScroll && 0 == iconStart"
             class="fa-solid fa-chevron-left"
-            :style="{ color: elValue.style.iconColor + '50' }"
+            :style="{ color: site.body.style.textColor + '50' }"
           ></i>
         </div>
         <div v-else class="icon-slider-item"></div>
@@ -40,13 +39,11 @@
             'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
-            color: elValue.style.iconColor,
           }"
         >
           <div class="icon-slider-icon">
             <i
               :style="{
-                color: elValue.style.iconColor,
                 'font-size': elValue.style.iconSize + 'px',
               }"
               :class="elValue['items'][iconStart + iconIndex - 1][1]"
@@ -87,7 +84,6 @@
             'background-color': site.body.style.primaryColor,
             border: '1px solid ' + elValue.style.borderColor,
             'border-radius': elValue.style.borderRadius + 'px',
-            color: elValue.style.iconColor,
           }"
         >
           <i
@@ -99,7 +95,7 @@
           <i
             v-if="showIconScroll && iconStart + respvIconAmnt >= iconSliderItemAmount"
             class="fa-solid fa-chevron-right"
-            :style="{ color: elValue.style.iconColor + '50' }"
+            :style="{ color: site.body.style.textColor + '50' }"
           ></i>
         </div>
         <div v-else class="icon-slider-item"></div>

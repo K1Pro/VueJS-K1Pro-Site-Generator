@@ -1,6 +1,6 @@
 <template>
   <div class="headline">
-    <span>{{ elValue.style.textSize }}px</span>
+    <span class="dimensions">{{ elValue.style.textSize }}px</span>
     <input
       :style="{
         fontSize: elValue.style.textSize + 'px',
@@ -58,10 +58,6 @@ export default {
 <style>
 .headline {
   position: relative;
-}
-.headline span {
-  position: absolute;
-  color: rgb(90, 90, 90);
 }
 .headline input {
   height: 100%;

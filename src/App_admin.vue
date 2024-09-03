@@ -19,7 +19,12 @@
       v-on:dblclick="resetGrid"
     ></div>
 
-    <div class="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
+    <div
+      class="app-grid-item2"
+      id="app-grid-item2"
+      ref="appGridItem2"
+      :style="{ 'background-color': site.body.style.backgroundColor }"
+    >
       <template v-for="(pageElmnt, pageIndex) in site.pages[page.slctd]">
         <component
           :is="site.htmlElmnts[pageElmnt[0]].type"
@@ -247,6 +252,18 @@ export default {
     },
   },
 
+  mounted() {
+    const appGridItem2 = document.getElementById('app-grid-item2');
+    const allElements = [
+      ...Array.from(appGridItem2.getElementsByTagName('input')),
+      ...Array.from(appGridItem2.getElementsByTagName('select')),
+      ...Array.from(appGridItem2.getElementsByTagName('i')),
+    ];
+    allElements.forEach((el) => {
+      el.style.color = this.site.body.style.textColor;
+    });
+  },
+
   watch: {
     sideMenuSlctdLnk(newSideMenuSlctdLnk, oldSideMenuSlctdLnk) {
       if (newSideMenuSlctdLnk == 'Logout') {
@@ -279,6 +296,8 @@ export default {
 }
 .dimensions {
   position: absolute;
+  color: rgb(90, 90, 90);
+  padding: 0px 3px;
 }
 @media only screen and (min-width: 768px) {
   /* .app-grid-container {

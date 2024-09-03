@@ -13,6 +13,8 @@
 export default {
   name: 'Headline',
 
+  inject: ['site'],
+
   props: ['elKey', 'elValue', 'elIndex'],
 };
 </script>
