@@ -16,14 +16,12 @@
         <div class="product-card-item" :style="{ 'background-color': site.body.style.primaryColor }">
           <div class="product-card-group">
             <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
-            <div class="product-card-text" :style="{ padding: '12px' }">
+            <div class="product-card-text">
               <input type="text" class="product-card-header" v-model="site.htmlElmnts[elKey].items[cardIndex][1]" />
-              <span
-                spellcheck="false"
-                contenteditable="plaintext-only"
-                v-on:blur="updateProductCardDesc($event.target.innerHTML, cardIndex)"
-                >{{ productcard[2] }}</span
-              >
+              <div style="position: relative">
+                <textarea v-model="site.htmlElmnts[elKey].items[cardIndex][2]" @keydown.enter.prevent></textarea>
+                <span>{{ productcard[2] }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -50,12 +48,6 @@ export default {
 
     gridTemplateColumnsMobile() {
       return '100%';
-    },
-  },
-
-  methods: {
-    updateProductCardDesc(event, indx) {
-      this.site.htmlElmnts[this.elKey].items[indx][2] = event;
     },
   },
 };
@@ -87,30 +79,37 @@ export default {
   height: 350px;
   object-fit: cover;
 }
+.product-card-text {
+  padding: 12px;
+}
 .product-card-text input {
-  width: 96%;
-  padding: 2%;
+  width: 100%;
+  padding: 0%;
   border: 0px;
   background: transparent;
   font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  margin-bottom: 12px;
+}
+.product-card-text span {
+  color: transparent;
+  word-break: break-word;
+}
+.product-card-text textarea {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: transparent;
   resize: none;
-}
-.product-card-text span[contenteditable] {
-  min-height: 32px;
-  display: block; /* not sure if this is needed */
-}
-.product-card-text span[contenteditable]:focus {
   outline: none;
 }
-.product-card-text span[contenteditable]:empty::before {
-  min-height: 32px;
-  content: 'Enter description';
-  display: inline-block;
-  color: grey;
-}
-.product-card-text span[contenteditable]:empty:focus::before {
-  content: 'Start typing';
-  color: grey;
+.product-card-text span,
+.product-card-text textarea {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 16px;
+  padding: 0%;
+  margin: 0%;
+  border: none;
 }
 .product-card-header,
 .product-card-text input {

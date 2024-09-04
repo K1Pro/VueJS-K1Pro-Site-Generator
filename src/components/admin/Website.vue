@@ -37,15 +37,21 @@ export default {
   },
   methods: {
     changeColor(event, pageStyle) {
+      const appGridItem2 = document.getElementById('app-grid-item2');
       if (pageStyle == 'textColor') {
-        const appGridItem2 = document.getElementById('app-grid-item2');
-        const allElements = [
+        const allElmnts = [
           ...Array.from(appGridItem2.getElementsByTagName('input')),
           ...Array.from(appGridItem2.getElementsByTagName('select')),
           ...Array.from(appGridItem2.getElementsByTagName('i')),
+          ...Array.from(appGridItem2.getElementsByTagName('textarea')),
         ];
-        allElements.forEach((el) => {
+        allElmnts.forEach((el) => {
           el.style.color = event;
+        });
+      } else if (pageStyle == 'primaryColor') {
+        const primaryColorElmnts = [...Array.from(appGridItem2.getElementsByClassName('primary-color'))];
+        primaryColorElmnts.forEach((el) => {
+          el.style.backgroundColor = event;
         });
       }
     },

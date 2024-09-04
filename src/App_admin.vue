@@ -156,6 +156,7 @@ export default {
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data.params;
+          this.applyStyle();
           this.undoRedo++;
           console.log(getSiteResJSON.data.params);
           // if (getSiteResJSON.data?.params?.body?.style) {
@@ -250,18 +251,28 @@ export default {
         this.showMsg('Settings update error');
       }
     },
+    applyStyle() {
+      const appGridItem2 = document.getElementById('app-grid-item2');
+
+      const allElmnts = [
+        ...Array.from(appGridItem2.getElementsByTagName('input')),
+        ...Array.from(appGridItem2.getElementsByTagName('select')),
+        ...Array.from(appGridItem2.getElementsByTagName('i')),
+        ...Array.from(appGridItem2.getElementsByTagName('textarea')),
+      ];
+      allElmnts.forEach((el) => {
+        el.style.color = this.site.body.style.textColor;
+      });
+
+      const primaryColorElmnts = [...Array.from(appGridItem2.getElementsByClassName('primary-color'))];
+      primaryColorElmnts.forEach((el) => {
+        el.style.backgroundColor = this.site.body.style.primaryColor;
+      });
+    },
   },
 
   mounted() {
-    const appGridItem2 = document.getElementById('app-grid-item2');
-    const allElements = [
-      ...Array.from(appGridItem2.getElementsByTagName('input')),
-      ...Array.from(appGridItem2.getElementsByTagName('select')),
-      ...Array.from(appGridItem2.getElementsByTagName('i')),
-    ];
-    allElements.forEach((el) => {
-      el.style.color = this.site.body.style.textColor;
-    });
+    this.applyStyle();
   },
 
   watch: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="top-menu" :style="[elUl]">
+  <div class="top-menu primary-color" :style="[elUl]">
     <span class="dimensions">{{ grid.wdth }} px</span>
     <div class="top-menu-logo">
       <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" />
@@ -64,7 +64,6 @@ export default {
   computed: {
     elUl() {
       return {
-        backgroundColor: this.site.body.style.primaryColor,
         height: this.elValue.style.height * 2 + (this.elValue.style.fontSize * 3 + 20) + 'px',
         borderBottom: '1px solid black',
       };
