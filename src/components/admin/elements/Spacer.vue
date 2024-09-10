@@ -1,11 +1,14 @@
 <template>
   <div
     class="spacer"
-    :style="{
-      borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-    }"
+    :style="[
+      {
+        borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
+      },
+      style.outline.borderColor,
+    ]"
   >
-    <span>{{ elValue.style.height }}px</span>
+    <span :style="[style.outline.color]">{{ elValue.style.height }}px</span>
     <p :style="[spacerHeight]" ref="spacerP"></p>
     <div @mousedown="startResizeSpacer" @mouseup="stopResizeSpacer"></div>
   </div>
@@ -15,7 +18,7 @@
 export default {
   name: 'Spacer',
 
-  inject: ['site', 'page'],
+  inject: ['page', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -64,11 +67,11 @@ export default {
 .spacer {
   position: relative;
   border-style: dashed;
-  border-color: rgb(115, 115, 115);
 }
 .spacer span {
   position: absolute;
   color: rgb(90, 90, 90);
+  font-weight: bold;
 }
 .spacer p {
   padding: 0%;

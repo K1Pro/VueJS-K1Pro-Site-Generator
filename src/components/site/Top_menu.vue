@@ -1,7 +1,7 @@
 <template>
-  <ul class="top-menu" :style="[elUl]">
+  <ul class="top-menu" :style="[style.primaryColor, elUl]">
     <li :style="logoLi" @mouseover="highlightMenuItem($event, true)" @mouseout="highlightMenuItem($event, false)">
-      <img :src="endPts.siteURL + site.logo" alt="logo" :style="logoImg" class="top-menu-logo-img" />
+      <img :src="endPts.siteURL + site.logo" alt="logo" class="top-menu-logo-img" />
       <a class="top-menu-icon" v-if="this.wndw.wdth < this.respWidth.md" :style="logoA" @click="toggleRespMenu">
         <i :class="responsive ? 'fa fa-xmark' : 'fa fa-bars'"></i>
       </a>
@@ -9,40 +9,40 @@
     <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
       <li
         v-for="(menuItem, menuItemIndex) in menuItems"
-        :style="elLi"
+        :style="linksLi"
         @mouseover="highlightMenuItem($event, true)"
         @mouseout="highlightMenuItem($event, false)"
       >
         <a
           v-if="menuTypes[menuItemIndex] == 'Page'"
-          :style="[elA]"
+          :style="[linksA]"
           :href="endPts.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
-          :style="[elA]"
+          :style="[linksA]"
           :href="endPts.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Link'"
           target="_blank"
-          :style="[elA]"
+          :style="[linksA]"
           :href="'https://' + menuLinks[menuItemIndex].toLowerCase()"
           >{{ menuItem }}</a
         >
       </li>
     </template>
   </ul>
-  <div :style="{ height: elValue.style.height * 2 + (this.elValue.style.fontSize + 6) + 'px' }"></div>
+  <div :style="{ height: elValue.style.height * 2 + elValue.style.fontSize + 'px' }"></div>
 </template>
 
 <script>
 export default {
   name: 'Top Menu',
 
-  inject: ['wndw', 'respWidth', 'site', 'endPts'],
+  inject: ['wndw', 'respWidth', 'site', 'style', 'endPts'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -62,31 +62,36 @@ export default {
   computed: {
     elUl() {
       return {
-        backgroundColor: this.site.body.style.primaryColor,
+        borderBottom: '1px solid ' + this.site.body.style.textColor,
       };
     },
-    elLi() {
+    logoLi() {
+      return {
+        float: this.wndw.wdth < this.respWidth.md ? 'none' : 'left',
+        height: this.elValue.style.height * 2 + this.elValue.style.fontSize - 1 + 'px',
+      };
+    },
+    logoA() {
+      return {
+        color: this.site.body.style.textColor,
+        padding: this.elValue.style.height + 'px 20px',
+        height: this.elValue.style.height * 2 + this.elValue.style.fontSize - 1 + 'px',
+      };
+    },
+    linksLi() {
       return {
         float: this.wndw.wdth < this.respWidth.md ? 'none' : this.elValue.style?.alignment,
       };
     },
-    elA() {
+    linksA() {
       return {
         color: this.site.body.style.textColor,
-        padding: this.wndw.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 1 + 'px 20px',
-        fontSize: this.elValue.style.fontSize + 'px',
+        padding: this.wndw.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 'px 20px',
+        height:
+          this.wndw.wdth < this.respWidth.md
+            ? this.elValue.style.fontSize + 30 + 'px'
+            : this.elValue.style.height * 2 + this.elValue.style.fontSize - 1 + 'px',
       };
-    },
-    logoLi() {
-      return { float: this.wndw.wdth < this.respWidth.md ? 'none' : 'left' };
-    },
-    logoImg() {
-      return {
-        height: this.elValue.style.height * 2 + this.elValue.style.fontSize + 1 + 'px',
-      };
-    },
-    logoA() {
-      return { fontSize: this.elValue.style.fontSize + 'px', padding: this.elValue.style.height + 1 + 'px 20px' };
     },
     menuItems() {
       return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
@@ -164,6 +169,11 @@ export default {
   padding: 0;
   overflow: hidden;
 }
+.top-menu li {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
 .top-menu a {
   display: block;
   text-decoration: none;
@@ -184,5 +194,6 @@ export default {
 }
 .top-menu-logo-img {
   padding: 10px;
+  height: 100%;
 }
 </style>

@@ -1,11 +1,14 @@
 <template>
   <div class="headline">
-    <span class="dimensions">{{ elValue.style.textSize }}px</span>
+    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}px</span>
     <input
-      :style="{
-        fontSize: elValue.style.textSize + 'px',
-        borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-      }"
+      :style="[
+        {
+          fontSize: elValue.style.textSize + 'px',
+          borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
+        },
+        style.outline.borderColor,
+      ]"
       type="text"
       v-model="site.htmlElmnts[elKey].text"
     />
@@ -17,7 +20,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['site'],
+  inject: ['site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

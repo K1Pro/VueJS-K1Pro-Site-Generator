@@ -1,5 +1,8 @@
 <template>
-  <div class="icon-slider" :style="{ borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px' }">
+  <div
+    class="icon-slider"
+    :style="[{ borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px' }, style.outline.borderColor]"
+  >
     <div
       class="icon-slider-container"
       :style="{
@@ -10,11 +13,13 @@
         <div
           v-if="showIconScroll"
           class="icon-slider-prev"
-          :style="{
-            'background-color': site.body.style.primaryColor,
-            border: '1px solid ' + elValue.style.borderColor,
-            'border-radius': elValue.style.borderRadius + 'px',
-          }"
+          :style="[
+            {
+              border: '1px solid ' + elValue.style.borderColor,
+              'border-radius': elValue.style.borderRadius + 'px',
+            },
+            style.primaryColor.backgroundColor,
+          ]"
         >
           <i
             v-if="showIconScroll && 0 < iconStart"
@@ -34,11 +39,13 @@
       <template v-for="iconIndex in respvIconAmnt">
         <div
           v-if="iconIndex === respvIconAmnt"
-          :style="{
-            'background-color': site.body.style.primaryColor,
-            border: '1px solid ' + elValue.style.borderColor,
-            'border-radius': elValue.style.borderRadius + 'px',
-          }"
+          :style="[
+            {
+              border: '1px solid ' + elValue.style.borderColor,
+              'border-radius': elValue.style.borderRadius + 'px',
+            },
+            style.primaryColor.backgroundColor,
+          ]"
         >
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
@@ -49,11 +56,13 @@
         <div
           v-else
           class="icon-slider-item"
-          :style="{
-            'background-color': site.body.style.primaryColor,
-            border: '1px solid ' + elValue.style.borderColor,
-            'border-radius': elValue.style.borderRadius + 'px',
-          }"
+          :style="[
+            {
+              border: '1px solid ' + elValue.style.borderColor,
+              'border-radius': elValue.style.borderRadius + 'px',
+            },
+            style.primaryColor.backgroundColor,
+          ]"
         >
           <div class="icon-slider-icon">
             <i
@@ -80,11 +89,13 @@
         <div
           v-if="showIconScroll"
           class="icon-slider-next"
-          :style="{
-            'background-color': site.body.style.primaryColor,
-            border: '1px solid ' + elValue.style.borderColor,
-            'border-radius': elValue.style.borderRadius + 'px',
-          }"
+          :style="[
+            {
+              border: '1px solid ' + elValue.style.borderColor,
+              'border-radius': elValue.style.borderRadius + 'px',
+            },
+            style.primaryColor.backgroundColor,
+          ]"
         >
           <i
             v-if="showIconScroll && iconStart + respvIconAmnt < iconSliderItemAmount"
@@ -108,7 +119,7 @@
 export default {
   name: 'Icon Slider',
 
-  inject: ['grid', 'respWidth', 'site', 'endPts', 'undoRedo'],
+  inject: ['grid', 'respWidth', 'site', 'style', 'endPts', 'undoRedo'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -180,7 +191,6 @@ export default {
 .icon-slider {
   position: relative;
   border-style: dashed;
-  border-color: rgb(115, 115, 115);
 }
 .icon-slider-container {
   display: grid;

@@ -48,11 +48,6 @@ export default {
         allElmnts.forEach((el) => {
           el.style.color = event;
         });
-      } else if (pageStyle == 'primaryColor') {
-        const primaryColorElmnts = [...Array.from(appGridItem2.getElementsByClassName('primary-color'))];
-        primaryColorElmnts.forEach((el) => {
-          el.style.backgroundColor = event;
-        });
       }
     },
   },

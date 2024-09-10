@@ -39,9 +39,10 @@ export default {
 
   provide() {
     return {
-      site: Vue.computed(() => this.site),
-      respWidth: this.respWidth,
       endPts: this.endPts,
+      respWidth: this.respWidth,
+      site: Vue.computed(() => this.site),
+      style: Vue.computed(() => this.style),
     };
   },
 
@@ -50,6 +51,11 @@ export default {
       const pagesLowerCase = {};
       Object.entries(params.pages).map(([key, value]) => (pagesLowerCase[key.toLowerCase()] = value));
       return pagesLowerCase;
+    },
+    style() {
+      return {
+        primaryColor: { backgroundColor: this.site.body.style.primaryColor },
+      };
     },
   },
 };

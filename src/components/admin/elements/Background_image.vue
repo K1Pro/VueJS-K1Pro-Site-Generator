@@ -1,11 +1,6 @@
 <template>
   <div class="background-image" ref="backgroundImage" :style="[elImg]">
-    <img
-      v-if="Object.keys(elImg).length !== 0"
-      :width="grid.wdth + 'px'"
-      :src="site.htmlElmnts[elKey]['url']"
-      :style="[backgroundImageBorder]"
-    />
+    <img v-if="imgOffsetTop != null" :width="grid.wdth + 'px'" :src="site.htmlElmnts[elKey]['url']" />
   </div>
 </template>
 
@@ -18,47 +13,52 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { elImg: {} };
+    return { isMounted: false, imgOffsetTop: null };
   },
 
   computed: {
+    elImg() {
+      if (this.isMounted && this.imgOffsetTop === null) this.calcImgOffsetTop();
+      return this.isMounted
+        ? {
+            'margin-top': '-' + this.imgOffsetTop + 'px',
+            'margin-bottom': '-' + (this.$refs.backgroundImage.clientHeight - this.imgOffsetTop) + 'px',
+          }
+        : {};
+    },
     enabledPages() {
       return this.site.pages[this.page.slctd]
         .flat()
         .slice(0, this.elIndex * 2)
         .filter((removePageElmnt) => removePageElmnt == true || removePageElmnt == false);
     },
-    backgroundImageBorder() {
-      return {
-        borderWidth: this.site.pages[this.page.slctd][this.elIndex - 1] ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-      };
+  },
+
+  methods: {
+    calcImgOffsetTop() {
+      this.imgOffsetTop =
+        this.wndw.wdth < this.respWidth.md
+          ? this.$refs.backgroundImage.offsetTop - window.innerHeight
+          : this.$refs.backgroundImage.offsetTop;
     },
   },
+
   mounted() {
-    setTimeout(() => {
-      if (Object.keys(this.elImg).length === 0) {
-        this.elImg =
-          this.wndw.wdth > this.respWidth.md
-            ? {
-                marginTop: '-' + this.$refs.backgroundImage.getBoundingClientRect().y + 'px',
-              }
-            : {
-                marginTop: '-' + (this.$refs.backgroundImage.getBoundingClientRect().y - window.innerHeight) + 'px',
-              };
-      }
-    }, 1);
+    this.isMounted = true;
+    if (this.imgOffsetTop === null) this.calcImgOffsetTop();
   },
   watch: {
+    'wndw.wdth'() {
+      if (this.imgOffsetTop === null) this.calcImgOffsetTop();
+    },
     enabledPages(newEnabledPages, oldEnabledPages) {
       if (newEnabledPages.join('') !== oldEnabledPages.join('')) {
-        if (this.$refs.backgroundImage.getBoundingClientRect().y < 0 && !this.enabledPages.includes(true)) {
-          this.elImg = {
-            marginTop: '0px',
-          };
+        if (this.wndw.wdth < this.respWidth.md) {
+          this.imgOffsetTop = !this.enabledPages.includes(true)
+            ? 0
+            : this.$refs.backgroundImage.offsetTop - window.innerHeight;
         } else {
-          this.elImg = {
-            marginTop: '-' + this.$refs.backgroundImage.getBoundingClientRect().y + 'px',
-          };
+          this.imgOffsetTop = !this.enabledPages.includes(true) ? 0 : this.$refs.backgroundImage.offsetTop;
         }
       }
     },
@@ -69,14 +69,11 @@ export default {
 <style>
 .background-image {
   position: relative;
-  top: 0;
   height: 75vh;
 }
 .background-image img {
   object-fit: cover;
   width: 100%;
   height: 75vh;
-  border-style: dashed;
-  border-color: rgb(115, 115, 115);
 }
 </style>

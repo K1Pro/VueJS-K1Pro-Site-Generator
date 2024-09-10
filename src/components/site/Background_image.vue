@@ -16,7 +16,14 @@ export default {
     return { elImg: { marginTop: '0px' } };
   },
   mounted() {
-    this.elImg = { marginTop: '-' + this.$refs.backgroundImage.getBoundingClientRect().y + 'px' };
+    console.log(this.$refs);
+    // this.elImg = { marginTop: '-' + this.$refs.backgroundImage.getBoundingClientRect().y + 'px' };
+    this.elImg = {
+      'margin-top': '-' + this.$refs.backgroundImage.offsetTop + 'px',
+      'margin-bottom': '-75vh',
+      // 'margin-bottom': 'calc(-75vh + ' + this.$refs.backgroundImage.offsetTop + 'px)',
+      // 'margin-bottom': '-' + (this.$refs.backgroundImage.clientHeight - this.$refs.backgroundImage.offsetTop) + 'px',
+    };
   },
 };
 </script>
@@ -24,8 +31,8 @@ export default {
 <style>
 .background-image {
   position: relative;
-  top: 0;
-  height: 75vh;
+  /* top: 0;
+  height: 75vh; */
 }
 .background-image img {
   object-fit: cover;

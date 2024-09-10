@@ -1,9 +1,12 @@
 <template>
   <div
     class="product-card"
-    :style="{
-      borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-    }"
+    :style="[
+      {
+        borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
+      },
+      style.outline.borderColor,
+    ]"
   >
     <div
       class="product-card-container"
@@ -13,7 +16,7 @@
     >
       <div class="product-card-item"></div>
       <template v-for="(productcard, cardIndex) in elValue['items']">
-        <div class="product-card-item" :style="{ 'background-color': site.body.style.primaryColor }">
+        <div class="product-card-item" :style="[style.primaryColor.backgroundColor]">
           <div class="product-card-group">
             <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
             <div class="product-card-text">
@@ -35,7 +38,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['endPts', 'grid', 'respWidth', 'selectedPhoto', 'site', 'showMsg', 'wndw'],
+  inject: ['endPts', 'grid', 'respWidth', 'selectedPhoto', 'site', 'style', 'showMsg', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -57,7 +60,6 @@ export default {
 .product-card {
   position: relative;
   border-style: dashed;
-  border-color: rgb(115, 115, 115);
 }
 
 .product-card-container {

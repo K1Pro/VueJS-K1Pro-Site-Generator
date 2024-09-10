@@ -2,10 +2,12 @@
   <div class="footer">
     <div
       class="footer-container"
-      :style="{
-        'background-color': site.body.style.primaryColor,
-        gridTemplateColumns: gridTemplateLogOut,
-      }"
+      :style="[
+        {
+          gridTemplateColumns: gridTemplateLogOut,
+        },
+        style.primaryColor.backgroundColor,
+      ]"
     >
       <div class="footer-item0"></div>
       <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey]['items']">
@@ -22,7 +24,7 @@
 export default {
   name: 'Footer',
 
-  inject: ['content', 'grid', 'respWidth', 'wndw', 'site', 'endPts'],
+  inject: ['content', 'grid', 'respWidth', 'wndw', 'site', 'style', 'endPts'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

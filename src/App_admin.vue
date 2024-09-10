@@ -18,13 +18,7 @@
       @mouseup="stopResizeGrid"
       v-on:dblclick="resetGrid"
     ></div>
-
-    <div
-      class="app-grid-item2"
-      id="app-grid-item2"
-      ref="appGridItem2"
-      :style="{ 'background-color': site.body.style.backgroundColor }"
-    >
+    <div id="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
       <template v-for="(pageElmnt, pageIndex) in site.pages[page.slctd]">
         <component
           :is="site.htmlElmnts[pageElmnt[0]].type"
@@ -86,6 +80,7 @@ export default {
       content: Vue.computed(() => this.content),
       user: Vue.computed(() => this.user),
       selectedVideo: Vue.computed(() => this.selectedVideo),
+      style: Vue.computed(() => this.style),
       grid: Vue.computed(() => this.grid),
       undoRedo: Vue.computed(() => this.undoRedo),
       // static
@@ -120,11 +115,41 @@ export default {
         size: this.userSettings.layout['grid-size'],
       };
     },
+    style() {
+      return {
+        primaryColor: {
+          backgroundColor: { backgroundColor: this.site.body.style.primaryColor },
+          outline: {
+            color: {
+              color: this.findGreyZone(this.site.body.style.primaryColor) ? 'rgb(32, 32, 32)' : 'rgb(160, 160, 160)',
+            },
+            borderColor: {
+              borderColor: this.findGreyZone(this.site.body.style.primaryColor)
+                ? 'rgb(32, 32, 32)'
+                : 'rgb(128, 128, 128)',
+            },
+          },
+        },
+        outline: {
+          color: {
+            color: this.findGreyZone(this.site.body.style.backgroundColor) ? 'rgb(32, 32, 32)' : 'rgb(160, 160, 160)',
+          },
+          borderColor: {
+            borderColor: this.findGreyZone(this.site.body.style.backgroundColor)
+              ? 'rgb(32, 32, 32)'
+              : 'rgb(128, 128, 128)',
+          },
+        },
+      };
+    },
   },
 
   methods: {
-    modify(newSite) {
-      this.site = newSite;
+    findGreyZone(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return r < 192 && r > 64 && g < 192 && g > 64 && b < 192 && b > 64 ? true : false;
     },
     async patchSite() {
       try {
@@ -263,11 +288,6 @@ export default {
       allElmnts.forEach((el) => {
         el.style.color = this.site.body.style.textColor;
       });
-
-      const primaryColorElmnts = [...Array.from(appGridItem2.getElementsByClassName('primary-color'))];
-      primaryColorElmnts.forEach((el) => {
-        el.style.backgroundColor = this.site.body.style.primaryColor;
-      });
     },
   },
 
@@ -293,7 +313,7 @@ export default {
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 100vh auto; /* auto */
-  background-color: #c6c6c6;
+  /* background-color: #c6c6c6; */
   /* word-break: break-all; */
 }
 .app-grid-item1 {
@@ -301,20 +321,18 @@ export default {
 }
 .app-grid-resizer {
   cursor: col-resize;
+  background-color: #c6c6c6;
 }
-.app-grid-item1 {
-  background-color: white;
-}
-.dimensions {
+.dim {
+  font-weight: bold;
   position: absolute;
-  color: rgb(90, 90, 90);
   padding: 0px 3px;
 }
 @media only screen and (min-width: 768px) {
   /* .app-grid-container {
     grid-template-rows: 100vh;
   } */
-  .app-grid-item2 {
+  #app-grid-item2 {
     overflow-y: scroll;
   }
 }

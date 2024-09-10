@@ -14,58 +14,70 @@
         class="top-menu-links"
         :style="[elA, style.primaryColor.outline.borderColor]"
       >
-        <div class="top-menu-link">{{ menuItem }}</div>
-
-        <div class="top-menu-link-items">
-          <input
-            v-if="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link'"
-            type="text"
-            v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
-            :style="[allInputs]"
-          />
-          <select
-            v-else
-            v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
-            :ref="'menuItemsSelect' + menuItemIndex"
-            :style="[allInputs]"
-          >
-            <option value="Choose page" selected>Choose page</option>
-            <option v-for="page in Object.keys(site.pages)">
-              {{ page }}
-            </option>
-          </select>
+        <div
+          class="top-menu-link"
+          :style="[
+            allInputs,
+            {
+              'padding-right': '30px',
+              'margin-bottom': '-' + (this.elValue.style.height * 2 + this.elValue.style.fontSize - 4) / 3 + 'px',
+            },
+          ]"
+        >
+          {{ menuItem }}
         </div>
-
+        <div class="top-menu-link-items">
+          <template v-if="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link'">
+            <input type="text" v-model="site.htmlElmnts[elKey].items[menuItemIndex]" :style="[allInputs]" />
+          </template>
+          <template v-else>
+            <select
+              v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
+              :ref="'menuItemsSelect' + menuItemIndex"
+              :style="[allInputs]"
+            >
+              <option value="Choose page" selected>Choose page</option>
+              <option v-for="page in Object.keys(site.pages)">
+                {{ page }}
+              </option>
+            </select></template
+          >
+        </div>
         <div class="top-menu-link-type">
           <select
             v-model="site.htmlElmnts[elKey].types[menuItemIndex]"
-            @change="changeLink($event, menuItemIndex)"
             :style="[allInputs]"
+            @change="changeLink($event, menuItemIndex)"
           >
             <option>Page</option>
             <!-- <option>Anchor</option> -->
             <option>Link</option>
           </select>
         </div>
-
         <div class="top-menu-link-links">
           <input
             type="text"
-            :style="[allInputs]"
             :placeholder="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link' ? 'Link text...' : ''"
+            :style="[allInputs]"
             :disabled="site.htmlElmnts[elKey].types[menuItemIndex] != 'Link'"
             v-model="site.htmlElmnts[elKey].links[menuItemIndex]"
           />
         </div>
       </div>
-      <div class="top-menu-links" :style="[elA, style.primaryColor.outline.borderColor]" style="vertical-align: top">
-        <i
-          class="fa-solid fa-circle-plus greenWhitePlus"
-          :style="{
-            padding: elValue.style.height - 2 + 'px 20px',
-            'font-size': '16px',
-          }"
-        ></i>
+      <div
+        class="top-menu-links"
+        :style="[
+          elA,
+          style.primaryColor.outline.borderColor,
+          {
+            padding: elValue.style.height - 4 + 'px 20px',
+            'margin-bottom': '-10px',
+          },
+        ]"
+      >
+        <!-- <div class="top-menu-link"></div> -->
+
+        <div class="plus"></div>
       </div>
     </div>
   </div>
@@ -86,8 +98,8 @@ export default {
   computed: {
     allInputs() {
       return {
-        fontSize: '16px',
-        height: (this.elValue.style.height * 2 + 12) / 3 + 'px',
+        fontSize: this.elValue.style.fontSize + 'px',
+        height: (this.elValue.style.height * 2 + this.elValue.style.fontSize - 4) / 3 + 'px',
         padding: '2px',
         margin: '0px',
         border: '0px',
@@ -99,7 +111,9 @@ export default {
       };
     },
     elLi() {
-      return { textAlign: this.elValue.style?.alignment };
+      return {
+        textAlign: this.elValue.style?.alignment,
+      };
     },
     elA() {
       return {
@@ -109,7 +123,7 @@ export default {
     logoImg() {
       return {
         padding: '10px',
-        height: this.elValue.style.height * 2 + 12 + 'px',
+        height: this.elValue.style.height * 2 + this.elValue.style.fontSize - 4 + 'px',
       };
     },
   },
@@ -159,8 +173,9 @@ export default {
   border-width: 0px 0px 0px 3px;
 }
 .top-menu-link {
-  height: 0px;
-  padding: 0px 25px 0px 2px;
+  padding-left: 2px;
+  padding-right: 25px;
+  border: 1px solid grey;
   color: #000; /*  Fallback for older browsers */
   color: rgba(0, 0, 0, 0);
 }
@@ -177,10 +192,5 @@ export default {
   width: 0;
   border-style: none;
   background: transparent;
-}
-.greenWhitePlus::before {
-  color: forestgreen;
-  background-color: white;
-  border-radius: 25px;
 }
 </style>

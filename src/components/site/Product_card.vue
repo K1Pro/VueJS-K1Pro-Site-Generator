@@ -8,7 +8,7 @@
     >
       <div class="product-card-item"></div>
       <template v-for="(productcard, cardIndex) in elValue['items']">
-        <div class="product-card-item" :style="{ 'background-color': site.body.style.primaryColor }">
+        <div class="product-card-item" :style="[style.primaryColor]">
           <div class="product-card-group">
             <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
             <div class="product-card-text" :style="{ padding: '12px' }">
@@ -31,7 +31,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['respWidth', 'site', 'wndw'],
+  inject: ['respWidth', 'site', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
