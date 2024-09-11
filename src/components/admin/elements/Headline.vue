@@ -1,14 +1,15 @@
 <template>
   <div :id="elKey" class="headline">
-    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}px</span>
+    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSizePX }}px</span>
     <input
       :style="[
         {
-          fontSize: elValue.style.textSize + 'px',
+          fontSize: elValue.style.textSizePX + 'px',
           borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
         },
         style.outline.borderColor,
       ]"
+      ref="headline"
       type="text"
       v-model="site.htmlElmnts[elKey].text"
     />
@@ -20,7 +21,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['site', 'style'],
+  inject: ['grid', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -28,15 +29,22 @@ export default {
     return {
       mouseYCoord: null,
       newInputHeight: null,
-      startingInputHeightFontSize: this.site.htmlElmnts[this.elKey].style.textSize,
+      startingInputHeightFontSize: this.site.htmlElmnts[this.elKey].style.textSizePX,
     };
   },
   methods: {
     resizeInput(event) {
       if (this.mouseYCoord === null) this.mouseYCoord = event.clientY;
       const newInputHeight = -1 * (this.mouseYCoord - event.clientY);
-      if (window.innerHeight > event.clientY && this.mouseYCoord - this.startingInputHeightFontSize + 7 < event.clientY)
-        this.site.htmlElmnts[this.elKey].style.textSize = this.startingInputHeightFontSize + newInputHeight;
+      if (
+        window.innerHeight > event.clientY &&
+        this.mouseYCoord - this.startingInputHeightFontSize + 7 < event.clientY
+      ) {
+        this.site.htmlElmnts[this.elKey].style.textSizePX = this.startingInputHeightFontSize + newInputHeight;
+        this.site.htmlElmnts[this.elKey].style.textSizeVH = Math.round(
+          ((this.$refs.headline.getBoundingClientRect().height - 0.08 * this.grid.hght) / this.grid.hght) * 100
+        );
+      }
     },
     startResizeInput() {
       document.body.classList.add('prevent-select');
@@ -48,7 +56,7 @@ export default {
       this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
       this.mouseYCoord = null;
       this.newInputHeight = null;
-      this.startingInputHeightFontSize = this.site.htmlElmnts[this.elKey].style.textSize;
+      this.startingInputHeightFontSize = this.site.htmlElmnts[this.elKey].style.textSizePX;
       document.removeEventListener('mousemove', this.resizeInput, true);
       document.removeEventListener('mouseup', this.stopResizeInput, true);
       document.body.classList.remove('ns-resize');
@@ -68,7 +76,7 @@ export default {
   text-align: center;
   background: transparent;
   border-style: dashed;
-  padding: 30px 0px;
+  padding: 4vh 0px;
 }
 .headline input:focus {
   outline: none;

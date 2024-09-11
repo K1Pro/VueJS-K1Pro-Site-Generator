@@ -2,7 +2,7 @@
   <div
     class="headline"
     :style="{
-      fontSize: elValue.style.textSize + 'px',
+      fontSize: elValue.style.textSizeVH + 'vh',
     }"
   >
     {{ elValue.text }}
@@ -23,7 +23,7 @@ export default {
 .headline {
   position: relative;
   text-align: center;
-  padding: 30px 0px;
+  padding: 4vh 0px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

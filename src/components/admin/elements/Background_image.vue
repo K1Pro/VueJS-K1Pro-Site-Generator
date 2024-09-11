@@ -21,7 +21,7 @@ export default {
       if (this.isMounted && this.imgOffsetTop === null) this.calcImgOffsetTop();
       return this.isMounted
         ? {
-            'margin-top': '-' + this.imgOffsetTop + 'px',
+            // 'margin-top': '-' + this.imgOffsetTop + 'px',
             'margin-bottom': '-' + (this.$refs.backgroundImage.clientHeight - this.imgOffsetTop) + 'px',
           }
         : {};

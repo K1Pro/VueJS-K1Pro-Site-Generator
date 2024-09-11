@@ -15,6 +15,11 @@
         class="top-menu-links"
         :style="[elA, style.primaryColor.outline.borderColor]"
       >
+        <i
+          class="fa-solid fa-circle-minus redWhiteMinus"
+          style="position: absolute; right: 10px; top: -3px"
+          @click="removeItem(menuItemIndex)"
+        ></i>
         <div class="top-menu-link">{{ menuItem }}</div>
 
         <div class="top-menu-link-items">
@@ -61,10 +66,10 @@
       </div>
       <div class="top-menu-links" :style="[elA, style.primaryColor.outline.borderColor]" style="vertical-align: top">
         <i
+          @click="addItem"
           class="fa-solid fa-circle-plus greenWhitePlus"
           :style="{
             padding: elValue.style.height - 2 + 'px 20px',
-            'font-size': '16px',
           }"
         ></i>
       </div>
@@ -96,7 +101,8 @@ export default {
     },
     elUl() {
       return {
-        borderBottom: '1px solid ' + this.site.body.style.textColor,
+        'border-bottom': '1px solid ' + this.site.body.style.textColor,
+        'margin-bottom': '-' + (this.elValue.style.height * 2 + 16) + 'px',
       };
     },
     elLi() {
@@ -115,6 +121,16 @@ export default {
     },
   },
   methods: {
+    addItem() {
+      this.site.htmlElmnts[this.elKey].items = [...this.site.htmlElmnts[this.elKey].items, 'Choose page'];
+      this.site.htmlElmnts[this.elKey].types = [...this.site.htmlElmnts[this.elKey].types, 'Page'];
+      this.site.htmlElmnts[this.elKey].links = [...this.site.htmlElmnts[this.elKey].links, ''];
+    },
+    removeItem(menuItemIndex) {
+      this.site.htmlElmnts[this.elKey].items.splice(menuItemIndex, 1);
+      this.site.htmlElmnts[this.elKey].types.splice(menuItemIndex, 1);
+      this.site.htmlElmnts[this.elKey].links.splice(menuItemIndex, 1);
+    },
     changeLink(event, menuItemIndex) {
       if (event.target.value == 'Link') {
         this.site.htmlElmnts[this.elKey].items[menuItemIndex] = 'Type text';
@@ -152,6 +168,7 @@ export default {
   height: 100%;
 }
 .top-menu-links {
+  position: relative;
   display: inline-block;
   text-align: left;
   border-style: dashed;
@@ -176,10 +193,5 @@ export default {
   width: 0;
   border-style: none;
   background: transparent;
-}
-.greenWhitePlus::before {
-  color: forestgreen;
-  background-color: white;
-  border-radius: 25px;
 }
 </style>

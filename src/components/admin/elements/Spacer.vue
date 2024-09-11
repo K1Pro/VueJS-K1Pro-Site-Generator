@@ -9,7 +9,7 @@
       style.outline.borderColor,
     ]"
   >
-    <span :style="[style.outline.color]">{{ elValue.style.heightPX }}px</span>
+    <span class="dim" :style="[style.outline.color]">{{ elValue.style.heightPX }}px</span>
     <p :style="[spacerHeight]" ref="spacerP"></p>
     <div @mousedown="startResizeSpacer" @mouseup="stopResizeSpacer"></div>
   </div>
@@ -19,7 +19,7 @@
 export default {
   name: 'Spacer',
 
-  inject: ['page', 'site', 'style'],
+  inject: ['grid', 'page', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -40,9 +40,13 @@ export default {
     resizeSpacer(event) {
       if (this.mouseYCoord === null) this.mouseYCoord = event.clientY;
       const newSpacerHeight = -1 * (this.mouseYCoord - event.clientY);
-      if (window.innerHeight > event.clientY && this.mouseYCoord - this.startingSpacerHeight + 19 < event.clientY)
+      if (window.innerHeight > event.clientY && this.mouseYCoord - this.startingSpacerHeight + 19 < event.clientY) {
         this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX =
           this.startingSpacerHeight + newSpacerHeight;
+        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightVH = Math.round(
+          (this.$refs.spacerP.getBoundingClientRect().height / this.grid.hght) * 100
+        );
+      }
     },
     startResizeSpacer() {
       document.body.classList.add('prevent-select');
@@ -69,11 +73,6 @@ export default {
 .spacer {
   position: relative;
   border-style: dashed;
-}
-.spacer span {
-  position: absolute;
-  color: rgb(90, 90, 90);
-  font-weight: bold;
 }
 .spacer p {
   padding: 0%;

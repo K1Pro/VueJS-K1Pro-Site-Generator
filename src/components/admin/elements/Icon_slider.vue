@@ -50,7 +50,7 @@
         >
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
-              <button class="plus" @click.prevent="addIcon"></button>
+              <i class="fa-solid fa-circle-plus greenWhitePlus" @click.prevent="addIcon"></i>
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@ export default {
 }
 .icon-slider-item {
   overflow: hidden;
-  height: 140px;
+  height: 20vh;
   padding: 20px 0px;
   text-align: center;
 }
@@ -237,20 +237,20 @@ export default {
   margin-top: -10px;
   cursor: pointer;
 }
-.icon-slider-modify button {
+.icon-slider-modify i {
   position: relative;
   margin-left: 40px;
   margin-top: 0px;
   cursor: pointer;
 }
 .icon-slider-prev {
-  height: 140px;
+  height: 20vh;
   float: right;
   padding: 60px 5px 0px 5px;
   margin: 0px;
 }
 .icon-slider-next {
-  height: 140px;
+  height: 20vh;
   float: left;
   padding: 60px 5px 0px 5px;
   margin: 0px;

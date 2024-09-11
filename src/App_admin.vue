@@ -354,7 +354,22 @@ export default {
 .dim {
   font-weight: bold;
   position: absolute;
+  bottom: 0px;
   padding: 0px 3px;
+}
+.greenWhitePlus::before {
+  font-size: 16px;
+  color: forestgreen;
+  background-color: white;
+  border-radius: 25px;
+  cursor: pointer;
+}
+.redWhiteMinus::before {
+  font-size: 16px;
+  color: red;
+  background-color: white;
+  border-radius: 25px;
+  cursor: pointer;
 }
 @media only screen and (min-width: 768px) {
   /* .app-grid-container {

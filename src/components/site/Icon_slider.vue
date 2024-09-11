@@ -203,7 +203,7 @@ export default {
 }
 .icon-slider-item {
   overflow: hidden;
-  height: 140px;
+  height: 20vh;
   padding: 20px 0px;
   text-align: center;
 }
@@ -235,13 +235,13 @@ export default {
   cursor: pointer;
 }
 .icon-slider-prev {
-  height: 140px;
+  height: 20vh;
   float: right;
   padding: 60px 5px 0px 5px;
   margin: 0px;
 }
 .icon-slider-next {
-  height: 140px;
+  height: 20vh;
   float: left;
   padding: 60px 5px 0px 5px;
   margin: 0px;
