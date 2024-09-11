@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="elKey"
     class="top-menu"
     :style="[style.primaryColor.backgroundColor, style.primaryColor.outline.borderColor, elUl]"
     ref="topMenu"
@@ -133,11 +134,9 @@ export default {
 <style>
 .top-menu {
   position: relative;
-  /* top: 0px; */
   width: 100%;
   z-index: 4;
   list-style-type: none;
-  /* display: inline-block; */
   margin: 0;
   padding: 0;
   overflow-x: auto;

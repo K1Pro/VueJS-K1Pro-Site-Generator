@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="elKey"
     class="icon-slider"
     :style="[{ borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px' }, style.outline.borderColor]"
   >

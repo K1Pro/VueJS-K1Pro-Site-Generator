@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="elKey"
     class="spacer"
     :style="[
       {
@@ -8,7 +9,7 @@
       style.outline.borderColor,
     ]"
   >
-    <span :style="[style.outline.color]">{{ elValue.style.height }}px</span>
+    <span :style="[style.outline.color]">{{ elValue.style.heightPX }}px</span>
     <p :style="[spacerHeight]" ref="spacerP"></p>
     <div @mousedown="startResizeSpacer" @mouseup="stopResizeSpacer"></div>
   </div>
@@ -24,7 +25,7 @@ export default {
 
   computed: {
     spacerHeight() {
-      return { height: this.elValue.style.height + 'px' };
+      return { height: this.elValue.style.heightPX + 'px' };
     },
   },
 
@@ -32,7 +33,7 @@ export default {
     return {
       mouseYCoord: null,
       newSpacerHeight: null,
-      startingSpacerHeight: this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height,
+      startingSpacerHeight: this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX,
     };
   },
   methods: {
@@ -40,7 +41,7 @@ export default {
       if (this.mouseYCoord === null) this.mouseYCoord = event.clientY;
       const newSpacerHeight = -1 * (this.mouseYCoord - event.clientY);
       if (window.innerHeight > event.clientY && this.mouseYCoord - this.startingSpacerHeight + 19 < event.clientY)
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height =
+        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX =
           this.startingSpacerHeight + newSpacerHeight;
     },
     startResizeSpacer() {
@@ -53,7 +54,8 @@ export default {
       this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
       this.mouseYCoord = null;
       this.newSpacerHeight = null;
-      this.startingSpacerHeight = this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height;
+      this.startingSpacerHeight =
+        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX;
       document.removeEventListener('mousemove', this.resizeSpacer, true);
       document.removeEventListener('mouseup', this.stopResizeSpacer, true);
       document.body.classList.remove('ns-resize');

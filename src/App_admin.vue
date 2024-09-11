@@ -26,6 +26,7 @@
           :elKey="pageElmnt[0]"
           :elValue="site.htmlElmnts[pageElmnt[0]]"
           :elIndex="pageIndex"
+          :ref="pageElmnt[0]"
         ></component>
       </template>
     </div>
@@ -40,6 +41,7 @@ export default {
 
   data() {
     return {
+      isMounted: false,
       page: { slctd: 'Home' },
       site: params,
       respWidth: {
@@ -76,6 +78,8 @@ export default {
       page: Vue.computed(() => this.page),
       selectedPhoto: Vue.computed(() => this.selectedPhoto),
       site: Vue.computed(() => this.site),
+      siteElPositions: Vue.computed(() => this.siteElPositions),
+      siteElTypes: Vue.computed(() => this.siteElTypes),
       sideMenuSlctdLnk: Vue.computed(() => this.sideMenuSlctdLnk),
       content: Vue.computed(() => this.content),
       user: Vue.computed(() => this.user),
@@ -114,6 +118,20 @@ export default {
         hght: this.wndw.hght,
         size: this.userSettings.layout['grid-size'],
       };
+    },
+    siteElPositions() {
+      const siteElPositionsArray = [];
+      this.site.pages[this.page.slctd].forEach((el) => {
+        siteElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
+      });
+      return siteElPositionsArray;
+    },
+    siteElTypes() {
+      const siteElTypesArray = [];
+      this.site.pages[this.page.slctd].forEach((el) => {
+        siteElTypesArray.push(this.site.htmlElmnts[el[0]].type);
+      });
+      return siteElTypesArray;
     },
     style() {
       return {
@@ -292,7 +310,17 @@ export default {
   },
 
   mounted() {
+    this.isMounted = true;
     this.applyStyle();
+    // Object.entries(this.$refs).forEach(([elKey, elVal]) => {
+    //   if (elKey != 'appGridItem1' && elKey != 'appGridItem2') {
+    //     console.log('===================================');
+    //     console.log(elKey);
+    //     console.log(document.getElementById(elKey).offsetTop);
+    //     console.log(document.getElementById(elKey).offsetHeight);
+    //     // console.log(document.getElementById(elKey).getBoundingClientRect());
+    //   }
+    // });
   },
 
   watch: {

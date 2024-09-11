@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div :id="elKey" class="footer">
     <div
       class="footer-container"
       :style="[

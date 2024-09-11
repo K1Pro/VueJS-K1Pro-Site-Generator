@@ -1,5 +1,5 @@
 <template>
-  <div class="headline">
+  <div :id="elKey" class="headline">
     <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}px</span>
     <input
       :style="[

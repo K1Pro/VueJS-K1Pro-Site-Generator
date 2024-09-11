@@ -1,5 +1,5 @@
 <template>
-  <div class="background-image" ref="backgroundImage" :style="[elImg]">
+  <div :id="elKey" class="background-image" ref="backgroundImage" :style="[elImg]">
     <img v-if="imgOffsetTop != null" :width="grid.wdth + 'px'" :src="site.htmlElmnts[elKey]['url']" />
   </div>
 </template>

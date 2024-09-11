@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="elKey"
     class="product-card"
     :style="[
       {

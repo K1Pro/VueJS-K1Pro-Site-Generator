@@ -35,7 +35,7 @@
       </li>
     </template>
   </ul>
-  <div :style="{ height: elValue.style.height * 2 + elValue.style.fontSize + 'px' }"></div>
+  <div :style="{ height: elValue.style.height * 2 + 16 + 'px' }"></div>
 </template>
 
 <script>
@@ -68,14 +68,14 @@ export default {
     logoLi() {
       return {
         float: this.wndw.wdth < this.respWidth.md ? 'none' : 'left',
-        height: this.elValue.style.height * 2 + this.elValue.style.fontSize - 1 + 'px',
+        height: this.elValue.style.height * 2 + 16 - 1 + 'px',
       };
     },
     logoA() {
       return {
         color: this.site.body.style.textColor,
         padding: this.elValue.style.height + 'px 20px',
-        height: this.elValue.style.height * 2 + this.elValue.style.fontSize - 1 + 'px',
+        height: this.elValue.style.height * 2 + 16 - 1 + 'px',
       };
     },
     linksLi() {
@@ -87,10 +87,7 @@ export default {
       return {
         color: this.site.body.style.textColor,
         padding: this.wndw.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 'px 20px',
-        height:
-          this.wndw.wdth < this.respWidth.md
-            ? this.elValue.style.fontSize + 30 + 'px'
-            : this.elValue.style.height * 2 + this.elValue.style.fontSize - 1 + 'px',
+        height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height * 2 + 16 - 1 + 'px',
       };
     },
     menuItems() {

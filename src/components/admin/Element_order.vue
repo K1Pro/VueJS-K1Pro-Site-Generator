@@ -119,24 +119,7 @@
 export default {
   name: 'Element Order',
 
-  inject: ['content', 'page', 'showMsg', 'site', 'endPts'],
-
-  computed: {
-    siteElTypes() {
-      const siteElTypesArray = [];
-      this.site.pages[this.page.slctd].forEach((el) => {
-        siteElTypesArray.push(this.site.htmlElmnts[el[0]].type);
-      });
-      return siteElTypesArray;
-    },
-    siteElPositions() {
-      const siteElPositionsArray = [];
-      this.site.pages[this.page.slctd].forEach((el) => {
-        siteElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
-      });
-      return siteElPositionsArray;
-    },
-  },
+  inject: ['content', 'page', 'showMsg', 'site', 'siteElPositions', 'siteElTypes', 'endPts'],
 
   data() {
     return {
