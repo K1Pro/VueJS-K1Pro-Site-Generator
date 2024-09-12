@@ -173,6 +173,11 @@ export default {
 </script>
 
 <style>
+.contact-us {
+  position: relative;
+  width: 300px;
+  margin-left: calc(50% - 150px);
+}
 .footer-contact-container input[type='text'],
 .footer-contact-container textarea {
   width: 100%;

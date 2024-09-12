@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="background-image" ref="backgroundImage" :style="[elImg]">
+  <div :id="elKey" class="background-image" ref="backgroundImage">
     <img v-if="imgOffsetTop != null" :width="grid.wdth + 'px'" :src="site.htmlElmnts[elKey]['url']" />
   </div>
 </template>
@@ -13,19 +13,10 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { isMounted: false, imgOffsetTop: null };
+    return { imgOffsetTop: null };
   },
 
   computed: {
-    elImg() {
-      if (this.isMounted && this.imgOffsetTop === null) this.calcImgOffsetTop();
-      return this.isMounted
-        ? {
-            // 'margin-top': '-' + this.imgOffsetTop + 'px',
-            'margin-bottom': '-' + (this.$refs.backgroundImage.clientHeight - this.imgOffsetTop) + 'px',
-          }
-        : {};
-    },
     enabledPages() {
       return this.site.pages[this.page.slctd]
         .flat()
@@ -44,11 +35,13 @@ export default {
   },
 
   mounted() {
-    this.isMounted = true;
-    if (this.imgOffsetTop === null) this.calcImgOffsetTop();
+    this.calcImgOffsetTop();
   },
   watch: {
     'wndw.wdth'() {
+      if (this.imgOffsetTop === null) this.calcImgOffsetTop();
+    },
+    'wndw.hght'() {
       if (this.imgOffsetTop === null) this.calcImgOffsetTop();
     },
     enabledPages(newEnabledPages, oldEnabledPages) {
@@ -70,6 +63,7 @@ export default {
 .background-image {
   position: relative;
   height: 75vh;
+  margin-bottom: -75vh;
 }
 .background-image img {
   object-fit: cover;

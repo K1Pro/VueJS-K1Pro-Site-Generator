@@ -9,7 +9,7 @@
       style.outline.borderColor,
     ]"
   >
-    <span class="dim" :style="[style.outline.color]">{{ elValue.style.heightPX }}px</span>
+    <span class="dim" :style="[style.outline.color]">{{ elValue.style.height }}vh</span>
     <p :style="[spacerHeight]" ref="spacerP"></p>
     <div @mousedown="startResizeSpacer" @mouseup="stopResizeSpacer"></div>
   </div>
@@ -25,7 +25,7 @@ export default {
 
   computed: {
     spacerHeight() {
-      return { height: this.elValue.style.heightPX + 'px' };
+      return { height: this.elValue.style.height + 'vh' };
     },
   },
 
@@ -33,19 +33,16 @@ export default {
     return {
       mouseYCoord: null,
       newSpacerHeight: null,
-      startingSpacerHeight: this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX,
+      startingSpacerHeight: this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height,
     };
   },
   methods: {
     resizeSpacer(event) {
-      if (this.mouseYCoord === null) this.mouseYCoord = event.clientY;
-      const newSpacerHeight = -1 * (this.mouseYCoord - event.clientY);
-      if (window.innerHeight > event.clientY && this.mouseYCoord - this.startingSpacerHeight + 19 < event.clientY) {
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX =
-          this.startingSpacerHeight + newSpacerHeight;
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightVH = Math.round(
-          (this.$refs.spacerP.getBoundingClientRect().height / this.grid.hght) * 100
-        );
+      if (this.mouseYCoord === null) this.mouseYCoord = event.clientY / this.grid.hght;
+      const newSpacerHeight = -100 * (this.mouseYCoord - event.clientY / this.grid.hght);
+      if (window.innerHeight > event.clientY && this.startingSpacerHeight + newSpacerHeight > 1) {
+        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height =
+          Math.round((this.startingSpacerHeight + newSpacerHeight) * 100) / 100;
       }
     },
     startResizeSpacer() {
@@ -58,13 +55,15 @@ export default {
       this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
       this.mouseYCoord = null;
       this.newSpacerHeight = null;
-      this.startingSpacerHeight =
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.heightPX;
+      this.startingSpacerHeight = this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height;
       document.removeEventListener('mousemove', this.resizeSpacer, true);
       document.removeEventListener('mouseup', this.stopResizeSpacer, true);
       document.body.classList.remove('ns-resize');
       document.body.classList.remove('prevent-select');
     },
+  },
+  mounted() {
+    console.log(this.startingSpacerHeight);
   },
 };
 </script>
