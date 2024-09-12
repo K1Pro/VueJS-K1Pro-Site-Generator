@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="background-image" ref="backgroundImage">
-    <img v-if="imgOffsetTop != null" :width="grid.wdth + 'px'" :src="site.htmlElmnts[elKey]['url']" />
+    <img :width="grid.wdth + 'px'" :src="site.htmlElmnts[elKey]['url']" />
   </div>
 </template>
 
@@ -38,12 +38,6 @@ export default {
     this.calcImgOffsetTop();
   },
   watch: {
-    'wndw.wdth'() {
-      if (this.imgOffsetTop === null) this.calcImgOffsetTop();
-    },
-    'wndw.hght'() {
-      if (this.imgOffsetTop === null) this.calcImgOffsetTop();
-    },
     enabledPages(newEnabledPages, oldEnabledPages) {
       if (newEnabledPages.join('') !== oldEnabledPages.join('')) {
         if (this.wndw.wdth < this.respWidth.md) {
