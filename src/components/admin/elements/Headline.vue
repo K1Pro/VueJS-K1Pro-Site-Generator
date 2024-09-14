@@ -1,10 +1,10 @@
 <template>
   <div :id="elKey" class="headline">
-    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSizePX }}px</span>
+    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}vh</span>
     <input
       :style="[
         {
-          fontSize: elValue.style.textSizePX + 'px',
+          fontSize: elValue.style.textSize + 'vh',
           borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
         },
         style.outline.borderColor,
@@ -29,7 +29,7 @@ export default {
     return {
       mouseYCoord: null,
       newInputHeight: null,
-      startingInputHeightFontSize: this.site.htmlElmnts[this.elKey].style.textSizePX,
+      startingInputHeightFontSize: this.site.htmlElmnts[this.elKey].style.textSize,
     };
   },
   methods: {
@@ -40,10 +40,10 @@ export default {
         window.innerHeight > event.clientY &&
         this.mouseYCoord - this.startingInputHeightFontSize + 7 < event.clientY
       ) {
-        this.site.htmlElmnts[this.elKey].style.textSizePX = this.startingInputHeightFontSize + newInputHeight;
-        this.site.htmlElmnts[this.elKey].style.textSizeVH = Math.round(
-          ((this.$refs.headline.getBoundingClientRect().height - 0.08 * this.grid.hght) / this.grid.hght) * 100
-        );
+        this.site.htmlElmnts[this.elKey].style.textSize = this.startingInputHeightFontSize + newInputHeight;
+        // this.site.htmlElmnts[this.elKey].style.textSizeVH = Math.round(
+        //   ((this.$refs.headline.getBoundingClientRect().height - 0.08 * this.grid.hght) / this.grid.hght) * 100
+        // );
       }
     },
     startResizeInput() {
@@ -56,7 +56,7 @@ export default {
       this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
       this.mouseYCoord = null;
       this.newInputHeight = null;
-      this.startingInputHeightFontSize = this.site.htmlElmnts[this.elKey].style.textSizePX;
+      this.startingInputHeightFontSize = this.site.htmlElmnts[this.elKey].style.textSize;
       document.removeEventListener('mousemove', this.resizeInput, true);
       document.removeEventListener('mouseup', this.stopResizeInput, true);
       document.body.classList.remove('ns-resize');

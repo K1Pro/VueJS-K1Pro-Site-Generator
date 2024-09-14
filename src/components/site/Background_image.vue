@@ -16,7 +16,7 @@ export default {
     return { elImg: { marginTop: '0px' } };
   },
   mounted() {
-    console.log(this.$refs);
+    // console.log(this.$refs);
     // this.elImg = { marginTop: '-' + this.$refs.backgroundImage.getBoundingClientRect().y + 'px' };
     this.elImg = {
       'margin-top': '-' + this.$refs.backgroundImage.offsetTop + 'px',

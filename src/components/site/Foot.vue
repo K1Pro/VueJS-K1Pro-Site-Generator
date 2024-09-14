@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div class="footer" :style="[footer]" ref="footer">
     <div
       class="footer-container"
       :style="[
@@ -29,7 +29,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return {};
+    return { atBottom: null };
   },
 
   computed: {
@@ -50,6 +50,15 @@ export default {
       }
       return gridTemplateLogOutStyle;
     },
+    footer() {
+      return this.atBottom !== null
+        ? { position: this.atBottom ? 'relative' : 'fixed', bottom: this.atBottom ? false : '0' }
+        : {};
+    },
+  },
+  updated() {
+    if (this.atBottom === null)
+      this.atBottom = this.$refs.footer.getBoundingClientRect().bottom > this.wndw.hght ? true : false;
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <div
     class="headline"
     :style="{
-      fontSize: elValue.style.textSizeVH + 'vh',
+      fontSize: elValue.style.textSize + 'vh',
     }"
   >
     {{ elValue.text }}

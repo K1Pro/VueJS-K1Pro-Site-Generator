@@ -1,7 +1,7 @@
 <template>
   <div class="contact-us">
-    <h2>Contact Us</h2>
-    <div class="footer-contact-container">
+    <div class="contact-us-form" :style="[contactUsForm]">
+      <h2 v-if="!elKey" :style="[h2]">Contact Us</h2>
       <input
         type="text"
         name="Name"
@@ -24,10 +24,9 @@
         rows="3"
         name="Message"
         class="cntctInpts"
-        placeholder="Message"
+        :placeholder="elKey ? elValue.messageText : 'Message'"
         v-model="msgMessage"
         @keyup="removeInvalidContactUsFn"
-        style="border-width: 1px"
       ></textarea>
 
       <img :src="endPts.captchaURL + msgDate + '.jpg'" :style="{ opacity: 1 }" />
@@ -45,19 +44,19 @@
         @keyup="removeInvalidContactUsFn"
       />
 
-      <button style="width: 30px; height: 30px" @click="updateCaptcha">
+      <button style="width: 30px; height: 4vh" @click="updateCaptcha">
         <i :class="{ spin: spinUpdateCaptcha }" class="fa-solid fa-arrows-rotate"></i>
       </button>
 
-      <button style="margin-bottom: 10px" @click.prevent="postMsg">
+      <button style="margin-bottom: 1vh; height: 4vh" @click.prevent="postMsg">
         <i v-if="spinContactUsSend" class="spin fa-sharp fa-solid fa-circle-notch"></i>
-        <span v-else>Send</span>
+        <span v-else>{{ elKey ? elValue.buttonText : 'Send' }}</span>
       </button>
 
       <div
         :style="{
-          'margin-bottom': msg_captcha ? '0px' : '25px',
-          padding: msg_captcha ? '5px' : '0px',
+          'margin-bottom': msg_captcha ? '0vh' : '2.5vh',
+          padding: msg_captcha ? '0.5vh' : '0vh',
         }"
         class="validation-message"
       >
@@ -72,6 +71,26 @@ export default {
   name: 'Contact Us',
 
   inject: ['showMsg', 'site', 'endPts'],
+
+  props: ['elKey', 'elValue', 'elIndex'],
+
+  computed: {
+    contactUsForm() {
+      return {
+        width: this.elKey ? '300px' : false,
+        marginLeft: this.elKey ? 'calc(50% - 150px)' : false,
+        padding: this.elKey ? '1.5vh' : false,
+      };
+    },
+    h2() {
+      return {
+        backgroundColor: this.elKey ? 'white' : '#00000000',
+        padding: this.elKey ? '0.5vh' : false,
+        margin: this.elKey ? '0vh 0vh 2vh 0vh' : false,
+        fontSize: this.elKey ? '3vh' : false,
+      };
+    },
+  },
 
   data() {
     return {
@@ -175,37 +194,45 @@ export default {
 <style>
 .contact-us {
   position: relative;
-  width: 300px;
-  margin-left: calc(50% - 150px);
 }
-.footer-contact-container input[type='text'],
-.footer-contact-container textarea {
+.contact-us-form {
+  backdrop-filter: blur(20px);
+}
+.contact-us-form textarea {
+  height: 8vh;
+}
+.contact-us-form input[type='text'] {
+  height: 4vh;
+}
+.contact-us-form input[type='text'],
+.contact-us-form textarea {
   width: 100%;
-  padding: 5px;
-  margin-bottom: 10px;
-  resize: vertical;
+  padding: 0.5vh;
+  margin-bottom: 1.5vh;
+  resize: none;
+  font-size: 2vh;
 }
-.footer-contact-container button {
-  padding: 5px;
+.contact-us-form button {
+  /* padding: 5px; */
   width: 100%;
 }
-.footer-contact-container img {
-  max-height: 50px;
-  min-height: 30px;
+.contact-us-form img {
+  max-height: 5vh;
+  min-height: 3vh;
   height: 15vw;
   width: 100%;
   margin: 0px;
   padding: 0px;
   object-fit: cover;
-  border-width: 1px 1px 0px 1px;
+  border-width: 0.1vh 0.1vh 0vh 0.1vh;
   border-style: solid;
   border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
-  margin-top: -5px;
-  margin-bottom: -5px;
+  margin-top: -0.5vh;
+  margin-bottom: -0.5vh;
 }
 
 @media only screen and (min-width: 650px) {
-  .footer-contact-container img {
+  .contact-us-form img {
     height: 4.5vw;
   }
 }
