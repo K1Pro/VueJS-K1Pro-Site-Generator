@@ -140,13 +140,14 @@ export default {
   display: flex;
   -ms-flex-wrap: wrap; /* IE10 */
   flex-wrap: wrap;
-  padding: 0 8px;
+  gap: 8px;
+  /* padding: 0 8px; */
 }
 .Gallery-Column {
-  -ms-flex: 48%;
-  flex: 48%;
-  max-width: 48%;
-  padding: 0 1%;
+  -ms-flex: calc(50% - 4px);
+  flex: calc(50% - 4px);
+  max-width: calc(50% - 4px);
+  /* padding: 0 1%; */
 }
 .Gallery img {
   cursor: pointer;
