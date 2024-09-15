@@ -62,9 +62,6 @@ export default {
       document.body.classList.remove('prevent-select');
     },
   },
-  mounted() {
-    console.log(this.startingSpacerHeight);
-  },
 };
 </script>
 

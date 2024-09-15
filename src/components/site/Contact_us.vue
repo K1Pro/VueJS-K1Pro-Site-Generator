@@ -211,6 +211,7 @@ export default {
   margin-bottom: 1.5vh;
   resize: none;
   font-size: 2vh;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .contact-us-form button {
   /* padding: 5px; */
