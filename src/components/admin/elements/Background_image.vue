@@ -1,6 +1,12 @@
 <template>
   <div :id="elKey" class="background-image" ref="backgroundImage">
-    <img :width="grid.wdth + 'px'" :src="site.htmlElmnts[elKey]['url']" />
+    <img
+      :width="grid.wdth + 'px'"
+      :src="site.htmlElmnts[elKey].url"
+      @drop.prevent="drop"
+      @dragover.prevent
+      @dragenter.prevent
+    />
   </div>
 </template>
 
@@ -8,7 +14,7 @@
 export default {
   name: 'Background Image',
 
-  inject: ['grid', 'page', 'respWidth', 'selectedPhoto', 'showMsg', 'site', 'endPts', 'wndw'],
+  inject: ['grid', 'page', 'respWidth', 'selectedMedia', 'showMsg', 'site', 'endPts', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -31,6 +37,9 @@ export default {
         this.wndw.wdth < this.respWidth.md
           ? this.$refs.backgroundImage.offsetTop - window.innerHeight
           : this.$refs.backgroundImage.offsetTop;
+    },
+    drop(event) {
+      this.site.htmlElmnts[this.elKey].url = event.dataTransfer.getData('text');
     },
   },
 

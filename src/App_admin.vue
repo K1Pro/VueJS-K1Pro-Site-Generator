@@ -51,10 +51,9 @@ export default {
         xl: 1140,
       },
       sideMenuSlctdLnk: ['Website'],
-      selectedVideo: '',
-      selectedPhoto: '',
+      selectedMedia: { img: null, vid: null, txt: null },
       content: content,
-      user: {},
+      user: user,
       userSettings: user_settings,
       endPts: {
         siteURL: site_url,
@@ -76,7 +75,7 @@ export default {
     return {
       // computed
       page: Vue.computed(() => this.page),
-      selectedPhoto: Vue.computed(() => this.selectedPhoto),
+      selectedMedia: Vue.computed(() => this.selectedMedia),
       site: Vue.computed(() => this.site),
       siteElPositions: Vue.computed(() => this.siteElPositions),
       siteElTypes: Vue.computed(() => this.siteElTypes),

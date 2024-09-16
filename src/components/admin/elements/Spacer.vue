@@ -33,7 +33,7 @@ export default {
     return {
       mouseYCoord: null,
       newSpacerHeight: null,
-      startingSpacerHeight: this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height,
+      startingSpacerHeight: this.site.htmlElmnts[this.elKey].style.height,
     };
   },
   methods: {
@@ -41,7 +41,7 @@ export default {
       if (this.mouseYCoord === null) this.mouseYCoord = event.clientY / this.grid.hght;
       const newSpacerHeight = -100 * (this.mouseYCoord - event.clientY / this.grid.hght);
       if (window.innerHeight > event.clientY && this.startingSpacerHeight + newSpacerHeight > 1) {
-        this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height =
+        this.site.htmlElmnts[this.elKey].style.height =
           Math.round((this.startingSpacerHeight + newSpacerHeight) * 100) / 100;
       }
     },
@@ -55,7 +55,7 @@ export default {
       this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
       this.mouseYCoord = null;
       this.newSpacerHeight = null;
-      this.startingSpacerHeight = this.site.htmlElmnts[this.site.pages[this.page.slctd][this.elIndex][0]].style.height;
+      this.startingSpacerHeight = this.site.htmlElmnts[this.elKey].style.height;
       document.removeEventListener('mousemove', this.resizeSpacer, true);
       document.removeEventListener('mouseup', this.stopResizeSpacer, true);
       document.body.classList.remove('ns-resize');

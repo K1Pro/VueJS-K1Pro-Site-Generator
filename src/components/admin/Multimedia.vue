@@ -2,43 +2,35 @@
   <div class="multimedia">
     <button
       v-for="mediaType in Object.keys(mediaTypes)"
-      @click="selectMedia(mediaType)"
-      :style="{ backgroundColor: this.selectedMedia == mediaType ? 'darkgrey' : '#eee' }"
+      @click="selectMediaType(mediaType)"
+      :style="{ backgroundColor: this.selectedMediaType == mediaType ? 'darkgrey' : '#eee' }"
     >
       <i :class="'fa-solid ' + mediaType"></i>
     </button>
     <select @change="selectSearch">
       <template v-if="content.imagesSearched">
-        <option v-for="contentSearch in Object.keys(content[mediaTypes[selectedMedia][1]])" :value="contentSearch">
+        <option v-for="contentSearch in Object.keys(content[mediaTypes[selectedMediaType][1]])" :value="contentSearch">
           {{ contentSearch.charAt(0).toUpperCase() }}{{ contentSearch.slice(1).replaceAll('-', ' ') }}
         </option>
       </template>
     </select>
-    <input type="search" v-model="searchInput" />
-    <button><i class="fa-solid fa-trash"></i></button>
+    <input type="search" :value="searchInput" ref="searchInput" @keyup.enter="mediaSearch" />
+    <button><i class="fa-solid fa-magnifying-glass" @click="mediaSearch"></i></button>
+    <button style="border-right-width: 1px"><i class="fa-solid fa-trash"></i></button>
 
     <div class="Gallery">
       <div v-if="this.searchInput" class="Gallery-Row">
-        <div class="Gallery-Column">
+        <div v-for="mediaSrch in mediaSrchArray" class="Gallery-Column">
           <img
-            v-for="media in mediaSrchArr1stPart"
+            v-for="media in mediaSrch"
+            draggable="true"
             :src="media.src.medium"
             :style="{
-              outline: media.src.large2x == selectedPhoto ? '8px solid LawnGreen' : 'none',
-              outlineOffset: media.src.large2x == selectedPhoto ? '-8px' : '0',
+              outline: media.src.large2x == selectedMedia.img ? '8px solid LawnGreen' : 'none',
+              outlineOffset: media.src.large2x == selectedMedia.img ? '-8px' : '0',
             }"
             @click="selectImg($event, media.src.large2x)"
-          />
-        </div>
-        <div class="Gallery-Column">
-          <img
-            v-for="media in mediaSrchArr2ndPart"
-            :src="media.src.medium"
-            :style="{
-              outline: media.src.large2x == selectedPhoto ? '8px solid LawnGreen' : 'none',
-              outlineOffset: media.src.large2x == selectedPhoto ? '-8px' : '0',
-            }"
-            @click="selectImg($event, media.src.large2x)"
+            @dragstart="drag($event, media.src.large2x)"
           />
         </div>
       </div>
@@ -50,50 +42,90 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['content', 'getUserContent', 'selectedPhoto', 'user', 'showMsg', 'site', 'endPts'],
+  inject: ['content', 'getUserContent', 'selectedMedia', 'user', 'showMsg', 'site', 'endPts'],
 
   data() {
     return {
-      selectedMedia: 'fa-camera',
       searchInput: '',
+      selectedMediaType: 'fa-camera',
       mediaTypes: {
-        'fa-camera': ['mostRecentImageSearch', 'imagesSearched'],
-        'fa-video': ['mostRecentVideoSearch', 'videosSearched'],
-        'fa-quote-right': ['messages', 'messages'],
+        'fa-camera': ['mostRecentImageSearch', 'imagesSearched', 'image'],
+        'fa-video': ['mostRecentVideoSearch', 'videosSearched', 'video'],
+        'fa-quote-right': ['messages', 'messages', 'text'],
       },
     };
   },
 
   computed: {
-    mediaSrchArr1stPart() {
-      return this.content[this.mediaTypes[this.selectedMedia][1]][this.searchInput]?.photos?.slice(
-        0,
-        this.content[this.mediaTypes[this.selectedMedia][1]][this.searchInput]?.photos.length / 2
-      );
-    },
-
-    mediaSrchArr2ndPart() {
-      return this.content[this.mediaTypes[this.selectedMedia][1]][this.searchInput]?.photos?.slice(
-        this.content[this.mediaTypes[this.selectedMedia][1]][this.searchInput]?.photos.length / 2,
-        this.content[this.mediaTypes[this.selectedMedia][1]][this.searchInput]?.photos.length
-      );
+    mediaSrchArray() {
+      return [
+        this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos?.slice(
+          0,
+          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos.length / 2
+        ),
+        this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos?.slice(
+          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos.length / 2,
+          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos.length
+        ),
+      ];
     },
   },
 
   methods: {
-    selectMedia(mediaType) {
-      this.selectedMedia = mediaType;
-      this.searchInput = this.content[this.mediaTypes[this.selectedMedia][0]];
+    selectMediaType(mediaType) {
+      this.selectedMediaType = mediaType;
+      this.searchInput = this.content[this.mediaTypes[this.selectedMediaType][0]];
     },
     selectSearch(event) {
       this.searchInput = event.target.value;
-      console.log(this.content[this.mediaTypes[this.selectedMedia][1]][event.target.value]);
+      console.log(this.content[this.mediaTypes[this.selectedMediaType][1]][event.target.value]);
+    },
+    selectImg(event, selectedImgPath) {
+      this.selectedMedia.img = selectedImgPath;
+    },
+    drag(event, imgURL) {
+      event.dataTransfer.setData('text', imgURL);
+    },
+    async mediaSearch() {
+      this.searchInput = this.$refs.searchInput.value;
+      const prevSrchTtlRslts =
+        this.content[this.mediaTypes[this.selectedMediaType][1]]?.[this.searchInput.toLowerCase().replaceAll(' ', '-')]
+          ?.total_results;
+      const prevSrchTtlRsltsMax = prevSrchTtlRslts ? Math.floor(prevSrchTtlRslts / 80) : 1;
+      const randomPage = Math.floor(Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1);
+      console.log(prevSrchTtlRslts);
+      console.log(prevSrchTtlRsltsMax);
+      console.log(randomPage);
+      try {
+        const response = await fetch(
+          'https://api.pexels.com/v1/search?query=' +
+            this.searchInput.toLowerCase().replaceAll(' ', '+') +
+            `&page=${randomPage}&per_page=80`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: this.user.AppPermissions.Pexels,
+            },
+          }
+        );
+        const imageSearchJSON = await response.json();
+        if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
+          this.searchedPhotos = imageSearchJSON;
+          this.content['mostRecentImageSearch'] = this.searchInput.toLowerCase().replaceAll(' ', '-');
+          if (this.content.imagesSearched === null) this.content.imagesSearched = {};
+          this.content.imagesSearched[this.searchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
+          console.log(imageSearchJSON);
+          console.log(this.content);
+
+          // this.getUserContent('PATCH', 'image');
+        }
+      } catch (error) {
+        this.showMsg(error.toString());
+      }
     },
   },
   mounted() {
-    console.log(this.content);
-    console.log(this.content[this.mediaTypes[this.selectedMedia][0]]);
-    this.searchInput = this.content[this.mediaTypes[this.selectedMedia][0]];
+    this.searchInput = this.content[this.mediaTypes[this.selectedMediaType][0]];
   },
 };
 </script>
@@ -109,7 +141,8 @@ export default {
   padding: 2px;
   margin: 0px;
   border-radius: 0%;
-  border: 1px solid lightgray;
+  border: 1px solid black;
+  border-width: 1px 0px 1px 1px;
 }
 .multimedia input[type='search']:focus,
 .multimedia select:focus {
@@ -120,19 +153,21 @@ export default {
   width: 25px;
 }
 .multimedia input[type='search'] {
-  width: calc(100% - 125px);
+  width: calc(100% - 150px);
   margin-right: 25px;
 }
 .multimedia select {
-  width: calc(100% - 100px);
-  margin-right: calc(-100% + 100px);
+  width: calc(100% - 125px);
+  margin-right: calc(-100% + 125px);
 }
 
 .Gallery {
+  margin-top: 10px;
+  height: calc(100vh - 55px);
   /* padding: 20px 20px; */
   padding: 0px;
-  /* overflow-y: scroll;
-  overflow-x: hidden; */
+  overflow-y: auto;
+  /* overflow-x: hidden; */
   /* text-align: center; */
 }
 .Gallery-Row {
@@ -151,7 +186,7 @@ export default {
 }
 .Gallery img {
   cursor: pointer;
-  margin-top: 8px;
+  margin-bottom: 8px;
   vertical-align: middle;
   width: 100%;
   outline: 1px solid black;

@@ -19,7 +19,14 @@
       <template v-for="(productcard, cardIndex) in elValue['items']">
         <div class="product-card-item" :style="[style.primaryColor.backgroundColor]">
           <div class="product-card-group">
-            <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
+            <img
+              :src="productcard[0]"
+              :alt="productcard[1]"
+              @drop.prevent="drop(cardIndex)"
+              @dragover.prevent
+              @dragenter.prevent
+              :style="{ 'margin-bottom': '0px' }"
+            />
             <div class="product-card-text">
               <input type="text" class="product-card-header" v-model="site.htmlElmnts[elKey].items[cardIndex][1]" />
               <div style="position: relative">
@@ -39,7 +46,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['endPts', 'grid', 'respWidth', 'selectedPhoto', 'site', 'style', 'showMsg', 'wndw'],
+  inject: ['endPts', 'grid', 'respWidth', 'selectedMedia', 'site', 'style', 'showMsg', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -52,6 +59,11 @@ export default {
 
     gridTemplateColumnsMobile() {
       return '100%';
+    },
+  },
+  methods: {
+    drop(cardIndex) {
+      this.site.htmlElmnts[this.elKey].items[cardIndex][0] = event.dataTransfer.getData('text');
     },
   },
 };

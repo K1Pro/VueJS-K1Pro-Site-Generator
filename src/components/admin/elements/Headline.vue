@@ -34,16 +34,11 @@ export default {
   },
   methods: {
     resizeInput(event) {
-      if (this.mouseYCoord === null) this.mouseYCoord = event.clientY;
-      const newInputHeight = -1 * (this.mouseYCoord - event.clientY);
-      if (
-        window.innerHeight > event.clientY &&
-        this.mouseYCoord - this.startingInputHeightFontSize + 7 < event.clientY
-      ) {
-        this.site.htmlElmnts[this.elKey].style.textSize = this.startingInputHeightFontSize + newInputHeight;
-        // this.site.htmlElmnts[this.elKey].style.textSizeVH = Math.round(
-        //   ((this.$refs.headline.getBoundingClientRect().height - 0.08 * this.grid.hght) / this.grid.hght) * 100
-        // );
+      if (this.mouseYCoord === null) this.mouseYCoord = event.clientY / this.grid.hght;
+      const newInputHeight = -100 * (this.mouseYCoord - event.clientY / this.grid.hght);
+      if (window.innerHeight > event.clientY && this.startingInputHeightFontSize + newInputHeight > 1) {
+        this.site.htmlElmnts[this.elKey].style.textSize =
+          Math.round((this.startingInputHeightFontSize + newInputHeight) * 100) / 100;
       }
     },
     startResizeInput() {
