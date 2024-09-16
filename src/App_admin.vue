@@ -250,12 +250,12 @@ export default {
         const response = await fetch(this.endPts.siteURL + this.endPts.content, {
           method: method,
           headers: {
-            Authorization: this.access_token,
+            Authorization: access_token,
             'Content-Type': 'application/json',
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            // site: this.site.folderPath,
+            site: add_auth,
             content: content,
             contentType: contentType,
           }),

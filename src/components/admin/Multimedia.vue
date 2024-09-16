@@ -10,11 +10,11 @@
     <select @change="selectSearch">
       <template v-if="content.imagesSearched">
         <option v-for="contentSearch in Object.keys(content[mediaTypes[selectedMediaType][1]])" :value="contentSearch">
-          {{ contentSearch.charAt(0).toUpperCase() }}{{ contentSearch.slice(1).replaceAll('-', ' ') }}
+          {{ contentSearch.replaceAll('-', ' ') }}
         </option>
       </template>
     </select>
-    <input type="search" :value="searchInput" ref="searchInput" @keyup.enter="mediaSearch" />
+    <input type="search" :value="searchInput.replaceAll('-', ' ')" ref="searchInput" @keyup.enter="mediaSearch" />
     <button><i class="fa-solid fa-magnifying-glass" @click="mediaSearch"></i></button>
     <button style="border-right-width: 1px"><i class="fa-solid fa-trash"></i></button>
 
@@ -59,13 +59,20 @@ export default {
   computed: {
     mediaSrchArray() {
       return [
-        this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos?.slice(
+        this.content[this.mediaTypes[this.selectedMediaType][1]][
+          this.searchInput.toLowerCase().replaceAll(' ', '-')
+        ]?.photos?.slice(
           0,
-          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos.length / 2
+          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput.toLowerCase().replaceAll(' ', '-')]
+            ?.photos.length / 2
         ),
-        this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos?.slice(
-          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos.length / 2,
-          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput]?.photos.length
+        this.content[this.mediaTypes[this.selectedMediaType][1]][
+          this.searchInput.toLowerCase().replaceAll(' ', '-')
+        ]?.photos?.slice(
+          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput.toLowerCase().replaceAll(' ', '-')]
+            ?.photos.length / 2,
+          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput.toLowerCase().replaceAll(' ', '-')]
+            ?.photos.length
         ),
       ];
     },
@@ -93,9 +100,6 @@ export default {
           ?.total_results;
       const prevSrchTtlRsltsMax = prevSrchTtlRslts ? Math.floor(prevSrchTtlRslts / 80) : 1;
       const randomPage = Math.floor(Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1);
-      console.log(prevSrchTtlRslts);
-      console.log(prevSrchTtlRsltsMax);
-      console.log(randomPage);
       try {
         const response = await fetch(
           'https://api.pexels.com/v1/search?query=' +
@@ -108,16 +112,19 @@ export default {
             },
           }
         );
-        const imageSearchJSON = await response.json();
-        if (imageSearchJSON && Number.isInteger(+imageSearchJSON.total_results)) {
-          this.searchedPhotos = imageSearchJSON;
-          this.content['mostRecentImageSearch'] = this.searchInput.toLowerCase().replaceAll(' ', '-');
-          if (this.content.imagesSearched === null) this.content.imagesSearched = {};
-          this.content.imagesSearched[this.searchInput.toLowerCase().replaceAll(' ', '-')] = imageSearchJSON;
-          console.log(imageSearchJSON);
-          console.log(this.content);
+        const mediaSearchJSON = await response.json();
+        if (mediaSearchJSON && Number.isInteger(+mediaSearchJSON.total_results)) {
+          // this.searchedPhotos = mediaSearchJSON;
+          this.content[this.mediaTypes[this.selectedMediaType][0]] = this.searchInput
+            .toLowerCase()
+            .replaceAll(' ', '-');
+          if (this.content[this.mediaTypes[this.selectedMediaType][1]] === null)
+            this.content[this.mediaTypes[this.selectedMediaType][1]] = {};
+          this.content[this.mediaTypes[this.selectedMediaType][1]][
+            this.searchInput.toLowerCase().replaceAll(' ', '-')
+          ] = mediaSearchJSON;
 
-          // this.getUserContent('PATCH', 'image');
+          this.getUserContent('PATCH', 'image');
         }
       } catch (error) {
         this.showMsg(error.toString());
