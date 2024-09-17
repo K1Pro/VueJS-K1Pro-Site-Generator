@@ -99,7 +99,7 @@
             (!siteElTypes.includes(htmlElmnt) || !content.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
             (!pageElTypes.includes(htmlElmnt) || !content.htmlUniqPageElmnts.includes(htmlElmnt))
           "
-          :value="'create*' + htmlElmnt"
+          :value="htmlElmnt"
         >
           {{ htmlElmnt.replaceAll('_', ' ') }}
         </option>
@@ -111,14 +111,14 @@
               (!siteElTypes.includes(htmlElmntVal.type) || !content.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
               (!pageElTypes.includes(htmlElmntVal.type) || !content.htmlUniqPageElmnts.includes(htmlElmntVal.type))
             "
-            :value="'copy*' + htmlElmntKey"
+            :value="htmlElmntKey"
           >
             {{ htmlElmntKey.replaceAll('_', ' ') }}
           </option>
         </template>
       </template>
       <template v-if="slctdElmntButton == 'Delete' && Object.keys(site.htmlElmnts).length > 0">
-        <option v-for="htmlElmnt in Object.keys(site.htmlElmnts).sort()" :value="'delete*' + htmlElmnt">
+        <option v-for="htmlElmnt in Object.keys(site.htmlElmnts).sort()" :value="htmlElmnt">
           {{ htmlElmnt.replaceAll('_', ' ') }}
         </option>
       </template>
@@ -144,9 +144,8 @@ export default {
 
   methods: {
     createCopyDeleteEl(event) {
-      const action = event.target.value.split('*')[0];
-      const elmnt = event.target.value.split('*')[1];
-      if (action == 'delete') {
+      const elmnt = event.target.value;
+      if (this.slctdElmntButton == 'Delete') {
         if (
           confirm(
             'Are you sure you would like to permanently delete the "' +
@@ -167,7 +166,9 @@ export default {
         }
       } else {
         const elPosition =
-          action == 'copy' ? this.site.htmlElmnts[elmnt]?.position : this.content.htmlElmnts[elmnt]?.position;
+          this.slctdElmntButton == 'Copy'
+            ? this.site.htmlElmnts[elmnt]?.position
+            : this.content.htmlElmnts[elmnt]?.position;
         let newElPosition;
         if (0 < elPosition) {
           newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
