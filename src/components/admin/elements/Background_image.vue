@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="background-image" ref="backgroundImage">
+  <div class="background-image">
     <img
       :width="grid.wdth + 'px'"
       :src="site.htmlElmnts[elKey].url"
@@ -14,49 +14,13 @@
 export default {
   name: 'Background Image',
 
-  inject: ['grid', 'page', 'respWidth', 'selectedMedia', 'showMsg', 'site', 'endPts', 'wndw'],
+  inject: ['grid', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  data() {
-    return { imgOffsetTop: null };
-  },
-
-  computed: {
-    enabledPages() {
-      return this.site.pages[this.page.slctd]
-        .flat()
-        .slice(0, this.elIndex * 2)
-        .filter((removePageElmnt) => removePageElmnt == true || removePageElmnt == false);
-    },
-  },
-
   methods: {
-    calcImgOffsetTop() {
-      this.imgOffsetTop =
-        this.wndw.wdth < this.respWidth.md
-          ? this.$refs.backgroundImage.offsetTop - window.innerHeight
-          : this.$refs.backgroundImage.offsetTop;
-    },
     drop(event) {
       this.site.htmlElmnts[this.elKey].url = event.dataTransfer.getData('text');
-    },
-  },
-
-  mounted() {
-    this.calcImgOffsetTop();
-  },
-  watch: {
-    enabledPages(newEnabledPages, oldEnabledPages) {
-      if (newEnabledPages.join('') !== oldEnabledPages.join('')) {
-        if (this.wndw.wdth < this.respWidth.md) {
-          this.imgOffsetTop = !this.enabledPages.includes(true)
-            ? 0
-            : this.$refs.backgroundImage.offsetTop - window.innerHeight;
-        } else {
-          this.imgOffsetTop = !this.enabledPages.includes(true) ? 0 : this.$refs.backgroundImage.offsetTop;
-        }
-      }
     },
   },
 };

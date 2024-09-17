@@ -85,10 +85,6 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  data() {
-    return { isMounted: false };
-  },
-
   computed: {
     allInputs() {
       return {
@@ -102,7 +98,6 @@ export default {
     elUl() {
       return {
         'border-bottom': '1px solid ' + this.site.body.style.textColor,
-        'margin-bottom': '-' + (this.elValue.style.height * 2 + 16) + 'px',
       };
     },
     elLi() {
@@ -141,16 +136,13 @@ export default {
       this.site.htmlElmnts[this.elKey].links[menuItemIndex] = '';
     },
   },
-  mounted() {
-    this.isMounted = true;
-  },
 };
 </script>
 
 <style>
 .top-menu {
-  position: relative;
   width: 100%;
+  position: relative;
   z-index: 4;
   list-style-type: none;
   margin: 0;

@@ -5,7 +5,7 @@
       <input
         type="text"
         name="Name"
-        class="cntctInpts"
+        :class="'cntctInpts_' + elKey"
         placeholder="Name"
         v-model="msgName"
         @keyup="removeInvalidContactUsFn"
@@ -14,7 +14,7 @@
       <input
         type="text"
         name="Email"
-        class="cntctInpts"
+        :class="'cntctInpts_' + elKey"
         placeholder="Email"
         v-model="msgEmail"
         @keyup="removeInvalidContactUsFn"
@@ -23,7 +23,7 @@
       <textarea
         rows="3"
         name="Message"
-        class="cntctInpts"
+        :class="'cntctInpts_' + elKey"
         :placeholder="elKey ? elValue.messageText : 'Message'"
         v-model="msgMessage"
         @keyup="removeInvalidContactUsFn"
@@ -34,10 +34,12 @@
       <input
         type="text"
         name="Captcha"
-        :class="{
-          invalid: msg_captcha == 'Refresh captcha' || msg_captcha == 'Incorrect captcha',
-        }"
-        class="cntctInpts"
+        :class="[
+          'cntctInpts_' + elKey,
+          {
+            invalid: msg_captcha == 'Refresh captcha' || msg_captcha == 'Incorrect captcha',
+          },
+        ]"
         style="width: calc(100% - 30px)"
         placeholder="Verify captcha..."
         v-model="msgCaptcha"
@@ -122,7 +124,7 @@ export default {
               Message: this.msgMessage,
               Captcha: this.msgCaptcha,
               Date: this.msgDate,
-              // Referer: this.site.folderPath,
+              Referer: add_auth,
             }),
           });
           const postMsgResJSON = await response.json();
@@ -146,7 +148,7 @@ export default {
         }
       } else {
         let firstEl = 0;
-        for (let cntctInpt of document.getElementsByClassName('cntctInpts')) {
+        for (let cntctInpt of document.getElementsByClassName('cntctInpts_' + this.elKey)) {
           cntctInpt.classList.remove('invalid');
           if (cntctInpt.value == '') {
             if (firstEl == 0) {
