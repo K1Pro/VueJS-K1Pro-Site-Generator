@@ -82,31 +82,42 @@
       {{ pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : '' }}
     </div>
     <hr />
-    <select style="width: 100%" @change="createCopyDeleteEl">
-      <option disabled selected>Create element</option>
-      <template v-for="htmlElmnt in Object.keys(content.htmlElmnts).sort()">
+    <button
+      v-for="[elmntButtonKey, elmntButtonVal] in Object.entries(elmntButtons)"
+      :style="{
+        backgroundColor: elmntButtonKey == slctdElmntButton ? 'darkgrey' : '#eee',
+      }"
+      @click="slctdElmntButton = elmntButtonKey"
+    >
+      <i :class="elmntButtonVal"></i>
+    </button>
+    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl">
+      <option disabled selected>{{ slctdElmntButton }} element</option>
+      <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(content.htmlElmnts).sort()">
         <option
-          v-if="!siteElTypes.includes(htmlElmnt) || !content.htmlUniqElmnts.includes(htmlElmnt)"
+          v-if="
+            (!siteElTypes.includes(htmlElmnt) || !content.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
+            (!pageElTypes.includes(htmlElmnt) || !content.htmlUniqPageElmnts.includes(htmlElmnt))
+          "
           :value="'create*' + htmlElmnt"
         >
           {{ htmlElmnt.replaceAll('_', ' ') }}
         </option>
       </template>
-      <option disabled v-if="Object.keys(site.htmlElmnts).length > 0"></option>
-      <option disabled v-if="Object.keys(site.htmlElmnts).length > 0">Copy existing element</option>
-      <template v-if="Object.keys(site.htmlElmnts).length > 0">
+      <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
         <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
           <option
-            v-if="!siteElTypes.includes(htmlElmntVal.type) || !content.htmlUniqElmnts.includes(htmlElmntVal.type)"
+            v-if="
+              (!siteElTypes.includes(htmlElmntVal.type) || !content.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
+              (!pageElTypes.includes(htmlElmntVal.type) || !content.htmlUniqPageElmnts.includes(htmlElmntVal.type))
+            "
             :value="'copy*' + htmlElmntKey"
           >
             {{ htmlElmntKey.replaceAll('_', ' ') }}
           </option>
         </template>
       </template>
-      <option disabled v-if="Object.keys(site.htmlElmnts).length > 0"></option>
-      <option disabled v-if="Object.keys(site.htmlElmnts).length > 0">Delete existing element</option>
-      <template v-if="Object.keys(site.htmlElmnts).length > 0">
+      <template v-if="slctdElmntButton == 'Delete' && Object.keys(site.htmlElmnts).length > 0">
         <option v-for="htmlElmnt in Object.keys(site.htmlElmnts).sort()" :value="'delete*' + htmlElmnt">
           {{ htmlElmnt.replaceAll('_', ' ') }}
         </option>
@@ -119,10 +130,12 @@
 export default {
   name: 'Element Order',
 
-  inject: ['content', 'page', 'showMsg', 'site', 'siteElPositions', 'siteElTypes', 'endPts'],
+  inject: ['content', 'page', 'showMsg', 'site', 'pageElPositions', 'pageElTypes', 'siteElTypes', 'endPts'],
 
   data() {
     return {
+      elmntButtons: { Add: 'fa-solid fa-plus', Copy: 'fa-regular fa-copy', Delete: 'fa-solid fa-trash' },
+      slctdElmntButton: 'Add',
       addingPage: false,
       renamingPos: null,
       isHoverRenameSave: false,
@@ -157,15 +170,15 @@ export default {
           action == 'copy' ? this.site.htmlElmnts[elmnt]?.position : this.content.htmlElmnts[elmnt]?.position;
         let newElPosition;
         if (0 < elPosition) {
-          newElPosition = this.siteElPositions.findLastIndex((el) => 0 < el && el < elPosition);
+          newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
           newElPosition++;
         }
         if (0 > elPosition) {
-          newElPosition = this.siteElPositions.findIndex((el) => 0 > el && el > elPosition);
+          newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
           newElPosition = 0 > newElPosition ? this.site.pages[this.page.slctd].length : newElPosition;
         }
         if (elPosition === undefined) {
-          newElPosition = this.siteElPositions.findIndex((el) => 0 > el);
+          newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
           newElPosition = 0 > newElPosition ? this.site.pages[this.page.slctd].length : newElPosition;
         }
 
@@ -264,6 +277,17 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   height: 26px;
+}
+
+.element-order select {
+  height: 25px;
+}
+.element-order button {
+  border-width: 1px 0px 1px 1px;
+  border-color: black;
+  border-style: solid;
+  height: 25px;
+  width: 25px;
 }
 
 .element-order-items i {

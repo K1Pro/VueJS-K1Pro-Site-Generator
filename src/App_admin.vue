@@ -77,7 +77,8 @@ export default {
       page: Vue.computed(() => this.page),
       selectedMedia: Vue.computed(() => this.selectedMedia),
       site: Vue.computed(() => this.site),
-      siteElPositions: Vue.computed(() => this.siteElPositions),
+      pageElPositions: Vue.computed(() => this.pageElPositions),
+      pageElTypes: Vue.computed(() => this.pageElTypes),
       siteElTypes: Vue.computed(() => this.siteElTypes),
       sideMenuSlctdLnk: Vue.computed(() => this.sideMenuSlctdLnk),
       content: Vue.computed(() => this.content),
@@ -118,17 +119,24 @@ export default {
         size: this.userSettings.layout['grid-size'],
       };
     },
-    siteElPositions() {
-      const siteElPositionsArray = [];
+    pageElPositions() {
+      const pageElPositionsArray = [];
       this.site.pages[this.page.slctd].forEach((el) => {
-        siteElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
+        pageElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
       });
-      return siteElPositionsArray;
+      return pageElPositionsArray;
+    },
+    pageElTypes() {
+      const pageElTypesArray = [];
+      this.site.pages[this.page.slctd].forEach((el) => {
+        pageElTypesArray.push(this.site.htmlElmnts[el[0]].type);
+      });
+      return pageElTypesArray;
     },
     siteElTypes() {
       const siteElTypesArray = [];
-      this.site.pages[this.page.slctd].forEach((el) => {
-        siteElTypesArray.push(this.site.htmlElmnts[el[0]].type);
+      Object.values(this.site.htmlElmnts).forEach((val) => {
+        siteElTypesArray.push(val.type);
       });
       return siteElTypesArray;
     },
