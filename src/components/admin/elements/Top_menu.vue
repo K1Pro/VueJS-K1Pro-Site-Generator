@@ -5,7 +5,7 @@
     :style="[style.primaryColor.backgroundColor, style.primaryColor.outline.borderColor, elUl]"
     ref="topMenu"
   >
-    <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px</span>
+    <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="top-menu-logo" :style="logoImg">
       <img :src="endPts.siteURL + site.logo" alt="logo" />
     </div>
@@ -69,7 +69,7 @@
           @click="addItem"
           class="fa-solid fa-circle-plus greenWhitePlus"
           :style="{
-            padding: elValue.style.height - 2 + 'px 20px',
+            padding: elValue.style.height + 'vh 20px',
           }"
         ></i>
       </div>
@@ -88,8 +88,8 @@ export default {
   computed: {
     allInputs() {
       return {
-        fontSize: '16px',
-        height: (this.elValue.style.height * 2 + 12) / 3 + 'px',
+        fontSize: '2vh',
+        height: (this.elValue.style.height * 2 + 2 + 0.05) / 3 + 'vh',
         padding: '2px',
         margin: '0px',
         border: '0px',
@@ -97,7 +97,7 @@ export default {
     },
     elUl() {
       return {
-        'border-bottom': '1px solid ' + this.site.body.style.textColor,
+        'border-bottom': '0.1vh solid ' + this.site.body.style.textColor,
       };
     },
     elLi() {
@@ -111,7 +111,7 @@ export default {
     logoImg() {
       return {
         padding: '10px',
-        height: this.elValue.style.height * 2 + 12 + 'px',
+        height: this.elValue.style.height * 2 + 2 + 0.05 + 'vh',
       };
     },
   },

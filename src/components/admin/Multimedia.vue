@@ -125,9 +125,13 @@ export default {
           ] = mediaSearchJSON;
 
           this.getUserContent('PATCH', 'image');
+        } else {
+          this.showMsg('Media provider no response');
+          console.log(error.toString());
         }
       } catch (error) {
-        this.showMsg(error.toString());
+        this.showMsg('Media provider no response');
+        console.log(error.toString());
       }
     },
   },
