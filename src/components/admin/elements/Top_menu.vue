@@ -2,7 +2,7 @@
   <div
     :id="elKey"
     class="top-menu"
-    :style="[style.primaryColor.backgroundColor, style.primaryColor.outline.borderColor, elUl]"
+    :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]"
     ref="topMenu"
   >
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
@@ -97,7 +97,7 @@ export default {
     },
     elUl() {
       return {
-        'border-bottom': '0.1vh solid ' + this.site.body.style.textColor,
+        // 'border-bottom': '0.1vh solid ' + this.site.body.style.textColor,
       };
     },
     elLi() {
@@ -150,8 +150,9 @@ export default {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  border-style: dashed;
-  border-width: 3px;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .top-menu-logo {
   float: left;

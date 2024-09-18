@@ -1,9 +1,5 @@
 <template>
-  <div
-    :id="elKey"
-    class="icon-slider"
-    :style="[{ borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px' }, style.outline.borderColor]"
-  >
+  <div :id="elKey" class="icon-slider" :style="[style.outline.borderColor]">
     <div
       class="icon-slider-container"
       :style="{
@@ -191,7 +187,9 @@ export default {
 <style>
 .icon-slider {
   position: relative;
-  border-style: dashed;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .icon-slider-container {
   display: grid;

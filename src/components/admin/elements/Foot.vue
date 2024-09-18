@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="footer">
+  <div :id="elKey" class="footer" :style="[style.outline.borderColor]">
     <div
       class="footer-container"
       :style="[
@@ -59,9 +59,9 @@ export default {
   /* border-top: 1px solid rgba(0, 0, 0, 0.8); */
   position: relative;
   width: 100%;
-  border-width: 0px 3px 3px 3px;
-  border-style: dashed;
-  border-color: rgb(115, 115, 115);
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
   /* text-align: left;
     padding: 0vw 3vw;
     background-color: grey;

@@ -29,8 +29,7 @@ export default {
   computed: {
     contactUs() {
       return {
-        borderWidth: this.elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-        borderStyle: this.elKey ? 'dashed' : 'none',
+        outlineStyle: this.elKey ? 'dashed' : 'none',
       };
     },
     contactUsForm() {
@@ -61,6 +60,8 @@ export default {
 <style>
 .contact-us {
   position: relative;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .contact-us-form {
   backdrop-filter: blur(20px);

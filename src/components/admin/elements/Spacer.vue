@@ -1,14 +1,5 @@
 <template>
-  <div
-    :id="elKey"
-    class="spacer"
-    :style="[
-      {
-        borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-      },
-      style.outline.borderColor,
-    ]"
-  >
+  <div :id="elKey" class="spacer" :style="[style.outline.borderColor]">
     <span class="dim" :style="[style.outline.color]">{{ elValue.style.height }}vh</span>
     <p :style="[spacerHeight]" ref="spacerP"></p>
     <div @mousedown="startResizeSpacer" @mouseup="stopResizeSpacer"></div>
@@ -68,7 +59,9 @@ export default {
 <style>
 .spacer {
   position: relative;
-  border-style: dashed;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .spacer p {
   padding: 0%;

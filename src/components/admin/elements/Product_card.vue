@@ -1,14 +1,5 @@
 <template>
-  <div
-    :id="elKey"
-    class="product-card"
-    :style="[
-      {
-        borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
-      },
-      style.outline.borderColor,
-    ]"
-  >
+  <div :id="elKey" class="product-card" :style="[style.outline.borderColor]">
     <div
       class="product-card-container"
       :style="{
@@ -72,7 +63,9 @@ export default {
 <style>
 .product-card {
   position: relative;
-  border-style: dashed;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 
 .product-card-container {

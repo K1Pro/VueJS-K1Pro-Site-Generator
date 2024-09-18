@@ -160,7 +160,7 @@ export default {
             color: this.findGreyZone(this.site.body.style.backgroundColor) ? 'rgb(32, 32, 32)' : 'rgb(160, 160, 160)',
           },
           borderColor: {
-            borderColor: this.findGreyZone(this.site.body.style.backgroundColor)
+            outlineColor: this.findGreyZone(this.site.body.style.backgroundColor)
               ? 'rgb(32, 32, 32)'
               : 'rgb(128, 128, 128)',
           },

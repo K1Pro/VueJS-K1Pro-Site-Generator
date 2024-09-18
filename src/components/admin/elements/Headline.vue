@@ -5,7 +5,6 @@
       :style="[
         {
           fontSize: elValue.style.textSize + 'vh',
-          borderWidth: elIndex == 0 ? '3px 3px 3px 3px' : '0px 3px 3px 3px',
         },
         style.outline.borderColor,
       ]"
@@ -70,8 +69,11 @@ export default {
   width: 100%;
   text-align: center;
   background: transparent;
-  border-style: dashed;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
   padding: 4vh 0px;
+  border: none;
 }
 .headline input:focus {
   outline: none;
