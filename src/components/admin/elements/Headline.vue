@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="headline">
-    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}vh</span>
+    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}%</span>
     <input
       :style="[
         {
@@ -75,9 +75,9 @@ export default {
   padding: 4vh 0px;
   border: none;
 }
-.headline input:focus {
+/* .headline input:focus {
   outline: none;
-}
+} */
 .headline div {
   position: relative;
   z-index: 5;

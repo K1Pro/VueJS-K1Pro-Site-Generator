@@ -1,11 +1,11 @@
 <template>
-  <div class="contact-us" :style="[contactUs, style.outline.borderColor]">
+  <div class="contact-us" :style="[contactUs, style.outline.borderColor, { marginBottom: cntctUsCaptchaMrgn + 'vh' }]">
     <div class="contact-us-form" :style="[contactUsForm]">
       <h2 v-if="!elKey" :style="[h2]">Contact Us</h2>
       <input type="text" class="cntctInpts" placeholder="Name" />
       <input type="text" class="cntctInpts" placeholder="Email" />
       <textarea rows="3" class="cntctInpts" :placeholder="elKey ? elValue.messageText : 'Message'"></textarea>
-      <img :src="endPts.captchaURL + msgDate + '.jpg'" />
+      <img :src="endPts.captchaURL + msgDate + '.jpg'" ref="cntctUsCaptcha" />
       <input type="text" class="cntctInpts" style="width: calc(100% - 30px)" placeholder="Verify captcha..." />
       <button style="width: 30px; height: 4vh">
         <i class="fa-solid fa-arrows-rotate"></i>
@@ -13,7 +13,7 @@
       <button style="margin-bottom: 1vh; height: 4vh">
         <span>{{ elKey ? elValue.buttonText : 'Send' }}</span>
       </button>
-      <div style="margin-bottom: 2.5vh; padding: 0px" class="validation-message"></div>
+      <div style="height: 3vh"></div>
     </div>
   </div>
 </template>
@@ -22,7 +22,7 @@
 export default {
   name: 'Contact Us',
 
-  inject: ['endPts', 'style'],
+  inject: ['grid', 'endPts', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -52,7 +52,14 @@ export default {
   data() {
     return {
       msgDate: server_datetime_YmdHis,
+      cntctUsCaptchaMrgn: 0,
     };
+  },
+  watch: {
+    'grid.wdth'() {
+      this.cntctUsCaptchaMrgn = 5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.grid.hght) * 100;
+      console.log(5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.grid.hght) * 100);
+    },
   },
 };
 </script>
@@ -78,7 +85,7 @@ export default {
   padding: 0.5vh;
   margin-bottom: 1.5vh;
   resize: none;
-  font-size: 2vh;
+  /* font-size: 2vh; */
   font-family: Arial, Helvetica, sans-serif;
 }
 .contact-us-form button {
@@ -93,9 +100,10 @@ export default {
   margin: 0px;
   padding: 0px;
   object-fit: cover;
-  border-width: 0.1vh 0.1vh 0vh 0.1vh;
-  border-style: solid;
-  border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  outline-width: 0.1vh;
+  outline-offset: 0.1vh;
+  outline-style: solid;
+  outline-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
   margin-top: -0.5vh;
   margin-bottom: -0.5vh;
 }

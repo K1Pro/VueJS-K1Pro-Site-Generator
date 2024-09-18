@@ -1,5 +1,5 @@
 <template>
-  <div class="contact-us">
+  <div class="contact-us" :style="{ marginBottom: cntctUsCaptchaMrgn + 'vh' }">
     <div class="contact-us-form" :style="[contactUsForm]">
       <h2 v-if="!elKey" :style="[h2]">Contact Us</h2>
       <input
@@ -29,7 +29,7 @@
         @keyup="removeInvalidContactUsFn"
       ></textarea>
 
-      <img :src="endPts.captchaURL + msgDate + '.jpg'" :style="{ opacity: 1 }" />
+      <img :src="endPts.captchaURL + msgDate + '.jpg'" :style="{ opacity: 1 }" ref="cntctUsCaptcha" />
 
       <input
         type="text"
@@ -55,13 +55,7 @@
         <span v-else>{{ elKey ? elValue.buttonText : 'Send' }}</span>
       </button>
 
-      <div
-        :style="{
-          'margin-bottom': msg_captcha ? '0vh' : '2.5vh',
-          padding: msg_captcha ? '0.5vh' : '0vh',
-        }"
-        class="validation-message"
-      >
+      <div :style="{ backgroundColor: msg_captcha ? 'white' : 'transparent' }" class="validation-message">
         {{ msg_captcha ? msg_captcha : '' }}
       </div>
     </div>
@@ -72,7 +66,7 @@
 export default {
   name: 'Contact Us',
 
-  inject: ['showMsg', 'site', 'endPts'],
+  inject: ['endPts', 'wndw', 'showMsg', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -104,6 +98,7 @@ export default {
       spinContactUsSend: false,
       spinUpdateCaptcha: false,
       msg_captcha: '',
+      cntctUsCaptchaMrgn: 0,
     };
   },
 
@@ -163,7 +158,7 @@ export default {
     },
 
     removeInvalidContactUsFn(event) {
-      console.log(event);
+      // console.log(event);
       if (event.target.value.length < 1) {
         event.target.classList.add('invalid');
       } else {
@@ -190,6 +185,12 @@ export default {
       }
     },
   },
+  watch: {
+    'wndw.wdth'() {
+      this.cntctUsCaptchaMrgn = 5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.wndw.hght) * 100;
+      console.log(5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.wndw.hght) * 100);
+    },
+  },
 };
 </script>
 
@@ -212,7 +213,7 @@ export default {
   padding: 0.5vh;
   margin-bottom: 1.5vh;
   resize: none;
-  font-size: 2vh;
+  /* font-size: 2vh; */
   font-family: Arial, Helvetica, sans-serif;
 }
 .contact-us-form button {
@@ -227,11 +228,19 @@ export default {
   margin: 0px;
   padding: 0px;
   object-fit: cover;
-  border-width: 0.1vh 0.1vh 0vh 0.1vh;
-  border-style: solid;
-  border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  outline-width: 0.1vh;
+  outline-offset: 0.1vh;
+  outline-style: solid;
+  outline-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
   margin-top: -0.5vh;
   margin-bottom: -0.5vh;
+}
+
+.validation-message {
+  height: 3vh;
+  line-height: 3vh;
+  font-size: 2vh;
+  padding-left: 5px;
 }
 
 @media only screen and (min-width: 650px) {

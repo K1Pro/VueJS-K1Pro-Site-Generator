@@ -1,7 +1,7 @@
 <template>
-  <div :id="elKey" class="spacer" :style="[style.outline.borderColor]">
+  <div :id="elKey" :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]">
     <span class="dim" :style="[style.outline.color]"
-      >{{ elValue.style.height >= 1 ? elValue.style.height : '1' }}vh</span
+      >{{ elValue.style.height >= 1 ? elValue.style.height : '1' }}%</span
     >
     <p :style="[spacerHeight]" ref="spacerP"></p>
     <div @mousedown="startResizeSpacer" @mouseup="stopResizeSpacer"></div>
@@ -33,13 +33,20 @@ export default {
   methods: {
     resizeSpacer(event) {
       if (this.mouseYCoord === null) this.mouseYCoord = event.clientY / this.grid.hght;
-      const newSpacerHeight = -100 * (this.mouseYCoord - event.clientY / this.grid.hght);
-
       if (window.innerHeight > event.clientY) {
         if ((this.$refs.spacerP.clientHeight / this.grid.hght) * 100 >= 1) {
+          const newSpacerHeight = -100 * (this.mouseYCoord - event.clientY / this.grid.hght);
           const numberOfSpacers = this.site.pages[this.page.slctd]
             .slice(0, this.elIndex + 1)
             .filter((page) => page[0] == this.elKey && page[1] == true).length;
+          // const numberOfSpacersArray = [];
+          // Array.from(document.getElementsByClassName('spacer_' + this.elKey)).forEach((element) => {
+          //   if (element.getBoundingClientRect().top >= 0 && element.getBoundingClientRect().bottom <= this.grid.hght) {
+          //     numberOfSpacersArray.push(this.elIndex);
+          //   }
+          // });
+          // const numberOfSpacers = numberOfSpacersArray.length;
+          console.log(numberOfSpacers);
           this.site.htmlElmnts[this.elKey].style.height =
             Math.round((this.startingSpacerHeight + newSpacerHeight / numberOfSpacers) * 100) / 100;
         } else {

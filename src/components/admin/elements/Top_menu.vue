@@ -89,7 +89,7 @@ export default {
     allInputs() {
       return {
         fontSize: '2vh',
-        height: (this.elValue.style.height * 2 + 2 + 0.05) / 3 + 'vh',
+        height: (this.elValue.style.height * 2 + 2 + 0.1) / 3 + 'vh',
         padding: '2px',
         margin: '0px',
         border: '0px',
@@ -111,7 +111,7 @@ export default {
     logoImg() {
       return {
         padding: '10px',
-        height: this.elValue.style.height * 2 + 2 + 0.05 + 'vh',
+        height: this.elValue.style.height * 2 + 2 + 0.1 + 'vh',
       };
     },
   },
