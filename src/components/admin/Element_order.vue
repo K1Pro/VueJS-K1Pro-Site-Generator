@@ -45,7 +45,11 @@
       <i
         v-if="renamingPos != pageElmntIndx"
         class="fa-solid fa-circle-minus"
-        style="color: #ff0000; float: right"
+        :style="{
+          color: individEdit.elmnt === null ? '#ff0000' : 'grey',
+          cursor: individEdit.elmnt === null ? 'pointer' : 'default',
+          float: 'right',
+        }"
         @click="deletePageEl(pageElmntIndx)"
       ></i>
       <input
@@ -70,6 +74,10 @@
           renamingPos != pageElmntIndx
         "
         class="fa-solid fa-circle-down"
+        :style="{
+          color: individEdit.elmnt === null ? 'black' : 'grey',
+          cursor: individEdit.elmnt === null ? 'pointer' : 'default',
+        }"
         @click="moveDown(pageElmntIndx)"
       ></i>
       <i
@@ -80,6 +88,10 @@
           renamingPos != pageElmntIndx
         "
         class="fa-solid fa-circle-up"
+        :style="{
+          color: individEdit.elmnt === null ? 'black' : 'grey',
+          cursor: individEdit.elmnt === null ? 'pointer' : 'default',
+        }"
         @click.prevent="moveUp(pageElmntIndx)"
       ></i>
       <span v-on:dblclick="revealRenameInput(pageElmnt, pageElmntIndx)">{{
@@ -286,17 +298,23 @@ export default {
       }
     },
     deletePageEl(elementIndex) {
-      this.site.pages[this.page.slctd].splice(elementIndex, 1);
+      if (this.individEdit.elmnt === null) {
+        this.site.pages[this.page.slctd].splice(elementIndex, 1);
+      }
     },
     moveDown(elementIndex) {
-      const chosenElement = this.site.pages[this.page.slctd][elementIndex];
-      this.site.pages[this.page.slctd].splice(elementIndex, 1);
-      this.site.pages[this.page.slctd].splice(elementIndex + 1, 0, chosenElement);
+      if (this.individEdit.elmnt === null) {
+        const chosenElement = this.site.pages[this.page.slctd][elementIndex];
+        this.site.pages[this.page.slctd].splice(elementIndex, 1);
+        this.site.pages[this.page.slctd].splice(elementIndex + 1, 0, chosenElement);
+      }
     },
     moveUp(elementIndex) {
-      const chosenElement = this.site.pages[this.page.slctd][elementIndex];
-      this.site.pages[this.page.slctd].splice(elementIndex, 1);
-      this.site.pages[this.page.slctd].splice(elementIndex - 1, 0, chosenElement);
+      if (this.individEdit.elmnt === null) {
+        const chosenElement = this.site.pages[this.page.slctd][elementIndex];
+        this.site.pages[this.page.slctd].splice(elementIndex, 1);
+        this.site.pages[this.page.slctd].splice(elementIndex - 1, 0, chosenElement);
+      }
     },
   },
 };
@@ -326,7 +344,6 @@ export default {
 }
 
 .element-order-items i {
-  cursor: pointer;
   padding-left: 2px;
   float: right;
 }
