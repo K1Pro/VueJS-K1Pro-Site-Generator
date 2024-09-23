@@ -67,6 +67,9 @@ export default {
         content: 'content',
         messages: 'messages',
       },
+      individEdit: {
+        elmnt: null,
+      },
       undoRedo: 0,
     };
   },
@@ -87,6 +90,7 @@ export default {
       style: Vue.computed(() => this.style),
       grid: Vue.computed(() => this.grid),
       undoRedo: Vue.computed(() => this.undoRedo),
+      individEdit: Vue.computed(() => this.individEdit),
       // static
       respWidth: this.respWidth,
       endPts: this.endPts,
@@ -206,6 +210,7 @@ export default {
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data.params;
+          this.individEdit.elmnt = null;
           this.applyStyle();
           this.undoRedo++;
           console.log(getSiteResJSON.data.params);

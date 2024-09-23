@@ -26,11 +26,7 @@
       @click="deletePage(page.slctd)"
     ></i>
 
-    <div
-      v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]"
-      class="element-order-items"
-      v-on:dblclick="revealRenameInput(pageElmnt, pageElmntIndx)"
-    >
+    <div v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]" class="element-order-items">
       <input
         :ref="'renameInput' + pageElmntIndx"
         type="text"
@@ -53,10 +49,17 @@
         @click="deletePageEl(pageElmntIndx)"
       ></i>
       <input
+        type="radio"
+        style="float: right"
+        name="individEdit"
+        :checked="pageElmntIndx === this.individEdit.elmnt"
+        @click="enabledIndivEdit(pageElmntIndx)"
+      />
+      <input
         style="float: right"
         type="checkbox"
         v-if="renamingPos != pageElmntIndx"
-        :checked="pageElmnt[1]"
+        :disabled="this.individEdit.elmnt !== null"
         v-model="pageElmnt[1]"
       />
       <i
@@ -79,7 +82,9 @@
         class="fa-solid fa-circle-up"
         @click.prevent="moveUp(pageElmntIndx)"
       ></i>
-      {{ pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : '' }}
+      <span v-on:dblclick="revealRenameInput(pageElmnt, pageElmntIndx)">{{
+        pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : ''
+      }}</span>
     </div>
     <hr />
     <button
@@ -130,7 +135,17 @@
 export default {
   name: 'Element Order',
 
-  inject: ['content', 'page', 'showMsg', 'site', 'pageElPositions', 'pageElTypes', 'siteElTypes', 'endPts'],
+  inject: [
+    'content',
+    'endPts',
+    'individEdit',
+    'page',
+    'pageElPositions',
+    'pageElTypes',
+    'showMsg',
+    'site',
+    'siteElTypes',
+  ],
 
   data() {
     return {
@@ -143,6 +158,25 @@ export default {
   },
 
   methods: {
+    enabledIndivEdit(indx) {
+      if (this.individEdit.elmnt == indx) {
+        this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
+        this.individEdit.elmnt = null;
+        // event.target.checked = false;
+      } else if (this.individEdit.elmnt === null) {
+        this.individEdit.elmnts = JSON.stringify(this.site.pages[this.page.slctd]);
+        this.individEdit.elmnt = indx;
+        this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
+          page[1] = indx !== pageIndex ? false : true;
+        });
+      } else {
+        this.individEdit.elmnt = indx;
+        this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
+          page[1] = indx !== pageIndex ? false : true;
+        });
+      }
+    },
+
     createCopyDeleteEl(event) {
       const elmnt = event.target.value;
       if (this.slctdElmntButton == 'Delete') {
