@@ -32,7 +32,15 @@
       @click="deletePage(page.slctd)"
     ></i>
 
-    <div v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]" class="element-order-items">
+    <div
+      v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]"
+      class="element-order-items"
+      :draggable="site.htmlElmnts[pageElmnt[0]].position ? false : true"
+      @dragstart="drag($event, pageElmntIndx)"
+      @drop.prevent="drop($event, pageElmntIndx)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
       <input
         :ref="'renameInput' + pageElmntIndx"
         type="text"
@@ -177,6 +185,26 @@ export default {
   },
 
   methods: {
+    drag(event, pageElmntIndx) {
+      event.dataTransfer.setData('text', pageElmntIndx);
+    },
+    drop(event, pageElmntIndx) {
+      if (this.individEdit.elmntIndx) {
+        this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
+        this.individEdit.elmntIndx = null;
+        this.individEdit.elmnts = null;
+      }
+      if (this.site.htmlElmnts[this.site.pages[this.page.slctd][pageElmntIndx][0]].position === undefined) {
+        const draggedEl = this.site.pages[this.page.slctd][event.dataTransfer.getData('text')];
+        if (Number(event.dataTransfer.getData('text')) > pageElmntIndx) {
+          this.site.pages[this.page.slctd].splice(pageElmntIndx, 0, draggedEl);
+          this.site.pages[this.page.slctd].splice(Number(event.dataTransfer.getData('text')) + 1, 1);
+        } else {
+          this.site.pages[this.page.slctd].splice(pageElmntIndx + 1, 0, draggedEl);
+          this.site.pages[this.page.slctd].splice(Number(event.dataTransfer.getData('text')), 1);
+        }
+      }
+    },
     enabledIndivEdit(indx) {
       if (this.individEdit.elmntIndx == indx) {
         this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
