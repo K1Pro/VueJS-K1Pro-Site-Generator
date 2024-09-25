@@ -68,7 +68,8 @@ export default {
         messages: 'messages',
       },
       individEdit: {
-        elmnt: null,
+        elmntIndx: null,
+        elmnts: null,
       },
       undoRedo: 0,
     };
@@ -181,6 +182,11 @@ export default {
       return r < 192 && r > 64 && g < 192 && g > 64 && b < 192 && b > 64 ? true : false;
     },
     async patchSite() {
+      let siteTemp = JSON.stringify(this.site);
+      if (this.individEdit.elmntIndx !== null) {
+        siteTemp = JSON.parse(siteTemp);
+        siteTemp.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
+      }
       try {
         const response = await fetch(site_url + add_auth, {
           method: 'PATCH',
@@ -190,7 +196,7 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            params: this.site,
+            params: typeof siteTemp === 'string' ? JSON.parse(siteTemp) : siteTemp,
           }),
         });
         const patchSiteJSON = await response.json();
@@ -203,6 +209,8 @@ export default {
       }
     },
     async getSite() {
+      this.individEdit.elmntIndx = null;
+      this.individEdit.elmnts = null;
       try {
         const response = await fetch(site_url + add_auth, {
           method: 'GET',
@@ -210,7 +218,7 @@ export default {
         const getSiteResJSON = await response.json();
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data.params;
-          this.individEdit.elmnt = null;
+          this.individEdit.elmnts = null;
           this.applyStyle();
           this.undoRedo++;
           console.log(getSiteResJSON.data.params);

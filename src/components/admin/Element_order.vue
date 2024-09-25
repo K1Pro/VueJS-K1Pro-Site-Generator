@@ -1,6 +1,12 @@
 <template>
   <div class="element-order">
-    <select v-if="!addingPage" v-model="page.slctd" style="width: calc(100% - 40px)">
+    <select
+      v-if="!addingPage"
+      v-model="page.slctd"
+      @focus="pageSlctd = $event.target.value"
+      @change="pageSlctdChange"
+      style="width: calc(100% - 40px)"
+    >
       <option v-for="page in Object.keys(site.pages)">{{ page }}</option>
     </select>
     <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 40px)" placeholder="Page name" />
@@ -46,8 +52,8 @@
         v-if="renamingPos != pageElmntIndx"
         class="fa-solid fa-circle-minus"
         :style="{
-          color: individEdit.elmnt === null ? '#ff0000' : 'grey',
-          cursor: individEdit.elmnt === null ? 'pointer' : 'default',
+          color: individEdit.elmnts === null ? '#ff0000' : 'grey',
+          cursor: individEdit.elmnts === null ? 'pointer' : 'default',
           float: 'right',
         }"
         @click="deletePageEl(pageElmntIndx)"
@@ -56,14 +62,14 @@
         type="radio"
         style="float: right"
         name="individEdit"
-        :checked="pageElmntIndx === this.individEdit.elmnt"
+        :checked="pageElmntIndx === individEdit.elmntIndx"
         @click="enabledIndivEdit(pageElmntIndx)"
       />
       <input
         style="float: right"
         type="checkbox"
         v-if="renamingPos != pageElmntIndx"
-        :disabled="this.individEdit.elmnt !== null"
+        :disabled="individEdit.elmnts !== null"
         v-model="pageElmnt[1]"
       />
       <i
@@ -75,8 +81,8 @@
         "
         class="fa-solid fa-circle-down"
         :style="{
-          color: individEdit.elmnt === null ? 'black' : 'grey',
-          cursor: individEdit.elmnt === null ? 'pointer' : 'default',
+          color: individEdit.elmnts === null ? 'black' : 'grey',
+          cursor: individEdit.elmnts === null ? 'pointer' : 'default',
         }"
         @click="moveDown(pageElmntIndx)"
       ></i>
@@ -89,8 +95,8 @@
         "
         class="fa-solid fa-circle-up"
         :style="{
-          color: individEdit.elmnt === null ? 'black' : 'grey',
-          cursor: individEdit.elmnt === null ? 'pointer' : 'default',
+          color: individEdit.elmnts === null ? 'black' : 'grey',
+          cursor: individEdit.elmnts === null ? 'pointer' : 'default',
         }"
         @click.prevent="moveUp(pageElmntIndx)"
       ></i>
@@ -166,26 +172,38 @@ export default {
       addingPage: false,
       renamingPos: null,
       isHoverRenameSave: false,
+      pageSlctd: null,
     };
   },
 
   methods: {
     enabledIndivEdit(indx) {
-      if (this.individEdit.elmnt == indx) {
+      if (this.individEdit.elmntIndx == indx) {
         this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
-        this.individEdit.elmnt = null;
-        // event.target.checked = false;
-      } else if (this.individEdit.elmnt === null) {
+        this.individEdit.elmntIndx = null;
+        this.individEdit.elmnts = null;
+      } else if (this.individEdit.elmntIndx === null) {
+        this.individEdit.elmntIndx = indx;
         this.individEdit.elmnts = JSON.stringify(this.site.pages[this.page.slctd]);
-        this.individEdit.elmnt = indx;
         this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
           page[1] = indx !== pageIndex ? false : true;
         });
       } else {
-        this.individEdit.elmnt = indx;
+        this.individEdit.elmntIndx = indx;
         this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
           page[1] = indx !== pageIndex ? false : true;
         });
+      }
+    },
+
+    pageSlctdChange() {
+      if (this.individEdit.elmnts !== null) {
+        this.site.pages[this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
+        this.individEdit.elmntIndx = null;
+        this.individEdit.elmnts = null;
+        this.pageSlctd = this.page.slctd;
+      } else {
+        this.pageSlctd = this.page.slctd;
       }
     },
 
@@ -298,19 +316,19 @@ export default {
       }
     },
     deletePageEl(elementIndex) {
-      if (this.individEdit.elmnt === null) {
+      if (this.individEdit.elmnts === null) {
         this.site.pages[this.page.slctd].splice(elementIndex, 1);
       }
     },
     moveDown(elementIndex) {
-      if (this.individEdit.elmnt === null) {
+      if (this.individEdit.elmnts === null) {
         const chosenElement = this.site.pages[this.page.slctd][elementIndex];
         this.site.pages[this.page.slctd].splice(elementIndex, 1);
         this.site.pages[this.page.slctd].splice(elementIndex + 1, 0, chosenElement);
       }
     },
     moveUp(elementIndex) {
-      if (this.individEdit.elmnt === null) {
+      if (this.individEdit.elmnts === null) {
         const chosenElement = this.site.pages[this.page.slctd][elementIndex];
         this.site.pages[this.page.slctd].splice(elementIndex, 1);
         this.site.pages[this.page.slctd].splice(elementIndex - 1, 0, chosenElement);
