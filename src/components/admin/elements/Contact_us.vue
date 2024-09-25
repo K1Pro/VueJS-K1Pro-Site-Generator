@@ -58,7 +58,6 @@ export default {
   watch: {
     'grid.wdth'() {
       this.cntctUsCaptchaMrgn = 5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.grid.hght) * 100;
-      console.log(5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.grid.hght) * 100);
     },
   },
 };

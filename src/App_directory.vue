@@ -89,9 +89,6 @@ export default {
   },
 
   created() {
-    // if (this.isValid === 'false' || this.isValid === null) {
-    //   this.showMsg('Invalid site');
-    // }
     this.respvColAmnt = this.wndw.wdth > this.respWidth.md ? 9 : 3;
     this.directoryGridStaticCol =
       this.wndw.wdth > this.respWidth.md ? '4.5% 9% 9% 9% 9% 9% 9% 9% 9% 9% 4.5%' : '3% 30% 30% 30% 3%';

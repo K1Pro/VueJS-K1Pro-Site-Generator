@@ -188,7 +188,6 @@ export default {
   watch: {
     'wndw.wdth'() {
       this.cntctUsCaptchaMrgn = 5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.wndw.hght) * 100;
-      console.log(5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.wndw.hght) * 100);
     },
   },
 };
