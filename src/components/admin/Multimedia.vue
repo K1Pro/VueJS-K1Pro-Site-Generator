@@ -18,9 +18,9 @@
     <button><i class="fa-solid fa-magnifying-glass" @click="mediaSearch"></i></button>
     <button style="border-right-width: 1px"><i class="fa-solid fa-trash"></i></button>
 
-    <div class="Gallery">
-      <div v-if="this.searchInput" class="Gallery-Row">
-        <div v-for="mediaSrch in mediaSrchArray" class="Gallery-Column">
+    <div class="multimedia-gallery">
+      <div v-if="this.searchInput" class="multimedia-gallery-row">
+        <div v-for="mediaSrch in mediaSrchArray" class="multimedia-gallery-column">
           <img
             v-for="media in mediaSrch"
             draggable="true"
@@ -172,7 +172,7 @@ export default {
   margin-right: calc(-100% + 125px);
 }
 
-.Gallery {
+.multimedia-gallery {
   margin-top: 10px;
   height: calc(100vh - 55px);
   /* padding: 20px 20px; */
@@ -181,7 +181,7 @@ export default {
   /* overflow-x: hidden; */
   /* text-align: center; */
 }
-.Gallery-Row {
+.multimedia-gallery-row {
   display: -ms-flexbox; /* IE10 */
   display: flex;
   -ms-flex-wrap: wrap; /* IE10 */
@@ -189,13 +189,13 @@ export default {
   gap: 8px;
   /* padding: 0 8px; */
 }
-.Gallery-Column {
+.multimedia-gallery-column {
   -ms-flex: calc(50% - 4px);
   flex: calc(50% - 4px);
   max-width: calc(50% - 4px);
   /* padding: 0 1%; */
 }
-.Gallery img {
+.multimedia-gallery img {
   cursor: pointer;
   margin-bottom: 8px;
   vertical-align: middle;

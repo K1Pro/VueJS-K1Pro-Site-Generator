@@ -268,7 +268,7 @@ export default {
       }
 
       try {
-        const response = await fetch(this.endPts.siteURL + this.endPts.content, {
+        const response = await fetch(site_url + this.endPts.content, {
           method: method,
           headers: {
             Authorization: access_token,
@@ -369,7 +369,7 @@ export default {
 }
 .app-grid-resizer {
   cursor: col-resize;
-  background-color: #c6c6c6;
+  background-color: #eee;
 }
 .dim {
   font-weight: bold;
