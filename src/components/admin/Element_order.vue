@@ -32,86 +32,89 @@
       @click="deletePage(page.slctd)"
     ></i>
 
-    <div
-      v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]"
-      class="element-order-items"
-      :draggable="site.htmlElmnts[pageElmnt[0]].position ? false : true"
-      @dragstart="drag($event, pageElmntIndx)"
-      @drop.prevent="drop($event, pageElmntIndx)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <input
-        :ref="'renameInput' + pageElmntIndx"
-        type="text"
-        v-show="pageElmntIndx == renamingPos"
-        style="width: calc(100% - 20px)"
-        :value="pageElmnt[0].replaceAll('_', ' ')"
-        v-on:blur="isHoverRenameSave ? (renamingPos = pageElmntIndx) : (renamingPos = null)"
-      />
-      <i
-        v-if="pageElmntIndx == renamingPos"
-        class="fa-solid fa-floppy-disk"
-        @click="renameEl(pageElmnt, pageElmntIndx)"
-        @mouseover="isHoverRenameSave = true"
-        @mouseout="isHoverRenameSave = false"
-      ></i>
-      <i
-        v-if="renamingPos != pageElmntIndx"
-        class="fa-solid fa-circle-minus"
-        :style="{
-          color: individEdit.elmnts === null ? '#ff0000' : 'grey',
-          cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-          float: 'right',
-        }"
-        @click="deletePageEl(pageElmntIndx)"
-      ></i>
-      <input
-        type="radio"
-        style="float: right"
-        name="individEdit"
-        :checked="pageElmntIndx === individEdit.elmntIndx"
-        @click="enabledIndivEdit(pageElmntIndx)"
-      />
-      <input
-        style="float: right"
-        type="checkbox"
-        v-if="renamingPos != pageElmntIndx"
-        :disabled="individEdit.elmnts !== null"
-        v-model="pageElmnt[1]"
-      />
-      <i
-        v-if="
-          pageElmntIndx != site.pages[page.slctd].length - 1 &&
-          !site.htmlElmnts[pageElmnt[0]].position &&
-          !site.htmlElmnts?.[site.pages[page.slctd][pageElmntIndx + 1][0]]?.position &&
-          renamingPos != pageElmntIndx
-        "
-        class="fa-solid fa-circle-down"
-        :style="{
-          color: individEdit.elmnts === null ? 'black' : 'grey',
-          cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-        }"
-        @click="moveDown(pageElmntIndx)"
-      ></i>
-      <i
-        v-if="
-          pageElmntIndx != 0 &&
-          !site.htmlElmnts[pageElmnt[0]].position &&
-          !site.htmlElmnts?.[site.pages[page.slctd][pageElmntIndx - 1][0]]?.position &&
-          renamingPos != pageElmntIndx
-        "
-        class="fa-solid fa-circle-up"
-        :style="{
-          color: individEdit.elmnts === null ? 'black' : 'grey',
-          cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-        }"
-        @click.prevent="moveUp(pageElmntIndx)"
-      ></i>
-      <span v-on:dblclick="revealRenameInput(pageElmnt, pageElmntIndx)">{{
-        pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : ''
-      }}</span>
+    <div class="element-order-list">
+      <div
+        v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]"
+        class="element-order-items"
+        :draggable="site.htmlElmnts[pageElmnt[0]].position ? false : true"
+        @dragstart="drag($event, pageElmntIndx)"
+        @drop.prevent="drop($event, pageElmntIndx)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <input
+          :ref="'renameInput' + pageElmntIndx"
+          type="text"
+          v-show="pageElmntIndx == renamingPos"
+          style="width: calc(100% - 20px)"
+          :value="pageElmnt[0].replaceAll('_', ' ')"
+          v-on:blur="isHoverRenameSave ? (renamingPos = pageElmntIndx) : (renamingPos = null)"
+        />
+        <i
+          v-if="pageElmntIndx == renamingPos"
+          class="fa-solid fa-floppy-disk"
+          @click="renameEl(pageElmnt, pageElmntIndx)"
+          @mouseover="isHoverRenameSave = true"
+          @mouseout="isHoverRenameSave = false"
+        ></i>
+        <i
+          v-if="renamingPos != pageElmntIndx"
+          class="fa-solid fa-circle-minus"
+          :style="{
+            color: individEdit.elmnts === null ? '#ff0000' : 'grey',
+            cursor: individEdit.elmnts === null ? 'pointer' : 'default',
+            float: 'right',
+          }"
+          @click="deletePageEl(pageElmntIndx)"
+        ></i>
+        <input
+          type="radio"
+          style="float: right"
+          name="individEdit"
+          :checked="pageElmntIndx === individEdit.elmntIndx"
+          @click="enabledIndivEdit(pageElmntIndx)"
+        />
+        <input
+          style="float: right"
+          type="checkbox"
+          v-if="renamingPos != pageElmntIndx"
+          :disabled="individEdit.elmnts !== null"
+          v-model="pageElmnt[1]"
+        />
+        <i
+          v-if="
+            pageElmntIndx != site.pages[page.slctd].length - 1 &&
+            !site.htmlElmnts[pageElmnt[0]].position &&
+            !site.htmlElmnts?.[site.pages[page.slctd][pageElmntIndx + 1][0]]?.position &&
+            renamingPos != pageElmntIndx
+          "
+          class="fa-solid fa-circle-down"
+          :style="{
+            color: individEdit.elmnts === null ? 'black' : 'grey',
+            cursor: individEdit.elmnts === null ? 'pointer' : 'default',
+          }"
+          @click="moveDown(pageElmntIndx)"
+        ></i>
+        <i
+          v-if="
+            pageElmntIndx != 0 &&
+            !site.htmlElmnts[pageElmnt[0]].position &&
+            !site.htmlElmnts?.[site.pages[page.slctd][pageElmntIndx - 1][0]]?.position &&
+            renamingPos != pageElmntIndx
+          "
+          class="fa-solid fa-circle-up"
+          :style="{
+            color: individEdit.elmnts === null ? 'black' : 'grey',
+            cursor: individEdit.elmnts === null ? 'pointer' : 'default',
+          }"
+          @click.prevent="moveUp(pageElmntIndx)"
+        ></i>
+        <span v-on:dblclick="revealRenameInput(pageElmnt, pageElmntIndx)">{{
+          pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : ''
+        }}</span>
+      </div>
     </div>
+
     <hr />
     <button
       v-for="[elmntButtonKey, elmntButtonVal] in Object.entries(elmntButtons)"
@@ -387,6 +390,11 @@ export default {
   border-style: solid;
   height: 25px;
   width: 25px;
+}
+
+.element-order-list {
+  max-height: calc(100vh - 175px);
+  overflow-y: auto;
 }
 
 .element-order-items i {
