@@ -158,15 +158,13 @@ export default {
     },
 
     removeInvalidContactUsFn(event) {
-      // console.log(event);
-      if (event.target.value.length < 1) {
+      console.log(event.key);
+      console.log(event.target.value.length);
+      if (event.target.value.length < 1 && event.key != 'Tab' && event.key != 'Shift') {
         event.target.classList.add('invalid');
       } else {
         event.target.classList.remove('invalid');
       }
-      // if (event.target.name == 'Captcha') {
-      //   this.msg_captcha = '';
-      // }
     },
 
     async updateCaptcha() {

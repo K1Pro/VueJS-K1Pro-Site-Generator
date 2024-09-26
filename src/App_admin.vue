@@ -332,15 +332,6 @@ export default {
   mounted() {
     this.isMounted = true;
     this.applyStyle();
-    // Object.entries(this.$refs).forEach(([elKey, elVal]) => {
-    //   if (elKey != 'appGridItem1' && elKey != 'appGridItem2') {
-    //     console.log('===================================');
-    //     console.log(elKey);
-    //     console.log(document.getElementById(elKey).offsetTop);
-    //     console.log(document.getElementById(elKey).offsetHeight);
-    //     // console.log(document.getElementById(elKey).getBoundingClientRect());
-    //   }
-    // });
   },
 
   watch: {
