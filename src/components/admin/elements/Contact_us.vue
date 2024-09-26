@@ -1,7 +1,6 @@
 <template>
   <div class="contact-us" :style="[contactUs, style.outline.borderColor, { marginBottom: cntctUsCaptchaMrgn + 'vh' }]">
     <div class="contact-us-form" :style="[contactUsForm]">
-      <h2 v-if="!elKey" :style="[h2]">Contact Us</h2>
       <input type="text" class="cntctInpts" placeholder="Name" />
       <input type="text" class="cntctInpts" placeholder="Email" />
       <textarea rows="3" class="cntctInpts" :placeholder="elKey ? elValue.messageText : 'Message'"></textarea>

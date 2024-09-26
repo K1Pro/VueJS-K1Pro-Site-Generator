@@ -1,6 +1,5 @@
 <template>
   <div class="about-us">
-    <h2>About Us</h2>
     <p>
       {{ site.author }}<br />
       {{ site.phone }}<br />

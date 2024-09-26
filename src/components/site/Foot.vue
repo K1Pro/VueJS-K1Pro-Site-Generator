@@ -11,7 +11,10 @@
     >
       <div class="footer-item0"></div>
       <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey]['items']">
-        <div v-if="siteFooterItem != 'none'" :class="'footer-item' + Number(siteFooterIndex + 1)">
+        <div
+          v-if="siteFooterItem != 'none' && siteFooterItem != 'empty'"
+          :class="'footer-item' + Number(siteFooterIndex + 1)"
+        >
           <component :is="siteFooterItem.toLowerCase().replaceAll(' ', '_')"></component>
         </div>
       </template>
@@ -36,12 +39,16 @@ export default {
     gridTemplateLogOut() {
       let gridTemplateLogOutStyle;
       if (this.wndw.wdth > this.respWidth.md && this.wndw.wdth < this.respWidth.xl) {
-        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter((el) => el !== 'none');
+        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter(
+          (el) => el !== 'none' && el !== 'empty'
+        );
         const inner = (100 / footerItemsNoNoneArr.length).toFixed(2);
         const autos = `${inner}% `.repeat(footerItemsNoNoneArr.length);
         gridTemplateLogOutStyle = '0% ' + autos + ' 0%';
       } else if (this.wndw.wdth > this.respWidth.xl) {
-        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter((el) => el !== 'none');
+        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter(
+          (el) => el !== 'none' && el !== 'empty'
+        );
         const inner = (80 / footerItemsNoNoneArr.length).toFixed(2);
         const autos = `${inner}% `.repeat(footerItemsNoNoneArr.length);
         gridTemplateLogOutStyle = '10% ' + autos + ' 10%';

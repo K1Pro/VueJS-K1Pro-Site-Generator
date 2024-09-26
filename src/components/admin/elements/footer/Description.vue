@@ -1,6 +1,5 @@
 <template>
   <div class="description">
-    <h2>Description</h2>
     <span spellcheck="false" contenteditable="plaintext-only" v-on:blur="updateFooterDesc($event.target.innerHTML)">{{
       site.description
     }}</span>
