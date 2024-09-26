@@ -1,7 +1,7 @@
 <template>
   <div class="contact-us" :style="{ marginBottom: cntctUsCaptchaMrgn + 'vh' }">
     <div class="contact-us-form" :style="[contactUsForm]">
-      <h2 v-if="!elKey" :style="[h2]">Contact Us</h2>
+      <h2 v-if="footKey" :style="[h2]">Contact Us</h2>
       <input
         type="text"
         name="Name"
@@ -24,7 +24,7 @@
         rows="3"
         name="Message"
         :class="'cntctInpts_' + elKey"
-        :placeholder="elKey ? elValue.messageText : 'Message'"
+        :placeholder="!footKey ? elValue.messageText : 'Message'"
         v-model="msgMessage"
         @keyup="removeInvalidContactUsFn"
       ></textarea>
@@ -52,7 +52,7 @@
 
       <button style="margin-bottom: 1vh; height: 4vh" @click.prevent="postMsg">
         <i v-if="spinContactUsSend" class="spin fa-sharp fa-solid fa-circle-notch"></i>
-        <span v-else>{{ elKey ? elValue.buttonText : 'Send' }}</span>
+        <span v-else>{{ !footKey ? elValue.buttonText : 'Send' }}</span>
       </button>
 
       <div :style="{ backgroundColor: msg_captcha ? 'white' : 'transparent' }" class="validation-message">
@@ -68,22 +68,22 @@ export default {
 
   inject: ['endPts', 'wndw', 'showMsg', 'site'],
 
-  props: ['elKey', 'elValue', 'elIndex'],
+  props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 
   computed: {
     contactUsForm() {
       return {
-        width: this.elKey ? '300px' : false,
-        marginLeft: this.elKey ? 'calc(50% - 150px)' : false,
-        padding: this.elKey ? '1.5vh' : false,
+        width: !this.footKey ? '300px' : false,
+        marginLeft: !this.footKey ? 'calc(50% - 150px)' : false,
+        padding: !this.footKey ? '1.5vh' : false,
       };
     },
     h2() {
       return {
-        backgroundColor: this.elKey ? 'white' : '#00000000',
-        padding: this.elKey ? '0.5vh' : false,
-        margin: this.elKey ? '0vh 0vh 2vh 0vh' : false,
-        fontSize: this.elKey ? '3vh' : false,
+        backgroundColor: !this.footKey ? 'white' : '#00000000',
+        padding: !this.footKey ? '0.5vh' : false,
+        margin: !this.footKey ? '0vh 0vh 2vh 0vh' : false,
+        fontSize: !this.footKey ? '3vh' : false,
       };
     },
   },

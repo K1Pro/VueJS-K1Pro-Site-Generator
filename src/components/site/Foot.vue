@@ -15,7 +15,13 @@
           v-if="siteFooterItem != 'none' && siteFooterItem != 'empty'"
           :class="'footer-item' + Number(siteFooterIndex + 1)"
         >
-          <component :is="siteFooterItem.toLowerCase().replaceAll(' ', '_')"></component>
+          <component
+            :is="siteFooterItem"
+            :elKey="elKey"
+            :elValue="elValue"
+            :elIndex="elIndex"
+            :footKey="siteFooterItem"
+          ></component>
         </div>
       </template>
       <div :class="'footer-item' + Number(site.htmlElmnts[elKey]['items'].length + 1)"></div>

@@ -29,7 +29,11 @@
           </select>
           <component
             v-if="siteFooterItem != 'empty'"
-            :is="siteFooterItem.toLowerCase().replaceAll(' ', '_')"
+            :is="siteFooterItem"
+            :elKey="elKey"
+            :elValue="elValue"
+            :elIndex="elIndex"
+            :footKey="siteFooterItem"
           ></component>
         </div>
       </template>

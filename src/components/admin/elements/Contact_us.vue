@@ -3,14 +3,14 @@
     <div class="contact-us-form" :style="[contactUsForm]">
       <input type="text" class="cntctInpts" placeholder="Name" />
       <input type="text" class="cntctInpts" placeholder="Email" />
-      <textarea rows="3" class="cntctInpts" :placeholder="elKey ? elValue.messageText : 'Message'"></textarea>
+      <textarea rows="3" class="cntctInpts" :placeholder="!footKey ? elValue.messageText : 'Message'"></textarea>
       <img :src="endPts.captchaURL + msgDate + '.jpg'" ref="cntctUsCaptcha" />
       <input type="text" class="cntctInpts" style="width: calc(100% - 30px)" placeholder="Verify captcha..." />
       <button style="width: 30px; height: 4vh">
         <i class="fa-solid fa-arrows-rotate"></i>
       </button>
       <button style="margin-bottom: 1vh; height: 4vh">
-        <span>{{ elKey ? elValue.buttonText : 'Send' }}</span>
+        <span>{{ !footKey ? elValue.buttonText : 'Send' }}</span>
       </button>
       <div style="height: 3vh"></div>
     </div>
@@ -23,27 +23,19 @@ export default {
 
   inject: ['grid', 'endPts', 'style'],
 
-  props: ['elKey', 'elValue', 'elIndex'],
+  props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 
   computed: {
     contactUs() {
       return {
-        outlineStyle: this.elKey ? 'dashed' : 'none',
+        outlineStyle: !this.footKey ? 'dashed' : 'none',
       };
     },
     contactUsForm() {
       return {
-        width: this.elKey ? '300px' : false,
-        marginLeft: this.elKey ? 'calc(50% - 150px)' : false,
-        padding: this.elKey ? '1.5vh' : false,
-      };
-    },
-    h2() {
-      return {
-        backgroundColor: this.elKey ? 'white' : '#00000000',
-        padding: this.elKey ? '0.5vh' : false,
-        margin: this.elKey ? '0vh 0vh 2vh 0vh' : false,
-        fontSize: this.elKey ? '3vh' : false,
+        width: !this.footKey ? '300px' : false,
+        marginLeft: !this.footKey ? 'calc(50% - 150px)' : false,
+        padding: !this.footKey ? '1.5vh' : false,
       };
     },
   },
