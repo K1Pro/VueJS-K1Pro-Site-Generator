@@ -39,7 +39,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 
   data() {
-    return { mapHeight: 0, lng: -87.629799, lat: 41.878113, zoom: 11 };
+    return { mapHeight: 0 };
   },
 
   methods: {
@@ -87,6 +87,17 @@ export default {
       });
       document.getElementById('map').style.border = '1px solid #000000';
     }, 2);
+  },
+  watch: {
+    elValue() {
+      markerGroup.clearLayers();
+      map.panTo([
+        this.site.htmlElmnts[this.elKey][this.footKey].lat,
+        this.site.htmlElmnts[this.elKey][this.footKey].lng,
+      ]);
+      markerGroup.clearLayers();
+      L.marker(map.getCenter()).addTo(markerGroup);
+    },
   },
 };
 </script>

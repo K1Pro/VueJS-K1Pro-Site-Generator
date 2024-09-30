@@ -1,6 +1,6 @@
 <template>
   <div class="about-us">
-    <h2>About Us</h2>
+    <h2>About</h2>
     <p v-if="site.htmlElmnts[elKey][footKey].business">
       {{ site.business }}
     </p>

@@ -1,7 +1,7 @@
 <template>
   <div class="contact-us" :style="{ marginBottom: cntctUsCaptchaMrgn + 'vh' }">
     <div class="contact-us-form" :style="[contactUsForm]">
-      <h2 v-if="footKey" :style="[h2]">Contact Us</h2>
+      <h2 v-if="footKey" :style="[h2]">Contact</h2>
       <input
         type="text"
         name="Name"
