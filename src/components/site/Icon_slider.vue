@@ -12,7 +12,7 @@
           class="icon-slider-prev"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor,
@@ -39,7 +39,7 @@
           class="icon-slider-item"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor,
@@ -68,7 +68,7 @@
           v-else-if="iconSliderItemAmount < 10"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor,
@@ -88,7 +88,7 @@
           class="icon-slider-next"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor,

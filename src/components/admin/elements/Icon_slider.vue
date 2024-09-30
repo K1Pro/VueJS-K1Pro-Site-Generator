@@ -12,7 +12,7 @@
           class="icon-slider-prev"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor.backgroundColor,
@@ -38,7 +38,7 @@
           v-if="iconIndex === respvIconAmnt"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor.backgroundColor,
@@ -55,7 +55,7 @@
           class="icon-slider-item"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor.backgroundColor,
@@ -88,7 +88,7 @@
           class="icon-slider-next"
           :style="[
             {
-              border: '1px solid ' + elValue.style.borderColor,
+              border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
             },
             style.primaryColor.backgroundColor,
