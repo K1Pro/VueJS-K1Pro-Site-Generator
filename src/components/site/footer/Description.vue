@@ -10,6 +10,8 @@ export default {
   name: 'Description',
 
   inject: ['site'],
+
+  props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 };
 </script>
 
