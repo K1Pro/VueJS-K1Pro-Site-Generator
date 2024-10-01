@@ -12,6 +12,8 @@ export default {
 
   inject: ['site'],
 
+  props: ['elKey', 'elValue', 'elIndex', 'footKey'],
+
   methods: {
     updateFooterDesc(event) {
       this.site.description = event;

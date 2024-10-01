@@ -1,9 +1,12 @@
 <template>
-  <div></div>
+  <h2>Links</h2>
 </template>
 
 <script>
-export default {};
+export default { name: 'Links' };
 </script>
 
-<style></style>
+<style>
+.links {
+}
+</style>
