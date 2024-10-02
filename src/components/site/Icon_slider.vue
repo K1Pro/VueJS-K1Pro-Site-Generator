@@ -267,4 +267,9 @@ export default {
 .modChange input[type='range'] {
   width: 75%;
 }
+@media only screen and (min-width: 650px) {
+  .icon-slider-container {
+    column-gap: 10px;
+  }
+}
 </style>
