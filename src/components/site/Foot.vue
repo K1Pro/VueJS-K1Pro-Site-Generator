@@ -101,8 +101,7 @@ export default {
 .footer-item3,
 .footer-item4,
 .footer-item5,
-.footer-item6,
-.footer-item7 {
+.footer-item6 {
   padding: 10px 30px;
   text-align: left;
   /* word-wrap: break-word; */
@@ -117,8 +116,7 @@ export default {
 .footer-item3 h2,
 .footer-item4 h2,
 .footer-item5 h2,
-.footer-item6 h2,
-.footer-item7 h2 {
+.footer-item6 h2 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
@@ -141,7 +139,7 @@ export default {
   } */
 
   .footer-item0,
-  .footer-item7 {
+  .footer-item6 {
     padding: 0px;
   }
 }
@@ -157,8 +155,7 @@ export default {
   .footer-item3,
   .footer-item4,
   .footer-item5,
-  .footer-item6,
-  .footer-item7 {
+  .footer-item6 {
     padding: 10px 30px;
   }
 }

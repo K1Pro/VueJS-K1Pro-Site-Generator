@@ -3,10 +3,10 @@
     <p><input type="checkbox" v-model="site.htmlElmnts[elKey][footKey].business" />{{ site.business }}</p>
     <p><input type="checkbox" v-model="site.htmlElmnts[elKey][footKey].name" />{{ site.name }}</p>
     <p><input type="checkbox" v-model="site.htmlElmnts[elKey][footKey].author" />{{ site.author }}</p>
-    <p><input type="checkbox" v-model="site.htmlElmnts[elKey][footKey].address" />{{ site.address.street1 }}</p>
-    <p>{{ site.address.street2 }}</p>
     <p>
-      {{ site.address.city }}{{ site.address.city && site.address.state ? ',' : '' }} {{ site.address.state }}
+      <input type="checkbox" v-model="site.htmlElmnts[elKey][footKey].address" />{{ site.address.street1 }}
+      {{ site.address.street2 }} {{ site.address.city }}{{ site.address.city && site.address.state ? ',' : '' }}
+      {{ site.address.state }}
       {{ site.address.zip }}
     </p>
     <p><input type="checkbox" v-model="site.htmlElmnts[elKey][footKey].phone" />{{ site.phone }}</p>

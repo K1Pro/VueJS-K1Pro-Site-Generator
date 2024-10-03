@@ -12,8 +12,9 @@
     </p>
 
     <span v-if="site.htmlElmnts[elKey][footKey].address"
-      ><p>{{ site.address.street1 ? site.address.street1 : '' }}</p>
-      <p>{{ site.address.street2 ? site.address.street2 : '' }}</p>
+      ><p>
+        {{ site.address.street1 ? site.address.street1 : '' }} {{ site.address.street2 ? site.address.street2 : '' }}
+      </p>
       <p>
         {{ site.address.city ? site.address.city + ',' : '' }} {{ site.address.state ? site.address.state : '' }}
         {{ site.address.zip ? site.address.zip : '' }}
