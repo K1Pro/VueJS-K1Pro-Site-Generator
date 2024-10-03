@@ -51,7 +51,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { tempFootItems: null, footItems: ['about', 'contact', 'description', 'links', 'map'] };
+    return { tempFootItems: null, footItems: ['about', 'contact', 'description', 'links', 'location'] };
   },
 
   computed: {

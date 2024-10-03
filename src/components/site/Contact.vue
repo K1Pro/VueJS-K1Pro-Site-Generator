@@ -132,12 +132,12 @@ export default {
             this.updateCaptcha();
           }
           console.log(postMsgResJSON);
-          this.showMsg(postMsgResJSON.messages[0]);
+          // this.showMsg(postMsgResJSON.messages[0]);
           this.msg_captcha = postMsgResJSON.messages[0];
           this.spinContactUsSend = false;
         } catch (error) {
           console.log(error.toString());
-          this.showMsg(error.toString());
+          // this.showMsg(error.toString());
           this.msg_captcha = error.toString();
           this.spinContactUsSend = false;
         }
@@ -147,7 +147,7 @@ export default {
           cntctInpt.classList.remove('invalid');
           if (cntctInpt.value == '') {
             if (firstEl == 0) {
-              this.showMsg(cntctInpt.name + ' cannot be blank');
+              // this.showMsg(cntctInpt.name + ' cannot be blank');
               this.msg_captcha = cntctInpt.name + ' cannot be blank';
             }
             firstEl++;
@@ -178,7 +178,7 @@ export default {
         this.spinUpdateCaptcha = false;
       } catch (error) {
         console.log(error.toString());
-        this.showMsg('Captcha error - refresh page');
+        // this.showMsg('Captcha error - refresh page');
         this.spinUpdateCaptcha = false;
       }
     },
