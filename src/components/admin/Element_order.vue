@@ -230,6 +230,7 @@ export default {
 
     toggleElmnt(event, elmnt, indx) {
       if (this.content.htmlUniqSiteElmnts.includes(elmnt)) {
+        // toggles unique element on all pages
         for (const [pageKey, pageVal] of Object.entries(this.site.pages)) {
           pageVal.forEach((element, elIndex) => {
             if (elmnt == element[0]) {
@@ -238,6 +239,7 @@ export default {
           });
         }
       } else {
+        // toggles non-unique element only on selected page
         this.site.pages[this.page.slctd][indx][1] = event;
       }
     },
@@ -256,6 +258,7 @@ export default {
     createCopyDeleteEl(event) {
       const elmnt = event.target.value;
       if (this.slctdElmntButton == 'Delete') {
+        // still need to properly delete unique elements here!!!!!!!!!!!
         if (
           confirm(
             'Are you sure you would like to permanently delete the "' +
@@ -295,7 +298,9 @@ export default {
 
         if (this.content.htmlUniqSiteElmnts.includes(elmnt)) {
           this.site.htmlElmnts[elmnt] = this.content.htmlElmnts[elmnt];
-          this.site.pages[this.page.slctd].splice(newElPosition, 0, [elmnt, true]);
+          for (const [pageKey, pageVal] of Object.entries(this.site.pages)) {
+            this.site.pages[pageKey].splice(newElPosition, 0, [elmnt, true]);
+          }
         } else if (this.content.htmlAllElmnts.includes(elmnt)) {
           const newElName = elmnt + '_' + new Date().getTime();
           this.site.htmlElmnts[newElName] = this.content.htmlElmnts[elmnt];
