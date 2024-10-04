@@ -72,14 +72,15 @@
           style="float: right"
           name="individEdit"
           :checked="pageElmntIndx === individEdit.elmntIndx"
-          @click="enabledIndivEdit(pageElmntIndx)"
+          @click="toggleIndivEdit(pageElmntIndx)"
         />
         <input
           style="float: right"
           type="checkbox"
           v-if="renamingPos != pageElmntIndx"
           :disabled="individEdit.elmnts !== null"
-          v-model="pageElmnt[1]"
+          :checked="pageElmnt[1]"
+          @change="toggleElmnt($event.target.checked, pageElmnt[0], pageElmntIndx)"
         />
         <i
           v-if="
@@ -183,7 +184,7 @@ export default {
       addingPage: false,
       renamingPos: null,
       isHoverRenameSave: false,
-      pageSlctd: null,
+      pageSlctd: 'Home',
     };
   },
 
@@ -208,7 +209,7 @@ export default {
         }
       }
     },
-    enabledIndivEdit(indx) {
+    toggleIndivEdit(indx) {
       if (this.individEdit.elmntIndx == indx) {
         this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
         this.individEdit.elmntIndx = null;
@@ -224,6 +225,20 @@ export default {
         this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
           page[1] = indx !== pageIndex ? false : true;
         });
+      }
+    },
+
+    toggleElmnt(event, elmnt, indx) {
+      if (this.content.htmlUniqSiteElmnts.includes(elmnt)) {
+        for (const [pageKey, pageVal] of Object.entries(this.site.pages)) {
+          pageVal.forEach((element, elIndex) => {
+            if (elmnt == element[0]) {
+              this.site.pages[pageKey][elIndex][1] = event;
+            }
+          });
+        }
+      } else {
+        this.site.pages[this.page.slctd][indx][1] = event;
       }
     },
 
@@ -278,7 +293,10 @@ export default {
           newElPosition = 0 > newElPosition ? this.site.pages[this.page.slctd].length : newElPosition;
         }
 
-        if (this.content.htmlAllElmnts.includes(elmnt)) {
+        if (this.content.htmlUniqSiteElmnts.includes(elmnt)) {
+          this.site.htmlElmnts[elmnt] = this.content.htmlElmnts[elmnt];
+          this.site.pages[this.page.slctd].splice(newElPosition, 0, [elmnt, true]);
+        } else if (this.content.htmlAllElmnts.includes(elmnt)) {
           const newElName = elmnt + '_' + new Date().getTime();
           this.site.htmlElmnts[newElName] = this.content.htmlElmnts[elmnt];
           this.site.pages[this.page.slctd].splice(newElPosition, 0, [newElName, true]);
@@ -289,10 +307,12 @@ export default {
       event.srcElement.selectedIndex = 0;
     },
     revealRenameInput(pageElmnt, pageElmntIndx) {
-      this.renamingPos = pageElmntIndx;
-      setTimeout(() => {
-        this.$refs['renameInput' + pageElmntIndx][0].focus();
-      }, 1);
+      if (!this.content.htmlUniqSiteElmnts.includes(pageElmnt[0])) {
+        this.renamingPos = pageElmntIndx;
+        setTimeout(() => {
+          this.$refs['renameInput' + pageElmntIndx][0].focus();
+        }, 1);
+      }
     },
     renameEl(pageElmnt, pageElmntIndx) {
       const newPageElName = this.$refs['renameInput' + pageElmntIndx][0].value
