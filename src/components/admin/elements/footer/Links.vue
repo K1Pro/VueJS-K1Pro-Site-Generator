@@ -19,8 +19,11 @@
 <script>
 export default {
   name: 'Links',
+
   inject: ['site'],
+
   props: ['elKey', 'elValue', 'elIndex', 'footKey'],
+
   methods: {
     linkOnOff() {
       const newLinks = [];
