@@ -66,7 +66,7 @@
 export default {
   name: 'Contact Us',
 
-  inject: ['endPts', 'wndw', 'showMsg', 'site'],
+  inject: ['endPts', 'wndw', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 

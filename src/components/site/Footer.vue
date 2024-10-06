@@ -33,7 +33,7 @@
 export default {
   name: 'Footer',
 
-  inject: ['respWidth', 'wndw', 'site', 'style'],
+  inject: ['respWidth', 'site', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
