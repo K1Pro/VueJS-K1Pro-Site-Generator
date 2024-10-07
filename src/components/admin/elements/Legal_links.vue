@@ -1,9 +1,8 @@
 <template>
   <div class="legal-links" :style="[style.outline.borderColor, style.primaryColor.backgroundColor]">
-    <span v-for="([linkKey, linkVal], linkIndex) in Object.entries(site.htmlElmnts[elKey].links)">
-      <input type="checkbox" />{{ linkKey.replaceAll('_', ' ') }}
-      {{ Object.entries(site.htmlElmnts[elKey].links).length - 1 !== linkIndex ? ' | ' : '' }}
-    </span>
+    <template v-for="([linkKey, linkVal], linkIndex) in Object.entries(site.htmlElmnts[elKey].links)">
+      <input type="checkbox" v-model="site.htmlElmnts.legal_links.links[linkKey]" />{{ linkKey.replaceAll('_', ' ') }}
+    </template>
   </div>
 </template>
 
@@ -14,6 +13,10 @@ export default {
   inject: ['site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  data() {
+    return { year: fullDateTime.getFullYear() };
+  },
 };
 </script>
 

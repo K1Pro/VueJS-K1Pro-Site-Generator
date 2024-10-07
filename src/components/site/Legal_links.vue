@@ -1,11 +1,13 @@
 <template>
   <div class="legal-links" :style="[style.primaryColor, legalLinks]" ref="legalLinks">
-    © Copyright 2024, {{ site.business }} |
     <template v-for="([linkKey, linkVal], linkIndex) in Object.entries(site.htmlElmnts[elKey].links)">
-      <a :href="endPts.href + '/' + linkKey.toLowerCase()">
-        {{ linkKey.replaceAll('-', ' ') }}
-      </a>
-      {{ Object.entries(site.htmlElmnts[elKey].links).length - 1 !== linkIndex ? ' | ' : '' }}
+      <template v-if="linkVal === true">
+        <template v-if="linkKey == 'Copyright'"> © Copyright {{ year }}, {{ site.business }} </template>
+        <a v-else :href="endPts.href + '/' + linkKey.toLowerCase()">
+          {{ linkKey.replaceAll('-', ' ') }}
+        </a>
+      </template>
+      {{ Object.values(site.htmlElmnts[elKey].links)[linkIndex + 1] ? ' | ' : '' }}
     </template>
   </div>
 </template>
@@ -19,7 +21,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { atBottom: null };
+    return { year: fullDateTime.getFullYear(), atBottom: null };
   },
 
   computed: {
@@ -33,7 +35,6 @@ export default {
   mounted() {
     setTimeout(() => {
       if (this.atBottom === null) {
-        console.log(this.$refs.legalLinks.getBoundingClientRect().bottom);
         this.atBottom = this.$refs.legalLinks.getBoundingClientRect().bottom > this.wndw.hght ? true : false;
       }
     }, 1);

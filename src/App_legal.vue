@@ -2,7 +2,14 @@
   <div class="legal">
     <top_menu elKey="top_menu" :elValue="site.htmlElmnts.top_menu" elIndex="0"></top_menu>
     <div class="legal-content" v-for="legalInfo in legal">
-      <div v-html="legalInfo.replaceAll('__href__', domain.replaceAll('_', '.')).replaceAll('__name__', name)"></div>
+      <div
+        v-html="
+          legalInfo
+            .replaceAll('__href__', domain.replaceAll('_', '.'))
+            .replaceAll('__name__', name)
+            .replaceAll('__email__', site.email.toLowerCase())
+        "
+      ></div>
     </div>
     <foot
       v-if="JSON.stringify(site.pages.Home).includes(JSON.stringify(['footer', true]))"
