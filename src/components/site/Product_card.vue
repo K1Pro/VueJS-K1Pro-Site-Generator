@@ -3,20 +3,24 @@
     <div
       class="product-card-container"
       :style="{
-        gridTemplateColumns: wndw.wdth > respWidth.md ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
+        gridTemplateColumns: wndw.wdth > 730 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
       }"
     >
       <div class="product-card-item"></div>
-      <template v-for="(productcard, cardIndex) in elValue['items']">
+      <template v-for="cardIndex in respvItemAmnt">
         <div class="product-card-item" :style="[style.primaryColor]">
           <div class="product-card-group">
-            <img :src="productcard[0]" :alt="productcard[1]" :style="{ 'margin-bottom': '0px' }" />
+            <img
+              :src="elValue['items'][cardIndex - 1][0]"
+              :alt="elValue['items'][cardIndex - 1][1]"
+              :style="{ 'margin-bottom': '0px' }"
+            />
             <div class="product-card-text" :style="{ padding: '12px' }">
               <div class="product-card-header">
-                {{ productcard[1] }}
+                {{ elValue['items'][cardIndex - 1][1] }}
               </div>
               <p>
-                {{ productcard[2] }}
+                {{ elValue['items'][cardIndex - 1][2] }}
               </p>
             </div>
           </div>
@@ -36,10 +40,27 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
+    productCardItemAmount() {
+      return this.elValue['items'].length;
+    },
+    wndwWdthRoundDown() {
+      return Math.floor((this.wndw.wdth - 100) / 210);
+    },
+    showScroll() {
+      return this.productCardItemAmount > this.wndwWdthRoundDown;
+    },
+    respvItemAmnt() {
+      return this.productCardItemAmount > this.wndwWdthRoundDown && this.wndw.wdth >= 730
+        ? this.wndwWdthRoundDown
+        : this.productCardItemAmount > this.wndwWdthRoundDown && this.wndw.wdth < 730
+        ? this.productCardItemAmount
+        : this.productCardItemAmount;
+    },
     gridTemplateColumnsFull() {
-      const side = (99 - this.elValue['items'].length * 21) / 2;
-      const autos = '20% '.repeat(this.elValue['items'].length);
-      return side + '% ' + autos + side + '%';
+      // const side = (99 - this.elValue['items'].length * 21) / 2;
+      // const autos = '20% '.repeat(this.elValue['items'].length);
+      // return side + '% ' + autos + side + '%';
+      return 'auto repeat(' + this.respvItemAmnt + ', 210px) auto';
     },
 
     gridTemplateColumnsMobile() {
@@ -55,7 +76,7 @@ export default {
 }
 .product-card-container {
   display: grid;
-  column-gap: 1%;
+  column-gap: 10px;
 }
 .product-card-item {
   overflow: visible;
@@ -85,7 +106,7 @@ export default {
   font-size: 30px;
   overflow: hidden;
 }
-@media only screen and (min-width: 650px) {
+@media only screen and (min-width: 730px) {
   .product-card-group img {
     height: 250px;
   }

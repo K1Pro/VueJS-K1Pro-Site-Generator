@@ -45,6 +45,7 @@ export default {
       page: { slctd: 'Home' },
       site: params,
       respWidth: {
+        xs: 400,
         sm: 576,
         md: 768,
         lg: 992,

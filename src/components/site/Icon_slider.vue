@@ -3,12 +3,12 @@
     <div
       class="icon-slider-container"
       :style="{
-        gridTemplateColumns: wndw.wdth >= 400 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
+        gridTemplateColumns: wndw.wdth >= respWidth.xs ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
       }"
     >
       <div>
         <div
-          v-if="showIconScroll"
+          v-if="showScroll"
           class="icon-slider-prev"
           :style="[
             {
@@ -19,13 +19,13 @@
           ]"
         >
           <i
-            v-if="showIconScroll && 0 < iconStart"
+            v-if="showScroll && 0 < iconStart"
             class="fa-solid fa-chevron-left"
             style="cursor: pointer"
             @click="decreaseScroll"
           ></i>
           <i
-            v-if="showIconScroll && 0 == iconStart"
+            v-if="showScroll && 0 == iconStart"
             class="fa-solid fa-chevron-left"
             :style="{ color: site.body.style.textColor + '50' }"
           ></i>
@@ -33,7 +33,7 @@
         <div v-else class="icon-slider-item"></div>
       </div>
 
-      <template v-for="iconIndex in respvIconAmnt">
+      <template v-for="iconIndex in respvItemAmnt">
         <div
           v-if="site.htmlElmnts[elKey]['items'][iconStart + iconIndex - 1]"
           class="icon-slider-item"
@@ -84,7 +84,7 @@
 
       <div>
         <div
-          v-if="showIconScroll"
+          v-if="showScroll"
           class="icon-slider-next"
           :style="[
             {
@@ -95,13 +95,13 @@
           ]"
         >
           <i
-            v-if="showIconScroll && iconStart + respvIconAmnt < iconSliderItemAmount"
+            v-if="showScroll && iconStart + respvItemAmnt < iconSliderItemAmount"
             class="fa-solid fa-chevron-right"
             style="cursor: pointer"
             @click="increaseScroll"
           ></i>
           <i
-            v-if="showIconScroll && iconStart + respvIconAmnt >= iconSliderItemAmount"
+            v-if="showScroll && iconStart + respvItemAmnt >= iconSliderItemAmount"
             class="fa-solid fa-chevron-right"
             :style="{ color: site.body.style.textColor + '50' }"
           ></i>
@@ -124,28 +124,25 @@ export default {
     iconSliderItemAmount() {
       return this.elValue['items'].length;
     },
-    windowWidthRoundDown() {
+    wndwWdthRoundDown() {
       return Math.floor((this.wndw.wdth - 100) / 100);
     },
-    showIconScroll() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown;
+    showScroll() {
+      return this.iconSliderItemAmount > this.wndwWdthRoundDown;
     },
-    respvIconAmnt() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown && this.wndw.wdth >= 400
-        ? this.windowWidthRoundDown
-        : this.iconSliderItemAmount > this.windowWidthRoundDown && this.wndw.wdth < 400
+    respvItemAmnt() {
+      return this.iconSliderItemAmount > this.wndwWdthRoundDown && this.wndw.wdth >= this.respWidth.xs
+        ? this.wndwWdthRoundDown
+        : this.iconSliderItemAmount > this.wndwWdthRoundDown && this.wndw.wdth < this.respWidth.xs
         ? 3
         : this.iconSliderItemAmount;
     },
     gridTemplateColumnsFull() {
-      const autos = '100px '.repeat(this.respvIconAmnt);
-      return 'auto ' + autos + 'auto';
+      return 'auto repeat(' + this.respvItemAmnt + ', 100px) auto';
     },
     gridTemplateColumnsMobile() {
-      const autos = ('calc(' + 100 / this.respvIconAmnt + '% - ' + 70 / this.respvIconAmnt + 'px) ').repeat(
-        this.respvIconAmnt
-      );
-      return '25px ' + autos + '25px';
+      // prettier-ignore
+      return '25px repeat(' + this.respvItemAmnt + ', calc('+ 100 / this.respvItemAmnt + '% - ' + 70 / this.respvItemAmnt + 'px) ) 25px';
     },
   },
 
@@ -177,7 +174,7 @@ export default {
   },
 
   watch: {
-    respvIconAmnt() {
+    respvItemAmnt() {
       this.iconStart = 0;
     },
   },

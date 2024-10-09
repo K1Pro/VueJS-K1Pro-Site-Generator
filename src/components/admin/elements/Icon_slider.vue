@@ -3,12 +3,12 @@
     <div
       class="icon-slider-container"
       :style="{
-        gridTemplateColumns: grid.wdth >= 400 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
+        gridTemplateColumns: grid.wdth >= respWidth.xs ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
       }"
     >
       <div>
         <div
-          v-if="showIconScroll"
+          v-if="showScroll"
           class="icon-slider-prev"
           :style="[
             {
@@ -19,13 +19,13 @@
           ]"
         >
           <i
-            v-if="showIconScroll && 0 < iconStart"
+            v-if="showScroll && 0 < itemStart"
             class="fa-solid fa-chevron-left"
             style="cursor: pointer"
             @click="decreaseScroll"
           ></i>
           <i
-            v-if="showIconScroll && 0 == iconStart"
+            v-if="showScroll && 0 == itemStart"
             class="fa-solid fa-chevron-left"
             :style="{ color: site.body.style.textColor + '50' }"
           ></i>
@@ -33,9 +33,9 @@
         <div v-else class="icon-slider-item"></div>
       </div>
 
-      <template v-for="iconIndex in respvIconAmnt">
+      <template v-for="iconIndex in respvItemAmnt">
         <div
-          v-if="iconIndex === respvIconAmnt"
+          v-if="iconIndex === respvItemAmnt"
           :style="[
             {
               border: '1px solid ' + site.body.style.borderColor,
@@ -66,25 +66,25 @@
               :style="{
                 'font-size': elValue.style.iconSize + 'px',
               }"
-              :class="elValue['items'][iconStart + iconIndex - 1][1]"
+              :class="elValue['items'][itemStart + iconIndex - 1][1]"
             ></i>
           </div>
 
-          <select v-model="site.htmlElmnts[elKey].items[iconStart + iconIndex - 1][1]">
+          <select v-model="site.htmlElmnts[elKey].items[itemStart + iconIndex - 1][1]">
             <icon_slider_options></icon_slider_options>
           </select>
 
           <input
             type="text"
             placeholder="text here..."
-            v-model="site.htmlElmnts[elKey].items[iconStart + iconIndex - 1][0]"
+            v-model="site.htmlElmnts[elKey].items[itemStart + iconIndex - 1][0]"
           />
         </div>
       </template>
 
       <div>
         <div
-          v-if="showIconScroll"
+          v-if="showScroll"
           class="icon-slider-next"
           :style="[
             {
@@ -95,13 +95,13 @@
           ]"
         >
           <i
-            v-if="showIconScroll && iconStart + respvIconAmnt < iconSliderItemAmount"
+            v-if="showScroll && itemStart + respvItemAmnt < iconSliderItemAmount"
             class="fa-solid fa-chevron-right"
             style="cursor: pointer"
             @click="increaseScroll"
           ></i>
           <i
-            v-if="showIconScroll && iconStart + respvIconAmnt >= iconSliderItemAmount"
+            v-if="showScroll && itemStart + respvItemAmnt >= iconSliderItemAmount"
             class="fa-solid fa-chevron-right"
             :style="{ color: site.body.style.textColor + '50' }"
           ></i>
@@ -127,28 +127,28 @@ export default {
     windowWidthRoundDown() {
       return Math.floor((this.grid.wdth - 100) / 100);
     },
-    showIconScroll() {
+    showScroll() {
       return this.iconSliderItemAmount > this.windowWidthRoundDown;
     },
-    respvIconAmnt() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth >= 400
+    respvItemAmnt() {
+      return this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth >= this.respWidth.xs
         ? this.windowWidthRoundDown
-        : this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth < 400
+        : this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth < this.respWidth.xs
         ? 3
         : this.iconSliderItemAmount;
     },
     gridTemplateColumnsFull() {
-      const autos = 'repeat(' + this.respvIconAmnt + ', 100px) ';
+      const autos = 'repeat(' + this.respvItemAmnt + ', 100px) ';
       return 'auto ' + autos + 'auto';
     },
     gridTemplateColumnsMobile() {
       const autos =
         'repeat(' +
-        this.respvIconAmnt +
+        this.respvItemAmnt +
         ', calc(' +
-        100 / this.respvIconAmnt +
+        100 / this.respvItemAmnt +
         '% - ' +
-        70 / this.respvIconAmnt +
+        70 / this.respvItemAmnt +
         'px)) ';
       return '25px ' + autos + '25px';
     },
@@ -156,29 +156,29 @@ export default {
 
   data() {
     return {
-      iconStart: 0,
+      itemStart: 0,
     };
   },
 
   methods: {
     increaseScroll() {
-      this.iconStart++;
+      this.itemStart++;
     },
     decreaseScroll() {
-      this.iconStart--;
+      this.itemStart--;
     },
     addIcon() {
-      if (this.site.htmlElmnts[this.elKey]['items'].length < 8) this.iconStart++;
+      if (this.site.htmlElmnts[this.elKey]['items'].length < 8) this.itemStart++;
       this.site.htmlElmnts[this.elKey]['items'].push(['', 'fa-solid fa-question']);
     },
   },
 
   watch: {
-    respvIconAmnt() {
-      this.iconStart = 0;
+    respvItemAmnt() {
+      this.itemStart = 0;
     },
     undoRedo() {
-      this.iconStart = 0;
+      this.itemStart = 0;
     },
   },
 };
@@ -203,6 +203,12 @@ export default {
   display: table-cell;
   vertical-align: middle;
   text-align: center;
+}
+.icon-slider-modify i {
+  position: relative;
+  margin-left: 40px;
+  margin-top: 0px;
+  cursor: pointer;
 }
 .icon-slider-item {
   overflow: hidden;
@@ -233,12 +239,6 @@ export default {
   position: absolute;
   margin-left: 25px;
   margin-top: -10px;
-  cursor: pointer;
-}
-.icon-slider-modify i {
-  position: relative;
-  margin-left: 40px;
-  margin-top: 0px;
   cursor: pointer;
 }
 .icon-slider-prev {

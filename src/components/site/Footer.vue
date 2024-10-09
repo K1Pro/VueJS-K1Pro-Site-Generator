@@ -37,9 +37,9 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  data() {
-    return { atBottom: null };
-  },
+  // data() {
+  //   return { atBottom: null };
+  // },
 
   computed: {
     gridTemplateLogOut() {

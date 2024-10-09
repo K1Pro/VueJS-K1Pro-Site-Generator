@@ -21,7 +21,10 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { year: fullDateTime.getFullYear(), atBottom: null };
+    return {
+      year: fullDateTime.getFullYear(),
+      // atBottom: null
+    };
   },
 
   // computed: {

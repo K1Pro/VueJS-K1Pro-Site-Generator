@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       respWidth: {
+        xs: 400,
         sm: 576,
         md: 650,
         lg: 992,
