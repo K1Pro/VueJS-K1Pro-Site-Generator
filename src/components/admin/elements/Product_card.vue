@@ -3,7 +3,7 @@
     <div
       class="product-card-container"
       :style="{
-        gridTemplateColumns: grid.wdth > 730 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
+        gridTemplateColumns: gridTemplateColumnsFull,
       }"
     >
       <div>
@@ -33,9 +33,9 @@
         <div v-else class="product-card-item"></div>
       </div>
 
-      <template v-for="cardIndex in respvItemAmnt">
+      <template v-for="itemIndex in respvItemAmnt">
         <div
-          v-if="cardIndex === respvItemAmnt"
+          v-if="itemIndex === respvItemAmnt"
           :style="[
             {
               border: '1px solid ' + site.body.style.borderColor,
@@ -46,16 +46,16 @@
         >
           <div class="product-card-modify-container">
             <div class="product-card-modify">
-              <i class="fa-solid fa-circle-plus greenWhitePlus" @click.prevent="addIcon"></i>
+              <i class="fa-solid fa-circle-plus greenWhitePlus" @click="addItem"></i>
             </div>
           </div>
         </div>
         <div v-else class="product-card-item" :style="[style.primaryColor.backgroundColor]">
           <div class="product-card-group">
             <img
-              :src="elValue['items'][itemStart + cardIndex - 1][0]"
-              :alt="elValue['items'][itemStart + cardIndex - 1][1]"
-              @drop.prevent="drop(itemStart + cardIndex - 1)"
+              :src="elValue['items'][itemStart + itemIndex - 1][0]"
+              :alt="elValue['items'][itemStart + itemIndex - 1][1]"
+              @drop.prevent="drop(itemStart + itemIndex - 1)"
               @dragover.prevent
               @dragenter.prevent
               :style="{ 'margin-bottom': '0px' }"
@@ -64,14 +64,16 @@
               <input
                 type="text"
                 class="product-card-header"
-                v-model="site.htmlElmnts[elKey].items[itemStart + cardIndex - 1][1]"
+                placeholder="Title..."
+                v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][1]"
               />
               <div style="position: relative">
                 <textarea
-                  v-model="site.htmlElmnts[elKey].items[itemStart + cardIndex - 1][2]"
+                  placeholder="Description..."
+                  rows="7"
+                  v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][2]"
                   @keydown.enter.prevent
                 ></textarea>
-                <span>{{ elValue['items'][itemStart + cardIndex - 1][2] }}</span>
               </div>
             </div>
           </div>
@@ -91,13 +93,13 @@
           ]"
         >
           <i
-            v-if="showScroll && itemStart + respvItemAmnt < productCardItemAmount"
+            v-if="showScroll && itemStart + respvItemAmnt < itmAmnt"
             class="fa-solid fa-chevron-right"
             style="cursor: pointer"
             @click="increaseScroll"
           ></i>
           <i
-            v-if="showScroll && itemStart + respvItemAmnt >= productCardItemAmount"
+            v-if="showScroll && itemStart + respvItemAmnt >= itmAmnt"
             class="fa-solid fa-chevron-right"
             :style="{ color: site.body.style.textColor + '50' }"
           ></i>
@@ -112,26 +114,22 @@
 export default {
   name: 'Product Card',
 
-  inject: ['grid', 'respWidth', 'selectedMedia', 'site', 'style', 'wndw'],
+  inject: ['grid', 'respWidth', 'selectedMedia', 'site', 'style', 'undoRedo', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    productCardItemAmount() {
+    itmAmnt() {
       return this.elValue['items'].length + 1;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.grid.wdth - 100) / 210);
     },
     showScroll() {
-      return this.productCardItemAmount > this.wndwWdthRoundDown;
+      return this.itmAmnt > this.wndwWdthRoundDown;
     },
     respvItemAmnt() {
-      return this.productCardItemAmount > this.wndwWdthRoundDown && this.grid.wdth >= 730
-        ? this.wndwWdthRoundDown
-        : this.productCardItemAmount > this.wndwWdthRoundDown && this.grid.wdth < 730
-        ? this.productCardItemAmount
-        : this.productCardItemAmount;
+      return this.itmAmnt > this.wndwWdthRoundDown ? this.wndwWdthRoundDown : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
       // const side = (99 - this.elValue['items'].length * 21) / 2;
@@ -152,8 +150,8 @@ export default {
   },
 
   methods: {
-    drop(cardIndex) {
-      this.site.htmlElmnts[this.elKey].items[cardIndex][0] = event.dataTransfer.getData('text');
+    drop(itemIndex) {
+      this.site.htmlElmnts[this.elKey].items[itemIndex][0] = event.dataTransfer.getData('text');
     },
     increaseScroll() {
       this.itemStart++;
@@ -161,8 +159,22 @@ export default {
     decreaseScroll() {
       this.itemStart--;
     },
-    addIcon() {
-      console.log('test');
+    addItem() {
+      this.itemStart++;
+      this.site.htmlElmnts[this.elKey]['items'].push([
+        'https://api-site.k1pro.net/public/default/logo/missingimage.png',
+        '',
+        '',
+      ]);
+    },
+  },
+
+  watch: {
+    respvItemAmnt() {
+      this.itemStart = 0;
+    },
+    undoRedo() {
+      this.itemStart = 0;
     },
   },
 };
@@ -225,9 +237,13 @@ export default {
   color: transparent;
   word-break: break-word;
 }
+.product-card-text span:empty::before {
+  content: 'Description...';
+  color: grey;
+}
 .product-card-text textarea {
-  position: absolute;
-  height: 100%;
+  /* position: absolute;
+  height: 100%; */
   width: 100%;
   background: transparent;
   resize: none;

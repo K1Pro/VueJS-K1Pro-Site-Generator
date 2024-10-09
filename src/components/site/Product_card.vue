@@ -7,20 +7,20 @@
       }"
     >
       <div class="product-card-item"></div>
-      <template v-for="cardIndex in respvItemAmnt">
+      <template v-for="itemIndex in respvItemAmnt">
         <div class="product-card-item" :style="[style.primaryColor]">
           <div class="product-card-group">
             <img
-              :src="elValue['items'][cardIndex - 1][0]"
-              :alt="elValue['items'][cardIndex - 1][1]"
+              :src="elValue['items'][itemIndex - 1][0]"
+              :alt="elValue['items'][itemIndex - 1][1]"
               :style="{ 'margin-bottom': '0px' }"
             />
             <div class="product-card-text" :style="{ padding: '12px' }">
               <div class="product-card-header">
-                {{ elValue['items'][cardIndex - 1][1] }}
+                {{ elValue['items'][itemIndex - 1][1] }}
               </div>
               <p>
-                {{ elValue['items'][cardIndex - 1][2] }}
+                {{ elValue['items'][itemIndex - 1][2] }}
               </p>
             </div>
           </div>
@@ -40,21 +40,21 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    productCardItemAmount() {
+    itmAmnt() {
       return this.elValue['items'].length;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.wndw.wdth - 100) / 210);
     },
     showScroll() {
-      return this.productCardItemAmount > this.wndwWdthRoundDown;
+      return this.itmAmnt > this.wndwWdthRoundDown;
     },
     respvItemAmnt() {
-      return this.productCardItemAmount > this.wndwWdthRoundDown && this.wndw.wdth >= 730
+      return this.itmAmnt > this.wndwWdthRoundDown && this.wndw.wdth >= 730
         ? this.wndwWdthRoundDown
-        : this.productCardItemAmount > this.wndwWdthRoundDown && this.wndw.wdth < 730
-        ? this.productCardItemAmount
-        : this.productCardItemAmount;
+        : this.itmAmnt > this.wndwWdthRoundDown && this.wndw.wdth < 730
+        ? this.itmAmnt
+        : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
       // const side = (99 - this.elValue['items'].length * 21) / 2;

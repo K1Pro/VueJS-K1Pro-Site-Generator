@@ -33,9 +33,9 @@
         <div v-else class="icon-slider-item"></div>
       </div>
 
-      <template v-for="iconIndex in respvItemAmnt">
+      <template v-for="itemIndex in respvItemAmnt">
         <div
-          v-if="iconIndex === respvItemAmnt"
+          v-if="itemIndex === respvItemAmnt"
           :style="[
             {
               border: '1px solid ' + site.body.style.borderColor,
@@ -46,7 +46,7 @@
         >
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
-              <i class="fa-solid fa-circle-plus greenWhitePlus" @click.prevent="addIcon"></i>
+              <i class="fa-solid fa-circle-plus greenWhitePlus" @click="addItem"></i>
             </div>
           </div>
         </div>
@@ -66,18 +66,18 @@
               :style="{
                 'font-size': elValue.style.iconSize + 'px',
               }"
-              :class="elValue['items'][itemStart + iconIndex - 1][1]"
+              :class="elValue['items'][itemStart + itemIndex - 1][1]"
             ></i>
           </div>
 
-          <select v-model="site.htmlElmnts[elKey].items[itemStart + iconIndex - 1][1]">
+          <select v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][1]">
             <icon_slider_options></icon_slider_options>
           </select>
 
           <input
             type="text"
             placeholder="text here..."
-            v-model="site.htmlElmnts[elKey].items[itemStart + iconIndex - 1][0]"
+            v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][0]"
           />
         </div>
       </template>
@@ -95,13 +95,13 @@
           ]"
         >
           <i
-            v-if="showScroll && itemStart + respvItemAmnt < iconSliderItemAmount"
+            v-if="showScroll && itemStart + respvItemAmnt < itmAmnt"
             class="fa-solid fa-chevron-right"
             style="cursor: pointer"
             @click="increaseScroll"
           ></i>
           <i
-            v-if="showScroll && itemStart + respvItemAmnt >= iconSliderItemAmount"
+            v-if="showScroll && itemStart + respvItemAmnt >= itmAmnt"
             class="fa-solid fa-chevron-right"
             :style="{ color: site.body.style.textColor + '50' }"
           ></i>
@@ -121,21 +121,21 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    iconSliderItemAmount() {
+    itmAmnt() {
       return this.elValue['items'].length + 1;
     },
-    windowWidthRoundDown() {
+    wndwWdthRoundDown() {
       return Math.floor((this.grid.wdth - 100) / 100);
     },
     showScroll() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown;
+      return this.itmAmnt > this.wndwWdthRoundDown;
     },
     respvItemAmnt() {
-      return this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth >= this.respWidth.xs
-        ? this.windowWidthRoundDown
-        : this.iconSliderItemAmount > this.windowWidthRoundDown && this.grid.wdth < this.respWidth.xs
+      return this.itmAmnt > this.wndwWdthRoundDown && this.grid.wdth >= this.respWidth.xs
+        ? this.wndwWdthRoundDown
+        : this.itmAmnt > this.wndwWdthRoundDown && this.grid.wdth < this.respWidth.xs
         ? 3
-        : this.iconSliderItemAmount;
+        : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
       const autos = 'repeat(' + this.respvItemAmnt + ', 100px) ';
@@ -167,8 +167,8 @@ export default {
     decreaseScroll() {
       this.itemStart--;
     },
-    addIcon() {
-      if (this.site.htmlElmnts[this.elKey]['items'].length < 8) this.itemStart++;
+    addItem() {
+      this.itemStart++;
       this.site.htmlElmnts[this.elKey]['items'].push(['', 'fa-solid fa-question']);
     },
   },
