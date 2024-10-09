@@ -1,5 +1,5 @@
 <template>
-  <div class="legal-links" :style="[style.primaryColor, legalLinks]" ref="legalLinks">
+  <div class="legal-links" :style="[style.primaryColor]">
     <template v-for="([linkKey, linkVal], linkIndex) in Object.entries(site.htmlElmnts[elKey].links)">
       <template v-if="linkVal === true">
         <template v-if="linkKey == 'Copyright'"> © Copyright {{ year }}, {{ site.business }} </template>
@@ -24,21 +24,21 @@ export default {
     return { year: fullDateTime.getFullYear(), atBottom: null };
   },
 
-  computed: {
-    legalLinks() {
-      return this.atBottom !== null
-        ? { position: this.atBottom ? 'relative' : 'fixed', bottom: this.atBottom ? false : '0' }
-        : {};
-    },
-  },
+  // computed: {
+  //   legalLinks() {
+  //     return this.atBottom !== null
+  //       ? { position: this.atBottom ? 'relative' : 'fixed', bottom: this.atBottom ? false : '0' }
+  //       : {};
+  //   },
+  // },
 
-  mounted() {
-    setTimeout(() => {
-      if (this.atBottom === null) {
-        this.atBottom = this.$refs.legalLinks.getBoundingClientRect().bottom > this.wndw.hght ? true : false;
-      }
-    }, 1);
-  },
+  // mounted() {
+  //   setTimeout(() => {
+  //     if (this.atBottom === null) {
+  //       this.atBottom = this.$refs.legalLinks.getBoundingClientRect().bottom > this.wndw.hght ? true : false;
+  //     }
+  //   }, 1);
+  // },
 };
 </script>
 
