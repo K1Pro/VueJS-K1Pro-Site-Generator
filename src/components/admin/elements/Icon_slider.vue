@@ -138,19 +138,11 @@ export default {
         : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
-      const autos = 'repeat(' + this.respvItemAmnt + ', 100px) ';
-      return 'auto ' + autos + 'auto';
+      return 'auto ' + 'repeat(' + this.respvItemAmnt + ', 100px) auto';
     },
     gridTemplateColumnsMobile() {
-      const autos =
-        'repeat(' +
-        this.respvItemAmnt +
-        ', calc(' +
-        100 / this.respvItemAmnt +
-        '% - ' +
-        70 / this.respvItemAmnt +
-        'px)) ';
-      return '25px ' + autos + '25px';
+      // prettier-ignore
+      return '25px repeat(' +  this.respvItemAmnt + ', calc(' + 100 / this.respvItemAmnt + '% - ' + 70 / this.respvItemAmnt + 'px)) 25px'
     },
   },
 
@@ -168,8 +160,12 @@ export default {
       this.itemStart--;
     },
     addItem() {
-      this.itemStart++;
       this.site.htmlElmnts[this.elKey]['items'].push(['', 'fa-solid fa-question']);
+      if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey]['items'].length + 1) < 0) {
+        this.itemStart = this.site.htmlElmnts[this.elKey]['items'].length + 1 - this.respvItemAmnt;
+      } else {
+        this.itemStart = 0;
+      }
     },
   },
 

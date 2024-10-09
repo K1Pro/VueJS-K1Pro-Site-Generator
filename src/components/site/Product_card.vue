@@ -57,9 +57,6 @@ export default {
         : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
-      // const side = (99 - this.elValue['items'].length * 21) / 2;
-      // const autos = '20% '.repeat(this.elValue['items'].length);
-      // return side + '% ' + autos + side + '%';
       return 'auto repeat(' + this.respvItemAmnt + ', 210px) auto';
     },
 

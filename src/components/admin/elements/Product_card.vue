@@ -132,9 +132,6 @@ export default {
       return this.itmAmnt > this.wndwWdthRoundDown ? this.wndwWdthRoundDown : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
-      // const side = (99 - this.elValue['items'].length * 21) / 2;
-      // const autos = '20% '.repeat(this.elValue['items'].length);
-      // return side + '% ' + autos + side + '%';
       return 'auto repeat(' + this.respvItemAmnt + ', 210px) auto';
     },
 
@@ -160,12 +157,16 @@ export default {
       this.itemStart--;
     },
     addItem() {
-      this.itemStart++;
       this.site.htmlElmnts[this.elKey]['items'].push([
         'https://api-site.k1pro.net/public/default/logo/missingimage.png',
         '',
         '',
       ]);
+      if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey]['items'].length + 1) < 0) {
+        this.itemStart = this.site.htmlElmnts[this.elKey]['items'].length + 1 - this.respvItemAmnt;
+      } else {
+        this.itemStart = 0;
+      }
     },
   },
 
