@@ -51,6 +51,12 @@
           </div>
         </div>
         <div v-else class="product-card-item" :style="[style.primaryColor.backgroundColor]">
+          <i
+            v-if="itemStart + itemIndex - 1 !== 0"
+            class="fa-solid fa-circle-minus redWhiteMinus"
+            style="position: absolute; margin-left: -16px"
+            @click="removeItem(itemStart + itemIndex - 1)"
+          ></i>
           <div class="product-card-group">
             <img
               :src="elValue['items'][itemStart + itemIndex - 1][0]"
@@ -139,7 +145,7 @@ export default {
       return 'auto repeat(' + this.respvItemAmnt + ', 210px) auto';
     },
     gridTemplateColumnsMobile() {
-      return 'auto repeat(' + this.respvItemAmnt + ', calc(33.33% - 33px)) auto';
+      return '25px repeat(' + this.respvItemAmnt + ', calc(33.33% - 30px)) 25px';
     },
   },
 
@@ -170,6 +176,10 @@ export default {
       } else {
         this.itemStart = 0;
       }
+    },
+    removeItem(itemIndex) {
+      if (this.itemStart !== 0) this.itemStart--;
+      this.site.htmlElmnts[this.elKey]['items'].splice(itemIndex, 1);
     },
   },
 
@@ -210,7 +220,7 @@ export default {
 }
 .product-card-item {
   overflow: visible;
-  text-align: left;
+  text-align: right;
 }
 .product-card-group button {
   position: relative;

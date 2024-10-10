@@ -50,35 +50,42 @@
             </div>
           </div>
         </div>
-        <div
-          v-else
-          class="icon-slider-item"
-          :style="[
-            {
-              border: '1px solid ' + site.body.style.borderColor,
-              'border-radius': elValue.style.borderRadius + 'px',
-            },
-            style.primaryColor.backgroundColor,
-          ]"
-        >
-          <div class="icon-slider-icon">
-            <i
-              :style="{
-                'font-size': elValue.style.iconSize + 'px',
-              }"
-              :class="elValue['items'][itemStart + itemIndex - 1][1]"
-            ></i>
+        <div v-else style="text-align: right">
+          <i
+            v-if="itemStart + itemIndex - 1 !== 0"
+            class="fa-solid fa-circle-minus redWhiteMinus"
+            style="position: absolute; margin-left: -16px"
+            @click="removeItem(itemStart + itemIndex - 1)"
+          ></i>
+          <div
+            class="icon-slider-item"
+            :style="[
+              {
+                border: '1px solid ' + site.body.style.borderColor,
+                'border-radius': elValue.style.borderRadius + 'px',
+              },
+              style.primaryColor.backgroundColor,
+            ]"
+          >
+            <div class="icon-slider-icon">
+              <i
+                :style="{
+                  'font-size': elValue.style.iconSize + 'px',
+                }"
+                :class="elValue['items'][itemStart + itemIndex - 1][1]"
+              ></i>
+            </div>
+
+            <select v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][1]">
+              <icon_slider_options></icon_slider_options>
+            </select>
+
+            <input
+              type="text"
+              placeholder="text here..."
+              v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][0]"
+            />
           </div>
-
-          <select v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][1]">
-            <icon_slider_options></icon_slider_options>
-          </select>
-
-          <input
-            type="text"
-            placeholder="text here..."
-            v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][0]"
-          />
         </div>
       </template>
 
@@ -142,7 +149,7 @@ export default {
     },
     gridTemplateColumnsMobile() {
       // prettier-ignore
-      return '25px repeat(' +  this.respvItemAmnt + ', calc(' + 100 / this.respvItemAmnt + '% - ' + 70 / this.respvItemAmnt + 'px)) 25px'
+      return '25px repeat(' + this.respvItemAmnt + ', calc(33.33% - 30px)) 25px';
     },
   },
 
@@ -167,6 +174,10 @@ export default {
         this.itemStart = 0;
       }
     },
+    removeItem(itemIndex) {
+      if (this.itemStart !== 0) this.itemStart--;
+      this.site.htmlElmnts[this.elKey]['items'].splice(itemIndex, 1);
+    },
   },
 
   watch: {
@@ -189,7 +200,7 @@ export default {
 }
 .icon-slider-container {
   display: grid;
-  column-gap: 5px;
+  column-gap: 10px;
 }
 .icon-slider-modify-container {
   display: table;
