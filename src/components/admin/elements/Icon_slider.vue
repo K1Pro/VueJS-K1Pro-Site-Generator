@@ -194,6 +194,7 @@ export default {
 .icon-slider-modify-container {
   display: table;
   height: 100%;
+  width: 100%;
 }
 .icon-slider-modify {
   display: table-cell;
@@ -201,9 +202,6 @@ export default {
   text-align: center;
 }
 .icon-slider-modify i {
-  position: relative;
-  margin-left: 40px;
-  margin-top: 0px;
   cursor: pointer;
 }
 .icon-slider-item {

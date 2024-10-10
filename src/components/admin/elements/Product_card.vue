@@ -3,7 +3,7 @@
     <div
       class="product-card-container"
       :style="{
-        gridTemplateColumns: gridTemplateColumnsFull,
+        gridTemplateColumns: grid.wdth >= respWidth.md ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
       }"
     >
       <div>
@@ -129,14 +129,17 @@ export default {
       return this.itmAmnt > this.wndwWdthRoundDown;
     },
     respvItemAmnt() {
-      return this.itmAmnt > this.wndwWdthRoundDown ? this.wndwWdthRoundDown : this.itmAmnt;
+      return this.itmAmnt > this.wndwWdthRoundDown && this.wndwWdthRoundDown >= 3
+        ? this.wndwWdthRoundDown
+        : this.itmAmnt > this.wndwWdthRoundDown && this.wndwWdthRoundDown < 3
+        ? 3
+        : this.itmAmnt;
     },
     gridTemplateColumnsFull() {
       return 'auto repeat(' + this.respvItemAmnt + ', 210px) auto';
     },
-
     gridTemplateColumnsMobile() {
-      return '100%';
+      return 'auto repeat(' + this.respvItemAmnt + ', calc(33.33% - 33px)) auto';
     },
   },
 
@@ -188,14 +191,14 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
 }
-
 .product-card-container {
   display: grid;
-  column-gap: 1%;
+  column-gap: 10px;
 }
 .product-card-modify-container {
   display: table;
   height: 100%;
+  width: 100%;
 }
 .product-card-modify {
   display: table-cell;
@@ -203,9 +206,6 @@ export default {
   text-align: center;
 }
 .product-card-modify i {
-  position: relative;
-  margin-left: 92px;
-  margin-top: 0px;
   cursor: pointer;
 }
 .product-card-item {
@@ -219,7 +219,7 @@ export default {
 }
 .product-card-group img {
   width: 100%;
-  height: 350px;
+  height: 250px;
   object-fit: cover;
 }
 .product-card-text {
@@ -266,24 +266,13 @@ export default {
 .product-card-prev {
   height: 100%;
   float: right;
-  padding: 350px 5px 0px 5px;
+  padding: 250px 5px 0px 5px;
   margin: 0px;
 }
 .product-card-next {
   height: 100%;
   float: left;
-  padding: 350px 5px 0px 5px;
+  padding: 250px 5px 0px 5px;
   margin: 0px;
-}
-@media only screen and (min-width: 650px) {
-  .product-card-group img {
-    height: 250px;
-  }
-  .product-card-prev {
-    padding: 250px 5px 0px 5px;
-  }
-  .product-card-next {
-    padding: 250px 5px 0px 5px;
-  }
 }
 </style>
