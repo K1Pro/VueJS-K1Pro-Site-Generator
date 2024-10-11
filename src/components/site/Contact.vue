@@ -158,8 +158,6 @@ export default {
     },
 
     removeInvalidContactUsFn(event) {
-      console.log(event.key);
-      console.log(event.target.value.length);
       if (event.target.value.length < 1 && event.key != 'Tab' && event.key != 'Shift') {
         event.target.classList.add('invalid');
       } else {
