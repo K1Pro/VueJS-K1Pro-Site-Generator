@@ -37,7 +37,7 @@
 export default {
   name: 'App admin',
 
-  mixins: [snackbarMixin, wndwWdthHghtMixin, appGridResizerMixin, logoutMixin],
+  mixins: [snackbarMixin, wndwWdthHghtMixin, appGridResizerMixin],
 
   data() {
     return {
@@ -58,12 +58,9 @@ export default {
       userSettings: user_settings,
       endPts: {
         siteURL: site_url,
-        loginURL: login_url,
         captchaURL: captcha_url,
-        accountResetURL: accountreset_url,
         cookiePath: cookie_path,
         login: 'sessions',
-        logout: 'sessions/',
         user: 'users',
         content: 'content',
         messages: 'messages',
@@ -108,9 +105,9 @@ export default {
     sideMenuItems() {
       const sideMenuItemsArray = [
         ['fa fa-gear', null, 'Website'],
-        ['fa fa-camera', null, 'Multimedia', 'Calendar'],
-        ['fa fa-envelope', null, 'Messages', 'Calendar'],
-        ['fa fa-user-gear', null, 'User', 'Calendar'],
+        ['fa fa-camera', null, 'Multimedia'],
+        ['fa fa-envelope', null, 'Messages'],
+        ['fa fa-user-gear', 'link-' + accountlogin_url, 'Account'],
         ['fa fa-sign-out', null, 'Log out'],
       ];
       return sideMenuItemsArray;
@@ -333,17 +330,6 @@ export default {
   mounted() {
     this.isMounted = true;
     this.applyStyle();
-  },
-
-  watch: {
-    sideMenuSlctdLnk(newSideMenuSlctdLnk, oldSideMenuSlctdLnk) {
-      if (newSideMenuSlctdLnk == 'Logout') {
-        this.sideMenuSlctdLnk = oldSideMenuSlctdLnk;
-        if (confirm('Are you sure you would like to log out?') == true) {
-          this.deleteLogin();
-        }
-      }
-    },
   },
 };
 </script>

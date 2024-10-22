@@ -69,12 +69,9 @@ export default {
       directoryGridStaticCol: '',
       endPts: {
         siteURL: site_url,
-        loginURL: login_url,
         captchaURL: captcha_url,
-        accountResetURL: accountreset_url,
         cookiePath: cookie_path,
         login: 'sessions',
-        logout: 'sessions/',
         user: 'users',
         content: 'content',
         messages: 'messages',
