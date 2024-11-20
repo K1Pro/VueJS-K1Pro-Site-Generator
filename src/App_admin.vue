@@ -57,7 +57,7 @@ export default {
       user: user,
       userSettings: user_settings,
       endPts: {
-        siteURL: site_url,
+        appApiUrl: app_api_url,
         captchaURL: captcha_url,
         cookiePath: cookie_path,
         login: 'sessions',
@@ -186,7 +186,7 @@ export default {
         siteTemp.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
       }
       try {
-        const response = await fetch(site_url + add_auth, {
+        const response = await fetch(app_api_url + url, {
           method: 'PATCH',
           headers: {
             Authorization: access_token,
@@ -210,10 +210,11 @@ export default {
       this.individEdit.elmntIndx = null;
       this.individEdit.elmnts = null;
       try {
-        const response = await fetch(site_url + add_auth, {
+        const response = await fetch(app_api_url + url, {
           method: 'GET',
         });
         const getSiteResJSON = await response.json();
+        console.log(getSiteResJSON);
         if (getSiteResJSON.success) {
           this.site = getSiteResJSON.data.params;
           this.individEdit.elmnts = null;
@@ -240,7 +241,7 @@ export default {
           // }
           // const setFavicon = document.createElement('link');
           // setFavicon.setAttribute('rel', 'shortcut icon');
-          // setFavicon.setAttribute('href', this.endPts.siteURL + this.site.params.icon);
+          // setFavicon.setAttribute('href', this.endPts.appApiUrl + this.site.params.icon);
           // document.head.appendChild(setFavicon);
         }
         // console.log(getSiteResJSON);
@@ -266,7 +267,7 @@ export default {
       }
 
       try {
-        const response = await fetch(site_url + this.endPts.content, {
+        const response = await fetch(app_api_url + this.endPts.content, {
           method: method,
           headers: {
             Authorization: access_token,
@@ -291,7 +292,7 @@ export default {
     async patchUserSettings(newUserSettings) {
       this.userSettings = newUserSettings;
       try {
-        const response = await fetch(site_url + 'settings', {
+        const response = await fetch(app_api_url + 'settings', {
           method: 'PATCH',
           headers: {
             Authorization: access_token,

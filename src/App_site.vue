@@ -31,7 +31,7 @@ export default {
         url: url,
         href: href,
         frstURLSgmnt: first_url_segment,
-        siteURL: site_url,
+        appApiUrl: app_api_url,
         captchaURL: captcha_url,
         messages: 'messages',
       },

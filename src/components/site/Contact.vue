@@ -107,7 +107,7 @@ export default {
       if (this.msgName != '' && this.msgEmail != '' && this.msgMessage != '' && this.msgCaptcha != '') {
         this.spinContactUsSend = true;
         try {
-          const response = await fetch(this.endPts.siteURL + this.endPts.messages, {
+          const response = await fetch(this.endPts.appApiUrl + this.endPts.messages, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

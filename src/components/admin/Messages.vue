@@ -33,7 +33,7 @@ export default {
         console.log('you want to delete message ' + messageIndex);
         this.content.messages.splice(messageIndex, 1);
         try {
-          const response = await fetch(site_url + 'messages', {
+          const response = await fetch(app_api_url + 'messages', {
             method: 'DELETE',
             headers: {
               Authorization: access_token,

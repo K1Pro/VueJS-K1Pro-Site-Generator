@@ -7,7 +7,7 @@
   >
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="top-menu-logo" :style="logoImg">
-      <img :src="endPts.siteURL + site.logo" alt="logo" />
+      <img :src="endPts.appApiUrl + site.logo" alt="logo" />
     </div>
     <div :style="[elLi]">
       <div

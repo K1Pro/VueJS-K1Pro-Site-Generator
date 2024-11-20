@@ -26,7 +26,7 @@
         >
           <a :href="dirKey" target="_blank">
             <div style="height: 50%">
-              <img :src="endPts.siteURL + dirValue.logo" :alt="dirKey" height="100%" />
+              <img :src="endPts.appApiUrl + dirValue.logo" :alt="dirKey" height="100%" />
             </div>
             <div style="position: relative; height: 50%; padding: 0">
               <div style="position: absolute; bottom: 0">
@@ -68,7 +68,7 @@ export default {
       respvColAmnt: '',
       directoryGridStaticCol: '',
       endPts: {
-        siteURL: site_url,
+        appApiUrl: app_api_url,
         captchaURL: captcha_url,
         cookiePath: cookie_path,
         login: 'sessions',
