@@ -141,6 +141,7 @@
       </template>
       <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
         <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
+          <option>bart test - {{ htmlElmntVal.type }}</option>
           <option
             v-if="
               (!siteElTypes.includes(htmlElmntVal.type) || !content.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&

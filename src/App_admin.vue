@@ -137,11 +137,7 @@ export default {
       return pageElTypesArray;
     },
     siteElTypes() {
-      const siteElTypesArray = [];
-      Object.values(this.site.htmlElmnts).forEach((val) => {
-        siteElTypesArray.push(val.type);
-      });
-      return siteElTypesArray;
+      return Object.keys(this.site.htmlElmnts);
     },
     style() {
       return {
@@ -248,7 +244,7 @@ export default {
         // this.msg.snackBar = getSiteResJSON.messages[0];
       } catch (error) {
         console.log(error.toString());
-        this.msg.snackBar = error.toString();
+        this.showMsg(error.toString());
       }
     },
     async getUserContent(method, contentType) {
