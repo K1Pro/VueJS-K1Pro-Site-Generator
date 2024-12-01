@@ -126,7 +126,7 @@
     >
       <i :class="elmntButtonVal"></i>
     </button>
-    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl">
+    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl(event)">
       <option disabled selected>{{ slctdElmntButton }} element</option>
       <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(content.htmlElmnts).sort()">
         <option
@@ -141,7 +141,6 @@
       </template>
       <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
         <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
-          <option>bart test - {{ htmlElmntVal.type }}</option>
           <option
             v-if="
               (!siteElTypes.includes(htmlElmntVal.type) || !content.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
@@ -257,7 +256,7 @@ export default {
     },
 
     createCopyDeleteEl(event) {
-      const elmnt = event.target.value;
+      const elmnt = event?.target?.value ? event.target.value : event;
       if (this.slctdElmntButton == 'Delete') {
         // still need to properly delete unique elements here!!!!!!!!!!!
         if (
@@ -310,7 +309,7 @@ export default {
           this.site.pages[this.page.slctd].splice(newElPosition, 0, [elmnt, true]);
         }
       }
-      event.srcElement.selectedIndex = 0;
+      if (event?.srcElement?.selectedIndex) event.srcElement.selectedIndex = 0;
     },
     revealRenameInput(pageElmnt, pageElmntIndx) {
       if (!this.content.htmlUniqSiteElmnts.includes(pageElmnt[0])) {
@@ -359,6 +358,16 @@ export default {
       if (this.addingPage) {
         this.site.pages[this.$refs.newPageName.value] = [];
         this.page.slctd = this.$refs.newPageName.value;
+
+        // console.log(this.site.htmlElmnts);
+        this.siteElTypes.forEach((elType) => {
+          if (this.content.htmlUniqSiteElmnts.includes(elType)) {
+            console.log(elType);
+            this.slctdElmntButton = 'Copy';
+            this.createCopyDeleteEl(elType);
+          }
+        });
+
         this.addingPage = !this.addingPage;
       } else {
         this.addingPage = !this.addingPage;

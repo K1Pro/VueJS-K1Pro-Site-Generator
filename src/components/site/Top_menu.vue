@@ -15,21 +15,24 @@
       >
         <a
           v-if="menuTypes[menuItemIndex] == 'Page'"
+          :ref="menuItem.toLowerCase()"
           :style="[linksA]"
           :href="endPts.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
+          :ref="menuItem.toLowerCase()"
           :style="[linksA]"
           :href="endPts.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Link'"
+          :ref="menuItem.toLowerCase()"
           target="_blank"
           :style="[linksA]"
-          :href="'https://' + menuLinks[menuItemIndex].toLowerCase()"
+          :href="protocol + menuLinks[menuItemIndex].toLowerCase()"
           >{{ menuItem }}</a
         >
       </li>
@@ -56,6 +59,9 @@ export default {
         this.elValue.style?.alignment == 'right' ? Array.from(this.elValue.links).reverse() : this.elValue.links,
       pageClick: false,
       responsive: false,
+      protocol: protocol,
+      frstURLSgmnt: first_url_segment,
+      topMenuMount: 0,
     };
   },
 
@@ -117,8 +123,12 @@ export default {
           event.target.style.backgroundColor = event.target.parentElement.parentElement.style.backgroundColor;
           event.target.style.filter = 'brightness(90%)';
         } else {
-          event.target.style.backgroundColor = '';
-          event.target.style.filter = 'none';
+          event.target.style.backgroundColor =
+            event.target.textContent.toLowerCase() == first_url_segment
+              ? event.target.parentElement.parentElement.style.backgroundColor
+              : '';
+          event.target.style.filter =
+            event.target.textContent.toLowerCase() == first_url_segment ? 'brightness(95%)' : 'none';
         }
       }
     },
@@ -140,6 +150,17 @@ export default {
   created() {
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('click', this.handleClick);
+  },
+
+  updated() {
+    if (this.topMenuMount === 0) {
+      if (Object.keys(this.$refs).includes(first_url_segment)) {
+        this.$refs[first_url_segment][0].style.backgroundColor =
+          this.$refs[first_url_segment][0].parentElement.parentElement.style.backgroundColor;
+        this.$refs[first_url_segment][0].style.filter = 'brightness(95%)';
+      }
+      this.topMenuMount++;
+    }
   },
 
   watch: {
