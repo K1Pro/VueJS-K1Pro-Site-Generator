@@ -47,7 +47,7 @@ export default {
       document.addEventListener('mouseup', this.stopResizeInput, true);
     },
     stopResizeInput() {
-      this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
+      this.patchUserSettings ? this.patchUserSettings(this.sttngs.user) : false;
       this.mouseYCoord = null;
       this.newInputHeight = null;
       this.startingInputHeightFontSize = this.site.htmlElmnts[this.elKey].style.textSize;

@@ -67,4 +67,14 @@ export default {
   position: relative;
   padding: 10px;
 }
+.validation-message {
+  color: red;
+  height: 3vh;
+  line-height: 3vh;
+  font-size: 2vh;
+  background-color: white;
+  font-weight: bold;
+  text-align: left;
+  padding-left: 5px;
+}
 </style>

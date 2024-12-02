@@ -62,7 +62,7 @@ export default {
       document.addEventListener('mouseup', this.stopResizeSpacer, true);
     },
     stopResizeSpacer() {
-      this.patchUserSettings ? this.patchUserSettings(this.userSettings) : false;
+      this.patchUserSettings ? this.patchUserSettings(this.sttngs.user) : false;
       this.modifyingSpacerHeight = false;
       this.mouseYCoord = null;
       this.newSpacerHeight = null;

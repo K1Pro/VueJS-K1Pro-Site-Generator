@@ -126,7 +126,7 @@
     >
       <i :class="elmntButtonVal"></i>
     </button>
-    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl(event)">
+    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl($event)">
       <option disabled selected>{{ slctdElmntButton }} element</option>
       <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(content.htmlElmnts).sort()">
         <option
@@ -139,6 +139,9 @@
           {{ htmlElmnt.replaceAll('_', ' ') }}
         </option>
       </template>
+      {{
+        site
+      }}
       <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
         <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
           <option
@@ -257,6 +260,7 @@ export default {
 
     createCopyDeleteEl(event) {
       const elmnt = event?.target?.value ? event.target.value : event;
+      console.log(event);
       if (this.slctdElmntButton == 'Delete') {
         // still need to properly delete unique elements here!!!!!!!!!!!
         if (
@@ -400,6 +404,9 @@ export default {
         this.site.pages[this.page.slctd].splice(elementIndex - 1, 0, chosenElement);
       }
     },
+  },
+  mounted() {
+    console.log(this.site);
   },
 };
 </script>

@@ -231,12 +231,12 @@ export default {
   margin-bottom: -0.5vh;
 }
 
-.validation-message {
+/* .validation-message {
   height: 3vh;
   line-height: 3vh;
   font-size: 2vh;
   padding-left: 5px;
-}
+} */
 
 @media only screen and (min-width: 650px) {
   .contact-us-form img {

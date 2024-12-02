@@ -5,8 +5,9 @@
     <div class="app-grid-item1" ref="appGridItem1">
       <sidemenu
         :sideMenuItems
+        :sideMenuSlctdLnk="sideMenuSlctdLnk"
         :wndw
-        @sideMenuSlctdLnk="(el) => ((eventIndex = null), (sideMenuSlctdLnk = el))"
+        @sideMenuSlctdLnk="(el) => (sideMenuSlctdLnk = el)"
       ></sidemenu>
       <component :is="sideMenuSlctdLnk[0]" style="padding: 10px 10px 10px 70px; height: 100%"></component>
     </div>
@@ -55,7 +56,7 @@ export default {
       selectedMedia: { img: null, vid: null, txt: null },
       content: content,
       user: user,
-      userSettings: user_settings,
+      sttngs: { user: user_settings },
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: captcha_url,
@@ -119,7 +120,7 @@ export default {
             ? this.$refs.appGridItem1?.clientWidth
             : this.$refs.appGridItem2?.clientWidth,
         hght: this.wndw.hght,
-        size: this.userSettings.layout['grid-size'],
+        size: this.sttngs.user.layout['grid-size'],
       };
     },
     pageElPositions() {
@@ -285,8 +286,8 @@ export default {
         console.log(error);
       }
     },
-    async patchUserSettings(newUserSettings) {
-      this.userSettings = newUserSettings;
+    async patchUserSettings(newSettings) {
+      this.sttngs.user = newSettings;
       try {
         const response = await fetch(app_api_url + 'settings', {
           method: 'PATCH',
@@ -297,11 +298,11 @@ export default {
           },
           body: JSON.stringify({
             Site: site.site,
-            Settings: this.userSettings,
+            Settings: this.sttngs.user,
           }),
         });
-        const patchUserSettingsResJSON = await response.json();
-        if (!patchUserSettingsResJSON.success) {
+        const resJSON = await response.json();
+        if (!resJSON.success) {
           this.showMsg('Settings update error');
         }
       } catch (error) {

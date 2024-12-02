@@ -1,15 +1,8 @@
 <template>
-  <div class="legal">
+  <div class="account-login">
     <top_menu elKey="top_menu" :elValue="site.htmlElmnts.top_menu" elIndex="0"></top_menu>
-    <div class="legal-content" v-for="legalInfo in legal">
-      <div
-        v-html="
-          legalInfo
-            .replaceAll('__href__', domain.replaceAll('_', '.'))
-            .replaceAll('__name__', name)
-            .replaceAll('__email__', site.email.toLowerCase())
-        "
-      ></div>
+    <div class="account-login-container">
+      <login></login>
     </div>
     <foot
       v-if="JSON.stringify(site.pages.Home).includes(JSON.stringify(['footer', true]))"
@@ -41,8 +34,6 @@ export default {
         xl: 1140,
       },
       site: params,
-      domain: add_auth,
-      legal: legal,
       endPts: {
         url: url,
         href: href,
@@ -91,7 +82,10 @@ export default {
 </script>
 
 <style>
-.legal-content {
-  padding: 0px 10%;
+.account-login {
+}
+.account-login-container {
+  display: flex;
+  justify-content: center;
 }
 </style>
