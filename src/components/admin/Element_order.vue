@@ -2,7 +2,7 @@
   <div class="element-order">
     <select
       v-if="!addingPage"
-      v-model="page.slctd"
+      v-model="slctd.page"
       @focus="pageSlctd = $event.target.value"
       @change="pageSlctdChange"
       style="width: calc(100% - 40px)"
@@ -25,16 +25,16 @@
     <i
       class="fa-solid fa-circle-minus"
       :style="{
-        color: page.slctd == 'Home' && !addingPage ? 'grey' : '#ff0000',
-        cursor: page.slctd == 'Home' && !addingPage ? 'not-allowed' : 'pointer',
+        color: slctd.page == 'Home' && !addingPage ? 'grey' : '#ff0000',
+        cursor: slctd.page == 'Home' && !addingPage ? 'not-allowed' : 'pointer',
       }"
       style="padding-left: 2px"
-      @click="deletePage(page.slctd)"
+      @click="deletePage(slctd.page)"
     ></i>
 
     <div class="element-order-list">
       <div
-        v-for="(pageElmnt, pageElmntIndx) in site.pages[page.slctd]"
+        v-for="(pageElmnt, pageElmntIndx) in site.pages[slctd.page]"
         class="element-order-items"
         :draggable="site.htmlElmnts[pageElmnt[0]].position ? false : true"
         @dragstart="drag($event, pageElmntIndx)"
@@ -84,9 +84,9 @@
         />
         <i
           v-if="
-            pageElmntIndx != site.pages[page.slctd].length - 1 &&
+            pageElmntIndx != site.pages[slctd.page].length - 1 &&
             !site.htmlElmnts[pageElmnt[0]].position &&
-            !site.htmlElmnts?.[site.pages[page.slctd][pageElmntIndx + 1][0]]?.position &&
+            !site.htmlElmnts?.[site.pages[slctd.page][pageElmntIndx + 1][0]]?.position &&
             renamingPos != pageElmntIndx
           "
           class="fa-solid fa-circle-down"
@@ -100,7 +100,7 @@
           v-if="
             pageElmntIndx != 0 &&
             !site.htmlElmnts[pageElmnt[0]].position &&
-            !site.htmlElmnts?.[site.pages[page.slctd][pageElmntIndx - 1][0]]?.position &&
+            !site.htmlElmnts?.[site.pages[slctd.page][pageElmntIndx - 1][0]]?.position &&
             renamingPos != pageElmntIndx
           "
           class="fa-solid fa-circle-up"
@@ -128,11 +128,11 @@
     </button>
     <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl($event)">
       <option disabled selected>{{ slctdElmntButton }} element</option>
-      <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(content.htmlElmnts).sort()">
+      <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(defaults.htmlElmnts).sort()">
         <option
           v-if="
-            (!siteElTypes.includes(htmlElmnt) || !content.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
-            (!pageElTypes.includes(htmlElmnt) || !content.htmlUniqPageElmnts.includes(htmlElmnt))
+            (!siteElTypes.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
+            (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt))
           "
           :value="htmlElmnt"
         >
@@ -146,8 +146,8 @@
         <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
           <option
             v-if="
-              (!siteElTypes.includes(htmlElmntVal.type) || !content.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
-              (!pageElTypes.includes(htmlElmntVal.type) || !content.htmlUniqPageElmnts.includes(htmlElmntVal.type))
+              (!siteElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
+              (!pageElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqPageElmnts.includes(htmlElmntVal.type))
             "
             :value="htmlElmntKey"
           >
@@ -169,15 +169,15 @@ export default {
   name: 'Element Order',
 
   inject: [
-    'content',
+    'defaults',
     'endPts',
     'individEdit',
-    'page',
     'pageElPositions',
     'pageElTypes',
     'showMsg',
     'site',
     'siteElTypes',
+    'slctd',
   ],
 
   data() {
@@ -197,42 +197,42 @@ export default {
     },
     drop(event, pageElmntIndx) {
       if (this.individEdit.elmntIndx) {
-        this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
+        this.site.pages[this.slctd.page] = JSON.parse(this.individEdit.elmnts);
         this.individEdit.elmntIndx = null;
         this.individEdit.elmnts = null;
       }
-      if (this.site.htmlElmnts[this.site.pages[this.page.slctd][pageElmntIndx][0]].position === undefined) {
-        const draggedEl = this.site.pages[this.page.slctd][event.dataTransfer.getData('text')];
+      if (this.site.htmlElmnts[this.site.pages[this.slctd.page][pageElmntIndx][0]].position === undefined) {
+        const draggedEl = this.site.pages[this.slctd.page][event.dataTransfer.getData('text')];
         if (Number(event.dataTransfer.getData('text')) > pageElmntIndx) {
-          this.site.pages[this.page.slctd].splice(pageElmntIndx, 0, draggedEl);
-          this.site.pages[this.page.slctd].splice(Number(event.dataTransfer.getData('text')) + 1, 1);
+          this.site.pages[this.slctd.page].splice(pageElmntIndx, 0, draggedEl);
+          this.site.pages[this.slctd.page].splice(Number(event.dataTransfer.getData('text')) + 1, 1);
         } else {
-          this.site.pages[this.page.slctd].splice(pageElmntIndx + 1, 0, draggedEl);
-          this.site.pages[this.page.slctd].splice(Number(event.dataTransfer.getData('text')), 1);
+          this.site.pages[this.slctd.page].splice(pageElmntIndx + 1, 0, draggedEl);
+          this.site.pages[this.slctd.page].splice(Number(event.dataTransfer.getData('text')), 1);
         }
       }
     },
     toggleIndivEdit(indx) {
       if (this.individEdit.elmntIndx == indx) {
-        this.site.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
+        this.site.pages[this.slctd.page] = JSON.parse(this.individEdit.elmnts);
         this.individEdit.elmntIndx = null;
         this.individEdit.elmnts = null;
       } else if (this.individEdit.elmntIndx === null) {
         this.individEdit.elmntIndx = indx;
-        this.individEdit.elmnts = JSON.stringify(this.site.pages[this.page.slctd]);
-        this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
+        this.individEdit.elmnts = JSON.stringify(this.site.pages[this.slctd.page]);
+        this.site.pages[this.slctd.page].forEach((page, pageIndex) => {
           page[1] = indx !== pageIndex ? false : true;
         });
       } else {
         this.individEdit.elmntIndx = indx;
-        this.site.pages[this.page.slctd].forEach((page, pageIndex) => {
+        this.site.pages[this.slctd.page].forEach((page, pageIndex) => {
           page[1] = indx !== pageIndex ? false : true;
         });
       }
     },
 
     toggleElmnt(event, elmnt, indx) {
-      if (this.content.htmlUniqSiteElmnts.includes(elmnt)) {
+      if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
         // toggles unique element on all pages
         for (const [pageKey, pageVal] of Object.entries(this.site.pages)) {
           pageVal.forEach((element, elIndex) => {
@@ -243,7 +243,7 @@ export default {
         }
       } else {
         // toggles non-unique element only on selected page
-        this.site.pages[this.page.slctd][indx][1] = event;
+        this.site.pages[this.slctd.page][indx][1] = event;
       }
     },
 
@@ -252,9 +252,9 @@ export default {
         this.site.pages[this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
         this.individEdit.elmntIndx = null;
         this.individEdit.elmnts = null;
-        this.pageSlctd = this.page.slctd;
+        this.pageSlctd = this.slctd.page;
       } else {
-        this.pageSlctd = this.page.slctd;
+        this.pageSlctd = this.slctd.page;
       }
     },
 
@@ -285,7 +285,7 @@ export default {
         const elPosition =
           this.slctdElmntButton == 'Copy'
             ? this.site.htmlElmnts[elmnt]?.position
-            : this.content.htmlElmnts[elmnt]?.position;
+            : this.defaults.htmlElmnts[elmnt]?.position;
         let newElPosition;
         if (0 < elPosition) {
           newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
@@ -293,30 +293,30 @@ export default {
         }
         if (0 > elPosition) {
           newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
-          newElPosition = 0 > newElPosition ? this.site.pages[this.page.slctd].length : newElPosition;
+          newElPosition = 0 > newElPosition ? this.site.pages[this.slctd.page].length : newElPosition;
         }
         if (elPosition === undefined) {
           newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
-          newElPosition = 0 > newElPosition ? this.site.pages[this.page.slctd].length : newElPosition;
+          newElPosition = 0 > newElPosition ? this.site.pages[this.slctd.page].length : newElPosition;
         }
 
-        if (this.content.htmlUniqSiteElmnts.includes(elmnt)) {
-          this.site.htmlElmnts[elmnt] = this.content.htmlElmnts[elmnt];
+        if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
+          this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
           for (const [pageKey, pageVal] of Object.entries(this.site.pages)) {
             this.site.pages[pageKey].splice(newElPosition, 0, [elmnt, true]);
           }
-        } else if (this.content.htmlAllElmnts.includes(elmnt)) {
+        } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
           const newElName = elmnt + '_' + new Date().getTime();
-          this.site.htmlElmnts[newElName] = this.content.htmlElmnts[elmnt];
-          this.site.pages[this.page.slctd].splice(newElPosition, 0, [newElName, true]);
+          this.site.htmlElmnts[newElName] = this.defaults.htmlElmnts[elmnt];
+          this.site.pages[this.slctd.page].splice(newElPosition, 0, [newElName, true]);
         } else {
-          this.site.pages[this.page.slctd].splice(newElPosition, 0, [elmnt, true]);
+          this.site.pages[this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
         }
       }
       if (event?.srcElement?.selectedIndex) event.srcElement.selectedIndex = 0;
     },
     revealRenameInput(pageElmnt, pageElmntIndx) {
-      if (!this.content.htmlUniqSiteElmnts.includes(pageElmnt[0])) {
+      if (!this.defaults.htmlUniqSiteElmnts.includes(pageElmnt[0])) {
         this.renamingPos = pageElmntIndx;
         setTimeout(() => {
           this.$refs['renameInput' + pageElmntIndx][0].focus();
@@ -338,7 +338,7 @@ export default {
       const htmlElmntsLowerCase = [];
       Object.keys(this.site.htmlElmnts).map((key) => htmlElmntsLowerCase.push(key.toLowerCase()));
       const contentHtmlElmntsLowerCase = [];
-      Object.keys(this.content.htmlElmnts).map((key) => contentHtmlElmntsLowerCase.push(key.toLowerCase()));
+      Object.keys(this.defaults.htmlElmnts).map((key) => contentHtmlElmntsLowerCase.push(key.toLowerCase()));
 
       if (
         pagesLowerCase.includes(newPageElName.toLowerCase()) ||
@@ -361,11 +361,11 @@ export default {
     addPage() {
       if (this.addingPage) {
         this.site.pages[this.$refs.newPageName.value] = [];
-        this.page.slctd = this.$refs.newPageName.value;
+        this.slctd.page = this.$refs.newPageName.value;
 
         // console.log(this.site.htmlElmnts);
         this.siteElTypes.forEach((elType) => {
-          if (this.content.htmlUniqSiteElmnts.includes(elType)) {
+          if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
             console.log(elType);
             this.slctdElmntButton = 'Copy';
             this.createCopyDeleteEl(elType);
@@ -381,32 +381,29 @@ export default {
       if (this.addingPage) {
         this.addingPage = !this.addingPage;
       } else {
-        this.page.slctd = 'Home';
+        this.slctd.page = 'Home';
         delete this.site.pages[slctdPage];
       }
     },
     deletePageEl(elementIndex) {
       if (this.individEdit.elmnts === null) {
-        this.site.pages[this.page.slctd].splice(elementIndex, 1);
+        this.site.pages[this.slctd.page].splice(elementIndex, 1);
       }
     },
     moveDown(elementIndex) {
       if (this.individEdit.elmnts === null) {
-        const chosenElement = this.site.pages[this.page.slctd][elementIndex];
-        this.site.pages[this.page.slctd].splice(elementIndex, 1);
-        this.site.pages[this.page.slctd].splice(elementIndex + 1, 0, chosenElement);
+        const chosenElement = this.site.pages[this.slctd.page][elementIndex];
+        this.site.pages[this.slctd.page].splice(elementIndex, 1);
+        this.site.pages[this.slctd.page].splice(elementIndex + 1, 0, chosenElement);
       }
     },
     moveUp(elementIndex) {
       if (this.individEdit.elmnts === null) {
-        const chosenElement = this.site.pages[this.page.slctd][elementIndex];
-        this.site.pages[this.page.slctd].splice(elementIndex, 1);
-        this.site.pages[this.page.slctd].splice(elementIndex - 1, 0, chosenElement);
+        const chosenElement = this.site.pages[this.slctd.page][elementIndex];
+        this.site.pages[this.slctd.page].splice(elementIndex, 1);
+        this.site.pages[this.slctd.page].splice(elementIndex - 1, 0, chosenElement);
       }
     },
-  },
-  mounted() {
-    console.log(this.site);
   },
 };
 </script>

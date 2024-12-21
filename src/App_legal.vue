@@ -1,11 +1,11 @@
 <template>
   <div class="legal">
     <top_menu elKey="top_menu" :elValue="site.htmlElmnts.top_menu" elIndex="0"></top_menu>
-    <div class="legal-content" v-for="legalInfo in legal">
+    <div class="legal-content" v-for="legalInfo in site.legal">
       <div
         v-html="
           legalInfo
-            .replaceAll('__href__', domain.replaceAll('_', '.'))
+            .replaceAll('__href__', site.job.replaceAll('_', '.'))
             .replaceAll('__name__', name)
             .replaceAll('__email__', site.email.toLowerCase())
         "
@@ -40,16 +40,10 @@ export default {
         lg: 992,
         xl: 1140,
       },
-      site: params,
-      domain: add_auth,
-      legal: legal,
+      site: site,
       endPts: {
-        url: url,
-        href: href,
-        frstURLSgmnt: first_url_segment,
         appApiUrl: app_api_url,
-        captchaURL: captcha_url,
-        messages: 'messages',
+        captchaURL: api_path.captcha,
       },
     };
   },
@@ -82,10 +76,6 @@ export default {
     //   }
     //   return pageElTypesArray;
     // },
-  },
-
-  mounted() {
-    console.log(this.endPts.frstURLSgmnt);
   },
 };
 </script>

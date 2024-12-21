@@ -33,14 +33,10 @@ export default {
         lg: 992,
         xl: 1140,
       },
-      site: params,
+      site: site,
       endPts: {
-        url: url,
-        href: href,
-        frstURLSgmnt: first_url_segment,
         appApiUrl: app_api_url,
-        captchaURL: captcha_url,
-        messages: 'messages',
+        captchaURL: api_path.captcha,
       },
     };
   },
@@ -73,10 +69,6 @@ export default {
     //   }
     //   return pageElTypesArray;
     // },
-  },
-
-  mounted() {
-    console.log(this.endPts.frstURLSgmnt);
   },
 };
 </script>

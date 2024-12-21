@@ -46,7 +46,7 @@
 export default {
   name: 'Footer',
 
-  inject: ['content', 'endPts', 'grid', 'page', 'respWidth', 'site', 'style', 'wndw'],
+  inject: ['endPts', 'grid', 'slctd', 'respWidth', 'site', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

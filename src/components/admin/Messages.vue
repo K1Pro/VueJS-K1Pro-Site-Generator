@@ -2,7 +2,7 @@
   <div class="messages">
     Messages:
     <div class="messages-container">
-      <template v-for="(message, messageIndex) in content.messages">
+      <template v-for="(message, messageIndex) in messages">
         <div>
           <h4>{{ messageIndex + 1 }}</h4>
           <button @click="deleteMessage(messageIndex)"><i class="fa-solid fa-trash"></i></button>
@@ -16,7 +16,7 @@
         <div>{{ message.Email }}</div>
         <div>{{ message.Message }}</div>
       </template>
-      <div v-if="content.messages.length === 0">0 messages</div>
+      <div v-if="messages.length === 0">0 messages</div>
     </div>
   </div>
 </template>
@@ -25,13 +25,13 @@
 export default {
   name: 'Messages',
 
-  inject: ['content', 'showMsg'],
+  inject: ['messages', 'showMsg'],
 
   methods: {
     async deleteMessage(messageIndex) {
       if (confirm('Are you sure you would like to delete this message?') == true) {
         console.log('you want to delete message ' + messageIndex);
-        this.content.messages.splice(messageIndex, 1);
+        this.messages.splice(messageIndex, 1);
         try {
           const response = await fetch(app_api_url + 'messages', {
             method: 'DELETE',
@@ -41,7 +41,6 @@ export default {
               'Cache-Control': 'no-store',
             },
             body: JSON.stringify({
-              Referer: add_auth,
               EmailIndex: messageIndex,
             }),
           });

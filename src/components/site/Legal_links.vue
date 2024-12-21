@@ -3,7 +3,7 @@
     <template v-for="([linkKey, linkVal], linkIndex) in Object.entries(site.htmlElmnts[elKey].links)">
       <template v-if="linkVal === true">
         <template v-if="linkKey == 'Copyright'"> © Copyright {{ year }}, {{ site.business }} </template>
-        <a v-else :href="endPts.href + '/' + linkKey.toLowerCase()">
+        <a v-else :href="site.href + '/' + linkKey.toLowerCase()">
           {{ linkKey.replaceAll('-', ' ') }}
         </a>
       </template>

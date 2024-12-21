@@ -1,6 +1,6 @@
 <template>
   <snackbar :msg @deleteMsg="msg = null"></snackbar>
-  <template v-for="(pageElmnt, pageIndex) in pages[endPts.frstURLSgmnt ? endPts.frstURLSgmnt : 'home']">
+  <template v-for="(pageElmnt, pageIndex) in pages[site.first_url_segment ? site.first_url_segment : 'home']">
     <component
       :is="site.htmlElmnts[pageElmnt[0]].type"
       v-if="pageElmnt[1]"
@@ -26,14 +26,10 @@ export default {
         lg: 992,
         xl: 1140,
       },
-      site: params,
+      site: site,
       endPts: {
-        url: url,
-        href: href,
-        frstURLSgmnt: first_url_segment,
         appApiUrl: app_api_url,
-        captchaURL: captcha_url,
-        messages: 'messages',
+        captchaURL: api_path.captcha,
       },
     };
   },
@@ -50,7 +46,7 @@ export default {
   computed: {
     pages() {
       const pagesLowerCase = {};
-      Object.entries(params.pages).map(([key, value]) => (pagesLowerCase[key.toLowerCase()] = value));
+      Object.entries(site.pages).map(([key, value]) => (pagesLowerCase[key.toLowerCase()] = value));
       return pagesLowerCase;
     },
     style() {

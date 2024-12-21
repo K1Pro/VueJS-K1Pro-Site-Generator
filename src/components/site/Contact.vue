@@ -107,9 +107,10 @@ export default {
       if (this.msgName != '' && this.msgEmail != '' && this.msgMessage != '' && this.msgCaptcha != '') {
         this.spinContactUsSend = true;
         try {
-          const response = await fetch(this.endPts.appApiUrl + this.endPts.messages, {
+          const response = await fetch(this.endPts.appApiUrl + this.site.job + '/messages', {
             method: 'POST',
             headers: {
+              Authorization: btoa(this.site.entity),
               'Content-Type': 'application/json',
               'Cache-Control': 'no-store',
             },
@@ -119,7 +120,6 @@ export default {
               Message: this.msgMessage,
               Captcha: this.msgCaptcha,
               Date: this.msgDate,
-              Referer: add_auth,
             }),
           });
           const postMsgResJSON = await response.json();
@@ -168,7 +168,7 @@ export default {
     async updateCaptcha() {
       this.spinUpdateCaptcha = true;
       try {
-        const response = await fetch(time_url, {
+        const response = await fetch(api_path.time, {
           method: 'GET',
         });
         const getServerTimeJSON = await response.json();

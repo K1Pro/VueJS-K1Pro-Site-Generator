@@ -1,7 +1,7 @@
 <template>
   <snackbar :msg @deleteMsg="msg = null"></snackbar>
 
-  <div class="app-grid-container" :style="appGridContainer">
+  <div class="app-grid-container" :style="appGridContainer" v-if="sttngs.user !== null">
     <div class="app-grid-item1" ref="appGridItem1">
       <sidemenu
         :sideMenuItems
@@ -19,8 +19,9 @@
       @mouseup="stopResizeGrid"
       v-on:dblclick="resetGrid"
     ></div>
-    <div id="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
-      <template v-for="(pageElmnt, pageIndex) in site.pages[page.slctd]">
+
+    <div class="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
+      <template v-for="(pageElmnt, pageIndex) in site.pages[slctd.page]">
         <component
           :is="site.htmlElmnts[pageElmnt[0]].type"
           v-if="pageElmnt[1]"
@@ -38,13 +39,23 @@
 export default {
   name: 'App admin',
 
-  mixins: [snackbarMixin, wndwWdthHghtMixin, appGridResizerMixin],
+  mixins: [appGridResizerMixin, defaultsMixin, pexelsMixin, snackbarMixin, settingsMixin, wndwWdthHghtMixin],
 
   data() {
     return {
-      isMounted: false,
-      page: { slctd: 'Home' },
-      site: params,
+      endPts: {
+        appApiUrl: app_api_url,
+        captchaURL: api_path.captcha,
+      },
+      grid: {
+        wdth: document.body.clientWidth * 0.5,
+        hght: document.documentElement.clientHeight,
+      },
+      individEdit: {
+        elmntIndx: null,
+        elmnts: null,
+      },
+      messages: null,
       respWidth: {
         xs: 400,
         sm: 576,
@@ -52,53 +63,37 @@ export default {
         lg: 992,
         xl: 1140,
       },
+      slctd: { imgURL: null, page: 'Home', txtCntnt: null, vidURL: null },
       sideMenuSlctdLnk: ['Website'],
-      selectedMedia: { img: null, vid: null, txt: null },
-      content: content,
-      user: user,
-      sttngs: { user: user_settings },
-      endPts: {
-        appApiUrl: app_api_url,
-        captchaURL: captcha_url,
-        cookiePath: cookie_path,
-        login: 'sessions',
-        user: 'users',
-        content: 'content',
-        messages: 'messages',
-      },
-      individEdit: {
-        elmntIndx: null,
-        elmnts: null,
-      },
+      site: site,
       undoRedo: 0,
+      userData: user_data,
     };
   },
 
   provide() {
     return {
       // computed
+      grid: Vue.computed(() => this.grid),
+      individEdit: Vue.computed(() => this.individEdit),
+      messages: Vue.computed(() => this.messages),
       page: Vue.computed(() => this.page),
-      selectedMedia: Vue.computed(() => this.selectedMedia),
-      site: Vue.computed(() => this.site),
       pageElPositions: Vue.computed(() => this.pageElPositions),
       pageElTypes: Vue.computed(() => this.pageElTypes),
-      siteElTypes: Vue.computed(() => this.siteElTypes),
-      sideMenuSlctdLnk: Vue.computed(() => this.sideMenuSlctdLnk),
-      content: Vue.computed(() => this.content),
-      user: Vue.computed(() => this.user),
       selectedVideo: Vue.computed(() => this.selectedVideo),
+      sideMenuSlctdLnk: Vue.computed(() => this.sideMenuSlctdLnk),
+      site: Vue.computed(() => this.site),
+      siteElTypes: Vue.computed(() => this.siteElTypes),
+      slctd: Vue.computed(() => this.slctd),
       style: Vue.computed(() => this.style),
-      grid: Vue.computed(() => this.grid),
       undoRedo: Vue.computed(() => this.undoRedo),
-      individEdit: Vue.computed(() => this.individEdit),
+      userData: Vue.computed(() => this.userData),
       // static
-      respWidth: this.respWidth,
       endPts: this.endPts,
+      respWidth: this.respWidth,
       // methods
-      getUserContent: this.getUserContent,
-      patchSite: this.patchSite,
-      modify: this.modify,
       getSite: this.getSite,
+      patchSite: this.patchSite,
     };
   },
 
@@ -108,31 +103,21 @@ export default {
         ['fa fa-gear', null, 'Website'],
         ['fa fa-camera', null, 'Multimedia'],
         ['fa fa-envelope', null, 'Messages'],
-        ['fa fa-user-gear', 'link-' + accountlogin_url, 'Account'],
+        ['fa fa-user-gear', 'link-' + url_path.login, 'Account'],
         ['fa fa-sign-out', null, 'Log out'],
       ];
       return sideMenuItemsArray;
     },
-    grid() {
-      return {
-        wdth:
-          this.wndw.wdth < this.respWidth.md
-            ? this.$refs.appGridItem1?.clientWidth
-            : this.$refs.appGridItem2?.clientWidth,
-        hght: this.wndw.hght,
-        size: this.sttngs.user.layout['grid-size'],
-      };
-    },
     pageElPositions() {
       const pageElPositionsArray = [];
-      this.site.pages[this.page.slctd].forEach((el) => {
+      this.site.pages[this.slctd.page].forEach((el) => {
         pageElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
       });
       return pageElPositionsArray;
     },
     pageElTypes() {
       const pageElTypesArray = [];
-      this.site.pages[this.page.slctd].forEach((el) => {
+      this.site.pages[this.slctd.page].forEach((el) => {
         pageElTypesArray.push(this.site.htmlElmnts[el[0]].type);
       });
       return pageElTypesArray;
@@ -180,7 +165,7 @@ export default {
       let siteTemp = JSON.stringify(this.site);
       if (this.individEdit.elmntIndx !== null) {
         siteTemp = JSON.parse(siteTemp);
-        siteTemp.pages[this.page.slctd] = JSON.parse(this.individEdit.elmnts);
+        siteTemp.pages[this.slctd.page] = JSON.parse(this.individEdit.elmnts);
       }
       try {
         const response = await fetch(app_api_url + url, {
@@ -213,7 +198,7 @@ export default {
         const getSiteResJSON = await response.json();
         console.log(getSiteResJSON);
         if (getSiteResJSON.success) {
-          this.site = getSiteResJSON.data.params;
+          this.site = getSiteResJSON.data.params; //need to refactor params
           this.individEdit.elmnts = null;
           this.applyStyle();
           this.undoRedo++;
@@ -248,70 +233,8 @@ export default {
         this.showMsg(error.toString());
       }
     },
-    async getUserContent(method, contentType) {
-      // this.getUserContent('POST', null);
-      let content;
-      if (contentType == 'image') {
-        content = {
-          mostRecentImageSearch: this.content.mostRecentImageSearch,
-          imagesSearched: this.content.imagesSearched,
-        };
-      } else if (contentType == 'video') {
-        content = {
-          mostRecentVideoSearch: this.content.mostRecentVideoSearch,
-          videosSearched: this.content.videosSearched,
-        };
-      }
-
-      try {
-        const response = await fetch(app_api_url + this.endPts.content, {
-          method: method,
-          headers: {
-            Authorization: access_token,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            site: add_auth,
-            content: content,
-            contentType: contentType,
-          }),
-        });
-        const getUserContentJSON = await response.json();
-        if (getUserContentJSON.success) {
-          if (method == 'POST') this.content = getUserContentJSON.data;
-          console.log(getUserContentJSON);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async patchUserSettings(newSettings) {
-      this.sttngs.user = newSettings;
-      try {
-        const response = await fetch(app_api_url + 'settings', {
-          method: 'PATCH',
-          headers: {
-            Authorization: access_token,
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-store',
-          },
-          body: JSON.stringify({
-            Site: site.site,
-            Settings: this.sttngs.user,
-          }),
-        });
-        const resJSON = await response.json();
-        if (!resJSON.success) {
-          this.showMsg('Settings update error');
-        }
-      } catch (error) {
-        console.log(error.toString());
-        this.showMsg('Settings update error');
-      }
-    },
     applyStyle() {
-      const appGridItem2 = document.getElementById('app-grid-item2');
+      const appGridItem2 = this.$refs.appGridItem2;
 
       const allElmnts = [
         ...Array.from(appGridItem2.getElementsByTagName('input')),
@@ -323,11 +246,33 @@ export default {
         el.style.color = this.site.body.style.textColor;
       });
     },
+
+    async messagesReq(METHOD) {
+      try {
+        const response = await fetch(app_api_url + 'messages', {
+          headers: {
+            Authorization: access_token,
+            'Cache-Control': 'no-store',
+          },
+        });
+        const resJSON = await response.json();
+        if (resJSON.success) this.messages = resJSON.data.messages;
+      } catch (error) {
+        console.log(error.toString());
+        this.showMsg('Messages error');
+      }
+    },
   },
 
   mounted() {
-    this.isMounted = true;
-    this.applyStyle();
+    this.sttngsReq('GET', 'user');
+    this.messagesReq('GET');
+    this.pexelsReq('GET', 'img');
+    // this.applyStyle();
+  },
+  updated() {
+    if (this.$refs?.appGridItem2) this.grid.wdth = this.$refs.appGridItem2.clientWidth;
+    // console.log(this.grid.wdth);
   },
 };
 </script>
@@ -335,7 +280,6 @@ export default {
 <style>
 .app-grid-container {
   display: grid;
-  grid-template-columns: 100%;
   grid-template-rows: 100vh auto; /* auto */
   /* background-color: #c6c6c6; */
   /* word-break: break-all; */
@@ -353,6 +297,16 @@ export default {
   bottom: 0px;
   padding: 0px 3px;
 }
+.font-size-input {
+  font-size: 12px;
+  position: absolute;
+  width: 50px;
+  height: 25px;
+  top: 5px;
+  right: 5px;
+  padding: 0px 3px;
+  margin: 0px;
+}
 .greenWhitePlus::before {
   font-size: 16px;
   color: forestgreen;
@@ -367,11 +321,13 @@ export default {
   border-radius: 25px;
   cursor: pointer;
 }
+@media only screen and (max-width: 767px) {
+  .app-grid-container {
+    grid-template-columns: 100%;
+  }
+}
 @media only screen and (min-width: 768px) {
-  /* .app-grid-container {
-    grid-template-rows: 100vh;
-  } */
-  #app-grid-item2 {
+  .app-grid-item2 {
     overflow-y: scroll;
   }
 }

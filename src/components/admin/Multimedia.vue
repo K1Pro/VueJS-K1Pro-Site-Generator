@@ -1,33 +1,44 @@
 <template>
   <div class="multimedia">
     <button
-      v-for="mediaType in Object.keys(mediaTypes)"
+      v-for="mediaType in Object.keys(mdTp)"
       @click="selectMediaType(mediaType)"
-      :style="{ backgroundColor: this.selectedMediaType == mediaType ? 'darkgrey' : '#eee' }"
+      :style="{ backgroundColor: slctdMd == mediaType ? 'darkgrey' : '#eee' }"
     >
       <i :class="'fa-solid ' + mediaType"></i>
     </button>
     <select @change="selectSearch">
-      <template v-if="content.imagesSearched">
-        <option v-for="contentSearch in Object.keys(content[mediaTypes[selectedMediaType][1]])" :value="contentSearch">
-          {{ contentSearch.replaceAll('-', ' ') }}
+      <template v-if="this[mdTp[slctdMd][0]][mdTp[slctdMd][1]]">
+        <option
+          v-for="media in this[mdTp[slctdMd][0]][mdTp[slctdMd][1]]?.toReversed()"
+          :value="media.search"
+          :selected="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == media.search"
+        >
+          {{ media.search.replaceAll('+', ' ') }}
         </option>
       </template>
     </select>
-    <input type="search" :value="searchInput.replaceAll('-', ' ')" ref="searchInput" @keyup.enter="mediaSearch" />
+    <input
+      type="search"
+      :value="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]].replaceAll('+', ' ')"
+      ref="searchInput"
+      @keyup.enter="mediaSearch"
+    />
     <button><i class="fa-solid fa-magnifying-glass" @click="mediaSearch"></i></button>
     <button style="border-right-width: 1px"><i class="fa-solid fa-trash"></i></button>
-
     <div class="multimedia-gallery">
-      <div v-if="this.searchInput" class="multimedia-gallery-row">
-        <div v-for="mediaSrch in mediaSrchArray" class="multimedia-gallery-column">
+      <div
+        v-if="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] && mediaSrchArr !== null"
+        class="multimedia-gallery-row"
+      >
+        <div v-for="mediaSrch in mediaSrchArr" class="multimedia-gallery-column">
           <img
             v-for="media in mediaSrch"
             draggable="true"
             :src="media.src.medium"
             :style="{
-              outline: media.src.large2x == selectedMedia.img ? '8px solid LawnGreen' : 'none',
-              outlineOffset: media.src.large2x == selectedMedia.img ? '-8px' : '0',
+              outline: media.src.large2x == slctd.imgURL ? '8px solid LawnGreen' : 'none',
+              outlineOffset: media.src.large2x == slctd.imgURL ? '-8px' : '0',
             }"
             @click="selectImg($event, media.src.large2x)"
             @dragstart="drag($event, media.src.large2x)"
@@ -42,101 +53,61 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['content', 'getUserContent', 'selectedMedia', 'user', 'showMsg', 'site', 'endPts'],
+  inject: ['endPts', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq'],
 
   data() {
     return {
-      searchInput: '',
-      selectedMediaType: 'fa-camera',
-      mediaTypes: {
-        'fa-camera': ['mostRecentImageSearch', 'imagesSearched', 'image'],
-        'fa-video': ['mostRecentVideoSearch', 'videosSearched', 'video'],
-        'fa-quote-right': ['messages', 'messages', 'text'],
+      slctdMd: 'fa-camera',
+      mdTp: {
+        'fa-camera': ['pexels', 'img', 'photos'],
+        'fa-video': ['pexels', 'vid', 'videos'],
+        // 'fa-quote-right': ['txtprovider', 'txt', 'messages'],
       },
     };
   },
 
   computed: {
-    mediaSrchArray() {
-      return [
-        this.content[this.mediaTypes[this.selectedMediaType][1]][
-          this.searchInput.toLowerCase().replaceAll(' ', '-')
-        ]?.photos?.slice(
-          0,
-          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput.toLowerCase().replaceAll(' ', '-')]
-            ?.photos.length / 2
-        ),
-        this.content[this.mediaTypes[this.selectedMediaType][1]][
-          this.searchInput.toLowerCase().replaceAll(' ', '-')
-        ]?.photos?.slice(
-          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput.toLowerCase().replaceAll(' ', '-')]
-            ?.photos.length / 2,
-          this.content[this.mediaTypes[this.selectedMediaType][1]][this.searchInput.toLowerCase().replaceAll(' ', '-')]
-            ?.photos.length
-        ),
-      ];
+    mediaSrchArr() {
+      const mSArr = this?.[this.mdTp[this.slctdMd][0]]?.[this.mdTp[this.slctdMd][1]]?.filter(
+        (el) => el.search == this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]]
+      )?.[0];
+      return mSArr
+        ? [
+            mSArr[this.mdTp[this.slctdMd][2]].slice(0, mSArr[this.mdTp[this.slctdMd][2]].length / 2),
+            mSArr[this.mdTp[this.slctdMd][2]].slice(
+              mSArr[this.mdTp[this.slctdMd][2]].length / 2,
+              mSArr[this.mdTp[this.slctdMd][2]].length
+            ),
+          ]
+        : null;
     },
   },
 
   methods: {
     selectMediaType(mediaType) {
-      this.selectedMediaType = mediaType;
-      this.searchInput = this.content[this.mediaTypes[this.selectedMediaType][0]];
+      this.slctdMd = mediaType;
+      // this.searchInput = this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]]; //gotta work on this
     },
     selectSearch(event) {
-      this.searchInput = event.target.value;
-      console.log(this.content[this.mediaTypes[this.selectedMediaType][1]][event.target.value]);
+      this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]] = event.target.value;
+      this.sttngsReq('PATCH', 'user');
     },
     selectImg(event, selectedImgPath) {
-      this.selectedMedia.img = selectedImgPath;
+      this.slctd.imgURL = selectedImgPath;
     },
     drag(event, imgURL) {
       event.dataTransfer.setData('text', imgURL);
     },
-    async mediaSearch() {
-      this.searchInput = this.$refs.searchInput.value;
-      const prevSrchTtlRslts =
-        this.content[this.mediaTypes[this.selectedMediaType][1]]?.[this.searchInput.toLowerCase().replaceAll(' ', '-')]
-          ?.total_results;
-      const prevSrchTtlRsltsMax = prevSrchTtlRslts ? Math.floor(prevSrchTtlRslts / 80) : 1;
-      const randomPage = Math.floor(Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1);
-      try {
-        const response = await fetch(
-          'https://api.pexels.com/v1/search?query=' +
-            this.searchInput.toLowerCase().replaceAll(' ', '+') +
-            `&page=${randomPage}&per_page=80`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: this.user.AppPermissions.Pexels,
-            },
-          }
-        );
-        const mediaSearchJSON = await response.json();
-        if (mediaSearchJSON && Number.isInteger(+mediaSearchJSON.total_results)) {
-          // this.searchedPhotos = mediaSearchJSON;
-          this.content[this.mediaTypes[this.selectedMediaType][0]] = this.searchInput
-            .toLowerCase()
-            .replaceAll(' ', '-');
-          if (this.content[this.mediaTypes[this.selectedMediaType][1]] === null)
-            this.content[this.mediaTypes[this.selectedMediaType][1]] = {};
-          this.content[this.mediaTypes[this.selectedMediaType][1]][
-            this.searchInput.toLowerCase().replaceAll(' ', '-')
-          ] = mediaSearchJSON;
-
-          this.getUserContent('PATCH', 'image');
-        } else {
-          this.showMsg('Media provider no response');
-          console.log(error.toString());
-        }
-      } catch (error) {
-        this.showMsg('Media provider no response');
-        console.log(error.toString());
-      }
+    mediaSearch() {
+      this.pexelsReq('GET', 'img/' + this.$refs.searchInput.value.toLowerCase().replaceAll(' ', '+'));
     },
   },
-  mounted() {
-    this.searchInput = this.content[this.mediaTypes[this.selectedMediaType][0]];
+
+  created() {
+    Object.values(this.mdTp).forEach((mediaType) => {
+      if (!this.sttngs.user[mediaType[0]]) this.sttngs.user[mediaType[0]] = {};
+      if (!this.sttngs.user[mediaType[0]][mediaType[1]]) this.sttngs.user[mediaType[0]][mediaType[1]] = '';
+    });
   },
 };
 </script>
@@ -171,7 +142,8 @@ export default {
   width: calc(100% - 125px);
   margin-right: calc(-100% + 125px);
 }
-
+.multimedia select:focus {
+}
 .multimedia-gallery {
   margin-top: 10px;
   height: calc(100vh - 55px);

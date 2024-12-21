@@ -19,15 +19,12 @@
           ]"
         >
           <i
-            v-if="showScroll && 0 < itemStart"
             class="fa-solid fa-chevron-left"
-            style="cursor: pointer"
-            @click="decreaseScroll"
-          ></i>
-          <i
-            v-if="showScroll && 0 == itemStart"
-            class="fa-solid fa-chevron-left"
-            :style="{ color: site.body.style.textColor + '50' }"
+            :style="{
+              color: 0 < itemStart ? site.body.style.textColor : site.body.style.textColor + '50',
+              cursor: 0 < itemStart ? 'pointer' : 'default',
+            }"
+            @click="0 < itemStart && itemStart--"
           ></i>
         </div>
         <div v-else class="icon-slider-item"></div>
@@ -64,22 +61,6 @@
             </div>
           </div>
         </div>
-        <div
-          v-else-if="itmAmnt < 10"
-          :style="[
-            {
-              border: '1px solid ' + site.body.style.borderColor,
-              'border-radius': elValue.style.borderRadius + 'px',
-            },
-            style.primaryColor,
-          ]"
-        >
-          <div class="icon-slider-modify-container">
-            <div class="icon-slider-modify">
-              <button class="plus" @click.prevent="addItem"></button>
-            </div>
-          </div>
-        </div>
       </template>
 
       <div>
@@ -95,15 +76,12 @@
           ]"
         >
           <i
-            v-if="showScroll && itemStart + respvItemAmnt < itmAmnt"
             class="fa-solid fa-chevron-right"
-            style="cursor: pointer"
-            @click="increaseScroll"
-          ></i>
-          <i
-            v-if="showScroll && itemStart + respvItemAmnt >= itmAmnt"
-            class="fa-solid fa-chevron-right"
-            :style="{ color: site.body.style.textColor + '50' }"
+            :style="{
+              color: itemStart + respvItemAmnt < itmAmnt ? site.body.style.textColor : site.body.style.textColor + '50',
+              cursor: itemStart + respvItemAmnt < itmAmnt ? 'pointer' : 'default',
+            }"
+            @click="itemStart + respvItemAmnt < itmAmnt && itemStart++"
           ></i>
         </div>
         <div v-else class="icon-slider-item"></div>
@@ -125,7 +103,7 @@ export default {
       return this.elValue['items'].length;
     },
     wndwWdthRoundDown() {
-      return Math.floor((this.wndw.wdth - 100) / 100);
+      return Math.floor((this.wndw.wdth - 50) / 110);
     },
     showScroll() {
       return this.itmAmnt > this.wndwWdthRoundDown;
@@ -148,29 +126,8 @@ export default {
 
   data() {
     return {
-      menuChange: '',
       itemStart: 0,
     };
-  },
-
-  methods: {
-    increaseScroll() {
-      this.itemStart++;
-    },
-    decreaseScroll() {
-      this.itemStart--;
-    },
-    addItem() {
-      if (this.site.htmlElmnts[this.elKey]['items'].length < 8) this.itemStart++;
-      this.site.htmlElmnts[this.elKey]['items'].push(['', 'fa-solid fa-question']);
-    },
-    deleteItem(itemIndex) {
-      this.itemStart--;
-      this.site.htmlElmnts[this.elKey]['items'].splice(itemIndex, 1);
-    },
-    menuAction(event) {
-      console.log(event.srcElement.selectedOptions[0].value);
-    },
   },
 
   watch: {
@@ -189,15 +146,6 @@ export default {
   display: grid;
   column-gap: 5px;
 }
-.icon-slider-modify-container {
-  display: table;
-  height: 100%;
-}
-.icon-slider-modify {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
 .icon-slider-item {
   overflow: hidden;
   height: 20vh;
@@ -211,26 +159,6 @@ export default {
   overflow: hidden;
   height: 50%;
 }
-.icon-slider-item input[type='text'] {
-  padding: 5px;
-  border-style: none;
-  width: 85%;
-}
-.icon-slider-item select {
-  padding: 5px;
-}
-.icon-slider-item button {
-  position: absolute;
-  margin-left: 25px;
-  margin-top: -10px;
-  cursor: pointer;
-}
-.icon-slider-modify button {
-  position: relative;
-  margin-left: 40px;
-  margin-top: 0px;
-  cursor: pointer;
-}
 .icon-slider-prev {
   height: 20vh;
   float: right;
@@ -242,27 +170,6 @@ export default {
   float: left;
   padding: 60px 5px 0px 5px;
   margin: 0px;
-}
-.modPosition {
-  position: absolute;
-  top: 0;
-  left: 5px;
-  text-align: left;
-}
-.modPosition input[type='color'] {
-  width: 150px;
-}
-.modPosition select {
-  width: 150px;
-  padding: 3px;
-  margin: 0px;
-}
-.modChange {
-  background-color: white;
-  width: 150px;
-}
-.modChange input[type='range'] {
-  width: 75%;
 }
 @media only screen and (min-width: 650px) {
   .icon-slider-container {

@@ -17,14 +17,14 @@
           v-if="menuTypes[menuItemIndex] == 'Page'"
           :ref="menuItem.toLowerCase()"
           :style="[linksA]"
-          :href="endPts.href + '/' + menuItem.toLowerCase()"
+          :href="site.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
           v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
           :ref="menuItem.toLowerCase()"
           :style="[linksA]"
-          :href="endPts.href + '/' + menuItem.toLowerCase()"
+          :href="site.href + '/' + menuItem.toLowerCase()"
           >{{ menuItem }}</a
         >
         <a
@@ -60,7 +60,6 @@ export default {
       pageClick: false,
       responsive: false,
       protocol: protocol,
-      frstURLSgmnt: first_url_segment,
       topMenuMount: 0,
     };
   },
@@ -124,11 +123,11 @@ export default {
           event.target.style.filter = 'brightness(90%)';
         } else {
           event.target.style.backgroundColor =
-            event.target.textContent.toLowerCase() == first_url_segment
+            event.target.textContent.toLowerCase() == site.first_url_segment
               ? event.target.parentElement.parentElement.style.backgroundColor
               : '';
           event.target.style.filter =
-            event.target.textContent.toLowerCase() == first_url_segment ? 'brightness(95%)' : 'none';
+            event.target.textContent.toLowerCase() == site.first_url_segment ? 'brightness(95%)' : 'none';
         }
       }
     },
@@ -154,10 +153,10 @@ export default {
 
   updated() {
     if (this.topMenuMount === 0) {
-      if (Object.keys(this.$refs).includes(first_url_segment)) {
-        this.$refs[first_url_segment][0].style.backgroundColor =
-          this.$refs[first_url_segment][0].parentElement.parentElement.style.backgroundColor;
-        this.$refs[first_url_segment][0].style.filter = 'brightness(95%)';
+      if (Object.keys(this.$refs).includes(site.first_url_segment)) {
+        this.$refs[site.first_url_segment][0].style.backgroundColor =
+          this.$refs[site.first_url_segment][0].parentElement.parentElement.style.backgroundColor;
+        this.$refs[site.first_url_segment][0].style.filter = 'brightness(95%)';
       }
       this.topMenuMount++;
     }

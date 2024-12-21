@@ -10,10 +10,10 @@
       class="directory-grid-container"
       :style="{
         gridTemplateColumns:
-          Object.entries(scannedDirs).length < respvColAmnt ? directoryGridDynamicCol : directoryGridStaticCol,
+          Object.entries(site.scanned_dirs).length < respvColAmnt ? directoryGridDynamicCol : directoryGridStaticCol,
       }"
     >
-      <template v-for="([dirKey, dirValue], dirIndex) in Object.entries(scannedDirs)">
+      <template v-for="([dirKey, dirValue], dirIndex) in Object.entries(site.scanned_dirs)">
         <div class="directory-grid-item" v-if="dirIndex === 0 || dirIndex % respvColAmnt === 0"></div>
         <div class="directory-grid-item" v-if="dirIndex % respvColAmnt === 0 && dirIndex !== 0"></div>
         <div
@@ -52,29 +52,20 @@ export default {
 
   computed: {
     directoryGridDynamicCol() {
-      const side = (99 - Object.entries(this.scannedDirs).length * 10) / 2;
-      const autos = '9% '.repeat(Object.entries(this.scannedDirs).length);
+      const side = (99 - Object.entries(this.site.scanned_dirs).length * 10) / 2;
+      const autos = '9% '.repeat(Object.entries(this.site.scanned_dirs).length);
       return side + '% ' + autos + side + '%';
     },
   },
 
   data() {
     return {
-      site: {
-        // folderPath: folder_path,
-        params: params,
-      },
-      scannedDirs: scanned_dirs,
+      site: site,
       respvColAmnt: '',
       directoryGridStaticCol: '',
       endPts: {
         appApiUrl: app_api_url,
-        captchaURL: captcha_url,
-        cookiePath: cookie_path,
-        login: 'sessions',
-        user: 'users',
-        content: 'content',
-        messages: 'messages',
+        captchaURL: api_path.captcha,
       },
       respWidth: {
         sm: 576,

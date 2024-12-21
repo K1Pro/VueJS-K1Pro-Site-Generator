@@ -19,15 +19,12 @@
           ]"
         >
           <i
-            v-if="showScroll && 0 < itemStart"
             class="fa-solid fa-chevron-left"
-            style="cursor: pointer"
-            @click="decreaseScroll"
-          ></i>
-          <i
-            v-if="showScroll && 0 == itemStart"
-            class="fa-solid fa-chevron-left"
-            :style="{ color: site.body.style.textColor + '50' }"
+            :style="{
+              color: 0 < itemStart ? site.body.style.textColor : site.body.style.textColor + '50',
+              cursor: 0 < itemStart ? 'pointer' : 'default',
+            }"
+            @click="0 < itemStart && itemStart--"
           ></i>
         </div>
         <div v-else class="icon-slider-item"></div>
@@ -102,15 +99,12 @@
           ]"
         >
           <i
-            v-if="showScroll && itemStart + respvItemAmnt < itmAmnt"
             class="fa-solid fa-chevron-right"
-            style="cursor: pointer"
-            @click="increaseScroll"
-          ></i>
-          <i
-            v-if="showScroll && itemStart + respvItemAmnt >= itmAmnt"
-            class="fa-solid fa-chevron-right"
-            :style="{ color: site.body.style.textColor + '50' }"
+            :style="{
+              color: itemStart + respvItemAmnt < itmAmnt ? site.body.style.textColor : site.body.style.textColor + '50',
+              cursor: itemStart + respvItemAmnt < itmAmnt ? 'pointer' : 'default',
+            }"
+            @click="itemStart + respvItemAmnt < itmAmnt && itemStart++"
           ></i>
         </div>
         <div v-else class="icon-slider-item"></div>
@@ -132,7 +126,7 @@ export default {
       return this.elValue['items'].length + 1;
     },
     wndwWdthRoundDown() {
-      return Math.floor((this.grid.wdth - 100) / 100);
+      return Math.floor((this.grid.wdth - 50) / 110);
     },
     showScroll() {
       return this.itmAmnt > this.wndwWdthRoundDown;
@@ -160,12 +154,6 @@ export default {
   },
 
   methods: {
-    increaseScroll() {
-      this.itemStart++;
-    },
-    decreaseScroll() {
-      this.itemStart--;
-    },
     addItem() {
       this.site.htmlElmnts[this.elKey]['items'].push(['', 'fa-solid fa-question']);
       if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey]['items'].length + 1) < 0) {
@@ -251,11 +239,13 @@ export default {
   float: right;
   padding: 60px 5px 0px 5px;
   margin: 0px;
+  width: 20px;
 }
 .icon-slider-next {
   height: 20vh;
   float: left;
   padding: 60px 5px 0px 5px;
   margin: 0px;
+  width: 20px;
 }
 </style>

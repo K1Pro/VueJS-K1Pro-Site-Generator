@@ -120,7 +120,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['grid', 'respWidth', 'selectedMedia', 'site', 'style', 'undoRedo', 'wndw'],
+  inject: ['grid', 'respWidth', 'site', 'style', 'undoRedo', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
