@@ -10,60 +10,63 @@
       <img :src="endPts.appApiUrl + site.logo" alt="logo" />
     </div>
     <div :style="[elLi]">
-      <div
-        v-for="(menuItem, menuItemIndex) in elValue.items"
-        class="top-menu-links"
-        :style="[elA, style.primaryColor.outline.borderColor]"
-      >
-        <i
-          class="fa-solid fa-circle-minus redWhiteMinus"
-          style="position: absolute; right: 10px; top: -3px"
-          @click="removeItem(menuItemIndex)"
-        ></i>
-        <div class="top-menu-link">{{ menuItem }}</div>
+      <template v-for="(menuItem, menuItemIndex) in elValue.items">
+        <div
+          v-if="site.pages[slctd.type][menuItem]"
+          class="top-menu-links"
+          :style="[elA, style.primaryColor.outline.borderColor]"
+        >
+          <i
+            class="fa-solid fa-circle-minus redWhiteMinus"
+            style="position: absolute; right: 10px; top: -3px"
+            @click="removeItem(menuItemIndex)"
+          ></i>
+          <div class="top-menu-link">{{ menuItem }}</div>
 
-        <div class="top-menu-link-items">
-          <input
-            v-if="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link'"
-            type="text"
-            v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
-            :style="[allInputs]"
-          />
-          <select
-            v-else
-            v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
-            :ref="'menuItemsSelect' + menuItemIndex"
-            :style="[allInputs]"
-          >
-            <option value="Choose page" selected>Choose page</option>
-            <option v-for="page in Object.keys(site.pages)">
-              {{ page }}
-            </option>
-          </select>
-        </div>
+          <div class="top-menu-link-items">
+            <input
+              v-if="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link'"
+              type="text"
+              v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
+              :style="[allInputs]"
+            />
+            <select
+              v-else
+              v-model="site.htmlElmnts[elKey].items[menuItemIndex]"
+              :ref="'menuItemsSelect' + menuItemIndex"
+              :style="[allInputs]"
+            >
+              <option value="Choose page" selected>Choose page</option>
+              <option v-for="page in Object.keys(site.pages[slctd.type])">
+                {{ page }}
+              </option>
+            </select>
+          </div>
 
-        <div class="top-menu-link-type">
-          <select
-            v-model="site.htmlElmnts[elKey].types[menuItemIndex]"
-            @change="changeLink($event, menuItemIndex)"
-            :style="[allInputs]"
-          >
-            <option>Page</option>
-            <!-- <option>Anchor</option> -->
-            <option>Link</option>
-          </select>
-        </div>
+          <div class="top-menu-link-type">
+            <select
+              v-model="site.htmlElmnts[elKey].types[menuItemIndex]"
+              @change="changeLink($event, menuItemIndex)"
+              :style="[allInputs]"
+            >
+              <option>Page</option>
+              <!-- <option>Anchor</option> -->
+              <option>Link</option>
+            </select>
+          </div>
 
-        <div class="top-menu-link-links">
-          <input
-            type="text"
-            :style="[allInputs]"
-            :placeholder="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link' ? 'Link text...' : ''"
-            :disabled="site.htmlElmnts[elKey].types[menuItemIndex] != 'Link'"
-            v-model="site.htmlElmnts[elKey].links[menuItemIndex]"
-          />
+          <div class="top-menu-link-links">
+            <input
+              type="text"
+              :style="[allInputs]"
+              :placeholder="site.htmlElmnts[elKey].types[menuItemIndex] == 'Link' ? 'Link text...' : ''"
+              :disabled="site.htmlElmnts[elKey].types[menuItemIndex] != 'Link'"
+              v-model="site.htmlElmnts[elKey].links[menuItemIndex]"
+            />
+          </div>
         </div>
-      </div>
+      </template>
+
       <div class="top-menu-links" :style="[elA, style.primaryColor.outline.borderColor]" style="vertical-align: top">
         <i
           @click="addItem"
@@ -81,7 +84,7 @@
 export default {
   name: 'Top Menu',
 
-  inject: ['endPts', 'grid', 'site', 'style'],
+  inject: ['endPts', 'grid', 'site', 'slctd', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

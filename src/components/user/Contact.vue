@@ -66,7 +66,7 @@
 export default {
   name: 'Contact Us',
 
-  inject: ['endPts', 'wndw', 'site'],
+  inject: ['endPts', 'slctd', 'site', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 
@@ -107,7 +107,7 @@ export default {
       if (this.msgName != '' && this.msgEmail != '' && this.msgMessage != '' && this.msgCaptcha != '') {
         this.spinContactUsSend = true;
         try {
-          const response = await fetch(this.endPts.appApiUrl + this.site.job + '/messages', {
+          const response = await fetch(this.endPts.appApiUrl + this.slctd.job + '/messages', {
             method: 'POST',
             headers: {
               Authorization: btoa(this.site.entity),

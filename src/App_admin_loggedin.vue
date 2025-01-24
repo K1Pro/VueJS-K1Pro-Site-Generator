@@ -21,7 +21,7 @@
     ></div>
 
     <div class="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
-      <template v-for="(pageElmnt, pageIndex) in site.pages[slctd.page]">
+      <template v-for="(pageElmnt, pageIndex) in site.pages[slctd.type][slctd.page]">
         <component
           :is="site.htmlElmnts[pageElmnt[0]].type"
           v-if="pageElmnt[1]"
@@ -63,7 +63,16 @@ export default {
         lg: 992,
         xl: 1140,
       },
-      slctd: { imgURL: null, page: 'Home', txtCntnt: null, vidURL: null },
+      slctd: {
+        firstUrlSegment: slctd.first_url_segment,
+        href: slctd.href,
+        imgURL: null,
+        job: slctd.job,
+        page: 'Home',
+        txtCntnt: null,
+        type: 'loggedout',
+        vidURL: null,
+      },
       sideMenuSlctdLnk: ['Website'],
       site: site,
       undoRedo: 0,
@@ -103,21 +112,22 @@ export default {
         ['fa fa-gear', null, 'Website'],
         ['fa fa-camera', null, 'Multimedia'],
         ['fa fa-envelope', null, 'Messages'],
-        ['fa fa-user-gear', 'link-' + url_path.login, 'Account'],
+        ['fa fa-comment', null, 'Chat'],
+        ['fa fa-user-gear', 'post-' + url_path.login, 'Account', '_a_t', access_token, '_s_i', session_id],
         ['fa fa-sign-out', null, 'Log out'],
       ];
       return sideMenuItemsArray;
     },
     pageElPositions() {
       const pageElPositionsArray = [];
-      this.site.pages[this.slctd.page].forEach((el) => {
+      this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
         pageElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
       });
       return pageElPositionsArray;
     },
     pageElTypes() {
       const pageElTypesArray = [];
-      this.site.pages[this.slctd.page].forEach((el) => {
+      this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
         pageElTypesArray.push(this.site.htmlElmnts[el[0]].type);
       });
       return pageElTypesArray;
@@ -165,10 +175,10 @@ export default {
       let siteTemp = JSON.stringify(this.site);
       if (this.individEdit.elmntIndx !== null) {
         siteTemp = JSON.parse(siteTemp);
-        siteTemp.pages[this.slctd.page] = JSON.parse(this.individEdit.elmnts);
+        siteTemp.pages.site[this.slctd.page] = JSON.parse(this.individEdit.elmnts);
       }
       try {
-        const response = await fetch(app_api_url + url, {
+        const response = await fetch(app_api_url + this.slctd.job, {
           method: 'PATCH',
           headers: {
             Authorization: access_token,
@@ -179,9 +189,9 @@ export default {
             params: typeof siteTemp === 'string' ? JSON.parse(siteTemp) : siteTemp,
           }),
         });
-        const patchSiteJSON = await response.json();
-        if (patchSiteJSON.success) {
-          this.showMsg(patchSiteJSON.messages[0]);
+        const resJSON = await response.json();
+        if (resJSON.success) {
+          this.showMsg(resJSON.messages[0]);
         }
       } catch (error) {
         console.log(error.toString());
@@ -192,32 +202,32 @@ export default {
       this.individEdit.elmntIndx = null;
       this.individEdit.elmnts = null;
       try {
-        const response = await fetch(app_api_url + url, {
+        const response = await fetch(app_api_url + this.slctd.job, {
           method: 'GET',
         });
-        const getSiteResJSON = await response.json();
-        console.log(getSiteResJSON);
-        if (getSiteResJSON.success) {
-          this.site = getSiteResJSON.data.params; //need to refactor params
+        const resJSON = await response.json();
+        console.log(resJSON);
+        if (resJSON.success) {
+          this.site = resJSON.data.site; //need to refactor params
           this.individEdit.elmnts = null;
-          this.applyStyle();
+          // this.applyStyle();
           this.undoRedo++;
-          console.log(getSiteResJSON.data.params);
-          // if (getSiteResJSON.data?.params?.body?.style) {
-          //   Object.keys(getSiteResJSON.data.params.body.style).forEach((key) => {
+          console.log(resJSON.data.site);
+          // if (resJSON.data?.params?.body?.style) {
+          //   Object.keys(resJSON.data.params.body.style).forEach((key) => {
           //     // this should be also found in loader.js
           //     if (this.isValid == 'admin' && key == 'backgroundColor') {
-          //       if (getSiteResJSON.data.params.body.style.backgroundColor == '#ffffff') {
-          //         getSiteResJSON.data.params.body.style.backgroundColor = '#777777';
+          //       if (resJSON.data.params.body.style.backgroundColor == '#ffffff') {
+          //         resJSON.data.params.body.style.backgroundColor = '#777777';
           //       }
           //       document.body.style.backgroundImage =
           //         'linear-gradient(125deg, ' +
-          //         getSiteResJSON.data.params.body.style.backgroundColor +
+          //         resJSON.data.params.body.style.backgroundColor +
           //         '75 0 65%, ' +
-          //         getSiteResJSON.data.params.body.style.backgroundColor +
+          //         resJSON.data.params.body.style.backgroundColor +
           //         ' 65% 100%)';
           //     } else {
-          //       document.body.style[key] = getSiteResJSON.data.params.body.style[key];
+          //       document.body.style[key] = resJSON.data.params.body.style[key];
           //     }
           //   });
           // }
@@ -226,8 +236,8 @@ export default {
           // setFavicon.setAttribute('href', this.endPts.appApiUrl + this.site.params.icon);
           // document.head.appendChild(setFavicon);
         }
-        // console.log(getSiteResJSON);
-        // this.msg.snackBar = getSiteResJSON.messages[0];
+        // console.log(resJSON);
+        // this.msg.snackBar = resJSON.messages[0];
       } catch (error) {
         console.log(error.toString());
         this.showMsg(error.toString());
@@ -249,7 +259,7 @@ export default {
 
     async messagesReq(METHOD) {
       try {
-        const response = await fetch(app_api_url + 'messages', {
+        const response = await fetch(app_api_url + this.slctd.job + '/messages', {
           headers: {
             Authorization: access_token,
             'Cache-Control': 'no-store',

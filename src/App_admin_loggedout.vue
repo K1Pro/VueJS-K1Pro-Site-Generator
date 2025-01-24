@@ -1,14 +1,15 @@
 <template>
-  <div class="blog">Blog</div>
+  <login></login>
 </template>
 
 <script>
 export default {
-  name: 'App blog',
+  name: 'App',
 };
 </script>
 
 <style>
-.blog {
+.login-container {
+  height: 100vh;
 }
 </style>

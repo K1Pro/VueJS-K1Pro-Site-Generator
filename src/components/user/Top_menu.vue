@@ -7,35 +7,37 @@
       </a>
     </li>
     <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
-      <li
-        v-for="(menuItem, menuItemIndex) in menuItems"
-        :style="linksLi"
-        @mouseover="highlightMenuItem($event, true)"
-        @mouseout="highlightMenuItem($event, false)"
-      >
-        <a
-          v-if="menuTypes[menuItemIndex] == 'Page'"
-          :ref="menuItem.toLowerCase()"
-          :style="[linksA]"
-          :href="site.href + '/' + menuItem.toLowerCase()"
-          >{{ menuItem }}</a
+      <template v-for="(menuItem, menuItemIndex) in menuItems">
+        <li
+          v-if="site.pages[slctd.type][menuItem]"
+          :style="linksLi"
+          @mouseover="highlightMenuItem($event, true)"
+          @mouseout="highlightMenuItem($event, false)"
         >
-        <a
-          v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
-          :ref="menuItem.toLowerCase()"
-          :style="[linksA]"
-          :href="site.href + '/' + menuItem.toLowerCase()"
-          >{{ menuItem }}</a
-        >
-        <a
-          v-else-if="menuTypes[menuItemIndex] == 'Link'"
-          :ref="menuItem.toLowerCase()"
-          target="_blank"
-          :style="[linksA]"
-          :href="protocol + menuLinks[menuItemIndex].toLowerCase()"
-          >{{ menuItem }}</a
-        >
-      </li>
+          <a
+            v-if="menuTypes[menuItemIndex] == 'Page'"
+            :ref="menuItem.toLowerCase()"
+            :style="[linksA]"
+            :href="slctd.href + '/' + menuItem.toLowerCase()"
+            >{{ menuItem }}</a
+          >
+          <a
+            v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
+            :ref="menuItem.toLowerCase()"
+            :style="[linksA]"
+            :href="slctd.href + '/' + menuItem.toLowerCase()"
+            >{{ menuItem }}</a
+          >
+          <a
+            v-else-if="menuTypes[menuItemIndex] == 'Link'"
+            :ref="menuItem.toLowerCase()"
+            target="_blank"
+            :style="[linksA]"
+            :href="protocol + menuLinks[menuItemIndex].toLowerCase()"
+            >{{ menuItem }}</a
+          >
+        </li>
+      </template>
     </template>
   </ul>
   <div :style="{ height: elValue.style.height * 2 + 2 + 0.05 + 'vh' }"></div>
@@ -45,7 +47,7 @@
 export default {
   name: 'Top Menu',
 
-  inject: ['wndw', 'respWidth', 'site', 'style', 'endPts'],
+  inject: ['endPts', 'respWidth', 'site', 'slctd', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -123,11 +125,11 @@ export default {
           event.target.style.filter = 'brightness(90%)';
         } else {
           event.target.style.backgroundColor =
-            event.target.textContent.toLowerCase() == site.first_url_segment
+            event.target.textContent.toLowerCase() == this.slctd.first_url_segment
               ? event.target.parentElement.parentElement.style.backgroundColor
               : '';
           event.target.style.filter =
-            event.target.textContent.toLowerCase() == site.first_url_segment ? 'brightness(95%)' : 'none';
+            event.target.textContent.toLowerCase() == this.slctd.first_url_segment ? 'brightness(95%)' : 'none';
         }
       }
     },
@@ -153,10 +155,10 @@ export default {
 
   updated() {
     if (this.topMenuMount === 0) {
-      if (Object.keys(this.$refs).includes(site.first_url_segment)) {
-        this.$refs[site.first_url_segment][0].style.backgroundColor =
-          this.$refs[site.first_url_segment][0].parentElement.parentElement.style.backgroundColor;
-        this.$refs[site.first_url_segment][0].style.filter = 'brightness(95%)';
+      if (Object.keys(this.$refs).includes(this.slctd.first_url_segment)) {
+        this.$refs[this.slctd.first_url_segment][0].style.backgroundColor =
+          this.$refs[this.slctd.first_url_segment][0].parentElement.parentElement.style.backgroundColor;
+        this.$refs[this.slctd.first_url_segment][0].style.filter = 'brightness(95%)';
       }
       this.topMenuMount++;
     }

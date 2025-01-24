@@ -9,8 +9,10 @@
           site.htmlElmnts?.[elmntVal[0]]?.links.includes(elmntVal[3])
         "
       >
-        <a v-if="elmntVal[2] == 'Page'" :href="site.href + '/' + elmntVal[1].toLowerCase()">{{ elmntVal[1] }}</a>
-        <a v-else-if="elmntVal[2] == 'Anchor'" :href="site.href + '/' + elmntVal[1].toLowerCase()">{{ elmntVal[1] }}</a>
+        <a v-if="elmntVal[2] == 'Page'" :href="slctd.href + '/' + elmntVal[1].toLowerCase()">{{ elmntVal[1] }}</a>
+        <a v-else-if="elmntVal[2] == 'Anchor'" :href="slctd.href + '/' + elmntVal[1].toLowerCase()">{{
+          elmntVal[1]
+        }}</a>
         <a v-else-if="elmntVal[2] == 'Link'" :href="'https://' + elmntVal[3].toLowerCase()" target="_blank">
           {{ elmntVal[1] }}
         </a>
@@ -23,7 +25,7 @@
 export default {
   name: 'Links',
 
-  inject: ['endPts', 'site'],
+  inject: ['endPts', 'site', 'slctd'],
 
   props: ['elKey', 'elValue', 'elIndex', 'footKey'],
 };

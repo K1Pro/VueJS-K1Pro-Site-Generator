@@ -25,7 +25,7 @@
 export default {
   name: 'Messages',
 
-  inject: ['messages', 'showMsg'],
+  inject: ['messages', 'showMsg', 'slctd'],
 
   methods: {
     async deleteMessage(messageIndex) {
@@ -33,7 +33,7 @@ export default {
         console.log('you want to delete message ' + messageIndex);
         this.messages.splice(messageIndex, 1);
         try {
-          const response = await fetch(app_api_url + 'messages', {
+          const response = await fetch(app_api_url + this.slctd.job + '/messages', {
             method: 'DELETE',
             headers: {
               Authorization: access_token,

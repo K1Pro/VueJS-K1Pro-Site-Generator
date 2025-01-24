@@ -1,6 +1,10 @@
 <template>
   <snackbar :msg @deleteMsg="msg = null"></snackbar>
-  <template v-for="(pageElmnt, pageIndex) in pages[site.first_url_segment ? site.first_url_segment : 'home']">
+  <template
+    v-for="(pageElmnt, pageIndex) in pages[
+      slctd.first_url_segment ? slctd.first_url_segment : site.defaultPage[slctd.type]
+    ]"
+  >
     <component
       :is="site.htmlElmnts[pageElmnt[0]].type"
       v-if="pageElmnt[1]"
@@ -27,6 +31,7 @@ export default {
         xl: 1140,
       },
       site: site,
+      slctd: slctd,
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
@@ -38,15 +43,16 @@ export default {
     return {
       endPts: this.endPts,
       respWidth: this.respWidth,
-      site: Vue.computed(() => this.site),
-      style: Vue.computed(() => this.style),
+      site: this.site,
+      slctd: this.slctd,
+      style: this.style,
     };
   },
 
   computed: {
     pages() {
       const pagesLowerCase = {};
-      Object.entries(site.pages).map(([key, value]) => (pagesLowerCase[key.toLowerCase()] = value));
+      Object.entries(site.pages[this.slctd.type]).map(([key, value]) => (pagesLowerCase[key.toLowerCase()] = value));
       return pagesLowerCase;
     },
     style() {
