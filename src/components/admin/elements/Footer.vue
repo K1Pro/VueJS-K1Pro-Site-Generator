@@ -10,22 +10,25 @@
       ]"
     >
       <div class="footer-item0"></div>
-      <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey].items">
+      <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey].components">
         <div v-if="siteFooterItem != 'none'" :class="'footer-item' + Number(siteFooterIndex + 1)">
           <select
-            :value="site.htmlElmnts[elKey].items[siteFooterIndex]"
-            @focusin="tempFootItems = JSON.stringify(site.htmlElmnts[elKey].items)"
+            :value="site.htmlElmnts[elKey].components[siteFooterIndex]"
+            @focusin="tempFootComponents = JSON.stringify(site.htmlElmnts[elKey].components)"
             @change="changeFootItem($event, siteFooterIndex)"
           >
             <option value="empty" selected disabled>Select</option>
-            <option v-for="footItem in footItems" :value="footItem">
+            <option v-for="footItem in footComponents" :value="footItem">
               {{ footItem.charAt(0).toUpperCase() + footItem.slice(1).replaceAll('_', ' ') }}
             </option>
             <option disabled></option>
-            <option v-if="siteFooterIndex == activeFootItems.length - 1 && activeFootItems.length < 5" value="add">
+            <option
+              v-if="siteFooterIndex == activeFootComponents.length - 1 && activeFootComponents.length < 5"
+              value="add"
+            >
               Add
             </option>
-            <option v-if="activeFootItems.length > 1" value="remove">Remove</option>
+            <option v-if="activeFootComponents.length > 1" value="remove">Remove</option>
           </select>
           <component
             v-if="siteFooterItem != 'empty'"
@@ -37,7 +40,7 @@
           ></component>
         </div>
       </template>
-      <div :class="'footer-item' + Number(site.htmlElmnts[elKey]['items'].length + 1)"></div>
+      <div :class="'footer-item' + Number(site.htmlElmnts[elKey]['components'].length + 1)"></div>
     </div>
   </div>
 </template>
@@ -51,26 +54,26 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { tempFootItems: null, footItems: ['about', 'contact', 'description', 'links', 'location'] };
+    return { tempFootComponents: null, footComponents: ['about', 'contact', 'description', 'links', 'location'] };
   },
 
   computed: {
-    activeFootItems() {
-      return this.site.htmlElmnts[this.elKey].items.filter((item) => {
+    activeFootComponents() {
+      return this.site.htmlElmnts[this.elKey].components.filter((item) => {
         return item != 'none';
       });
     },
     gridTemplateLogOut() {
       let gridTemplateLogOutStyle;
       if (this.grid.wdth > this.respWidth.md && this.grid.wdth < this.respWidth.xl) {
-        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter((el) => el !== 'none');
-        const inner = (100 / footerItemsNoNoneArr.length).toFixed(2);
-        const autos = `${inner}% `.repeat(footerItemsNoNoneArr.length);
+        const footerComponentsNoNoneArr = this.site.htmlElmnts[this.elKey]['components'].filter((el) => el !== 'none');
+        const inner = (100 / footerComponentsNoNoneArr.length).toFixed(2);
+        const autos = `${inner}% `.repeat(footerComponentsNoNoneArr.length);
         gridTemplateLogOutStyle = '0% ' + autos + ' 0%';
       } else if (this.grid.wdth > this.respWidth.xl) {
-        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter((el) => el !== 'none');
-        const inner = (80 / footerItemsNoNoneArr.length).toFixed(2);
-        const autos = `${inner}% `.repeat(footerItemsNoNoneArr.length);
+        const footerComponentsNoNoneArr = this.site.htmlElmnts[this.elKey]['components'].filter((el) => el !== 'none');
+        const inner = (80 / footerComponentsNoNoneArr.length).toFixed(2);
+        const autos = `${inner}% `.repeat(footerComponentsNoNoneArr.length);
         gridTemplateLogOutStyle = '10% ' + autos + ' 10%';
       } else {
         gridTemplateLogOutStyle = '100%';
@@ -82,23 +85,23 @@ export default {
   methods: {
     changeFootItem(event, siteFooterIndex) {
       if (event.target.value == 'add') {
-        this.site.htmlElmnts[this.elKey].items[siteFooterIndex + 1] = 'empty';
+        this.site.htmlElmnts[this.elKey].components[siteFooterIndex + 1] = 'empty';
       } else if (event.target.value == 'remove') {
-        this.site.htmlElmnts[this.elKey].items.splice(siteFooterIndex, 1);
-        this.site.htmlElmnts[this.elKey].items.push('none');
+        this.site.htmlElmnts[this.elKey].components.splice(siteFooterIndex, 1);
+        this.site.htmlElmnts[this.elKey].components.push('none');
       } else {
-        if (JSON.parse(this.tempFootItems).includes(event.target.value)) {
-          const existingFootItemIndx = JSON.parse(this.tempFootItems).findIndex((el) => el == event.target.value);
-          this.site.htmlElmnts[this.elKey].items[existingFootItemIndx] = 'empty';
+        if (JSON.parse(this.tempFootComponents).includes(event.target.value)) {
+          const existingFootItemIndx = JSON.parse(this.tempFootComponents).findIndex((el) => el == event.target.value);
+          this.site.htmlElmnts[this.elKey].components[existingFootItemIndx] = 'empty';
         }
-        this.site.htmlElmnts[this.elKey].items[siteFooterIndex] = event.target.value;
+        this.site.htmlElmnts[this.elKey].components[siteFooterIndex] = event.target.value;
       }
     },
   },
   created() {
-    if (this.site.htmlElmnts[this.elKey].items.includes('empty')) {
-      this.site.htmlElmnts[this.elKey].items.forEach((item, index) => {
-        if (item == 'empty') this.site.htmlElmnts[this.elKey].items[index] = 'none';
+    if (this.site.htmlElmnts[this.elKey].components.includes('empty')) {
+      this.site.htmlElmnts[this.elKey].components.forEach((item, index) => {
+        if (item == 'empty') this.site.htmlElmnts[this.elKey].components[index] = 'none';
       });
     }
   },
