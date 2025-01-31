@@ -10,7 +10,7 @@
       ]"
     >
       <div class="footer-item0"></div>
-      <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey]['items']">
+      <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey]['components']">
         <div
           v-if="siteFooterItem != 'none' && siteFooterItem != 'empty'"
           :class="'footer-item' + Number(siteFooterIndex + 1)"
@@ -24,7 +24,7 @@
           ></component>
         </div>
       </template>
-      <div :class="'footer-item' + Number(site.htmlElmnts[elKey]['items'].length + 1)"></div>
+      <div :class="'footer-item' + Number(site.htmlElmnts[elKey]['components'].length + 1)"></div>
     </div>
   </div>
 </template>
@@ -37,22 +37,18 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  // data() {
-  //   return { atBottom: null };
-  // },
-
   computed: {
     gridTemplateLogOut() {
       let gridTemplateLogOutStyle;
       if (this.wndw.wdth > this.respWidth.md && this.wndw.wdth < this.respWidth.xl) {
-        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter(
+        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['components'].filter(
           (el) => el !== 'none' && el !== 'empty'
         );
         const inner = (100 / footerItemsNoNoneArr.length).toFixed(2);
         const autos = `${inner}% `.repeat(footerItemsNoNoneArr.length);
         gridTemplateLogOutStyle = '0% ' + autos + ' 0%';
       } else if (this.wndw.wdth > this.respWidth.xl) {
-        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['items'].filter(
+        const footerItemsNoNoneArr = this.site.htmlElmnts[this.elKey]['components'].filter(
           (el) => el !== 'none' && el !== 'empty'
         );
         const inner = (80 / footerItemsNoNoneArr.length).toFixed(2);
@@ -63,16 +59,7 @@ export default {
       }
       return gridTemplateLogOutStyle;
     },
-    // footer() {
-    //   return this.atBottom !== null
-    //     ? { position: this.atBottom ? 'relative' : 'fixed', bottom: this.atBottom ? false : '0' }
-    //     : {};
-    // },
   },
-  // updated() {
-  //   if (this.atBottom === null)
-  //     this.atBottom = this.$refs.footer.getBoundingClientRect().bottom > this.wndw.hght ? true : false;
-  // },
 };
 </script>
 
