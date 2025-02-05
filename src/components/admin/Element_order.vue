@@ -28,17 +28,15 @@
     <i
       class="fa-solid fa-circle-minus"
       :style="{
-        color: (slctd.page == 'Home' && !addingPage) || defaults.prtctdPages.includes(slctd.page) ? 'grey' : '#ff0000',
+        color: (slctd.page == 'Home' && !addingPage) || defaults.reqrdPages.includes(slctd.page) ? 'grey' : '#ff0000',
         cursor:
-          (slctd.page == 'Home' && !addingPage) || defaults.prtctdPages.includes(slctd.page)
-            ? 'not-allowed'
-            : 'pointer',
+          (slctd.page == 'Home' && !addingPage) || defaults.reqrdPages.includes(slctd.page) ? 'not-allowed' : 'pointer',
       }"
       style="padding-left: 2px"
       @click="deletePage(slctd.page)"
     ></i>
 
-    <div v-if="!defaults.prtctdPages.includes(slctd.page)">
+    <div v-if="!defaults.reqrdPages.includes(slctd.page)">
       Logged in:<input
         type="radio"
         name="site_status"
@@ -85,9 +83,9 @@
           class="fa-solid fa-circle-minus"
           :style="{
             color:
-              individEdit.elmnts === null && !defaults.htmlPrtctdPageElmnts.includes(pageElmnt[0]) ? '#ff0000' : 'grey',
+              individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0]) ? '#ff0000' : 'grey',
             cursor:
-              individEdit.elmnts === null && !defaults.htmlPrtctdPageElmnts.includes(pageElmnt[0])
+              individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])
                 ? 'pointer'
                 : 'default',
             float: 'right',
@@ -105,7 +103,7 @@
           style="float: right"
           type="checkbox"
           v-if="renamingPos != pageElmntIndx"
-          :disabled="individEdit.elmnts !== null || defaults.htmlPrtctdPageElmnts.includes(pageElmnt[0])"
+          :disabled="individEdit.elmnts !== null || defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])"
           :checked="pageElmnt[1]"
           @change="toggleElmnt($event.target.checked, pageElmnt[0], pageElmntIndx)"
         />
@@ -160,7 +158,7 @@
           v-if="
             (!siteElTypes.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
             (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt)) &&
-            !defaults.htmlPrtctdPageElmnts.includes(htmlElmnt)
+            !defaults.htmlReqrdPageElmnts.includes(htmlElmnt)
           "
           :value="htmlElmnt"
         >
@@ -176,7 +174,7 @@
             v-if="
               (!siteElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
               (!pageElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqPageElmnts.includes(htmlElmntVal.type)) &&
-              !defaults.htmlPrtctdPageElmnts.includes(htmlElmntKey)
+              !defaults.htmlReqrdPageElmnts.includes(htmlElmntKey)
             "
             :value="htmlElmntKey"
           >
@@ -186,7 +184,7 @@
       </template>
       <template v-if="slctdElmntButton == 'Delete' && Object.keys(site.htmlElmnts).length > 0">
         <template v-for="htmlElmnt in Object.keys(site.htmlElmnts).sort()">
-          <option v-if="!defaults.htmlPrtctdPageElmnts.includes(htmlElmnt)" :value="htmlElmnt">
+          <option v-if="!defaults.htmlReqrdPageElmnts.includes(htmlElmnt)" :value="htmlElmnt">
             {{ htmlElmnt.replaceAll('_', ' ') }}
           </option>
         </template>
@@ -420,7 +418,7 @@ export default {
       }
     },
     deletePage(slctdPage) {
-      if (!this.defaults.prtctdPages.includes(slctdPage)) {
+      if (!this.defaults.reqrdPages.includes(slctdPage)) {
         if (this.addingPage) {
           this.addingPage = !this.addingPage;
         } else {
@@ -432,7 +430,7 @@ export default {
     deletePageEl(elementIndex) {
       if (
         this.individEdit.elmnts === null &&
-        !this.defaults.htmlPrtctdPageElmnts.includes(this.site.pages[this.slctd.type][this.slctd.page][elementIndex][0])
+        !this.defaults.htmlReqrdPageElmnts.includes(this.site.pages[this.slctd.type][this.slctd.page][elementIndex][0])
       ) {
         this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
       }

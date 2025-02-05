@@ -40,7 +40,7 @@
       </template>
     </template>
   </ul>
-  <div :style="{ height: elValue.style.height * 2 + 2 + 0.05 + 'vh' }"></div>
+  <div :style="{ height: elValue.style.height + 'vh' }"></div>
 </template>
 
 <script>
@@ -75,14 +75,14 @@ export default {
     logoLi() {
       return {
         float: this.wndw.wdth < this.respWidth.md ? 'none' : 'left',
-        height: this.elValue.style.height * 2 + 2 - 0.1 + 'vh',
+        height: this.elValue.style.height + 'vh',
       };
     },
     logoA() {
       return {
         color: this.site.body.style.textColor,
-        padding: this.elValue.style.height + 'vh 20px',
-        height: this.elValue.style.height * 2 + 2 - 0.1 + 'vh',
+        height: this.elValue.style.height + 'vh',
+        padding: 'calc(' + this.elValue.style.height / 2 + 'vh - 1vh) 20px',
       };
     },
     linksLi() {
@@ -93,8 +93,9 @@ export default {
     linksA() {
       return {
         color: this.site.body.style.textColor,
-        padding: this.wndw.wdth < this.respWidth.md ? '15px' : this.elValue.style.height + 'vh 20px',
-        height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height * 2 + 2 - 0.1 + 'vh',
+        padding:
+          this.wndw.wdth < this.respWidth.md ? '15px' : 'calc(' + this.elValue.style.height / 2 + 'vh - 1vh) 20px',
+        height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height + 'vh',
       };
     },
     menuItems() {

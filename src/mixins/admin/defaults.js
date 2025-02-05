@@ -4,7 +4,7 @@ const defaultsMixin = {
       defaults: {
         htmlUniqSiteElmnts: ['footer', 'legal_links', 'top_menu'],
         htmlUniqPageElmnts: ['background_image', 'contact', 'login'],
-        htmlPrtctdPageElmnts: ['terms_of_use', 'privacy_policy'],
+        htmlReqrdPageElmnts: ['terms_of_use', 'privacy_policy'],
         htmlAllElmnts: [
           'background_image',
           'contact',
@@ -19,8 +19,8 @@ const defaultsMixin = {
           'terms_of_use',
           'top_menu',
         ],
-        prtctdPages: ['Terms-of-use', 'Privacy-policy'],
-        prtctdPagesElmnts: ['footer', 'legal_links', 'top_menu'],
+        reqrdPages: ['Terms-of-use', 'Privacy-policy'],
+        reqrdPagesElmnts: ['footer', 'legal_links', 'top_menu'],
         htmlElmnts: {
           background_image: {
             type: 'background_image',
