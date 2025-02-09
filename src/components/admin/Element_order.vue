@@ -1,18 +1,25 @@
 <template>
   <div class="element-order">
-    <select
+    <!-- <select
       v-if="!addingPage"
       v-model="slctd.page"
       @focus="pageSlctd = $event.target.value"
       @change="pageSlctdChange"
-      style="width: calc(100% - 60px)"
-    >
-      <template v-for="sitePages in Object.values(site.pages)">
-        <option v-for="page in Object.keys(sitePages)">{{ page }}</option>
+      style="width: calc(100% - 40px)"
+    > -->
+    <select v-if="!addingPage" style="width: calc(100% - 40px)" @change="pageSlctdChange" @focus="pageSlctdFocus">
+      <template v-for="siteType in Object.keys(site.pages)">
+        <option disabled>==={{ siteType }}===</option>
+        <option
+          v-for="sitePage in Object.keys(site.pages[siteType])"
+          :value="[siteType, sitePage]"
+          :selected="siteType == slctd.type && sitePage == slctd.page"
+        >
+          {{ sitePage }}
+        </option>
       </template>
     </select>
-    <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 40px)" placeholder="Page name" />
-    <input v-if="!addingPage" type="checkbox" :checked="site.defaultPage[slctd.type] == slctd.page" />
+    <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 20px)" placeholder="Page name" />
     <i
       v-if="!addingPage"
       class="fa-solid fa-circle-plus"
@@ -37,19 +44,17 @@
     ></i>
 
     <div v-if="!defaults.reqrdPages.includes(slctd.page)">
-      Logged in:<input
-        type="radio"
-        name="site_status"
-        value="loggedin"
-        :checked="slctd.type == 'loggedin'"
-        @change="toggleLogInOut('loggedin', 'loggedout')"
+      In:<input
+        type="checkbox"
+        :disabled="slctd.page.toLowerCase() == site.defaultPage.loggedin"
+        :checked="slctd.page.toLowerCase() == site.defaultPage.loggedin"
+        @change="site.defaultPage.loggedin = slctd.page.toLowerCase()"
       />
       Out:<input
-        type="radio"
-        name="site_status"
-        value="loggedout"
-        :checked="slctd.type == 'loggedout'"
-        @change="toggleLogInOut('loggedout', 'loggedin')"
+        type="checkbox"
+        :disabled="slctd.page.toLowerCase() == site.defaultPage.loggedout"
+        :checked="slctd.page.toLowerCase() == site.defaultPage.loggedout"
+        @change="site.defaultPage.loggedout = slctd.page.toLowerCase()"
       />
     </div>
 
@@ -217,6 +222,7 @@ export default {
       renamingPos: null,
       isHoverRenameSave: false,
       pageSlctd: 'Home',
+      typeSlctd: 'loggedout',
     };
   },
 
@@ -279,23 +285,31 @@ export default {
     },
 
     toggleLogInOut(newLogStatus, oldLogStatus) {
-      !this.site.pages[newLogStatus]
-        ? (this.site.pages[newLogStatus] = { [this.slctd.page]: this.site.pages[oldLogStatus][this.slctd.page] })
-        : (this.site.pages[newLogStatus][this.slctd.page] = this.site.pages[oldLogStatus][this.slctd.page]);
+      !this.site.pages[this.slctd.type][newLogStatus]
+        ? (this.site.pages[this.slctd.type][newLogStatus] = {
+            [this.slctd.page]: this.site.pages[this.slctd.type][oldLogStatus][this.slctd.page],
+          })
+        : (this.site.pages[this.slctd.type][newLogStatus][this.slctd.page] =
+            this.site.pages[this.slctd.type][oldLogStatus][this.slctd.page]);
       this.slctd.type = newLogStatus;
-      delete this.site.pages[oldLogStatus][this.slctd.page];
+      delete this.site.pages[this.slctd.type][oldLogStatus][this.slctd.page];
     },
-
-    pageSlctdChange() {
-      Object.entries(this.site.pages).forEach(([pageKey, pageValue]) => {
-        if (pageValue[this.slctd.page]) this.slctd.type = pageKey;
-      });
+    pageSlctdFocus(event) {
+      this.typeSlctd = event.target.value.split(',')[0];
+      this.pageSlctd = event.target.value.split(',')[1];
+    },
+    pageSlctdChange(event) {
+      this.slctd.type = event.target.value.split(',')[0];
+      this.slctd.page = event.target.value.split(',')[1];
+      // We might be able to get rid of the below since we are not using v-model anymore
       if (this.individEdit.elmnts !== null) {
-        this.site.pages[this.slctd.type][this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
+        this.site.pages[this.typeSlctd][this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
         this.individEdit.elmntIndx = null;
         this.individEdit.elmnts = null;
+        this.typeSlctd = this.slctd.type;
         this.pageSlctd = this.slctd.page;
       } else {
+        this.typeSlctd = this.slctd.type;
         this.pageSlctd = this.slctd.page;
       }
     },
@@ -342,10 +356,10 @@ export default {
         }
         if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
           if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
-          Object.keys(this.site.pages).forEach((pageType) => {
-            for (const [pageKey, pageVal] of Object.entries(this.site.pages[pageType])) {
+          Object.keys(this.site.pages[this.slctd.type]).forEach((pageType) => {
+            for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type][pageType])) {
               !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
-                this.site.pages[pageType][pageKey].splice(newElPosition, 0, [elmnt, true]);
+                this.site.pages[this.slctd.type][pageType][pageKey].splice(newElPosition, 0, [elmnt, true]);
             }
           });
         } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {

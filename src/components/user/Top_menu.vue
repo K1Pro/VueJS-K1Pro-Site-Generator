@@ -15,21 +15,21 @@
           @mouseout="highlightMenuItem($event, false)"
         >
           <a
-            v-if="menuTypes[menuItemIndex] == 'Page'"
+            v-if="menuLinks[menuItemIndex] == 'Page'"
             :ref="menuItem.toLowerCase()"
             :style="[linksA]"
             :href="slctd.href + '/' + menuItem.toLowerCase()"
             >{{ menuItem }}</a
           >
           <a
-            v-else-if="menuTypes[menuItemIndex] == 'Anchor'"
+            v-else-if="menuLinks[menuItemIndex] == 'Anchor'"
             :ref="menuItem.toLowerCase()"
             :style="[linksA]"
             :href="slctd.href + '/' + menuItem.toLowerCase()"
             >{{ menuItem }}</a
           >
           <a
-            v-else-if="menuTypes[menuItemIndex] == 'Link'"
+            v-else-if="menuLinks[menuItemIndex] == 'Link'"
             :ref="menuItem.toLowerCase()"
             target="_blank"
             :style="[linksA]"
@@ -55,8 +55,6 @@ export default {
     return {
       menuItemsRev:
         this.elValue.style?.alignment == 'right' ? Array.from(this.elValue.items).reverse() : this.elValue.items,
-      menuTypesRev:
-        this.elValue.style?.alignment == 'right' ? Array.from(this.elValue.types).reverse() : this.elValue.types,
       menuLinksRev:
         this.elValue.style?.alignment == 'right' ? Array.from(this.elValue.links).reverse() : this.elValue.links,
       pageClick: false,
@@ -102,11 +100,6 @@ export default {
       return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
         ? this.elValue.items
         : this.menuItemsRev;
-    },
-    menuTypes() {
-      return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
-        ? this.elValue.types
-        : this.menuTypesRev;
     },
     menuLinks() {
       return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md

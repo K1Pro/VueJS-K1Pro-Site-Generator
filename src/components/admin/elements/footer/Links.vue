@@ -1,7 +1,8 @@
 <template>
   <template v-for="([elmntKey, elmntVal], elmntIndx) in Object.entries(site.htmlElmnts)">
     <div v-if="elmntVal.type.includes('menu')" v-for="(item, itemIndx) in elmntVal.items">
-      <input
+      <!-- need to replace below types with links probably -->
+      <!-- <input
         type="checkbox"
         @click="linkOnOff"
         :ref="elmntIndx + '_' + itemIndx"
@@ -11,7 +12,8 @@
             JSON.stringify([elmntKey, item, elmntVal.types[itemIndx], elmntVal.links[itemIndx]])
           )
         "
-      />{{ item }}
+      /> -->
+      {{ item }}
     </div>
   </template>
 </template>

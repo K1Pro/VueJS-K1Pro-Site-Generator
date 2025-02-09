@@ -316,6 +316,7 @@ export default {
   right: 5px;
   padding: 0px 3px;
   margin: 0px;
+  z-index: 6;
 }
 .greenWhitePlus::before {
   font-size: 16px;
