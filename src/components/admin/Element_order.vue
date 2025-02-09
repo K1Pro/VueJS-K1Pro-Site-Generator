@@ -1,12 +1,5 @@
 <template>
   <div class="element-order">
-    <!-- <select
-      v-if="!addingPage"
-      v-model="slctd.page"
-      @focus="pageSlctd = $event.target.value"
-      @change="pageSlctdChange"
-      style="width: calc(100% - 40px)"
-    > -->
     <select v-if="!addingPage" style="width: calc(100% - 40px)" @change="pageSlctdChange" @focus="pageSlctdFocus">
       <template v-for="siteType in Object.keys(site.pages)">
         <option disabled>==={{ siteType }}===</option>
@@ -44,17 +37,16 @@
     ></i>
 
     <div v-if="!defaults.reqrdPages.includes(slctd.page)">
-      In:<input
+      Default:<input
         type="checkbox"
-        :disabled="slctd.page.toLowerCase() == site.defaultPage.loggedin"
-        :checked="slctd.page.toLowerCase() == site.defaultPage.loggedin"
-        @change="site.defaultPage.loggedin = slctd.page.toLowerCase()"
+        :disabled="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
+        :checked="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
+        @change="site.defaultPage[slctd.type] = slctd.page.toLowerCase()"
       />
-      Out:<input
+      Logged in:<input
         type="checkbox"
-        :disabled="slctd.page.toLowerCase() == site.defaultPage.loggedout"
-        :checked="slctd.page.toLowerCase() == site.defaultPage.loggedout"
-        @change="site.defaultPage.loggedout = slctd.page.toLowerCase()"
+        :checked="slctd.type == 'loggedin' && Object.keys(site.pages.loggedin).includes(slctd.page)"
+        @change="changeLogInOut"
       />
     </div>
 
@@ -227,6 +219,27 @@ export default {
   },
 
   methods: {
+    changeLogInOut(event) {
+      if (event.target.checked) {
+        if (
+          !this.site.pages['loggedin'][this.slctd.page] ||
+          confirm('A loggedin page with the same name already exists. Replace?') === true
+        ) {
+          this.site.pages['loggedin'][this.slctd.page] = this.site.pages['loggedout'][this.slctd.page];
+          this.slctd.type = 'loggedin';
+          delete this.site.pages['loggedout'][this.slctd.page];
+        }
+      } else {
+        if (
+          !this.site.pages['loggedin'][this.slctd.page] ||
+          confirm('A loggedin page with the same name already exists. Replace?') === true
+        ) {
+          this.site.pages['loggedout'][this.slctd.page] = this.site.pages['loggedin'][this.slctd.page];
+          this.slctd.type = 'loggedout';
+          delete this.site.pages['loggedin'][this.slctd.page];
+        }
+      }
+    },
     drag(event, pageElmntIndx) {
       event.dataTransfer.setData('text', pageElmntIndx);
     },

@@ -30,17 +30,24 @@
           <div class="top-menu-link">{{ elValue.items[menuLinkIndex] }}</div>
 
           <div class="top-menu-link-items">
-            <!-- <select v-model="site.htmlElmnts[elKey].items[menuLinkIndex]" :style="[allInputs]"></select> -->
             <select
               v-if="menuLinkIndex !== inputIndex"
               :value="site.htmlElmnts[elKey].items[menuLinkIndex]"
               :style="[allInputs]"
               @change="changeItem($event.target.value, menuLinkIndex)"
             >
-              <option value="Choose page" disabled>===Pages===</option>
-              <option v-for="page in Object.keys(site.pages[slctd.type])" :disabled="elValue.items.includes(page)">
-                {{ page }}
-              </option>
+              <template v-for="siteType in Object.keys(site.pages)">
+                <option value="Choose page" disabled>
+                  ==={{ siteType.charAt(0).toUpperCase() + siteType.slice(1) }} pages===
+                </option>
+                <option
+                  v-for="sitePage in Object.keys(site.pages[siteType])"
+                  :disabled="elValue.items.includes(sitePage)"
+                >
+                  {{ sitePage }}
+                </option>
+              </template>
+
               <option value="Choose link" disabled>===Links===</option>
               <option value="top-menu-link-opt">New link</option>
               <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue.links"
@@ -117,6 +124,8 @@ export default {
       this.site.htmlElmnts[this.elKey].links = [...this.site.htmlElmnts[this.elKey].links, 'https://example.com'];
     },
     changeItem(event, menuLinkIndex) {
+      console.log(event);
+      console.log(menuLinkIndex);
       if (event == 'top-menu-link-opt') {
         this.inputType = 'title';
         this.inputIndex = menuLinkIndex;
