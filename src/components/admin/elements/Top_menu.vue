@@ -32,7 +32,6 @@
           <div class="top-menu-link-items">
             <select
               v-if="menuLinkIndex !== inputIndex"
-              :value="site.htmlElmnts[elKey].items[menuLinkIndex]"
               :style="[allInputs]"
               @change="changeItem($event.target.value, menuLinkIndex)"
             >
@@ -42,16 +41,21 @@
                 </option>
                 <option
                   v-for="sitePage in Object.keys(site.pages[siteType])"
-                  :disabled="elValue.items.includes(sitePage)"
+                  :selected="menuLink == 'Page' && sitePage == elValue.items[menuLinkIndex]"
                 >
                   {{ sitePage }}
                 </option>
               </template>
-
               <option value="Choose link" disabled>===Links===</option>
               <option value="top-menu-link-opt">New link</option>
-              <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue.links"
-                ><option v-if="exstngMenuLink != 'Page' && !exstngMenuLink.includes('#')">
+              <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue.links">
+                <option
+                  v-if="exstngMenuLink != 'Page' && !exstngMenuLink.includes('#')"
+                  :selected="
+                    (exstngMenuLink.includes('http://') || exstngMenuLink.includes('https://')) &&
+                    menuLink == exstngMenuLink
+                  "
+                >
                   {{ elValue.items[exstngMenuLinkIndex] }}
                 </option>
               </template>
@@ -131,7 +135,8 @@ export default {
         this.inputIndex = menuLinkIndex;
       } else if (event.includes('#')) {
       } else {
-        console.log('left off here');
+        this.site.htmlElmnts[this.elKey].items[menuLinkIndex] = event;
+        this.site.htmlElmnts[this.elKey].links[menuLinkIndex] = 'Page';
       }
     },
     saveLink() {
@@ -143,6 +148,7 @@ export default {
       this.link.URL = '';
     },
     removeItem(menuLinkIndex) {
+      this.site.htmlElmnts[this.elKey].links.splice(menuLinkIndex, 1);
       this.site.htmlElmnts[this.elKey].items.splice(menuLinkIndex, 1);
     },
   },

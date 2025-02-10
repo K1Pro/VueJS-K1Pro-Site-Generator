@@ -9,7 +9,11 @@
     <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
       <template v-for="(menuItem, menuItemIndex) in menuItems">
         <li
-          v-if="site.pages[slctd.type][menuItem]"
+          v-if="
+            site.pages[slctd.type][menuItem] ||
+            menuLinks[menuItemIndex].includes('http://') ||
+            menuLinks[menuItemIndex].includes('https://')
+          "
           :style="linksLi"
           @mouseover="highlightMenuItem($event, true)"
           @mouseout="highlightMenuItem($event, false)"
@@ -29,11 +33,11 @@
             >{{ menuItem }}</a
           >
           <a
-            v-else-if="menuLinks[menuItemIndex] == 'Link'"
+            v-else-if="menuLinks[menuItemIndex].includes('http://') || menuLinks[menuItemIndex].includes('https://')"
             :ref="menuItem.toLowerCase()"
             target="_blank"
             :style="[linksA]"
-            :href="protocol + menuLinks[menuItemIndex].toLowerCase()"
+            :href="menuLinks[menuItemIndex].toLowerCase()"
             >{{ menuItem }}</a
           >
         </li>

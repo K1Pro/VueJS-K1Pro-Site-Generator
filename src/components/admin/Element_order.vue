@@ -12,7 +12,7 @@
         </option>
       </template>
     </select>
-    <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 20px)" placeholder="Page name" />
+    <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 40px)" placeholder="Page name" />
     <i
       v-if="!addingPage"
       class="fa-solid fa-circle-plus"
@@ -36,7 +36,7 @@
       @click="deletePage(slctd.page)"
     ></i>
 
-    <div v-if="!defaults.reqrdPages.includes(slctd.page)">
+    <div v-if="!defaults.reqrdPages.includes(slctd.page) && !addingPage">
       Default:<input
         type="checkbox"
         :disabled="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
@@ -350,6 +350,7 @@ export default {
           delete this.site.htmlElmnts[elmnt];
         }
       } else {
+        console.log('copying');
         const elPosition =
           this.slctdElmntButton == 'Copy'
             ? this.site.htmlElmnts[elmnt]?.position
@@ -369,10 +370,10 @@ export default {
         }
         if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
           if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
-          Object.keys(this.site.pages[this.slctd.type]).forEach((pageType) => {
-            for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type][pageType])) {
+          Object.keys(this.site.pages).forEach((slctdType) => {
+            for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
               !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
-                this.site.pages[this.slctd.type][pageType][pageKey].splice(newElPosition, 0, [elmnt, true]);
+                this.site.pages[slctdType][pageKey].splice(newElPosition, 0, [elmnt, true]);
             }
           });
         } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
@@ -438,7 +439,7 @@ export default {
             this.createCopyDeleteEl(elType);
           }
         });
-
+        this.slctdElmntButton = 'Add';
         this.addingPage = !this.addingPage;
       } else {
         this.addingPage = !this.addingPage;

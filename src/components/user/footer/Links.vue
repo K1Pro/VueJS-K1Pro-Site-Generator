@@ -1,20 +1,18 @@
 <template>
   <div class="links">
     <h2>Links</h2>
-    <template v-for="[elmntKey, elmntVal] in Object.entries(site.htmlElmnts[elKey][footKey])">
-      <p
-        v-if="
-          site.htmlElmnts?.[elmntVal[0]] &&
-          site.htmlElmnts?.[elmntVal[0]]?.items.includes(elmntVal[1]) &&
-          site.htmlElmnts?.[elmntVal[0]]?.links.includes(elmntVal[3])
-        "
-      >
-        <a v-if="elmntVal[2] == 'Page'" :href="slctd.href + '/' + elmntVal[1].toLowerCase()">{{ elmntVal[1] }}</a>
-        <a v-else-if="elmntVal[2] == 'Anchor'" :href="slctd.href + '/' + elmntVal[1].toLowerCase()">{{
-          elmntVal[1]
+    <template v-for="(link, linkIndex) in site.htmlElmnts[elKey][footKey].links">
+      <p>
+        <a
+          v-if="link == 'Page'"
+          :href="slctd.href + '/' + site.htmlElmnts[elKey][footKey].items[linkIndex].toLowerCase()"
+          >{{ site.htmlElmnts[elKey][footKey].items[linkIndex] }}</a
+        >
+        <a v-else-if="link.includes('#')" :href="slctd.href + '/' + link.toLowerCase()">{{
+          site.htmlElmnts[elKey][footKey].items[linkIndex]
         }}</a>
-        <a v-else-if="elmntVal[2] == 'Link'" :href="'https://' + elmntVal[3].toLowerCase()" target="_blank">
-          {{ elmntVal[1] }}
+        <a v-else-if="link.includes('http://') || link.includes('https://')" :href="link.toLowerCase()" target="_blank">
+          {{ site.htmlElmnts[elKey][footKey].items[linkIndex] }}
         </a>
       </p>
     </template>
