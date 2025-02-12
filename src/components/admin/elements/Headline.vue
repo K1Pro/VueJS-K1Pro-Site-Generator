@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="headline">
-    <input class="font-size-input" type="number" step="0.01" v-model="site.htmlElmnts[elKey].style.textSize" />
+    <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}%</span>
     <input
       class="headline-input"

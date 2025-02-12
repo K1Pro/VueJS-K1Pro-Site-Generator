@@ -307,17 +307,6 @@ export default {
   bottom: 0px;
   padding: 0px 3px;
 }
-.font-size-input {
-  font-size: 12px;
-  position: absolute;
-  width: 50px;
-  height: 25px;
-  top: 5px;
-  right: 5px;
-  padding: 0px 3px;
-  margin: 0px;
-  z-index: 6;
-}
 .greenWhitePlus::before {
   font-size: 16px;
   color: forestgreen;

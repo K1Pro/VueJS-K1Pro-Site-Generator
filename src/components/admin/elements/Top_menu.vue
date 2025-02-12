@@ -5,7 +5,8 @@
     :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]"
     ref="topMenu"
   >
-    <input class="font-size-input" type="number" step="0.01" v-model="site.htmlElmnts[elKey].style.height" />
+    <edit_menu :elKey="elKey" :options="['align', 'height']"></edit_menu>
+
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="top-menu-logo" :style="logoImg">
       <img :src="endPts.appApiUrl + site.logo" alt="logo" />

@@ -1,21 +1,7 @@
 <template>
-  <template v-for="([elmntKey, elmntVal], elmntIndx) in Object.entries(site.htmlElmnts)">
-    <div v-if="elmntVal.type.includes('menu')" v-for="(item, itemIndx) in elmntVal.items">
-      <!-- need to replace below types with links probably -->
-      <!-- <input
-        type="checkbox"
-        @click="linkOnOff"
-        :ref="elmntIndx + '_' + itemIndx"
-        :name="elmntKey"
-        :checked="
-          JSON.stringify(site.htmlElmnts[elKey].links).includes(
-            JSON.stringify([elmntKey, item, elmntVal.types[itemIndx], elmntVal.links[itemIndx]])
-          )
-        "
-      /> -->
-      {{ item }}
-    </div>
-  </template>
+  <div class="links">
+    <p v-for="(item, itemIndex) in site.htmlElmnts[elKey][footKey].items">{{ item }}</p>
+  </div>
 </template>
 
 <script>

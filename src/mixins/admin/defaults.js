@@ -17,6 +17,7 @@ const defaultsMixin = {
           'product_card',
           'spacer',
           'terms_of_use',
+          'text_box',
           'top_menu',
         ],
         reqrdPages: ['Terms-of-use', 'Privacy-policy'],
@@ -115,6 +116,12 @@ const defaultsMixin = {
           },
           spacer: { type: 'spacer', style: { height: 50 } },
           terms_of_use: { type: 'terms_of_use', style: {} },
+          text_box: {
+            type: 'text_box',
+            style: {
+              height: 20,
+            },
+          },
           top_menu: {
             type: 'top_menu',
             position: 2,

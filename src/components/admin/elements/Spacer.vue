@@ -1,10 +1,10 @@
 <template>
   <div :id="elKey" :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]">
-    <input class="font-size-input" type="number" step="0.01" v-model="site.htmlElmnts[elKey].style.height" />
+    <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
     <span class="dim" :style="[style.outline.color]"
       >{{ elValue.style.height >= 1 ? Math.round(elValue.style.height * 100) / 100 : '1' }}%</span
     >
-    <p :style="[spacerHeight]" ref="spacerP"></p>
+    <p :style="[spacerHeight]"></p>
   </div>
 </template>
 
@@ -34,12 +34,5 @@ export default {
 .spacer p {
   padding: 0%;
   margin: 0%;
-}
-.spacer div {
-  position: relative;
-  z-index: 5;
-  cursor: ns-resize;
-  margin-top: -5px;
-  height: 5px;
 }
 </style>
