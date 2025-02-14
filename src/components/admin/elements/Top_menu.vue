@@ -12,7 +12,7 @@
       <img :src="endPts.appApiUrl + site.logo" alt="logo" />
     </div>
     <div :style="[elLi]">
-      <template v-for="(menuLink, menuLinkIndex) in elValue.links">
+      <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type].links">
         <div class="top-menu-links" :style="[style.primaryColor.outline.borderColor]">
           <i
             v-if="menuLinkIndex !== inputIndex"
@@ -28,7 +28,7 @@
             :style="{ top: elValue.style.height / 3.5 + 'vh' }"
             @click="inputType == 'title' ? (inputType = 'URL') : saveLink()"
           ></i>
-          <div class="top-menu-link">{{ elValue.items[menuLinkIndex] }}</div>
+          <div class="top-menu-link">{{ elValue[slctd.type].items[menuLinkIndex] }}</div>
 
           <div class="top-menu-link-items">
             <select
@@ -42,14 +42,14 @@
                 </option>
                 <option
                   v-for="sitePage in Object.keys(site.pages[siteType])"
-                  :selected="menuLink == 'Page' && sitePage == elValue.items[menuLinkIndex]"
+                  :selected="menuLink == 'Page' && sitePage == elValue[slctd.type].items[menuLinkIndex]"
                 >
                   {{ sitePage }}
                 </option>
               </template>
               <option value="Choose link" disabled>===Links===</option>
               <option value="top-menu-link-opt">New link</option>
-              <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue.links">
+              <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue[slctd.type].links">
                 <option
                   v-if="exstngMenuLink != 'Page' && !exstngMenuLink.includes('#')"
                   :selected="
@@ -57,7 +57,7 @@
                     menuLink == exstngMenuLink
                   "
                 >
-                  {{ elValue.items[exstngMenuLinkIndex] }}
+                  {{ elValue[slctd.type].items[exstngMenuLinkIndex] }}
                 </option>
               </template>
               <option value="Choose anchor" disabled>===Anchors===</option>
@@ -125,8 +125,14 @@ export default {
   },
   methods: {
     addItem() {
-      this.site.htmlElmnts[this.elKey].items = [...this.site.htmlElmnts[this.elKey].items, 'Example'];
-      this.site.htmlElmnts[this.elKey].links = [...this.site.htmlElmnts[this.elKey].links, 'https://example.com'];
+      this.site.htmlElmnts[this.elKey][this.slctd.type].items = [
+        ...this.site.htmlElmnts[this.elKey][this.slctd.type].items,
+        'Example',
+      ];
+      this.site.htmlElmnts[this.elKey][this.slctd.type].links = [
+        ...this.site.htmlElmnts[this.elKey][this.slctd.type].links,
+        'https://example.com',
+      ];
     },
     changeItem(event, menuLinkIndex) {
       console.log(event);
@@ -136,21 +142,21 @@ export default {
         this.inputIndex = menuLinkIndex;
       } else if (event.includes('#')) {
       } else {
-        this.site.htmlElmnts[this.elKey].items[menuLinkIndex] = event;
-        this.site.htmlElmnts[this.elKey].links[menuLinkIndex] = 'Page';
+        this.site.htmlElmnts[this.elKey][this.slctd.type].items[menuLinkIndex] = event;
+        this.site.htmlElmnts[this.elKey][this.slctd.type].links[menuLinkIndex] = 'Page';
       }
     },
     saveLink() {
-      this.elValue.items[this.inputIndex] = this.link.title;
-      this.elValue.links[this.inputIndex] = this.link.URL;
+      this.elValue[this.slctd.type].items[this.inputIndex] = this.link.title;
+      this.elValue[this.slctd.type].links[this.inputIndex] = this.link.URL;
       this.inputType = 'page';
       this.inputIndex = null;
       this.link.title = '';
       this.link.URL = '';
     },
     removeItem(menuLinkIndex) {
-      this.site.htmlElmnts[this.elKey].links.splice(menuLinkIndex, 1);
-      this.site.htmlElmnts[this.elKey].items.splice(menuLinkIndex, 1);
+      this.site.htmlElmnts[this.elKey][this.slctd.type].links.splice(menuLinkIndex, 1);
+      this.site.htmlElmnts[this.elKey][this.slctd.type].items.splice(menuLinkIndex, 1);
     },
   },
 };

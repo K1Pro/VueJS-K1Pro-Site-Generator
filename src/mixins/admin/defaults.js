@@ -2,8 +2,8 @@ const defaultsMixin = {
   data() {
     return {
       defaults: {
-        htmlUniqSiteElmnts: ['footer', 'legal_links'],
-        htmlUniqPageElmnts: ['background_image', 'contact', 'login', 'top_menu'],
+        htmlUniqSiteElmnts: ['footer', 'legal_links', 'top_menu'],
+        htmlUniqPageElmnts: ['background_image', 'contact', 'login'],
         htmlReqrdPageElmnts: ['terms_of_use', 'privacy_policy'],
         htmlAllElmnts: [
           'background_image',
@@ -125,8 +125,11 @@ const defaultsMixin = {
           top_menu: {
             type: 'top_menu',
             position: 2,
-            items: ['Menu Item 1', 'Menu Item 2'],
-            links: ['https://example1.com', 'https://example1.com'],
+            loggedin: {},
+            loggedout: {
+              items: ['Menu Item 1', 'Menu Item 2'],
+              links: ['https://example1.com', 'https://example1.com'],
+            },
             style: {
               alignment: 'right',
               height: 14,

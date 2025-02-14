@@ -49,9 +49,13 @@ export default {
   data() {
     return {
       menuItemsRev:
-        this.elValue.style?.alignment == 'right' ? Array.from(this.elValue.items).reverse() : this.elValue.items,
+        this.elValue.style?.alignment == 'right'
+          ? Array.from(this.elValue[this.slctd.type].items).reverse()
+          : this.elValue[this.slctd.type].items,
       menuLinksRev:
-        this.elValue.style?.alignment == 'right' ? Array.from(this.elValue.links).reverse() : this.elValue.links,
+        this.elValue.style?.alignment == 'right'
+          ? Array.from(this.elValue[this.slctd.type].links).reverse()
+          : this.elValue[this.slctd.type].links,
       pageClick: false,
       responsive: false,
       protocol: protocol,
@@ -93,12 +97,12 @@ export default {
     },
     menuItems() {
       return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
-        ? this.elValue.items
+        ? this.elValue[this.slctd.type].items
         : this.menuItemsRev;
     },
     menuLinks() {
       return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
-        ? this.elValue.links
+        ? this.elValue[this.slctd.type].links
         : this.menuLinksRev;
     },
   },
