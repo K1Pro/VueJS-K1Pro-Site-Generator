@@ -26,6 +26,7 @@
           <img
             v-if="site.htmlElmnts[elKey]?.['box' + column].img"
             class="text-box-img-item"
+            :style="{ height: site.htmlElmnts[elKey].style.height * 0.75 + 'vh' }"
             :src="site.htmlElmnts[elKey]?.['box' + column].img"
             @drop.prevent="drop(column)"
             @dragover.prevent
@@ -58,7 +59,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['site', 'style'],
+  inject: ['grid', 'respWidth', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -113,8 +114,9 @@ export default {
             70 / (this.site.htmlElmnts[this.elKey].style.gridTemplateColumns - 1) +
             '%) 30%';
       return {
-        'grid-template-rows': this.site.htmlElmnts[this.elKey].style.height + 'vh',
+        'grid-template-rows': this.site.htmlElmnts[this.elKey].style.height * 0.75 + 'vh',
         'grid-template-columns': gridTemplateColumns,
+        padding: this.grid.wdth > this.respWidth.md ? '0px 10%' : '0px',
       };
     },
   },
@@ -127,21 +129,20 @@ export default {
 }
 .text-box-opts {
   display: grid;
-  padding: 0px 10%;
 }
 .text-box-items {
   display: grid;
-  padding: 0px 10%;
 }
 .text-box-txt-item {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   border: 1px dashed black;
   padding: 10px;
 }
 .text-box-img-item {
   padding: 10px;
   border: 1px dashed black;
-  height: 100%;
+  object-fit: cover;
   width: 100%;
 }
 </style>

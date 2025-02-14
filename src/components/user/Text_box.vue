@@ -20,7 +20,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['site', 'style'],
+  inject: ['wndw', 'respWidth', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -52,8 +52,9 @@ export default {
             70 / (this.site.htmlElmnts[this.elKey].style.gridTemplateColumns - 1) +
             '%) 30%';
       return {
-        'grid-template-rows': this.site.htmlElmnts[this.elKey].style.height + 'vh',
+        'grid-template-rows': this.site.htmlElmnts[this.elKey].style.height * 0.75 + 'vh',
         'grid-template-columns': gridTemplateColumns,
+        padding: this.wndw.wdth > this.respWidth.md ? '0px 10%' : '0px',
       };
     },
   },
@@ -64,12 +65,12 @@ export default {
 .text-box {
   position: relative;
   display: grid;
-  padding: 0px 10%;
 }
 .text-box-items {
 }
 .text-box-txt-item {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 10px;
 }
 .text-box-img-item {
