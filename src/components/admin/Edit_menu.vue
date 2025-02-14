@@ -1,5 +1,12 @@
 <template>
   <div class="edit-menu">
+    <input
+      v-if="options.includes('grid-template-columns')"
+      class="edit-font-size"
+      type="number"
+      title="columns"
+      v-model="site.htmlElmnts[elKey].style.gridTemplateColumns"
+    />
     <button v-if="options.includes('align')" class="edit-align" title="alignment">
       <i
         class="fa-solid"
