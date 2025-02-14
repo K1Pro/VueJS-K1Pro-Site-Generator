@@ -2,7 +2,9 @@
   <div
     class="headline"
     :style="{
-      fontSize: elValue.style.textSize + 'vh',
+      textAlign: elValue.style.align,
+      fontSize: elValue.style.fontSize + 'vh',
+      padding: elValue.style.padding + 'vh ' + (this.wndw.wdth > this.respWidth.md ? 'calc(10% + 10px)' : '10px'),
     }"
   >
     {{ elValue.text }}
@@ -13,7 +15,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['site'],
+  inject: ['wndw', 'respWidth', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 };
@@ -22,8 +24,6 @@ export default {
 <style>
 .headline {
   position: relative;
-  text-align: center;
-  padding: 4vh 0px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

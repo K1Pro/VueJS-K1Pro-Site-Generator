@@ -36,7 +36,7 @@ const defaultsMixin = {
             location: { lng: '-87.629799', lat: '41.878113', zoom: '11' },
             links: [],
             style: {
-              alignment: 'right',
+              align: 'right',
               backgroundColor: '#FFFFFF',
               borderColor: '#FFFFFF',
               color: '#000000',
@@ -46,19 +46,16 @@ const defaultsMixin = {
             type: 'headline',
             text: 'Headline',
             style: {
-              backgroundColor: '#ffffff',
-              color: '#000000',
-              fontFamily: '',
-              height: '75',
-              'padding-bottom': '0',
-              textSize: 30,
+              align: 'center',
+              fontSize: 4,
+              padding: 4,
             },
           },
           icon_slider: {
             type: 'icon_slider',
             items: [['Slide 1', 'fa-solid fa-house']],
             style: {
-              alignment: 'right',
+              align: 'right',
               backgroundColor: '#ffffff',
               borderRadius: '10',
               borderColor: '#000000',
@@ -106,7 +103,7 @@ const defaultsMixin = {
               ],
             ],
             style: {
-              alignment: 'center',
+              align: 'center',
               backgroundColor: '#ffffff',
               borderRadius: '10',
               borderColor: '#000000',
@@ -131,7 +128,7 @@ const defaultsMixin = {
               links: ['https://example1.com', 'https://example1.com'],
             },
             style: {
-              alignment: 'right',
+              align: 'right',
               height: 14,
             },
           },

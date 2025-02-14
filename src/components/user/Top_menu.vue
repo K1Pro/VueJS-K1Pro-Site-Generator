@@ -49,11 +49,11 @@ export default {
   data() {
     return {
       menuItemsRev:
-        this.elValue.style?.alignment == 'right'
+        this.elValue.style?.align == 'right'
           ? Array.from(this.elValue[this.slctd.type].items).reverse()
           : this.elValue[this.slctd.type].items,
       menuLinksRev:
-        this.elValue.style?.alignment == 'right'
+        this.elValue.style?.align == 'right'
           ? Array.from(this.elValue[this.slctd.type].links).reverse()
           : this.elValue[this.slctd.type].links,
       pageClick: false,
@@ -84,7 +84,7 @@ export default {
     },
     linksLi() {
       return {
-        float: this.wndw.wdth < this.respWidth.md ? 'none' : this.elValue.style?.alignment,
+        float: this.wndw.wdth < this.respWidth.md ? 'none' : this.elValue.style?.align,
       };
     },
     linksA() {
@@ -96,12 +96,12 @@ export default {
       };
     },
     menuItems() {
-      return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
+      return this.elValue.style?.align == 'right' && this.wndw.wdth < this.respWidth.md
         ? this.elValue[this.slctd.type].items
         : this.menuItemsRev;
     },
     menuLinks() {
-      return this.elValue.style?.alignment == 'right' && this.wndw.wdth < this.respWidth.md
+      return this.elValue.style?.align == 'right' && this.wndw.wdth < this.respWidth.md
         ? this.elValue[this.slctd.type].links
         : this.menuLinksRev;
     },

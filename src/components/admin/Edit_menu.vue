@@ -1,32 +1,53 @@
 <template>
   <div class="edit-menu">
-    <input
-      v-if="options.includes('grid-template-columns')"
-      class="edit-font-size"
-      type="number"
-      title="columns"
-      v-model="site.htmlElmnts[elKey].style.gridTemplateColumns"
-    />
-    <button v-if="options.includes('align')" class="edit-align" title="alignment">
+    <!-- align -->
+    <button v-if="options.includes('align')" class="edit-align" title="align">
       <i
         class="fa-solid"
         :class="
-          site.htmlElmnts[elKey].style.alignment == 'left'
+          site.htmlElmnts[elKey].style.align == 'left'
             ? 'fa-align-left'
-            : site.htmlElmnts[elKey].style.alignment == 'center'
+            : site.htmlElmnts[elKey].style.align == 'center'
             ? 'fa-align-center'
             : 'fa-align-right'
         "
         @click="changeAlign($event.target.classList[1])"
       ></i>
     </button>
+    <!-- font-size -->
+    <input
+      v-if="options.includes('font-size')"
+      class="edit-height"
+      type="number"
+      step="0.01"
+      title="height"
+      v-model="site.htmlElmnts[elKey].style.fontSize"
+    />
+    <!-- grid-template-columns -->
+    <input
+      v-if="options.includes('grid-template-columns')"
+      class="edit-height"
+      type="number"
+      title="columns"
+      v-model="site.htmlElmnts[elKey].style.gridTemplateColumns"
+    />
+    <!-- height -->
     <input
       v-if="options.includes('height')"
-      class="edit-font-size"
+      class="edit-height"
       type="number"
       step="0.01"
       title="height"
       v-model="site.htmlElmnts[elKey].style.height"
+    />
+    <!-- padding -->
+    <input
+      v-if="options.includes('padding')"
+      class="edit-height"
+      type="number"
+      step="0.01"
+      title="padding"
+      v-model="site.htmlElmnts[elKey].style.padding"
     />
   </div>
 </template>
@@ -41,10 +62,10 @@ export default {
 
   methods: {
     changeAlign(event) {
-      const alignment = ['left', 'center', 'right'];
-      let alignmentPosition = alignment.findIndex((align) => align == event.split('-')[2]);
-      alignmentPosition = alignmentPosition > 1 ? 0 : alignmentPosition + 1;
-      this.site.htmlElmnts[this.elKey].style.alignment = alignment[alignmentPosition];
+      const align = ['left', 'center', 'right'];
+      let alignPosition = align.findIndex((align) => align == event.split('-')[2]);
+      alignPosition = alignPosition > 1 ? 0 : alignPosition + 1;
+      this.site.htmlElmnts[this.elKey].style.align = align[alignPosition];
     },
   },
 };
@@ -58,7 +79,7 @@ export default {
   z-index: 6;
   height: 25px;
 }
-.edit-font-size {
+.edit-height {
   width: 50px;
 }
 .edit-menu button,

@@ -30,17 +30,16 @@ export default {
     textBoxStyle() {
       if (!this.site.htmlElmnts[this.elKey].style.gridTemplateColumns)
         this.site.htmlElmnts[this.elKey].style = { gridTemplateColumns: 2 };
-      if (!this.site.htmlElmnts[this.elKey].style.alignment)
-        this.site.htmlElmnts[this.elKey].style.alignment = 'center';
+      if (!this.site.htmlElmnts[this.elKey].style.align) this.site.htmlElmnts[this.elKey].style.align = 'center';
       if (!this.site.htmlElmnts[this.elKey].style.height) this.site.htmlElmnts[this.elKey].style.height = 10;
       const gridTemplateColumns =
-        this.site.htmlElmnts[this.elKey].style.alignment == 'left'
+        this.site.htmlElmnts[this.elKey].style.align == 'left'
           ? '30% repeat(' +
             (this.site.htmlElmnts[this.elKey].style.gridTemplateColumns - 1) +
             ', ' +
             70 / (this.site.htmlElmnts[this.elKey].style.gridTemplateColumns - 1) +
             '%)'
-          : this.site.htmlElmnts[this.elKey].style.alignment == 'center'
+          : this.site.htmlElmnts[this.elKey].style.align == 'center'
           ? 'repeat(' +
             this.site.htmlElmnts[this.elKey].style.gridTemplateColumns +
             ', ' +

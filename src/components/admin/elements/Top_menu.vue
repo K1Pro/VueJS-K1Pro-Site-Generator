@@ -114,7 +114,7 @@ export default {
       };
     },
     elLi() {
-      return { textAlign: this.elValue.style?.alignment };
+      return { textAlign: this.elValue.style?.align };
     },
     logoImg() {
       return {

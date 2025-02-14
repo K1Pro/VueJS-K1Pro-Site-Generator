@@ -1,12 +1,14 @@
 <template>
   <div :id="elKey" class="headline">
-    <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
-    <span :style="[style.outline.color]" class="dim">{{ elValue.style.textSize }}%</span>
+    <edit_menu :elKey="elKey" :options="['align', 'font-size', 'padding']"></edit_menu>
+    <span :style="[style.outline.color]" class="dim">{{ elValue.style.fontSize }}%</span>
     <input
       class="headline-input"
       :style="[
         {
-          fontSize: elValue.style.textSize + 'vh',
+          textAlign: elValue.style.align,
+          fontSize: elValue.style.fontSize + 'vh',
+          padding: elValue.style.padding + 'vh ' + (this.grid.wdth > this.respWidth.md ? 'calc(10% + 10px)' : '10px'),
         },
         style.outline.borderColor,
       ]"
@@ -21,7 +23,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['site', 'style'],
+  inject: ['grid', 'respWidth', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 };
@@ -34,12 +36,10 @@ export default {
 .headline-input {
   height: 100%;
   width: 100%;
-  text-align: center;
   background: transparent;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
-  padding: 4vh 0px;
   border: none;
 }
 </style>
