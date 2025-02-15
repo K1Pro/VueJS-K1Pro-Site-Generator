@@ -50,6 +50,8 @@
   <option value="fa-solid fa-arrows-up-to-line">Arrows up to line</option>
   <option value="fa-solid fa-sort-down">Sort down</option>
   <option value="fa-solid fa-circle-minus">Circle minus</option>
+  <option value="fa-brands fa-react">React</option>
+  <option value="fa-brands fa-node">Node.JS</option>
 </template>
 
 <script>

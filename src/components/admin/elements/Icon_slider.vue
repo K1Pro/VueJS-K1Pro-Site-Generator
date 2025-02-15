@@ -7,17 +7,7 @@
       }"
     >
       <div>
-        <div
-          v-if="showScroll"
-          class="icon-slider-prev"
-          :style="[
-            {
-              border: '1px solid ' + site.body.style.borderColor,
-              'border-radius': elValue.style.borderRadius + 'px',
-            },
-            style.primaryColor.backgroundColor,
-          ]"
-        >
+        <div v-if="showScroll" class="icon-slider-prev">
           <i
             class="fa-solid fa-chevron-left"
             :style="{
@@ -69,35 +59,39 @@
                 :style="{
                   'font-size': elValue.style.iconSize + 'px',
                 }"
-                :class="elValue['items'][itemStart + itemIndex - 1][1]"
+                :class="elValue.icons[itemStart + itemIndex].icon"
               ></i>
             </div>
 
-            <select v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][1]">
+            <select v-model="site.htmlElmnts[elKey].icons[itemStart + itemIndex].icon">
               <icon_slider_options></icon_slider_options>
             </select>
 
             <input
               type="text"
-              placeholder="text here..."
-              v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][0]"
+              placeholder="Text here..."
+              v-model="site.htmlElmnts[elKey].icons[itemStart + itemIndex].title"
             />
+            <select @change="changeLink($event.target.value, itemIndex)">
+              <option value="">No link</option>
+              <template v-for="siteType in Object.keys(site.pages)">
+                <option value="Choose page" disabled>
+                  ==={{ siteType.charAt(0).toUpperCase() + siteType.slice(1) }} pages===
+                </option>
+                <option v-for="sitePage in Object.keys(site.pages[siteType])">
+                  {{ sitePage }}
+                </option>
+              </template>
+              <option value="Choose link" disabled>===Links===</option>
+              <option value="top-menu-link-opt">New link</option>
+              <option value="Choose anchor" disabled>===Anchors===</option>
+            </select>
           </div>
         </div>
       </template>
 
       <div>
-        <div
-          v-if="showScroll"
-          class="icon-slider-next"
-          :style="[
-            {
-              border: '1px solid ' + site.body.style.borderColor,
-              'border-radius': elValue.style.borderRadius + 'px',
-            },
-            style.primaryColor.backgroundColor,
-          ]"
-        >
+        <div v-if="showScroll" class="icon-slider-next">
           <i
             class="fa-solid fa-chevron-right"
             :style="{
@@ -123,7 +117,7 @@ export default {
 
   computed: {
     itmAmnt() {
-      return this.elValue['items'].length + 1;
+      return this.elValue?.icons ? Object.keys(this.elValue.icons).length + 1 : 0;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.grid.wdth - 50) / 110);
@@ -155,7 +149,8 @@ export default {
 
   methods: {
     addItem() {
-      this.site.htmlElmnts[this.elKey]['items'].push(['', 'fa-solid fa-question']);
+      this.site.htmlElmnts[this.elKey].icons[this.itmAmnt] = { title: '', icon: 'fa-solid fa-question' };
+      // finished here
       if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey]['items'].length + 1) < 0) {
         this.itemStart = this.site.htmlElmnts[this.elKey]['items'].length + 1 - this.respvItemAmnt;
       } else {
@@ -165,6 +160,12 @@ export default {
     removeItem(itemIndex) {
       if (this.itemStart !== 0) this.itemStart--;
       this.site.htmlElmnts[this.elKey]['items'].splice(itemIndex, 1);
+    },
+    changeLink(event, itemIndex) {
+      console.log(event);
+      console.log(itemIndex);
+      console.log(this.site.htmlElmnts[this.elKey].items[itemIndex - 1]);
+      // finished here
     },
   },
 
@@ -205,7 +206,7 @@ export default {
 }
 .icon-slider-item {
   overflow: hidden;
-  height: 20vh;
+  height: 22vh;
   padding: 20px 0px;
   text-align: center;
 }
@@ -235,14 +236,14 @@ export default {
   cursor: pointer;
 }
 .icon-slider-prev {
-  height: 20vh;
+  height: 22vh;
   float: right;
   padding: 60px 5px 0px 5px;
   margin: 0px;
   width: 20px;
 }
 .icon-slider-next {
-  height: 20vh;
+  height: 22vh;
   float: left;
   padding: 60px 5px 0px 5px;
   margin: 0px;

@@ -7,17 +7,7 @@
       }"
     >
       <div>
-        <div
-          v-if="showScroll"
-          class="icon-slider-prev"
-          :style="[
-            {
-              border: '1px solid ' + site.body.style.borderColor,
-              'border-radius': elValue.style.borderRadius + 'px',
-            },
-            style.primaryColor,
-          ]"
-        >
+        <div v-if="showScroll" class="icon-slider-prev">
           <i
             class="fa-solid fa-chevron-left"
             :style="{
@@ -32,7 +22,7 @@
 
       <template v-for="itemIndex in respvItemAmnt">
         <div
-          v-if="site.htmlElmnts[elKey]['items'][itemStart + itemIndex - 1]"
+          v-if="site.htmlElmnts[elKey].icons[itemStart + itemIndex]"
           class="icon-slider-item"
           :style="[
             {
@@ -47,7 +37,7 @@
               :style="{
                 'font-size': elValue.style.iconSize + 'px',
               }"
-              :class="elValue['items'][itemStart + itemIndex - 1][1]"
+              :class="elValue.icons[itemStart + itemIndex].icon"
             ></i>
           </div>
           <div style="padding: 0px 10px">
@@ -57,24 +47,14 @@
                 'font-size': elValue.style.textSize + 'px',
               }"
             >
-              {{ elValue['items'][itemStart + itemIndex - 1][0] }}
+              {{ elValue.icons[itemStart + itemIndex].title }}
             </div>
           </div>
         </div>
       </template>
 
       <div>
-        <div
-          v-if="showScroll"
-          class="icon-slider-next"
-          :style="[
-            {
-              border: '1px solid ' + site.body.style.borderColor,
-              'border-radius': elValue.style.borderRadius + 'px',
-            },
-            style.primaryColor,
-          ]"
-        >
+        <div v-if="showScroll" class="icon-slider-next">
           <i
             class="fa-solid fa-chevron-right"
             :style="{
@@ -100,7 +80,7 @@ export default {
 
   computed: {
     itmAmnt() {
-      return this.elValue['items'].length;
+      return this.elValue?.icons ? Object.keys(this.elValue.icons).length : 0;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.wndw.wdth - 50) / 110);
