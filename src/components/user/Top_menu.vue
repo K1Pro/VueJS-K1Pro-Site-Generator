@@ -7,29 +7,29 @@
       </a>
     </li>
     <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
-      <template v-for="(menuItem, menuItemIndex) in menuItems">
+      <template v-for="(menuLink, menuLinkIndex) in menuLinks">
         <li :style="linksLi" @mouseover="highlightMenuItem($event, true)" @mouseout="highlightMenuItem($event, false)">
           <a
-            v-if="menuLinks[menuItemIndex] == 'Page'"
-            :ref="menuItem.toLowerCase()"
+            v-if="menuLink.link == 'page'"
+            :ref="menuLink.title.toLowerCase()"
             :style="[linksA]"
-            :href="slctd.href + '/' + menuItem.toLowerCase()"
-            >{{ menuItem }}</a
+            :href="slctd.href + '/' + menuLink.title.toLowerCase()"
+            >{{ menuLink.title }}</a
           >
           <a
-            v-else-if="menuLinks[menuItemIndex] == 'Anchor'"
-            :ref="menuItem.toLowerCase()"
+            v-else-if="menuLink.link == 'anchor'"
+            :ref="menuLink.title.toLowerCase()"
             :style="[linksA]"
-            :href="slctd.href + '/' + menuItem.toLowerCase()"
-            >{{ menuItem }}</a
+            :href="slctd.href + '/' + menuLink.title.toLowerCase()"
+            >{{ menuLink.title }}</a
           >
           <a
-            v-else-if="menuLinks[menuItemIndex].includes('http://') || menuLinks[menuItemIndex].includes('https://')"
-            :ref="menuItem.toLowerCase()"
+            v-else-if="menuLink.link.includes('http://') || menuLink.link.includes('https://')"
+            :ref="menuLink.title.toLowerCase()"
             target="_blank"
             :style="[linksA]"
-            :href="menuLinks[menuItemIndex].toLowerCase()"
-            >{{ menuItem }}</a
+            :href="menuLink.link.toLowerCase()"
+            >{{ menuLink.title }}</a
           >
         </li>
       </template>
@@ -48,14 +48,10 @@ export default {
 
   data() {
     return {
-      menuItemsRev:
-        this.elValue.style?.align == 'right'
-          ? Array.from(this.elValue[this.slctd.type].items).reverse()
-          : this.elValue[this.slctd.type].items,
       menuLinksRev:
         this.elValue.style?.align == 'right'
-          ? Array.from(this.elValue[this.slctd.type].links).reverse()
-          : this.elValue[this.slctd.type].links,
+          ? Array.from(this.elValue[this.slctd.type]).reverse()
+          : this.elValue[this.slctd.type],
       pageClick: false,
       responsive: false,
       protocol: protocol,
@@ -95,14 +91,9 @@ export default {
         height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height + 'vh',
       };
     },
-    menuItems() {
-      return this.elValue.style?.align == 'right' && this.wndw.wdth < this.respWidth.md
-        ? this.elValue[this.slctd.type].items
-        : this.menuItemsRev;
-    },
     menuLinks() {
       return this.elValue.style?.align == 'right' && this.wndw.wdth < this.respWidth.md
-        ? this.elValue[this.slctd.type].links
+        ? this.elValue[this.slctd.type]
         : this.menuLinksRev;
     },
   },

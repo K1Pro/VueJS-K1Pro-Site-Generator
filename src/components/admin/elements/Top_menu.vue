@@ -12,7 +12,7 @@
       <img :src="endPts.appApiUrl + site.logo" alt="logo" />
     </div>
     <div :style="[elLi]">
-      <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type].links">
+      <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type]">
         <div class="top-menu-links" :style="[style.primaryColor.outline.borderColor]">
           <i
             v-if="menuLinkIndex !== inputIndex"
@@ -28,7 +28,7 @@
             :style="{ top: elValue.style.height / 3.5 + 'vh' }"
             @click="inputType == 'title' ? (inputType = 'URL') : saveLink()"
           ></i>
-          <div class="top-menu-link">{{ elValue[slctd.type].items[menuLinkIndex] }}</div>
+          <div class="top-menu-link">{{ menuLink.title }}</div>
 
           <div class="top-menu-link-items">
             <select
@@ -42,7 +42,7 @@
                 </option>
                 <option
                   v-for="sitePage in Object.keys(site.pages[siteType])"
-                  :selected="menuLink == 'Page' && sitePage == elValue[slctd.type].items[menuLinkIndex]"
+                  :selected="menuLink.link == 'page' && sitePage == menuLink.title"
                 >
                   {{ sitePage }}
                 </option>
@@ -51,7 +51,7 @@
               <option value="top-menu-link-opt">New link</option>
               <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue[slctd.type].links">
                 <option
-                  v-if="exstngMenuLink != 'Page' && !exstngMenuLink.includes('#')"
+                  v-if="exstngMenuLink.link != 'page' && !exstngMenuLink.includes('#')"
                   :selected="
                     (exstngMenuLink.includes('http://') || exstngMenuLink.includes('https://')) &&
                     menuLink == exstngMenuLink
@@ -135,15 +135,13 @@ export default {
       ];
     },
     changeItem(event, menuLinkIndex) {
-      console.log(event);
-      console.log(menuLinkIndex);
       if (event == 'top-menu-link-opt') {
         this.inputType = 'title';
         this.inputIndex = menuLinkIndex;
       } else if (event.includes('#')) {
       } else {
         this.site.htmlElmnts[this.elKey][this.slctd.type].items[menuLinkIndex] = event;
-        this.site.htmlElmnts[this.elKey][this.slctd.type].links[menuLinkIndex] = 'Page';
+        this.site.htmlElmnts[this.elKey][this.slctd.type].links[menuLinkIndex] = 'page';
       }
     },
     saveLink() {

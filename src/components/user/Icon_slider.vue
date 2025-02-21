@@ -21,23 +21,44 @@
       </div>
 
       <template v-for="itemIndex in respvItemAmnt">
-        <div
-          v-if="site.htmlElmnts[elKey].icons[itemStart + itemIndex]"
+        <component
+          :is="
+            elValue.icons[itemStart + itemIndex - 1].page ||
+            elValue.icons[itemStart + itemIndex - 1].url ||
+            elValue.icons[itemStart + itemIndex - 1].anchor
+              ? 'a'
+              : 'div'
+          "
+          v-if="elValue.icons[itemStart + itemIndex - 1]"
           class="icon-slider-item"
           :style="[
             {
               border: '1px solid ' + site.body.style.borderColor,
               'border-radius': elValue.style.borderRadius + 'px',
+              cursor:
+                elValue.icons[itemStart + itemIndex - 1].page ||
+                elValue.icons[itemStart + itemIndex - 1].url ||
+                elValue.icons[itemStart + itemIndex - 1].anchor
+                  ? 'pointer'
+                  : 'default',
             },
             style.primaryColor,
           ]"
+          :href="
+            elValue.icons[itemStart + itemIndex - 1].page
+              ? slctd.href + '/' + elValue.icons[itemStart + itemIndex - 1].page.toLowerCase()
+              : elValue.icons[itemStart + itemIndex - 1].url
+              ? elValue.icons[itemStart + itemIndex - 1].url
+              : null
+          "
+          :target="elValue.icons[itemStart + itemIndex - 1].url ? '_blank' : null"
         >
           <div class="icon-slider-icon">
             <i
               :style="{
                 'font-size': elValue.style.iconSize + 'px',
               }"
-              :class="elValue.icons[itemStart + itemIndex].icon"
+              :class="elValue.icons[itemStart + itemIndex - 1].icon"
             ></i>
           </div>
           <div style="padding: 0px 10px">
@@ -47,10 +68,10 @@
                 'font-size': elValue.style.textSize + 'px',
               }"
             >
-              {{ elValue.icons[itemStart + itemIndex].title }}
+              {{ elValue.icons[itemStart + itemIndex - 1].title }}
             </div>
           </div>
-        </div>
+        </component>
       </template>
 
       <div>
@@ -74,7 +95,7 @@
 export default {
   name: 'Icon Slider',
 
-  inject: ['respWidth', 'wndw', 'site', 'style'],
+  inject: ['respWidth', 'wndw', 'slctd', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -131,6 +152,7 @@ export default {
   height: 20vh;
   padding: 20px 0px;
   text-align: center;
+  text-decoration: none;
 }
 .icon-slider-icon {
   height: 50%;

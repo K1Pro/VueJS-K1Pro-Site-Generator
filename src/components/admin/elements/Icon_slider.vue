@@ -59,33 +59,55 @@
                 :style="{
                   'font-size': elValue.style.iconSize + 'px',
                 }"
-                :class="elValue.icons[itemStart + itemIndex].icon"
+                :class="elValue.icons[itemStart + itemIndex - 1].icon"
               ></i>
             </div>
 
-            <select v-model="site.htmlElmnts[elKey].icons[itemStart + itemIndex].icon">
+            <select v-model="site.htmlElmnts[elKey].icons[itemStart + itemIndex - 1].icon">
               <icon_slider_options></icon_slider_options>
             </select>
 
             <input
               type="text"
               placeholder="Text here..."
-              v-model="site.htmlElmnts[elKey].icons[itemStart + itemIndex].title"
+              v-model="site.htmlElmnts[elKey].icons[itemStart + itemIndex - 1].title"
             />
-            <select @change="changeLink($event.target.value, itemIndex)">
+            <select
+              v-if="itemStart + itemIndex - 1 !== inputIndex"
+              @change="changeLink($event.target.value, itemStart + itemIndex - 1)"
+            >
               <option value="">No link</option>
               <template v-for="siteType in Object.keys(site.pages)">
                 <option value="Choose page" disabled>
                   ==={{ siteType.charAt(0).toUpperCase() + siteType.slice(1) }} pages===
                 </option>
-                <option v-for="sitePage in Object.keys(site.pages[siteType])">
+                <option
+                  v-for="sitePage in Object.keys(site.pages[siteType])"
+                  :selected="elValue.icons[itemStart + itemIndex - 1].page == sitePage.toLowerCase()"
+                >
                   {{ sitePage }}
                 </option>
               </template>
               <option value="Choose link" disabled>===Links===</option>
-              <option value="top-menu-link-opt">New link</option>
+              <option value="icon-slider-link-opt">New link</option>
+              <option v-if="elValue.icons[itemStart + itemIndex - 1].url" selected>
+                {{ elValue.icons[itemStart + itemIndex - 1].url }}
+              </option>
               <option value="Choose anchor" disabled>===Anchors===</option>
             </select>
+            <input
+              v-if="itemStart + itemIndex - 1 === inputIndex"
+              type="text"
+              placeholder="Enter URL"
+              style="width: calc(85% - 14px)"
+              v-model="iconURL"
+            />
+            <i
+              v-if="itemStart + itemIndex - 1 === inputIndex"
+              class="fa-solid fa-floppy-disk greenWhitePlus"
+              style="width: 14px"
+              @click="saveURL(itemStart + itemIndex - 1)"
+            ></i>
           </div>
         </div>
       </template>
@@ -117,7 +139,7 @@ export default {
 
   computed: {
     itmAmnt() {
-      return this.elValue?.icons ? Object.keys(this.elValue.icons).length + 1 : 0;
+      return this.elValue?.icons ? this.elValue.icons.length + 1 : 0;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.grid.wdth - 50) / 110);
@@ -144,28 +166,46 @@ export default {
   data() {
     return {
       itemStart: 0,
+      iconURL: '',
+      inputIndex: null,
     };
   },
 
   methods: {
     addItem() {
-      this.site.htmlElmnts[this.elKey].icons[this.itmAmnt] = { title: '', icon: 'fa-solid fa-question' };
-      // finished here
-      if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey]['items'].length + 1) < 0) {
-        this.itemStart = this.site.htmlElmnts[this.elKey]['items'].length + 1 - this.respvItemAmnt;
+      this.site.htmlElmnts[this.elKey].icons[this.itmAmnt - 1] = { title: '', icon: 'fa-solid fa-question' };
+      if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey].icons.length + 1) < 0) {
+        this.itemStart = this.site.htmlElmnts[this.elKey].icons.length + 1 - this.respvItemAmnt;
       } else {
         this.itemStart = 0;
       }
     },
     removeItem(itemIndex) {
       if (this.itemStart !== 0) this.itemStart--;
-      this.site.htmlElmnts[this.elKey]['items'].splice(itemIndex, 1);
+      this.site.htmlElmnts[this.elKey].icons.splice(itemIndex, 1);
     },
     changeLink(event, itemIndex) {
       console.log(event);
       console.log(itemIndex);
-      console.log(this.site.htmlElmnts[this.elKey].items[itemIndex - 1]);
+      console.log(this.site.htmlElmnts[this.elKey].icons[itemIndex]);
+
+      if (event == 'icon-slider-link-opt') {
+        this.inputType = 'title';
+        this.inputIndex = itemIndex;
+      } else if (event.includes('#')) {
+      } else {
+        this.site.htmlElmnts[this.elKey].icons[itemIndex].page = event;
+        if (this.site.htmlElmnts[this.elKey].icons[itemIndex].url)
+          delete this.site.htmlElmnts[this.elKey].icons[itemIndex].url;
+      }
       // finished here
+    },
+    saveURL(itemIndex) {
+      this.site.htmlElmnts[this.elKey].icons[itemIndex].url = this.iconURL;
+      if (this.site.htmlElmnts[this.elKey].icons[itemIndex].page)
+        delete this.site.htmlElmnts[this.elKey].icons[itemIndex].page;
+      this.iconURL = '';
+      this.inputIndex = null;
     },
   },
 
