@@ -1,4 +1,8 @@
 <template>
+  <template v-if="slctd.hash">
+    <a :id="Object.values(site.pages[slctd.type])[0][elIndex][2]"></a>
+  </template>
+
   <div class="text-box" :style="textBoxStyle">
     <template v-for="column in site.htmlElmnts[elKey].style.gridTemplateColumns">
       <div
@@ -20,7 +24,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['wndw', 'respWidth', 'site', 'style'],
+  inject: ['wndw', 'respWidth', 'site', 'slctd', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

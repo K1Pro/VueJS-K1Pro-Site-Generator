@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="headline">
-    <edit_menu :elKey="elKey" :options="['align', 'font-size', 'padding']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['align', 'anchor', 'font-size', 'padding']"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ elValue.style.fontSize }}%</span>
     <input
       class="headline-input"

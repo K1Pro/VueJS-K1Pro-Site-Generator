@@ -1,6 +1,10 @@
 <template>
   <div :id="elKey" class="text-box">
-    <edit_menu :elKey="elKey" :options="['align', 'grid-template-columns', 'height']"></edit_menu>
+    <edit_menu
+      :elKey="elKey"
+      :elIndex="elIndex"
+      :options="['align', 'anchor', 'grid-template-columns', 'height']"
+    ></edit_menu>
 
     <div class="text-box-opts" :style="textBoxStyle" style="grid-template-rows: 22px">
       <template v-for="column in site.htmlElmnts[elKey].style.gridTemplateColumns">

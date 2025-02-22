@@ -47,6 +47,8 @@
           :href="
             elValue.icons[itemStart + itemIndex - 1].page
               ? slctd.href + '/' + elValue.icons[itemStart + itemIndex - 1].page.toLowerCase()
+              : elValue.icons[itemStart + itemIndex - 1].anchor
+              ? slctd.href + '/' + elValue.icons[itemStart + itemIndex - 1].anchor.toLowerCase()
               : elValue.icons[itemStart + itemIndex - 1].url
               ? elValue.icons[itemStart + itemIndex - 1].url
               : null

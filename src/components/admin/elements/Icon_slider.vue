@@ -33,7 +33,7 @@
         >
           <div class="icon-slider-modify-container">
             <div class="icon-slider-modify">
-              <i class="fa-solid fa-circle-plus greenWhitePlus" @click="addItem"></i>
+              <i class="fa-solid fa-circle-plus greenWhitePlus" @click="addIcon"></i>
             </div>
           </div>
         </div>
@@ -76,14 +76,14 @@
               v-if="itemStart + itemIndex - 1 !== inputIndex"
               @change="changeLink($event.target.value, itemStart + itemIndex - 1)"
             >
-              <option value="">No link</option>
+              <option value="icon-slider-no-link">No link</option>
               <template v-for="siteType in Object.keys(site.pages)">
                 <option value="Choose page" disabled>
                   ==={{ siteType.charAt(0).toUpperCase() + siteType.slice(1) }} pages===
                 </option>
                 <option
                   v-for="sitePage in Object.keys(site.pages[siteType])"
-                  :selected="elValue.icons[itemStart + itemIndex - 1].page == sitePage.toLowerCase()"
+                  :selected="elValue.icons[itemStart + itemIndex - 1].page == sitePage"
                 >
                   {{ sitePage }}
                 </option>
@@ -94,6 +94,22 @@
                 {{ elValue.icons[itemStart + itemIndex - 1].url }}
               </option>
               <option value="Choose anchor" disabled>===Anchors===</option>
+              <template v-for="siteType in Object.keys(site.pages)">
+                <template v-for="[sitePage, sitePageEls] in Object.entries(site.pages[siteType])">
+                  <template v-for="sitePageEl in sitePageEls">
+                    <option
+                      v-if="sitePageEl[1] && sitePageEl[2] && sitePageEl[2] != ''"
+                      :value="[sitePage, sitePageEl[2]]"
+                      :selected="
+                        elValue.icons[itemStart + itemIndex - 1].anchor ==
+                        sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()
+                      "
+                    >
+                      {{ sitePageEl[2] }} ({{ sitePage }})
+                    </option>
+                  </template>
+                </template>
+              </template>
             </select>
             <input
               v-if="itemStart + itemIndex - 1 === inputIndex"
@@ -172,7 +188,7 @@ export default {
   },
 
   methods: {
-    addItem() {
+    addIcon() {
       this.site.htmlElmnts[this.elKey].icons[this.itmAmnt - 1] = { title: '', icon: 'fa-solid fa-question' };
       if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey].icons.length + 1) < 0) {
         this.itemStart = this.site.htmlElmnts[this.elKey].icons.length + 1 - this.respvItemAmnt;
@@ -185,25 +201,30 @@ export default {
       this.site.htmlElmnts[this.elKey].icons.splice(itemIndex, 1);
     },
     changeLink(event, itemIndex) {
-      console.log(event);
-      console.log(itemIndex);
-      console.log(this.site.htmlElmnts[this.elKey].icons[itemIndex]);
-
-      if (event == 'icon-slider-link-opt') {
+      const slctdIcon = this.site.htmlElmnts[this.elKey].icons[itemIndex];
+      if (event == 'icon-slider-no-link') {
+        if (slctdIcon.url) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].url;
+        if (slctdIcon.page) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].page;
+        if (slctdIcon.anchor) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].anchor;
+      } else if (event == 'icon-slider-link-opt') {
         this.inputType = 'title';
         this.inputIndex = itemIndex;
-      } else if (event.includes('#')) {
+      } else if (event.includes(',')) {
+        this.site.htmlElmnts[this.elKey].icons[itemIndex].anchor =
+          event.split(',')[0].toLowerCase() + '#' + event.split(',')[1].toLowerCase();
+        if (slctdIcon.url) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].url;
+        if (slctdIcon.page) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].page;
       } else {
         this.site.htmlElmnts[this.elKey].icons[itemIndex].page = event;
-        if (this.site.htmlElmnts[this.elKey].icons[itemIndex].url)
-          delete this.site.htmlElmnts[this.elKey].icons[itemIndex].url;
+        if (slctdIcon.url) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].url;
+        if (slctdIcon.anchor) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].anchor;
       }
-      // finished here
     },
     saveURL(itemIndex) {
+      const slctdIcon = this.site.htmlElmnts[this.elKey].icons[itemIndex];
       this.site.htmlElmnts[this.elKey].icons[itemIndex].url = this.iconURL;
-      if (this.site.htmlElmnts[this.elKey].icons[itemIndex].page)
-        delete this.site.htmlElmnts[this.elKey].icons[itemIndex].page;
+      if (slctdIcon.page) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].page;
+      if (slctdIcon.anchor) delete this.site.htmlElmnts[this.elKey].icons[itemIndex].anchor;
       this.iconURL = '';
       this.inputIndex = null;
     },

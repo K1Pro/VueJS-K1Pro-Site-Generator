@@ -14,6 +14,13 @@
         @click="changeAlign($event.target.classList[1])"
       ></i>
     </button>
+    <!-- anchor -->
+    <input
+      v-if="options.includes('anchor')"
+      type="text"
+      v-model="site.pages[slctd.type][slctd.page][elIndex][2]"
+      class="edit-height"
+    />
     <!-- font-size -->
     <input
       v-if="options.includes('font-size')"
@@ -56,9 +63,9 @@
 export default {
   name: 'Edit menu',
 
-  inject: ['site'],
+  inject: ['site', 'slctd'],
 
-  props: ['elKey', 'options'],
+  props: ['elKey', 'elIndex', 'options'],
 
   methods: {
     changeAlign(event) {
