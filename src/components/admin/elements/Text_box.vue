@@ -3,7 +3,7 @@
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
-      :options="['align', 'anchor', 'grid-template-columns', 'height']"
+      :options="['height', 'align', 'anchor', 'grid-template-columns']"
     ></edit_menu>
 
     <div class="text-box-opts" :style="textBoxStyle" style="grid-template-rows: 22px">

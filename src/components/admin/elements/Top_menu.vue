@@ -5,7 +5,7 @@
     :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]"
     ref="topMenu"
   >
-    <edit_menu :elKey="elKey" :options="['align', 'height']"></edit_menu>
+    <edit_menu :elKey="elKey" :options="['height', 'align']"></edit_menu>
 
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="top-menu-logo" :style="logoImg">

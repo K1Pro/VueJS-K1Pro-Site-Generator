@@ -1,7 +1,10 @@
 <template>
   <div class="edit-menu">
+    <select v-model="option">
+      <option v-for="option in options">{{ option }}</option>
+    </select>
     <!-- align -->
-    <button v-if="options.includes('align')" class="edit-align" title="align">
+    <button v-if="option == 'align' && options.includes('align')" class="edit-align" title="align">
       <i
         class="fa-solid"
         :class="
@@ -16,14 +19,14 @@
     </button>
     <!-- anchor -->
     <input
-      v-if="options.includes('anchor')"
+      v-if="option == 'anchor' && options.includes('anchor')"
       type="text"
       v-model="site.pages[slctd.type][slctd.page][elIndex][2]"
       class="edit-height"
     />
     <!-- font-size -->
     <input
-      v-if="options.includes('font-size')"
+      v-if="option == 'font-size' && options.includes('font-size')"
       class="edit-height"
       type="number"
       step="0.01"
@@ -32,7 +35,7 @@
     />
     <!-- grid-template-columns -->
     <input
-      v-if="options.includes('grid-template-columns')"
+      v-if="option == 'grid-template-columns' && options.includes('grid-template-columns')"
       class="edit-height"
       type="number"
       title="columns"
@@ -40,7 +43,7 @@
     />
     <!-- height -->
     <input
-      v-if="options.includes('height')"
+      v-if="option == 'height' && options.includes('height')"
       class="edit-height"
       type="number"
       step="0.01"
@@ -49,7 +52,7 @@
     />
     <!-- padding -->
     <input
-      v-if="options.includes('padding')"
+      v-if="option == 'padding' && options.includes('padding')"
       class="edit-height"
       type="number"
       step="0.01"
@@ -66,6 +69,10 @@ export default {
   inject: ['site', 'slctd'],
 
   props: ['elKey', 'elIndex', 'options'],
+
+  data() {
+    return { option: this.options[0] };
+  },
 
   methods: {
     changeAlign(event) {
@@ -89,8 +96,12 @@ export default {
 .edit-height {
   width: 50px;
 }
+.edit-menu select {
+  width: 80px;
+}
 .edit-menu button,
-.edit-menu input {
+.edit-menu input,
+.edit-menu select {
   padding: 0px 3px;
   font-size: 12px;
   margin: 0px;
@@ -99,8 +110,10 @@ export default {
 }
 .edit-menu button:hover,
 .edit-menu input:hover,
+.edit-menu select:hover,
 .edit-menu button:focus,
-.edit-menu input:focus {
+.edit-menu input:focus,
+.edit-menu select:focus {
   opacity: 1;
 }
 </style>
