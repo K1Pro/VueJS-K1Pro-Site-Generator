@@ -1,10 +1,5 @@
 <template>
-  <div
-    :id="elKey"
-    class="top-menu"
-    :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]"
-    ref="topMenu"
-  >
+  <div :id="elKey" class="top-menu" :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]">
     <edit_menu :elKey="elKey" :options="['height', 'align']"></edit_menu>
 
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
@@ -16,17 +11,15 @@
         <div class="top-menu-links" :style="[style.primaryColor.outline.borderColor]">
           <i
             v-if="menuLinkIndex !== inputIndex"
-            class="fa-solid fa-circle-minus redWhiteMinus"
-            style="position: absolute; right: 10px"
-            :style="{ top: elValue.style.height / 3.5 + 'vh' }"
+            class="fa-solid fa-circle-minus redWhiteMinus top-menu-plus-minus"
+            :style="topMenuLinksIcon"
             @click="removeItem(menuLinkIndex)"
           ></i>
           <i
             v-else-if="menuLinkIndex === inputIndex"
-            class="fa-solid fa-floppy-disk greenWhitePlus"
-            style="position: absolute; right: 10px"
-            :style="{ top: elValue.style.height / 3.5 + 'vh' }"
-            @click="inputType == 'title' ? (inputType = 'URL') : saveLink()"
+            class="fa-solid fa-floppy-disk greenWhitePlus top-menu-plus-minus"
+            :style="topMenuLinksIcon"
+            @click="inputType == 'title' ? (inputType = 'link') : saveLink()"
           ></i>
           <div class="top-menu-link">{{ menuLink.title }}</div>
 
@@ -42,45 +35,43 @@
                 </option>
                 <option
                   v-for="sitePage in Object.keys(site.pages[siteType])"
-                  :selected="menuLink.link == 'page' && sitePage == menuLink.title"
+                  :selected="menuLink.page && sitePage == menuLink.title"
                 >
                   {{ sitePage }}
                 </option>
               </template>
+              <option value="Choose anchor" disabled>===Anchors===</option>
+              <template v-for="[siteType, sitePages] in Object.entries(site.pages)">
+                <template v-for="[sitePage, sitePageEls] in Object.entries(sitePages)">
+                  <template v-for="sitePageAnchor in sitePageEls">
+                    <option
+                      v-if="sitePageAnchor[2] && sitePageAnchor[2] != ''"
+                      :value="sitePage.toLowerCase() + '#' + sitePageAnchor[2].toLowerCase()"
+                    >
+                      {{ sitePageAnchor[2].toLowerCase() }} ({{ sitePage }})
+                    </option>
+                  </template>
+                </template>
+              </template>
               <option value="Choose link" disabled>===Links===</option>
               <option value="top-menu-link-opt">New link</option>
-              <template v-for="(exstngMenuLink, exstngMenuLinkIndex) in elValue[slctd.type].links">
-                <option
-                  v-if="exstngMenuLink.link != 'page' && !exstngMenuLink.includes('#')"
-                  :selected="
-                    (exstngMenuLink.includes('http://') || exstngMenuLink.includes('https://')) &&
-                    menuLink == exstngMenuLink
-                  "
-                >
-                  {{ elValue[slctd.type].items[exstngMenuLinkIndex] }}
-                </option>
-              </template>
-              <option value="Choose anchor" disabled>===Anchors===</option>
+              <option v-if="menuLink.link" selected>
+                {{ menuLink.title }}
+              </option>
             </select>
             <input
               v-else-if="menuLinkIndex === inputIndex"
               type="text"
-              placeholder="Enter title"
+              :placeholder="'Enter ' + inputType"
               :style="[allInputs]"
-              v-model="link[inputType]"
+              v-model="newLink[inputType]"
             />
           </div>
         </div>
       </template>
 
-      <div class="top-menu-links" :style="[style.primaryColor.outline.borderColor]" style="vertical-align: top">
-        <i
-          @click="addItem"
-          class="fa-solid fa-circle-plus greenWhitePlus"
-          :style="{
-            margin: 'calc(' + elValue.style.height / 2 + 'vh - 8px)' + ' 20px',
-          }"
-        ></i>
+      <div class="top-menu-links top-menu-links-add-item" :style="[style.primaryColor.outline.borderColor]">
+        <i @click="addItem" class="fa-solid fa-circle-plus greenWhitePlus" :style="topMenuLinksAddItem"></i>
       </div>
     </div>
   </div>
@@ -95,7 +86,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { inputType: 'page', inputIndex: null, link: { title: '', URL: '' }, linkTitle: '', linkURL: '' };
+    return { inputType: 'page', inputIndex: null, newLink: { title: '', link: '' } };
   },
 
   computed: {
@@ -103,14 +94,12 @@ export default {
       return {
         height: '2vh',
         margin: 'calc(' + this.elValue.style.height / 2 + 'vh - 1vh) 0px',
-        // padding: '2px',
         border: '0px',
       };
     },
     elUl() {
       return {
         height: this.elValue.style.height + 'vh',
-        // 'border-bottom': '0.1vh solid ' + this.site.body.style.textColor,
       };
     },
     elLi() {
@@ -122,39 +111,50 @@ export default {
         height: this.elValue.style.height + 'vh',
       };
     },
+    topMenuLinksIcon() {
+      return { top: this.elValue.style.height / 3.5 + 'vh' };
+    },
+    topMenuLinksAddItem() {
+      return { margin: 'calc(' + this.elValue.style.height / 2 + 'vh - 8px)' + ' 20px' };
+    },
   },
   methods: {
     addItem() {
-      this.site.htmlElmnts[this.elKey][this.slctd.type].items = [
-        ...this.site.htmlElmnts[this.elKey][this.slctd.type].items,
-        'Example',
-      ];
-      this.site.htmlElmnts[this.elKey][this.slctd.type].links = [
-        ...this.site.htmlElmnts[this.elKey][this.slctd.type].links,
-        'https://example.com',
-      ];
+      this.site.htmlElmnts[this.elKey][this.slctd.type].push({ title: 'Example', link: 'https://example.com' });
     },
     changeItem(event, menuLinkIndex) {
       if (event == 'top-menu-link-opt') {
         this.inputType = 'title';
         this.inputIndex = menuLinkIndex;
       } else if (event.includes('#')) {
+        this.site.htmlElmnts[this.elKey][this.slctd.type][menuLinkIndex] = {
+          title: event.split('#')[1].charAt(0).toUpperCase() + event.split('#')[1].slice(1).replaceAll('-', ' '),
+          anchor: event,
+        };
+        delete this.site.htmlElmnts[this.elKey][this.slctd.type][menuLinkIndex].link;
+        delete this.site.htmlElmnts[this.elKey][this.slctd.type][menuLinkIndex].page;
       } else {
-        this.site.htmlElmnts[this.elKey][this.slctd.type].items[menuLinkIndex] = event;
-        this.site.htmlElmnts[this.elKey][this.slctd.type].links[menuLinkIndex] = 'page';
+        this.site.htmlElmnts[this.elKey][this.slctd.type][menuLinkIndex] = { title: event, page: event };
+        delete this.site.htmlElmnts[this.elKey][this.slctd.type][menuLinkIndex].link;
+        delete this.site.htmlElmnts[this.elKey][this.slctd.type][menuLinkIndex].anchor;
       }
     },
+    removeItem(menuLinkIndex) {
+      this.site.htmlElmnts[this.elKey][this.slctd.type].splice(menuLinkIndex, 1);
+    },
     saveLink() {
-      this.elValue[this.slctd.type].items[this.inputIndex] = this.link.title;
-      this.elValue[this.slctd.type].links[this.inputIndex] = this.link.URL;
+      if (!this.newLink.link.includes('http://') || !this.newLink.link.includes('https://'))
+        this.newLink.link = 'https://' + this.newLink.link;
+      this.site.htmlElmnts[this.elKey][this.slctd.type][this.inputIndex] = {
+        title: this.newLink.title,
+        link: this.newLink.link,
+      };
+      delete this.site.htmlElmnts[this.elKey][this.slctd.type][this.inputIndex].page;
+      delete this.site.htmlElmnts[this.elKey][this.slctd.type][this.inputIndex].anchor;
       this.inputType = 'page';
       this.inputIndex = null;
-      this.link.title = '';
-      this.link.URL = '';
-    },
-    removeItem(menuLinkIndex) {
-      this.site.htmlElmnts[this.elKey][this.slctd.type].links.splice(menuLinkIndex, 1);
-      this.site.htmlElmnts[this.elKey][this.slctd.type].items.splice(menuLinkIndex, 1);
+      this.newLink.title = '';
+      this.newLink.link = '';
     },
   },
 };
@@ -187,6 +187,13 @@ export default {
   text-align: left;
   border-style: dashed;
   border-width: 0px 0px 0px 3px;
+}
+.top-menu-links-add-item {
+  vertical-align: top;
+}
+.top-menu-plus-minus {
+  position: absolute;
+  right: 10px;
 }
 .top-menu-link {
   height: 0px;

@@ -7,24 +7,24 @@
       </a>
     </li>
     <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
-      <template v-for="(menuLink, menuLinkIndex) in menuLinks">
+      <template v-for="menuLink in menuLinks">
         <li :style="linksLi" @mouseover="highlightMenuItem($event, true)" @mouseout="highlightMenuItem($event, false)">
           <a
-            v-if="menuLink.link == 'page'"
+            v-if="menuLink.page"
             :ref="menuLink.title.toLowerCase()"
             :style="[linksA]"
-            :href="slctd.href + '/' + menuLink.title.toLowerCase()"
+            :href="slctd.href + '/' + menuLink.page.toLowerCase()"
             >{{ menuLink.title }}</a
           >
           <a
-            v-else-if="menuLink.link == 'anchor'"
+            v-else-if="menuLink.anchor"
             :ref="menuLink.title.toLowerCase()"
             :style="[linksA]"
-            :href="slctd.href + '/' + menuLink.title.toLowerCase()"
+            :href="slctd.href + '/' + menuLink.anchor.toLowerCase()"
             >{{ menuLink.title }}</a
           >
           <a
-            v-else-if="menuLink.link.includes('http://') || menuLink.link.includes('https://')"
+            v-else-if="menuLink.link"
             :ref="menuLink.title.toLowerCase()"
             target="_blank"
             :style="[linksA]"
