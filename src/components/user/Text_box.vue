@@ -1,5 +1,5 @@
 <template>
-  <template v-if="slctd.hash">
+  <template v-if="slctd.hash && Object.values(site.pages[slctd.type])[0][elIndex][2]">
     <a :id="Object.values(site.pages[slctd.type])[0][elIndex][2]"></a>
   </template>
 
@@ -75,6 +75,12 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 10px;
+  /* overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  line-clamp: 8;
+  -webkit-box-orient: vertical; */
 }
 .text-box-img-item {
   padding: 10px;

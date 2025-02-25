@@ -189,7 +189,7 @@ export default {
 
   methods: {
     addIcon() {
-      this.site.htmlElmnts[this.elKey].icons[this.itmAmnt - 1] = { title: '', icon: 'fa-solid fa-question' };
+      this.site.htmlElmnts[this.elKey].icons.push({ title: '', icon: 'fa-solid fa-question' });
       if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey].icons.length + 1) < 0) {
         this.itemStart = this.site.htmlElmnts[this.elKey].icons.length + 1 - this.respvItemAmnt;
       } else {

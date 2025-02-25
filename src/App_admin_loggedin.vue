@@ -175,7 +175,7 @@ export default {
       let siteTemp = JSON.stringify(this.site);
       if (this.individEdit.elmntIndx !== null) {
         siteTemp = JSON.parse(siteTemp);
-        siteTemp.pages.site[this.slctd.page] = JSON.parse(this.individEdit.elmnts);
+        siteTemp.pages[this.slctd.type][this.slctd.page] = JSON.parse(this.individEdit.elmnts);
       }
       try {
         const response = await fetch(app_api_url + this.slctd.job, {

@@ -59,8 +59,8 @@
           ></i>
           <div class="product-card-group">
             <img
-              :src="elValue['items'][itemStart + itemIndex - 1][0]"
-              :alt="elValue['items'][itemStart + itemIndex - 1][1]"
+              :src="elValue.cards[itemStart + itemIndex - 1].img"
+              :alt="elValue.cards[itemStart + itemIndex - 1].title"
               @drop.prevent="drop(itemStart + itemIndex - 1)"
               @dragover.prevent
               @dragenter.prevent
@@ -71,13 +71,13 @@
                 type="text"
                 class="product-card-header"
                 placeholder="Title..."
-                v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][1]"
+                v-model="site.htmlElmnts[elKey].cards[itemStart + itemIndex - 1].title"
               />
               <div style="position: relative">
                 <textarea
                   placeholder="Description..."
                   rows="7"
-                  v-model="site.htmlElmnts[elKey].items[itemStart + itemIndex - 1][2]"
+                  v-model="site.htmlElmnts[elKey].cards[itemStart + itemIndex - 1].txt"
                   @keydown.enter.prevent
                 ></textarea>
               </div>
@@ -126,7 +126,7 @@ export default {
 
   computed: {
     itmAmnt() {
-      return this.elValue['items'].length + 1;
+      return this.elValue.cards.length + 1;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.grid.wdth - 100) / 210);
@@ -157,7 +157,7 @@ export default {
 
   methods: {
     drop(itemIndex) {
-      this.site.htmlElmnts[this.elKey].items[itemIndex][0] = event.dataTransfer.getData('text');
+      this.site.htmlElmnts[this.elKey].cards[itemIndex].img = event.dataTransfer.getData('text');
     },
     increaseScroll() {
       this.itemStart++;
@@ -166,20 +166,20 @@ export default {
       this.itemStart--;
     },
     addItem() {
-      this.site.htmlElmnts[this.elKey]['items'].push([
-        'https://api-site.k1pro.net/public/default/logo/missingimage.png',
-        '',
-        '',
-      ]);
-      if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey]['items'].length + 1) < 0) {
-        this.itemStart = this.site.htmlElmnts[this.elKey]['items'].length + 1 - this.respvItemAmnt;
+      this.site.htmlElmnts[this.elKey].cards.push({
+        img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
+        title: '',
+        txt: '',
+      });
+      if (this.respvItemAmnt - (this.site.htmlElmnts[this.elKey].cards.length + 1) < 0) {
+        this.itemStart = this.site.htmlElmnts[this.elKey].cards.length + 1 - this.respvItemAmnt;
       } else {
         this.itemStart = 0;
       }
     },
     removeItem(itemIndex) {
       if (this.itemStart !== 0) this.itemStart--;
-      this.site.htmlElmnts[this.elKey]['items'].splice(itemIndex, 1);
+      this.site.htmlElmnts[this.elKey].cards.splice(itemIndex, 1);
     },
   },
 

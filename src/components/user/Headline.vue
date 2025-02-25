@@ -1,4 +1,11 @@
 <template>
+  <template v-if="slctd.hash && Object.values(site.pages[slctd.type])[0][elIndex][2]">
+    <a
+      :id="Object.values(site.pages[slctd.type])[0][elIndex][2]"
+      style="display: block; margin-top: -100px; margin-bottom: 100px"
+    ></a>
+  </template>
+
   <div
     class="headline"
     :style="{
@@ -15,7 +22,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['wndw', 'respWidth', 'site'],
+  inject: ['wndw', 'respWidth', 'site', 'slctd'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 };

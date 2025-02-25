@@ -11,16 +11,16 @@
         <div class="product-card-item" :style="[style.primaryColor]">
           <div class="product-card-group">
             <img
-              :src="elValue['items'][itemIndex - 1][0]"
-              :alt="elValue['items'][itemIndex - 1][1]"
+              :src="elValue.cards[itemIndex - 1].img"
+              :alt="elValue.cards[itemIndex - 1].title"
               :style="{ 'margin-bottom': '0px' }"
             />
             <div class="product-card-text" :style="{ padding: '12px' }">
               <div class="product-card-header">
-                {{ elValue['items'][itemIndex - 1][1] }}
+                {{ elValue.cards[itemIndex - 1].title }}
               </div>
               <p>
-                {{ elValue['items'][itemIndex - 1][2] }}
+                {{ elValue.cards[itemIndex - 1].txt }}
               </p>
             </div>
           </div>
@@ -41,7 +41,7 @@ export default {
 
   computed: {
     itmAmnt() {
-      return this.elValue['items'].length;
+      return this.elValue.cards.length;
     },
     wndwWdthRoundDown() {
       return Math.floor((this.wndw.wdth - 100) / 210);
