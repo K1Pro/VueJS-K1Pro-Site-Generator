@@ -72,7 +72,7 @@ export default {
     boxImg(boxIndx) {
       if (!this.elValue.boxes?.[boxIndx]?.img)
         this.site.htmlElmnts[this.elKey].boxes[boxIndx] = {
-          img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+          img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
         };
       if (this.elValue.boxes?.[boxIndx]?.txt) delete this.site.htmlElmnts[this.elKey].boxes[boxIndx].txt;
     },

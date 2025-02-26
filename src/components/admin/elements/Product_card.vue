@@ -120,7 +120,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['grid', 'respWidth', 'site', 'style', 'undoRedo', 'wndw'],
+  inject: ['grid', 'respWidth', 'slctd', 'site', 'style', 'undoRedo', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -156,9 +156,32 @@ export default {
   },
 
   methods: {
-    drop(itemIndex) {
-      console.log(event);
-      this.site.htmlElmnts[this.elKey].cards[itemIndex].img = event.dataTransfer.getData('text');
+    async drop(itemIndex) {
+      if (event?.dataTransfer?.files?.[0]?.name) {
+        let formData = new FormData();
+        formData.append('uploaded_file', event.dataTransfer.files[0]);
+        try {
+          const response = await fetch(app_api_url + this.slctd.job + '/multimedia', {
+            method: 'POST',
+            headers: {
+              Authorization: access_token,
+              'Cache-Control': 'no-store',
+            },
+            body: formData,
+          });
+          const sendEmailResJSON = await response.json();
+          if (sendEmailResJSON.success) {
+            this.site.htmlElmnts[this.elKey].cards[itemIndex].img =
+              sendEmailResJSON.data.file_path + sendEmailResJSON.data.file_name;
+          } else {
+            console.log(sendEmailResJSON);
+          }
+        } catch (error) {
+          console.log(error.toString());
+        }
+      } else {
+        this.site.htmlElmnts[this.elKey].cards[itemIndex].img = event.dataTransfer.getData('text');
+      }
     },
     increaseScroll() {
       this.itemStart++;

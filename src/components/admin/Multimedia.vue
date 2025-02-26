@@ -61,6 +61,7 @@ export default {
       mdTp: {
         'fa-camera': ['pexels', 'img', 'photos'],
         'fa-video': ['pexels', 'vid', 'videos'],
+        'fa-cloud-arrow-up': ['upload', 'upld', 'upload'],
         // 'fa-quote-right': ['txtprovider', 'txt', 'messages'],
       },
     };
