@@ -53,7 +53,11 @@ const defaultsMixin = {
           },
           icon_slider: {
             type: 'icon_slider',
-            items: [['Slide 1', 'fa-solid fa-house']],
+            icons: [
+              { title: '', icon: 'fa-solid fa-question' },
+              { title: '', icon: 'fa-solid fa-question' },
+              { title: '', icon: 'fa-solid fa-question' },
+            ],
             style: {
               align: 'right',
               backgroundColor: '#ffffff',
@@ -85,22 +89,22 @@ const defaultsMixin = {
           privacy_policy: { type: 'privacy_policy', style: {} },
           product_card: {
             type: 'product_card',
-            items: [
-              [
-                'https://api-site.k1pro.net/public/default/logo/logo.png',
-                'Products',
-                'This is a short description about our products.',
-              ],
-              [
-                'https://api-site.k1pro.net/public/default/logo/logo.png',
-                'Services',
-                'This is a short description about our services.',
-              ],
-              [
-                'https://api-site.k1pro.net/public/default/logo/logo.png',
-                'Merchandise',
-                'This is a short description about our merchandise.',
-              ],
+            cards: [
+              {
+                img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+                title: 'Products',
+                txt: 'This is a short description about our products.',
+              },
+              {
+                img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+                title: 'Services',
+                txt: 'This is a short description about our services.',
+              },
+              {
+                img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+                title: 'Merchandise',
+                txt: 'This is a short description about our merchandise.',
+              },
             ],
             style: {
               align: 'center',
@@ -116,17 +120,21 @@ const defaultsMixin = {
           text_box: {
             type: 'text_box',
             style: {
-              height: 20,
+              height: 40,
             },
+            boxes: [{ txt: '' }],
           },
           top_menu: {
             type: 'top_menu',
             position: 2,
-            loggedin: {},
-            loggedout: {
-              items: ['Menu Item 1', 'Menu Item 2'],
-              links: ['https://example1.com', 'https://example1.com'],
-            },
+            loggedin: [
+              { title: 'Menu Item 1', link: 'https://example.com' },
+              { title: 'Menu Item 2', link: 'https://example.com' },
+            ],
+            loggedout: [
+              { title: 'Menu Item 1', link: 'https://example.com' },
+              { title: 'Menu Item 2', link: 'https://example.com' },
+            ],
             style: {
               align: 'right',
               height: 14,
