@@ -505,7 +505,7 @@ export default {
 }
 
 .element-order-list {
-  max-height: calc(100vh - 175px);
+  max-height: calc(100vh - 250px);
   overflow-y: auto;
 }
 

@@ -59,14 +59,8 @@ const defaultsMixin = {
               { title: '', icon: 'fa-solid fa-question' },
             ],
             style: {
-              align: 'right',
-              backgroundColor: '#ffffff',
               borderRadius: '10',
-              borderColor: '#000000',
-              iconColor: '#000000',
               iconSize: '30',
-              'padding-bottom': '0',
-              slideColor: '#ffffff',
               textSize: '30',
             },
           },
@@ -107,12 +101,7 @@ const defaultsMixin = {
               },
             ],
             style: {
-              align: 'center',
-              backgroundColor: '#ffffff',
               borderRadius: '10',
-              borderColor: '#000000',
-              cardColor: '#f0f0f0',
-              'padding-bottom': '0',
             },
           },
           spacer: { type: 'spacer', style: { height: 50 } },
@@ -120,6 +109,7 @@ const defaultsMixin = {
           text_box: {
             type: 'text_box',
             style: {
+              align: 'center',
               height: 40,
             },
             boxes: [{ txt: '' }],

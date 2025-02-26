@@ -157,6 +157,7 @@ export default {
 
   methods: {
     drop(itemIndex) {
+      console.log(event);
       this.site.htmlElmnts[this.elKey].cards[itemIndex].img = event.dataTransfer.getData('text');
     },
     increaseScroll() {
