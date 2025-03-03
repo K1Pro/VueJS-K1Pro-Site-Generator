@@ -50,14 +50,9 @@ export default {
 .text-box-img-item {
   padding: 0px 10px 0px 10px;
 }
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 650px) {
   .text-box-container {
     padding: 0px 10%;
   }
 }
-/* @media only screen and (min-width: 992px) {
-  .text-box-container {
-    padding: 0px 20%;
-  }
-} */
 </style>

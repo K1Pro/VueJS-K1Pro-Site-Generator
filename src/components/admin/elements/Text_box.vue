@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="text-box">
+  <div :id="elKey" class="text-box" :style="[style.outline.borderColor]">
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['text-box_image', 'anchor']"></edit_menu>
 
     <div
@@ -23,6 +23,7 @@
                 <button
                   @click="changeSlctdScrn"
                   :style="{ backgroundColor: cmptdSlctdScrn === slctdScrn ? 'palegreen' : 'pink' }"
+                  :title="scaleIcons[slctdScrn].split('-')[1] + ' screen'"
                 >
                   <i class="fa-solid" :class="scaleIcons[slctdScrn]"></i>
                 </button>
@@ -183,6 +184,9 @@ export default {
 <style>
 .text-box {
   position: relative;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .text-box-outer-container {
   width: 100%;

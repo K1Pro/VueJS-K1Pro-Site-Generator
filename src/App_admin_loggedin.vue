@@ -59,7 +59,7 @@ export default {
       respWidth: {
         xs: 400,
         sm: 576,
-        md: 768,
+        md: 650,
         lg: 992,
         xl: 1140,
       },
