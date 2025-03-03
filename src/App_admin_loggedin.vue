@@ -76,6 +76,7 @@ export default {
       sideMenuSlctdLnk: ['Website'],
       site: site,
       undoRedo: 0,
+      upload: { path: '', files: [] },
       userData: user_data,
     };
   },
@@ -96,6 +97,7 @@ export default {
       slctd: Vue.computed(() => this.slctd),
       style: Vue.computed(() => this.style),
       undoRedo: Vue.computed(() => this.undoRedo),
+      upload: Vue.computed(() => this.upload),
       userData: Vue.computed(() => this.userData),
       // static
       endPts: this.endPts,
@@ -243,6 +245,25 @@ export default {
         this.showMsg(error.toString());
       }
     },
+    async getMultimediaFiles() {
+      try {
+        const response = await fetch(app_api_url + this.slctd.job + '/multimedia', {
+          headers: {
+            Authorization: access_token,
+            'Cache-Control': 'no-store',
+          },
+        });
+        const resJSON = await response.json();
+        if (resJSON.success) {
+          this.upload.path = resJSON.data.file_path;
+          this.upload.files = resJSON.data.upload_files;
+        } else {
+          console.log(resJSON);
+        }
+      } catch (error) {
+        console.log(error.toString());
+      }
+    },
     applyStyle() {
       const appGridItem2 = this.$refs.appGridItem2;
 
@@ -278,6 +299,7 @@ export default {
     this.sttngsReq('GET', 'user');
     this.messagesReq('GET');
     this.pexelsReq('GET', 'img');
+    this.getMultimediaFiles();
     // this.applyStyle();
   },
   updated() {

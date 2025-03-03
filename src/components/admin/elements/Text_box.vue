@@ -1,51 +1,104 @@
 <template>
   <div :id="elKey" class="text-box">
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height', 'align', 'anchor']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['text-box_image', 'anchor']"></edit_menu>
 
-    <div class="text-box-opts" :style="textBoxStyle" style="grid-template-rows: 22px">
-      <template v-for="(box, boxIndx) in elValue.boxes">
-        <div>
-          <button title="text" v-if="box.img" @click="boxTxt(boxIndx)"><i class="fa-solid fa-font"></i></button>
-          <button title="image" v-if="box.txt || box.txt == ''" @click="boxImg(boxIndx)">
-            <i class="fa-regular fa-image"></i>
-          </button>
-          <button title="add" @click="addBox(boxIndx)"><i class="fa-solid fa-plus"></i></button>
-          <button title="delete" v-if="elValue.boxes.length > 1" @click="deleteBox(boxIndx)">
-            <i class="fa-solid fa-minus"></i>
-          </button>
-        </div>
-      </template>
-    </div>
-    <div class="text-box-items" :style="textBoxStyle">
-      <template v-for="(box, boxIndx) in elValue.boxes">
-        <template v-if="box.img || box.img == ''">
-          <img
-            v-if="box.img != ''"
-            class="text-box-img-item"
-            :style="{ height: elValue.style.height * 0.75 + 'vh' }"
-            :src="box.img"
-            @drop.prevent="drop(boxIndx)"
-            @dragover.prevent
-            @dragenter.prevent
-          />
+    <div
+      class="text-box-outer-container"
+      :style="{
+        padding: grid.wdth > respWidth.md ? '0px 10%' : '0px',
+      }"
+    >
+      <div class="text-box-inner-container">
+        <template v-if="elValue.img || elValue.img == ''">
           <div
-            v-else
-            style="background-color: white"
-            @drop.prevent="drop(boxIndx)"
-            @dragover.prevent
-            @dragenter.prevent
-          ></div>
+            style="position: relative"
+            :style="{
+              float: elValue.img.align,
+              width: !elValue.img.scale ? elValue.img.width[slctdScrn] + 'px' : elValue.img.scales[slctdScrn] + '%',
+              height: elValue.img.height[slctdScrn] + 'px',
+            }"
+          >
+            <div class="text-box-img-opts">
+              <div>
+                <button
+                  @click="changeSlctdScrn"
+                  :style="{ backgroundColor: cmptdSlctdScrn === slctdScrn ? 'palegreen' : 'pink' }"
+                >
+                  <i class="fa-solid" :class="scaleIcons[slctdScrn]"></i>
+                </button>
+                <input
+                  type="number"
+                  title="image height"
+                  style="width: 50px"
+                  @input="changeImgHeight"
+                  :value="elValue.img.height[slctdScrn]"
+                  step="0.01"
+                />
+                <input
+                  :disabled="elValue.img.scale"
+                  type="number"
+                  title="image width"
+                  style="width: 50px"
+                  @input="changeImgWidth"
+                  :value="elValue.img.width[slctdScrn]"
+                  step="0.01"
+                />
+              </div>
+
+              <div>
+                <button @click="site.htmlElmnts[elKey].img.scale = !site.htmlElmnts[elKey].img.scale">
+                  <i v-if="site.htmlElmnts[elKey].img.scale" class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                  <i v-else class="fa-solid fa-expand"></i>
+                </button>
+                <input
+                  v-if="elValue.img.scale"
+                  type="number"
+                  title="mobile image scale"
+                  style="width: 50px"
+                  v-model="site.htmlElmnts[elKey].img.scales[slctdScrn]"
+                  step="0.01"
+                />
+              </div>
+
+              <div>
+                <button title="image align">
+                  <i
+                    class="fa-solid"
+                    :class="elValue.img.align == 'left' ? 'fa-align-left' : 'fa-align-right'"
+                    @click="changeAlign"
+                  ></i>
+                </button>
+              </div>
+            </div>
+
+            <img
+              class="text-box-img-item"
+              :style="{
+                width: elValue.img.scale ? '100%' : elValue.img.width[slctdScrn] + 'px',
+                height: elValue.img.scale ? '100%' : elValue.img.height[slctdScrn] + 'px',
+                objectFit: elValue.img.scale ? 'cover' : false,
+              }"
+              :src="elValue.img.src"
+              ref="textBoxImg"
+              @drop.prevent="drop"
+              @dragover.prevent
+              @dragenter.prevent
+            />
+          </div>
         </template>
+
         <div
-          v-else
+          v-if="(elValue.txt != '' && elValue.txt != '<br>') || spanEnable === false"
+          class="text-box-txt-item"
           spellcheck="false"
           contenteditable="true"
-          class="text-box-txt-item"
-          v-html="box.txt"
-          @focusin="focusinTxtBox(boxIndx)"
-          @focusout="focusoutTxtBox($event, boxIndx)"
+          v-html="elValue.txt"
+          ref="textBoxTxtItem"
+          @focusout="focusoutTxtBox($event)"
         ></div>
-      </template>
+        <span v-else spellcheck="false" contenteditable="true" @focus="focusSpan"></span>
+        <div style="clear: both"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -58,50 +111,70 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  methods: {
-    focusinTxtBox(boxIndx) {
-      if (!this.elValue.boxes[boxIndx]) this.site.htmlElmnts[this.elKey].boxes[boxIndx] = { txt: '' };
-    },
-    focusoutTxtBox(event, boxIndx) {
-      this.site.htmlElmnts[this.elKey].boxes[boxIndx].txt = event.target.innerHTML;
-    },
-    boxTxt(boxIndx) {
-      if (!this.elValue.boxes?.[boxIndx]?.txt) this.site.htmlElmnts[this.elKey].boxes[boxIndx] = { txt: '' };
-      if (this.elValue.boxes?.[boxIndx]?.img) delete this.site.htmlElmnts[this.elKey].boxes[boxIndx].img;
-    },
-    boxImg(boxIndx) {
-      if (!this.elValue.boxes?.[boxIndx]?.img)
-        this.site.htmlElmnts[this.elKey].boxes[boxIndx] = {
-          img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
-        };
-      if (this.elValue.boxes?.[boxIndx]?.txt) delete this.site.htmlElmnts[this.elKey].boxes[boxIndx].txt;
-    },
-    addBox(boxIndx) {
-      this.site.htmlElmnts[this.elKey].boxes.splice(boxIndx + 1, 0, { txt: '' });
-    },
-    deleteBox(boxIndx) {
-      this.site.htmlElmnts[this.elKey].boxes.splice(boxIndx, 1);
-    },
-    drop(boxIndx) {
-      this.elValue.boxes[boxIndx].img = event.dataTransfer.getData('text');
-    },
+  data() {
+    return {
+      slctdScrn: this.grid.wdth > this.respWidth.lg ? 2 : this.grid.wdth > this.respWidth.md ? 1 : 0,
+      scaleIcons: ['fa-mobile-screen-button', 'fa-tablet-screen-button', 'fa-desktop'],
+      spanEnable: this.elValue.txt != '' && this.elValue.txt != '<br>' ? false : true,
+    };
   },
 
   computed: {
-    textBoxStyle() {
-      if (!this.elValue.style.align) this.site.htmlElmnts[this.elKey].style.align = 'center';
-      if (!this.elValue.style.height) this.site.htmlElmnts[this.elKey].style.height = 10;
-      const gridTemplateColumns =
-        this.elValue.style.align == 'left'
-          ? '30% repeat(' + (this.elValue.boxes.length - 1) + ', ' + 70 / (this.elValue.boxes.length - 1) + '%)'
-          : this.elValue.style.align == 'center'
-          ? 'repeat(' + this.elValue.boxes.length + ', ' + 100 / this.elValue.boxes.length + '%)'
-          : 'repeat(' + (this.elValue.boxes.length - 1) + ', ' + 70 / (this.elValue.boxes.length - 1) + '%) 30%';
-      return {
-        'grid-template-rows': this.elValue.style.height * 0.75 + 'vh',
-        'grid-template-columns': gridTemplateColumns,
-        padding: this.grid.wdth > this.respWidth.md ? '0px 10%' : '0px',
-      };
+    textBoxImage() {
+      return { height: this.$refs['textBoxImg'].naturalHeight, width: this.$refs['textBoxImg'].naturalWidth };
+    },
+    cmptdSlctdScrn() {
+      return this.grid.wdth > this.respWidth.lg ? 2 : this.grid.wdth > this.respWidth.md ? 1 : 0;
+    },
+  },
+
+  methods: {
+    changeImgWidth(event) {
+      this.site.htmlElmnts[this.elKey].img.width[this.slctdScrn] = Number(event.target.value);
+      this.site.htmlElmnts[this.elKey].img.height[this.slctdScrn] = Number(
+        Math.round(((event.target.value * this.textBoxImage.height) / this.textBoxImage.idth) * 100) / 100
+      );
+    },
+    changeImgHeight(event) {
+      this.site.htmlElmnts[this.elKey].img.height[this.slctdScrn] = Number(event.target.value);
+      this.site.htmlElmnts[this.elKey].img.width[this.slctdScrn] = Number(
+        Math.round(((event.target.value * this.textBoxImage.width) / this.textBoxImage.height) * 100) / 100
+      );
+    },
+    changeAlign() {
+      this.site.htmlElmnts[this.elKey].img.align = this.elValue.img.align == 'right' ? 'left' : 'right';
+    },
+    focusoutTxtBox(event) {
+      this.site.htmlElmnts[this.elKey].txt = event.target.innerHTML;
+      this.spanEnable = this.elValue.txt != '' && this.elValue.txt != '<br>' ? false : true;
+    },
+    drop() {
+      this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
+      setTimeout(() => {
+        this.elValue.img.width.forEach((width, index) => {
+          this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+          this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+          this.site.htmlElmnts[this.elKey].img.width[index] =
+            Math.round(
+              ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
+            ) / 100;
+        });
+      }, 100);
+    },
+    changeSlctdScrn() {
+      this.slctdScrn = this.slctdScrn > 1 ? 0 : this.slctdScrn + 1;
+    },
+    focusSpan() {
+      this.spanEnable = false;
+      setTimeout(() => {
+        this.$refs['textBoxTxtItem'].focus();
+      }, 100);
+    },
+  },
+
+  watch: {
+    'grid.wdth'(newGridWdth, oldGridWidth) {
+      this.slctdScrn = newGridWdth > this.respWidth.lg ? 2 : newGridWdth > this.respWidth.md ? 1 : 0;
     },
   },
 };
@@ -111,22 +184,43 @@ export default {
 .text-box {
   position: relative;
 }
-.text-box-opts {
-  display: grid;
+.text-box-outer-container {
+  width: 100%;
 }
-.text-box-items {
-  display: grid;
+.text-box-inner-container:focus-within {
+  outline: black inset 2px;
+}
+.text-box-opts {
+  background-color: #efefef;
+  height: 35px;
+  padding: 5px;
+  width: 50%;
+}
+.text-box-img-opts button {
+  width: 27px;
 }
 .text-box-txt-item {
-  overflow-x: hidden;
-  overflow-y: auto;
-  border: 1px dashed black;
   padding: 10px;
+  height: auto;
+}
+.text-box-txt-item:focus {
+  outline: none;
 }
 .text-box-img-item {
+  padding: 0px 10px 0px 10px;
+}
+.text-box-img-opts {
+  position: absolute;
+  top: 0;
+  left: 10px;
+}
+.text-box span[contenteditable] {
+  cursor: text;
   padding: 10px;
-  border: 1px dashed black;
-  object-fit: cover;
-  width: 100%;
+  display: block;
+}
+.text-box span[contenteditable]:empty::before {
+  content: 'Enter text';
+  color: grey;
 }
 </style>

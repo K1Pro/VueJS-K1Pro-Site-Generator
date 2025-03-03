@@ -1,13 +1,23 @@
 <template>
-  <template v-if="slctd.hash && Object.values(site.pages[slctd.type])[0][elIndex][2]">
-    <a :id="Object.values(site.pages[slctd.type])[0][elIndex][2]"></a>
-  </template>
-
-  <div class="text-box" :style="textBoxStyle">
-    <template v-for="box in elValue.boxes">
-      <div v-if="box?.txt" class="text-box-txt-item" v-html="box.txt"></div>
-      <img v-else class="text-box-img-item" :style="{ height: elValue.style.height * 0.75 + 'vh' }" :src="box.img" />
+  <div class="text-box">
+    <template v-if="slctd.hash && Object.values(site.pages[slctd.type])[0][elIndex][2]">
+      <a :id="Object.values(site.pages[slctd.type])[0][elIndex][2]"></a>
     </template>
+
+    <div class="text-box-container">
+      <img
+        class="text-box-img-item"
+        :src="elValue.img.src"
+        :style="{
+          float: elValue.img.align,
+          width: elValue.img.scale ? elValue.img.scales[slctdScrn] + '%' : elValue.img.width[slctdScrn] + 'px',
+          height: elValue.img.height[slctdScrn] + 'px',
+          objectFit: elValue.img.scale ? 'cover' : false,
+        }"
+      />
+      <div class="text-box-txt-item" v-html="elValue.txt"></div>
+      <div style="clear: both"></div>
+    </div>
   </div>
 </template>
 
@@ -15,27 +25,13 @@
 export default {
   name: 'Text box',
 
-  inject: ['wndw', 'respWidth', 'site', 'slctd', 'style'],
+  inject: ['wndw', 'respWidth', 'site', 'slctd'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  methods: {},
-
   computed: {
-    textBoxStyle() {
-      if (!this.elValue.style.align) this.site.htmlElmnts[this.elKey].style.align = 'center';
-      if (!this.elValue.style.height) this.site.htmlElmnts[this.elKey].style.height = 10;
-      const gridTemplateColumns =
-        this.elValue.style.align == 'left'
-          ? '30% repeat(' + (this.elValue.boxes.length - 1) + ', ' + 70 / (this.elValue.boxes.length - 1) + '%)'
-          : this.elValue.style.align == 'center'
-          ? 'repeat(' + this.elValue.boxes.length + ', ' + 100 / this.elValue.boxes.length + '%)'
-          : 'repeat(' + (this.elValue.boxes.length - 1) + ', ' + 70 / (this.elValue.boxes.length - 1) + '%) 30%';
-      return {
-        'grid-template-rows': this.elValue.style.height * 0.75 + 'vh',
-        'grid-template-columns': gridTemplateColumns,
-        padding: this.wndw.wdth > this.respWidth.md ? '0px 10%' : '0px',
-      };
+    slctdScrn() {
+      return this.wndw.wdth > this.respWidth.lg ? 2 : this.wndw.wdth > this.respWidth.md ? 1 : 0;
     },
   },
 };
@@ -44,24 +40,24 @@ export default {
 <style>
 .text-box {
   position: relative;
-  display: grid;
 }
-.text-box-items {
-}
-.text-box-txt-item {
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: 10px;
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 8;
-  line-clamp: 8;
-  -webkit-box-orient: vertical; */
-}
-.text-box-img-item {
-  padding: 10px;
-  object-fit: cover;
+.text-box-container {
   width: 100%;
 }
+.text-box-txt-item {
+  padding: 10px;
+}
+.text-box-img-item {
+  padding: 0px 10px 0px 10px;
+}
+@media only screen and (min-width: 768px) {
+  .text-box-container {
+    padding: 0px 10%;
+  }
+}
+/* @media only screen and (min-width: 992px) {
+  .text-box-container {
+    padding: 0px 20%;
+  }
+} */
 </style>

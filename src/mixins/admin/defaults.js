@@ -112,7 +112,14 @@ const defaultsMixin = {
               align: 'center',
               height: 40,
             },
-            boxes: [{ txt: '' }],
+            img: {
+              src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
+              align: 'left',
+              width: [200, 250, 300],
+              height: [200, 250, 300],
+              scale: true,
+              scales: [50, 45, 35],
+            },
           },
           top_menu: {
             type: 'top_menu',

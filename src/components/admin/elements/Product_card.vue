@@ -169,12 +169,12 @@ export default {
             },
             body: formData,
           });
-          const sendEmailResJSON = await response.json();
-          if (sendEmailResJSON.success) {
-            this.site.htmlElmnts[this.elKey].cards[itemIndex].img =
-              sendEmailResJSON.data.file_path + sendEmailResJSON.data.file_name;
+          const resJSON = await response.json();
+          if (resJSON.success) {
+            console.log(resJSON);
+            this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_path + resJSON.data.file_name;
           } else {
-            console.log(sendEmailResJSON);
+            console.log(resJSON);
           }
         } catch (error) {
           console.log(error.toString());

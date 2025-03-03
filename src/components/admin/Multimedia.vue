@@ -8,9 +8,10 @@
       <i :class="'fa-solid ' + mediaType"></i>
     </button>
     <select @change="selectSearch">
-      <template v-if="this[mdTp[slctdMd][0]][mdTp[slctdMd][1]]">
+      <template v-if="this?.[mdTp?.[slctdMd]?.[0]]?.[mdTp?.[slctdMd]?.[1]]">
         <option
-          v-for="media in this[mdTp[slctdMd][0]][mdTp[slctdMd][1]]?.toReversed()"
+          v-if="slctdMd != 'fa-cloud-arrow-up'"
+          v-for="media in this?.[mdTp?.[slctdMd]?.[0]]?.[mdTp?.[slctdMd]?.[1]]?.toReversed()"
           :value="media.search"
           :selected="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == media.search"
         >
@@ -45,6 +46,14 @@
           />
         </div>
       </div>
+      <div v-else class="multimedia-gallery-row">
+        <div v-for="file in upload.files.filter((element, index) => index % 2 === 0)" class="multimedia-gallery-column">
+          <img :src="upload.path + file" draggable="true" @dragstart="drag($event, upload.path + file)" />
+        </div>
+        <div v-for="file in upload.files.filter((element, index) => index % 2 !== 0)" class="multimedia-gallery-column">
+          <img :src="upload.path + file" draggable="true" @dragstart="drag($event, upload.path + file)" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +62,7 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['endPts', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq'],
+  inject: ['endPts', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq', 'upload'],
 
   data() {
     return {
@@ -61,7 +70,7 @@ export default {
       mdTp: {
         'fa-camera': ['pexels', 'img', 'photos'],
         'fa-video': ['pexels', 'vid', 'videos'],
-        'fa-cloud-arrow-up': ['upload', 'upld', 'upload'],
+        'fa-cloud-arrow-up': ['upload', 'files', 'upload'],
         // 'fa-quote-right': ['txtprovider', 'txt', 'messages'],
       },
     };
