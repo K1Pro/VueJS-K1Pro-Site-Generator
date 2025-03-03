@@ -32,8 +32,17 @@
       class="edit-height"
       type="number"
       step="0.01"
-      title="height"
+      title="font size"
       v-model="site.htmlElmnts[elKey].style.fontSize"
+    />
+    <!-- font-size -->
+    <input
+      v-if="option == 'title-font-size' && options.includes('title-font-size')"
+      class="edit-height"
+      type="number"
+      step="1"
+      title="title font size"
+      v-model="site.htmlElmnts[elKey].style.titleFontSize"
     />
     <!-- grid-template-columns -->
     <input

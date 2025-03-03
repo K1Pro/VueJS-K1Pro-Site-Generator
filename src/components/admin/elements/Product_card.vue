@@ -1,5 +1,6 @@
 <template>
   <div :id="elKey" class="product-card" :style="[style.outline.borderColor]">
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['font-size', 'title-font-size']"></edit_menu>
     <div
       class="product-card-container"
       :style="{
@@ -71,10 +72,12 @@
                 type="text"
                 class="product-card-header"
                 placeholder="Title..."
+                :style="{ fontSize: elValue.style.titleFontSize ? elValue.style.titleFontSize + 'vh' : '3vh' }"
                 v-model="site.htmlElmnts[elKey].cards[itemStart + itemIndex - 1].title"
               />
               <div style="position: relative">
                 <textarea
+                  :style="{ fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'vh' : '2vh' }"
                   placeholder="Description..."
                   rows="7"
                   v-model="site.htmlElmnts[elKey].cards[itemStart + itemIndex - 1].txt"
@@ -120,7 +123,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['grid', 'respWidth', 'slctd', 'site', 'style', 'undoRedo', 'wndw'],
+  inject: ['grid', 'respWidth', 'slctd', 'site', 'style', 'undoRedo'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -171,10 +174,8 @@ export default {
           });
           const resJSON = await response.json();
           if (resJSON.success) {
-            console.log(resJSON);
             this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_path + resJSON.data.file_name;
           } else {
-            console.log(resJSON);
           }
         } catch (error) {
           console.log(error.toString());
@@ -257,24 +258,16 @@ export default {
   object-fit: cover;
 }
 .product-card-text {
-  padding: 12px;
+  /* padding: 12px; */
 }
 .product-card-text input {
   width: 100%;
-  padding: 0%;
+  padding: 10px;
   border: 0px;
   background: transparent;
   font-family: Arial, Helvetica, sans-serif;
-  outline: none;
-  margin-bottom: 12px;
-}
-.product-card-text span {
-  color: transparent;
-  word-break: break-word;
-}
-.product-card-text span:empty::before {
-  content: 'Description...';
-  color: grey;
+  /* outline: none; */
+  /* margin-bottom: 12px; */
 }
 .product-card-text textarea {
   /* position: absolute;
@@ -282,19 +275,17 @@ export default {
   width: 100%;
   background: transparent;
   resize: none;
-  outline: none;
+  /* outline: none; */
 }
 .product-card-text span,
 .product-card-text textarea {
+  padding: 10px;
   font-family: 'Helvetica', sans-serif;
-  font-size: 16px;
-  padding: 0%;
   margin: 0%;
   border: none;
 }
 .product-card-header,
 .product-card-text input {
-  font-size: 30px;
   overflow: hidden;
 }
 .product-card-prev {

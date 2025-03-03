@@ -6,7 +6,7 @@
         gridTemplateColumns: wndw.wdth > 730 ? gridTemplateColumnsFull : gridTemplateColumnsMobile,
       }"
     >
-      <div class="product-card-item"></div>
+      <div v-if="wndw.wdth > 730" class="product-card-item"></div>
       <template v-for="itemIndex in respvItemAmnt">
         <div class="product-card-item" :style="[style.primaryColor]">
           <div class="product-card-group">
@@ -16,17 +16,20 @@
               :style="{ 'margin-bottom': '0px' }"
             />
             <div class="product-card-text" :style="{ padding: '12px' }">
-              <div class="product-card-header">
+              <div
+                class="product-card-header"
+                :style="{ fontSize: elValue.style.titleFontSize ? elValue.style.titleFontSize + 'vh' : '3vh' }"
+              >
                 {{ elValue.cards[itemIndex - 1].title }}
               </div>
-              <p>
+              <p :style="{ fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'vh' : '2vh' }">
                 {{ elValue.cards[itemIndex - 1].txt }}
               </p>
             </div>
           </div>
         </div>
       </template>
-      <div class="product-card-item"></div>
+      <div v-if="wndw.wdth > 730" class="product-card-item"></div>
     </div>
   </div>
 </template>
@@ -74,6 +77,7 @@ export default {
 .product-card-container {
   display: grid;
   column-gap: 10px;
+  padding: 1vh;
 }
 .product-card-item {
   overflow: visible;
@@ -100,10 +104,12 @@ export default {
 }
 .product-card-header,
 .product-card-text input {
-  font-size: 30px;
   overflow: hidden;
 }
 @media only screen and (min-width: 730px) {
+  .product-card-container {
+    padding: 0;
+  }
   .product-card-group img {
     height: 250px;
   }
