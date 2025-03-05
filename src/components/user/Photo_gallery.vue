@@ -1,14 +1,14 @@
 <template>
-  <div class="video-gallery">video gallery</div>
+  <div class="photo-gallery">photo gallery</div>
 </template>
 
 <script>
 export default {
-  name: 'Video gallery',
+  name: 'Photo gallery',
 };
 </script>
 
 <style>
-.video-gallery {
+.photo-gallery {
 }
 </style>
