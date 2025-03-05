@@ -3,11 +3,12 @@ const defaultsMixin = {
     return {
       defaults: {
         htmlUniqSiteElmnts: ['footer', 'legal_links', 'top_menu'],
-        htmlUniqPageElmnts: ['background_image', 'contact', 'login'],
+        htmlUniqPageElmnts: ['background_image', 'contact', 'login', 'feedback'],
         htmlReqrdPageElmnts: ['terms_of_use', 'privacy_policy'],
         htmlAllElmnts: [
           'background_image',
           'contact',
+          'feedback',
           'footer',
           'headline',
           'icon_slider',
@@ -16,6 +17,7 @@ const defaultsMixin = {
           'privacy_policy',
           'product_card',
           'spacer',
+
           'terms_of_use',
           'text_box',
           'top_menu',
@@ -28,6 +30,7 @@ const defaultsMixin = {
             url: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
           },
           contact: { type: 'contact', style: {} },
+          feedback: { type: 'feedback' },
           footer: {
             type: 'footer',
             position: -2,
@@ -85,26 +88,29 @@ const defaultsMixin = {
             type: 'product_card',
             cards: [
               {
-                img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+                img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
                 title: 'Products',
                 txt: 'This is a short description about our products.',
               },
               {
-                img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+                img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
                 title: 'Services',
                 txt: 'This is a short description about our services.',
               },
               {
-                img: 'https://api-site.k1pro.net/public/default/logo/logo.png',
+                img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
                 title: 'Merchandise',
                 txt: 'This is a short description about our merchandise.',
               },
             ],
             style: {
               borderRadius: '10',
+              fontSize: 2,
+              titleFontSize: 2.3,
             },
           },
           spacer: { type: 'spacer', style: { height: 50 } },
+
           terms_of_use: { type: 'terms_of_use', style: {} },
           text_box: {
             type: 'text_box',
@@ -118,8 +124,9 @@ const defaultsMixin = {
               width: [200, 250, 300],
               height: [200, 250, 300],
               scale: true,
-              scales: [50, 45, 35],
+              scales: [100, 50, 45],
             },
+            txt: '',
           },
           top_menu: {
             type: 'top_menu',

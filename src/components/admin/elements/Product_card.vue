@@ -60,7 +60,12 @@
           ></i>
           <div class="product-card-group">
             <img
-              :src="elValue.cards[itemStart + itemIndex - 1].img"
+              :src="
+                elValue.cards[itemStart + itemIndex - 1].img.includes('http://') ||
+                elValue.cards[itemStart + itemIndex - 1].img.includes('https://')
+                  ? elValue.cards[itemStart + itemIndex - 1].img
+                  : endPts.uploadFilesURL + elValue.cards[itemStart + itemIndex - 1].img
+              "
               :alt="elValue.cards[itemStart + itemIndex - 1].title"
               @drop.prevent="drop(itemStart + itemIndex - 1)"
               @dragover.prevent
@@ -123,7 +128,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['grid', 'respWidth', 'slctd', 'site', 'style', 'undoRedo'],
+  inject: ['endPts', 'grid', 'respWidth', 'slctd', 'site', 'style', 'undoRedo'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -174,7 +179,7 @@ export default {
           });
           const resJSON = await response.json();
           if (resJSON.success) {
-            this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_path + resJSON.data.file_name;
+            this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_name;
           } else {
           }
         } catch (error) {

@@ -48,10 +48,18 @@
       </div>
       <div v-else class="multimedia-gallery-row">
         <div v-for="file in upload.files.filter((element, index) => index % 2 === 0)" class="multimedia-gallery-column">
-          <img :src="upload.path + file" draggable="true" @dragstart="drag($event, upload.path + file)" />
+          <img
+            :src="endPts.uploadFilesURL + file"
+            draggable="true"
+            @dragstart="drag($event, endPts.uploadFilesURL + file)"
+          />
         </div>
         <div v-for="file in upload.files.filter((element, index) => index % 2 !== 0)" class="multimedia-gallery-column">
-          <img :src="upload.path + file" draggable="true" @dragstart="drag($event, upload.path + file)" />
+          <img
+            :src="endPts.uploadFilesURL + file"
+            draggable="true"
+            @dragstart="drag($event, endPts.uploadFilesURL + file)"
+          />
         </div>
       </div>
     </div>

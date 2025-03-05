@@ -46,6 +46,7 @@ export default {
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
+        uploadFilesURL: app_api_url + 'public/' + slctd.job + '/upload/images/',
       },
       grid: {
         wdth: document.body.clientWidth * 0.5,
@@ -76,7 +77,7 @@ export default {
       sideMenuSlctdLnk: ['Website'],
       site: site,
       undoRedo: 0,
-      upload: { path: '', files: [] },
+      upload: { files: [] },
       userData: user_data,
     };
   },
@@ -255,7 +256,6 @@ export default {
         });
         const resJSON = await response.json();
         if (resJSON.success) {
-          this.upload.path = resJSON.data.file_path;
           this.upload.files = resJSON.data.upload_files;
         } else {
           console.log(resJSON);

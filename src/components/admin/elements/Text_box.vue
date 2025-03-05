@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="text-box" :style="[style.outline.borderColor]">
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['text-box_image', 'anchor']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['text-box_image', 'anchor', 'horizontal-rule']"></edit_menu>
 
     <div
       class="text-box-outer-container"
@@ -79,7 +79,11 @@
                 height: elValue.img.scale ? '100%' : elValue.img.height[slctdScrn] + 'px',
                 objectFit: elValue.img.scale ? 'cover' : false,
               }"
-              :src="elValue.img.src"
+              :src="
+                elValue.img.src.includes('http://') || elValue.img.src.includes('https://')
+                  ? elValue.img.src
+                  : endPts.uploadFilesURL + elValue.img.src
+              "
               ref="textBoxImg"
               @drop.prevent="drop"
               @dragover.prevent
@@ -108,7 +112,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['grid', 'respWidth', 'site', 'style'],
+  inject: ['endPts', 'grid', 'respWidth', 'site', 'slctd', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -149,18 +153,51 @@ export default {
       this.site.htmlElmnts[this.elKey].txt = event.target.innerHTML;
       this.spanEnable = this.elValue.txt != '' && this.elValue.txt != '<br>' ? false : true;
     },
-    drop() {
-      this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
-      setTimeout(() => {
-        this.elValue.img.width.forEach((width, index) => {
-          this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
-          this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
-          this.site.htmlElmnts[this.elKey].img.width[index] =
-            Math.round(
-              ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
-            ) / 100;
-        });
-      }, 100);
+    async drop() {
+      if (event?.dataTransfer?.files?.[0]?.name) {
+        let formData = new FormData();
+        formData.append('uploaded_file', event.dataTransfer.files[0]);
+        try {
+          const response = await fetch(app_api_url + this.slctd.job + '/multimedia', {
+            method: 'POST',
+            headers: {
+              Authorization: access_token,
+              'Cache-Control': 'no-store',
+            },
+            body: formData,
+          });
+          const resJSON = await response.json();
+          if (resJSON.success) {
+            this.site.htmlElmnts[this.elKey].img.src = resJSON.data.file_name;
+            setTimeout(() => {
+              this.elValue.img.width.forEach((width, index) => {
+                this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+                this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+                this.site.htmlElmnts[this.elKey].img.width[index] =
+                  Math.round(
+                    ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) *
+                      100
+                  ) / 100;
+              });
+            }, 100);
+          } else {
+          }
+        } catch (error) {
+          console.log(error.toString());
+        }
+      } else {
+        this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
+        setTimeout(() => {
+          this.elValue.img.width.forEach((width, index) => {
+            this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+            this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+            this.site.htmlElmnts[this.elKey].img.width[index] =
+              Math.round(
+                ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
+              ) / 100;
+          });
+        }, 100);
+      }
     },
     changeSlctdScrn() {
       this.slctdScrn = this.slctdScrn > 1 ? 0 : this.slctdScrn + 1;

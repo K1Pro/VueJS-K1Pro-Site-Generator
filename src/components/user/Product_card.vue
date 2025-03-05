@@ -11,7 +11,12 @@
         <div class="product-card-item" :style="[style.primaryColor]">
           <div class="product-card-group">
             <img
-              :src="elValue.cards[itemIndex - 1].img"
+              :src="
+                elValue.cards[itemIndex - 1].img.includes('http://') ||
+                elValue.cards[itemIndex - 1].img.includes('https://')
+                  ? elValue.cards[itemIndex - 1].img
+                  : endPts.uploadFilesURL + elValue.cards[itemIndex - 1].img
+              "
               :alt="elValue.cards[itemIndex - 1].title"
               :style="{ 'margin-bottom': '0px' }"
             />
@@ -38,7 +43,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['respWidth', 'site', 'style', 'wndw'],
+  inject: ['endPts', 'respWidth', 'site', 'slctd', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

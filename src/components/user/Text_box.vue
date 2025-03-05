@@ -6,8 +6,13 @@
 
     <div class="text-box-container">
       <img
+        v-if="elValue.img || elValue.img == ''"
         class="text-box-img-item"
-        :src="elValue.img.src"
+        :src="
+          elValue.img.src.includes('http://') || elValue.img.src.includes('https://')
+            ? elValue.img.src
+            : endPts.uploadFilesURL + elValue.img.src
+        "
         :style="{
           float: elValue.img.align,
           width: elValue.img.scale ? elValue.img.scales[slctdScrn] + '%' : elValue.img.width[slctdScrn] + 'px',
@@ -25,7 +30,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['wndw', 'respWidth', 'site', 'slctd'],
+  inject: ['endPts', 'respWidth', 'site', 'slctd', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
