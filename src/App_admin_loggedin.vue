@@ -47,6 +47,10 @@ export default {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
         uploadFilesURL: app_api_url + 'public/' + slctd.job + '/upload/images/',
+        videosURL: app_api_url + 'public/' + slctd.job + '/videos/',
+      },
+      files: {
+        videos: {},
       },
       grid: {
         wdth: document.body.clientWidth * 0.5,
@@ -85,6 +89,7 @@ export default {
   provide() {
     return {
       // computed
+      files: Vue.computed(() => this.files),
       grid: Vue.computed(() => this.grid),
       individEdit: Vue.computed(() => this.individEdit),
       messages: Vue.computed(() => this.messages),
@@ -264,6 +269,19 @@ export default {
         console.log(error.toString());
       }
     },
+    async getVideos() {
+      try {
+        const response = await fetch(app_api_url + this.slctd.job + '/videos');
+        const resJSON = await response.json();
+        if (resJSON.success) {
+          this.files.videos = resJSON.data.videos;
+        } else {
+          console.log(resJSON);
+        }
+      } catch (error) {
+        console.log(error.toString());
+      }
+    },
     applyStyle() {
       const appGridItem2 = this.$refs.appGridItem2;
 
@@ -300,6 +318,7 @@ export default {
     this.messagesReq('GET');
     this.pexelsReq('GET', 'img');
     this.getMultimediaFiles();
+    this.getVideos();
     // this.applyStyle();
   },
   updated() {

@@ -3,24 +3,37 @@ const defaultsMixin = {
     return {
       defaults: {
         htmlUniqSiteElmnts: ['footer', 'legal_links', 'top_menu'],
-        htmlUniqPageElmnts: ['background_image', 'contact', 'login', 'feedback'],
+        htmlUniqPageElmnts: [
+          'background_image',
+          'background_video',
+          'contact',
+          'feedback',
+          'forms',
+          'login',
+          'photo_gallery',
+          'video_gallery',
+        ],
         htmlReqrdPageElmnts: ['terms_of_use', 'privacy_policy'],
         htmlAllElmnts: [
           'background_image',
+          'background_video',
           'contact',
           'feedback',
           'footer',
+          'forms',
           'headline',
           'icon_slider',
           'login',
           'legal_links',
+          'photo_gallery',
+          'photo_slider',
           'privacy_policy',
           'product_card',
           'spacer',
-
           'terms_of_use',
           'text_box',
           'top_menu',
+          'video_gallery',
         ],
         reqrdPages: ['Terms-of-use', 'Privacy-policy'],
         htmlElmnts: {
@@ -28,6 +41,11 @@ const defaultsMixin = {
             type: 'background_image',
             position: 1,
             url: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+          },
+          background_video: {
+            type: 'background_video',
+            position: 1,
+            src: 'https://video.pexels.com/videos/text.mp4',
           },
           contact: { type: 'contact', style: {} },
           feedback: { type: 'feedback' },
@@ -44,6 +62,9 @@ const defaultsMixin = {
               borderColor: '#FFFFFF',
               color: '#000000',
             },
+          },
+          forms: {
+            type: 'forms',
           },
           headline: {
             type: 'headline',
@@ -83,6 +104,8 @@ const defaultsMixin = {
             type: 'login',
             style: {},
           },
+          photo_gallery: { type: 'photo_gallery' },
+          photo_slider: { type: 'photo_slider' },
           privacy_policy: { type: 'privacy_policy', style: {} },
           product_card: {
             type: 'product_card',
@@ -143,6 +166,9 @@ const defaultsMixin = {
               align: 'right',
               height: 14,
             },
+          },
+          video_gallery: {
+            type: 'video_gallery',
           },
         },
       },
