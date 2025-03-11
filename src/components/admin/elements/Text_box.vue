@@ -82,7 +82,7 @@
               :src="
                 elValue.img.src.includes('http://') || elValue.img.src.includes('https://')
                   ? elValue.img.src
-                  : endPts.uploadFilesURL + elValue.img.src
+                  : endPts.imagesURL + elValue.img.src
               "
               ref="textBoxImg"
               @drop.prevent="drop"
@@ -158,7 +158,7 @@ export default {
         let formData = new FormData();
         formData.append('uploaded_file', event.dataTransfer.files[0]);
         try {
-          const response = await fetch(app_api_url + this.slctd.job + '/multimedia', {
+          const response = await fetch(app_api_url + this.slctd.job + '/images', {
             method: 'POST',
             headers: {
               Authorization: access_token,

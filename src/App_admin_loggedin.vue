@@ -46,11 +46,12 @@ export default {
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
-        uploadFilesURL: app_api_url + 'public/' + slctd.job + '/upload/images/',
+        imagesURL: slctd.assets_url + '/src/assets/images/loggedout/' + slctd.job + '/',
         videosURL: app_api_url + 'public/' + slctd.job + '/videos/',
       },
       files: {
         videos: {},
+        images: [],
       },
       grid: {
         wdth: document.body.clientWidth * 0.5,
@@ -81,7 +82,7 @@ export default {
       sideMenuSlctdLnk: ['Website'],
       site: site,
       undoRedo: 0,
-      upload: { files: [] },
+      upload: { files: [], videos: [] },
       userData: user_data,
     };
   },
@@ -251,9 +252,9 @@ export default {
         this.showMsg(error.toString());
       }
     },
-    async getMultimediaFiles() {
+    async getImages() {
       try {
-        const response = await fetch(app_api_url + this.slctd.job + '/multimedia', {
+        const response = await fetch(app_api_url + this.slctd.job + '/images', {
           headers: {
             Authorization: access_token,
             'Cache-Control': 'no-store',
@@ -261,7 +262,8 @@ export default {
         });
         const resJSON = await response.json();
         if (resJSON.success) {
-          this.upload.files = resJSON.data.upload_files;
+          this.files.images = resJSON.data;
+          console.log(resJSON);
         } else {
           console.log(resJSON);
         }
@@ -275,6 +277,7 @@ export default {
         const resJSON = await response.json();
         if (resJSON.success) {
           this.files.videos = resJSON.data.videos;
+          console.log(resJSON);
         } else {
           console.log(resJSON);
         }
@@ -317,7 +320,7 @@ export default {
     this.sttngsReq('GET', 'user');
     this.messagesReq('GET');
     this.pexelsReq('GET', 'img');
-    this.getMultimediaFiles();
+    this.getImages();
     this.getVideos();
     // this.applyStyle();
   },

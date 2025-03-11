@@ -31,6 +31,7 @@ const defaultsMixin = {
           'product_card',
           'spacer',
           'terms_of_use',
+          'test',
           'text_box',
           'top_menu',
           'video_gallery',
@@ -105,7 +106,15 @@ const defaultsMixin = {
             style: {},
           },
           photo_gallery: { type: 'photo_gallery' },
-          photo_slider: { type: 'photo_slider' },
+          photo_slider: {
+            type: 'photo_slider',
+            photos: [
+              { src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png' },
+              { src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png' },
+              { src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png' },
+            ],
+            style: { height: 35, width: 200, columnGap: 50 },
+          },
           privacy_policy: { type: 'privacy_policy', style: {} },
           product_card: {
             type: 'product_card',
@@ -135,6 +144,7 @@ const defaultsMixin = {
           spacer: { type: 'spacer', style: { height: 50 } },
 
           terms_of_use: { type: 'terms_of_use', style: {} },
+          test: { type: 'test' },
           text_box: {
             type: 'text_box',
             style: {

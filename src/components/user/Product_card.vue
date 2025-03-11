@@ -15,7 +15,7 @@
                 elValue.cards[itemIndex - 1].img.includes('http://') ||
                 elValue.cards[itemIndex - 1].img.includes('https://')
                   ? elValue.cards[itemIndex - 1].img
-                  : endPts.uploadFilesURL + elValue.cards[itemIndex - 1].img
+                  : endPts.imagesURL + elValue.cards[itemIndex - 1].img
               "
               :alt="elValue.cards[itemIndex - 1].title"
               :style="{ 'margin-bottom': '0px' }"

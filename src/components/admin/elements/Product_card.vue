@@ -64,7 +64,7 @@
                 elValue.cards[itemStart + itemIndex - 1].img.includes('http://') ||
                 elValue.cards[itemStart + itemIndex - 1].img.includes('https://')
                   ? elValue.cards[itemStart + itemIndex - 1].img
-                  : endPts.uploadFilesURL + elValue.cards[itemStart + itemIndex - 1].img
+                  : endPts.imagesURL + elValue.cards[itemStart + itemIndex - 1].img
               "
               :alt="elValue.cards[itemStart + itemIndex - 1].title"
               @drop.prevent="drop(itemStart + itemIndex - 1)"
@@ -169,7 +169,7 @@ export default {
         let formData = new FormData();
         formData.append('uploaded_file', event.dataTransfer.files[0]);
         try {
-          const response = await fetch(app_api_url + this.slctd.job + '/multimedia', {
+          const response = await fetch(app_api_url + this.slctd.job + '/images', {
             method: 'POST',
             headers: {
               Authorization: access_token,

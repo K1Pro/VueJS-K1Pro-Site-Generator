@@ -9,14 +9,23 @@
     </button>
     <select @change="selectSearch">
       <template v-if="this?.[mdTp?.[slctdMd]?.[0]]?.[mdTp?.[slctdMd]?.[1]]">
+        <option :value="'uploaded ' + mdTp[slctdMd][3]">uploaded {{ mdTp[slctdMd][3] }}</option>
         <option
+          v-if="slctdMd != 'fa-cloud-arrow-up'"
+          v-for="media in this?.[mdTp?.[slctdMd]?.[0]]?.[mdTp?.[slctdMd]?.[1]]"
+          :value="media.search"
+          :selected="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == media.search"
+        >
+          {{ media.search.replaceAll('+', ' ') }}
+        </option>
+        <!-- <option
           v-if="slctdMd != 'fa-cloud-arrow-up'"
           v-for="media in this?.[mdTp?.[slctdMd]?.[0]]?.[mdTp?.[slctdMd]?.[1]]?.toReversed()"
           :value="media.search"
           :selected="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == media.search"
         >
           {{ media.search.replaceAll('+', ' ') }}
-        </option>
+        </option> -->
       </template>
     </select>
     <input
@@ -28,40 +37,42 @@
     <button><i class="fa-solid fa-magnifying-glass" @click="mediaSearch"></i></button>
     <button style="border-right-width: 1px"><i class="fa-solid fa-trash"></i></button>
     <div class="multimedia-gallery">
-      <div
-        v-if="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] && mediaSrchArr !== null"
-        class="multimedia-gallery-row"
-      >
-        <div v-for="mediaSrch in mediaSrchArr" class="multimedia-gallery-column">
-          <img
-            v-for="media in mediaSrch"
-            draggable="true"
-            :src="media.src.medium"
-            :style="{
-              outline: media.src.large2x == slctd.imgURL ? '8px solid LawnGreen' : 'none',
-              outlineOffset: media.src.large2x == slctd.imgURL ? '-8px' : '0',
-            }"
-            @click="selectImg($event, media.src.large2x)"
-            @dragstart="drag($event, media.src.large2x)"
-          />
+      <template v-if="mediaSrchArr !== null">
+        <div
+          v-if="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]].split(' ')[0] != 'uploaded'"
+          class="multimedia-gallery-row"
+        >
+          <div v-for="mediaSrch in mediaSrchArr" class="multimedia-gallery-column">
+            <img
+              v-for="media in mediaSrch"
+              draggable="true"
+              :src="media.src.medium"
+              :title="media.src.medium"
+              :style="{
+                outline: media.src.large2x == slctd.imgURL ? '8px solid LawnGreen' : 'none',
+                outlineOffset: media.src.large2x == slctd.imgURL ? '-8px' : '0',
+              }"
+              @click="selectImg($event, media.src.large2x)"
+              @dragstart="drag($event, media.src.large2x)"
+            />
+          </div>
         </div>
-      </div>
-      <div v-else class="multimedia-gallery-row">
-        <div v-for="file in upload.files.filter((element, index) => index % 2 === 0)" class="multimedia-gallery-column">
-          <img
-            :src="endPts.uploadFilesURL + file"
-            draggable="true"
-            @dragstart="drag($event, endPts.uploadFilesURL + file)"
-          />
+        <div
+          v-else-if="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == 'uploaded images'"
+          class="multimedia-gallery-row"
+        >
+          <div v-for="mediaSrch in mediaSrchArr" class="multimedia-gallery-column">
+            <img
+              v-for="media in mediaSrch"
+              draggable="true"
+              :src="endPts.imagesURL + media"
+              :title="media"
+              @click="selectImg($event, endPts.imagesURL + media)"
+              @dragstart="drag($event, endPts.imagesURL + media)"
+            />
+          </div>
         </div>
-        <div v-for="file in upload.files.filter((element, index) => index % 2 !== 0)" class="multimedia-gallery-column">
-          <img
-            :src="endPts.uploadFilesURL + file"
-            draggable="true"
-            @dragstart="drag($event, endPts.uploadFilesURL + file)"
-          />
-        </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -70,15 +81,14 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['endPts', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq', 'upload'],
+  inject: ['endPts', 'files', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq', 'upload'],
 
   data() {
     return {
       slctdMd: 'fa-camera',
       mdTp: {
-        'fa-camera': ['pexels', 'img', 'photos'],
-        'fa-video': ['pexels', 'vid', 'videos'],
-        'fa-cloud-arrow-up': ['upload', 'files', 'upload'],
+        'fa-camera': ['pexels', 'img', 'photos', 'images'],
+        'fa-video': ['pexels', 'vid', 'videos', 'videos'],
         // 'fa-quote-right': ['txtprovider', 'txt', 'messages'],
       },
     };
@@ -97,6 +107,14 @@ export default {
               mSArr[this.mdTp[this.slctdMd][2]].length
             ),
           ]
+        : this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]] == 'uploaded images'
+        ? [
+            this.files.images.images_loggedout.slice(0, this.files.images.images_loggedout.length / 2),
+            this.files.images.images_loggedout.slice(
+              this.files.images.images_loggedout.length / 2,
+              this.files.images.images_loggedout.length
+            ),
+          ]
         : null;
     },
   },
@@ -107,6 +125,11 @@ export default {
       // this.searchInput = this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]]; //gotta work on this
     },
     selectSearch(event) {
+      console.log(event.target.value);
+      if (event.target.value.split(' ')[0] == 'uploaded') {
+        console.log(event.target.value.split(' ')[1]);
+        console.log(this.files[event.target.value.split(' ')[1]]);
+      }
       this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]] = event.target.value;
       this.sttngsReq('PATCH', 'user');
     },

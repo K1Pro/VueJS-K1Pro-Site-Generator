@@ -35,7 +35,7 @@ export default {
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
-        uploadFilesURL: app_api_url + 'public/' + slctd.job + '/upload/images/',
+        imagesURL: slctd.assets_url + '/src/assets/images/' + slctd.type + '/' + slctd.job + '/',
         videosURL: app_api_url + 'public/' + slctd.job + '/videos/',
       },
     };

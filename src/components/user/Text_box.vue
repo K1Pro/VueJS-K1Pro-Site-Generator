@@ -11,7 +11,7 @@
         :src="
           elValue.img.src.includes('http://') || elValue.img.src.includes('https://')
             ? elValue.img.src
-            : endPts.uploadFilesURL + elValue.img.src
+            : endPts.imagesURL + elValue.img.src
         "
         :style="{
           float: elValue.img.align,

@@ -12,9 +12,17 @@
       <div class="video-gallery-video">
         <video
           v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
-          :src="endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name"
+          :src="
+            files.videos[slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name
+              : endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name + '#t=0.75'
+          "
+          :poster="
+            files.videos[slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
+              : false
+          "
           controls
-          autoplay
         ></video>
         <video v-else></video>
       </div>

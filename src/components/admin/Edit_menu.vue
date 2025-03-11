@@ -26,6 +26,15 @@
       v-model="site.pages[slctd.type][slctd.page][elIndex][2]"
       class="edit-height"
     />
+    <!-- column gap -->
+    <input
+      v-if="option == 'column-gap' && options.includes('column-gap')"
+      class="edit-height"
+      type="number"
+      step="0.01"
+      title="column gap"
+      v-model="site.htmlElmnts[elKey].style.columnGap"
+    />
     <!-- font-size -->
     <input
       v-if="option == 'font-size' && options.includes('font-size')"
@@ -76,6 +85,15 @@
       v-if="option == 'text-box_image' && options.includes('text-box_image')"
       :checked="site.htmlElmnts[elKey].img && site.htmlElmnts[elKey].img != ''"
       @change="toggleTextBoxImg"
+    />
+    <!-- width -->
+    <input
+      v-if="option == 'width' && options.includes('width')"
+      class="edit-height"
+      type="number"
+      step="0.01"
+      title="width"
+      v-model="site.htmlElmnts[elKey].style.width"
     />
   </div>
 </template>

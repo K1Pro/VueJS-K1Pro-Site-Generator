@@ -11,9 +11,18 @@
       <div class="video-gallery-video">
         <video
           v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
-          :src="endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name"
-          controls
+          :src="
+            files.videos[slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name
+              : endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name + '#t=0.75'
+          "
+          :poster="
+            files.videos[slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
+              : false
+          "
           autoplay
+          controls
         ></video>
         <video v-else></video>
       </div>
@@ -48,7 +57,7 @@
                       slctdVideoDir +
                       '/' +
                       files.videos[slctdVideoDir][vidFilesIndx].file_name +
-                      '#t=0.9'
+                      '#t=1'
                 "
                 :poster="
                   files.videos[slctdVideoDir][vidFilesIndx].icon !== null
@@ -102,6 +111,7 @@ export default {
         const response = await fetch(app_api_url + this.slctd.job + '/videos');
         const resJSON = await response.json();
         if (resJSON.success) {
+          console.log(resJSON);
           this.files.videos = resJSON.data.videos;
           this.slctdVideoDir = Object.keys(resJSON.data.videos)[0];
         } else {
@@ -140,7 +150,7 @@ export default {
   },
 
   mounted() {
-    // this.getVideos();
+    this.getVideos();
   },
 };
 </script>
