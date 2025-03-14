@@ -43,12 +43,6 @@ export default {
 
   data() {
     return {
-      endPts: {
-        appApiUrl: app_api_url,
-        captchaURL: api_path.captcha,
-        imagesURL: slctd.assets_url + '/src/assets/images/loggedout/' + slctd.job + '/',
-        videosURL: app_api_url + 'public/' + slctd.job + '/videos/',
-      },
       files: {
         videos: {},
         images: [],
@@ -71,6 +65,7 @@ export default {
       },
       slctd: {
         firstUrlSegment: slctd.first_url_segment,
+        filesType: 'loggedout',
         href: slctd.href,
         imgURL: null,
         job: slctd.job,
@@ -82,7 +77,6 @@ export default {
       sideMenuSlctdLnk: ['Website'],
       site: site,
       undoRedo: 0,
-      upload: { files: [], videos: [] },
       userData: user_data,
     };
   },
@@ -90,6 +84,7 @@ export default {
   provide() {
     return {
       // computed
+      endPts: Vue.computed(() => this.endPts),
       files: Vue.computed(() => this.files),
       grid: Vue.computed(() => this.grid),
       individEdit: Vue.computed(() => this.individEdit),
@@ -104,10 +99,8 @@ export default {
       slctd: Vue.computed(() => this.slctd),
       style: Vue.computed(() => this.style),
       undoRedo: Vue.computed(() => this.undoRedo),
-      upload: Vue.computed(() => this.upload),
       userData: Vue.computed(() => this.userData),
       // static
-      endPts: this.endPts,
       respWidth: this.respWidth,
       // methods
       getSite: this.getSite,
@@ -116,6 +109,14 @@ export default {
   },
 
   computed: {
+    endPts() {
+      return {
+        appApiUrl: app_api_url,
+        captchaURL: api_path.captcha,
+        imagesURL: slctd.assets_url + '/src/assets/images/' + this.slctd.filesType + '/' + slctd.job + '/',
+        videosURL: slctd.assets_url + '/src/assets/videos/' + this.slctd.filesType + '/' + slctd.job + '/',
+      };
+    },
     sideMenuItems() {
       const sideMenuItemsArray = [
         ['fa fa-gear', null, 'Website'],
@@ -276,7 +277,7 @@ export default {
         const response = await fetch(app_api_url + this.slctd.job + '/videos');
         const resJSON = await response.json();
         if (resJSON.success) {
-          this.files.videos = resJSON.data.videos;
+          this.files.videos = resJSON.data.video_gallery;
           console.log(resJSON);
         } else {
           console.log(resJSON);

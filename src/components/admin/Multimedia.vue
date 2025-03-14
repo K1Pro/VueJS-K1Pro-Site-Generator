@@ -57,21 +57,38 @@
             />
           </div>
         </div>
-        <div
-          v-else-if="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == 'uploaded images'"
-          class="multimedia-gallery-row"
-        >
-          <div v-for="mediaSrch in mediaSrchArr" class="multimedia-gallery-column">
-            <img
-              v-for="media in mediaSrch"
-              draggable="true"
-              :src="endPts.imagesURL + media"
-              :title="media"
-              @click="selectImg($event, endPts.imagesURL + media)"
-              @dragstart="drag($event, endPts.imagesURL + media)"
-            />
+        <template v-else-if="sttngs.user[mdTp[slctdMd][0]][mdTp[slctdMd][1]] == 'uploaded images'">
+          Logged in:<input
+            type="radio"
+            :checked="slctd.filesType == 'loggedin'"
+            name="uploaded_images_type"
+            title="loggedin"
+            @change="uploadedImagesFileType"
+          />
+          Out:<input
+            type="radio"
+            :checked="slctd.filesType == 'loggedout'"
+            name="uploaded_images_type"
+            title="loggedout"
+            @change="uploadedImagesFileType"
+          />
+          <div class="multimedia-gallery-row" v-cloak>
+            <div v-for="(mediaSrch, medisSrchIndx) in mediaSrchArr" class="multimedia-gallery-column">
+              <img v-if="medisSrchIndx === 0" src="https://api-site.k1pro.net/public/default/logo/dragdrop.jpg" />
+
+              <div v-for="media in mediaSrch" style="position: relative">
+                <img
+                  draggable="true"
+                  :src="endPts.imagesURL + media"
+                  :title="media"
+                  @click="selectImg($event, endPts.imagesURL + media)"
+                  @dragstart="drag($event, endPts.imagesURL + media)"
+                />
+                <i class="fa-solid fa-circle-minus redWhiteMinus" style="position: absolute; margin-left: -16px"></i>
+              </div>
+            </div>
           </div>
-        </div>
+        </template>
       </template>
     </div>
   </div>
@@ -81,7 +98,7 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['endPts', 'files', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq', 'upload'],
+  inject: ['endPts', 'files', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq'],
 
   data() {
     return {
@@ -109,10 +126,10 @@ export default {
           ]
         : this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]] == 'uploaded images'
         ? [
-            this.files.images.images_loggedout.slice(0, this.files.images.images_loggedout.length / 2),
-            this.files.images.images_loggedout.slice(
-              this.files.images.images_loggedout.length / 2,
-              this.files.images.images_loggedout.length
+            this.files.images[this.slctd.filesType].slice(0, this.files.images[this.slctd.filesType].length / 2),
+            this.files.images[this.slctd.filesType].slice(
+              this.files.images[this.slctd.filesType].length / 2,
+              this.files.images[this.slctd.filesType].length
             ),
           ]
         : null;
@@ -120,6 +137,10 @@ export default {
   },
 
   methods: {
+    uploadedImagesFileType(event) {
+      this.slctd.filesType = event.target.title;
+      console.log(this.slctd.filesType);
+    },
     selectMediaType(mediaType) {
       this.slctdMd = mediaType;
       // this.searchInput = this.sttngs.user[this.mdTp[this.slctdMd][0]][this.mdTp[this.slctdMd][1]]; //gotta work on this

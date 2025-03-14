@@ -15,6 +15,7 @@ const defaultsMixin = {
         ],
         htmlReqrdPageElmnts: ['terms_of_use', 'privacy_policy'],
         htmlAllElmnts: [
+          'account_info',
           'background_image',
           'background_video',
           'contact',
@@ -38,6 +39,9 @@ const defaultsMixin = {
         ],
         reqrdPages: ['Terms-of-use', 'Privacy-policy'],
         htmlElmnts: {
+          account_info: {
+            type: 'account_info',
+          },
           background_image: {
             type: 'background_image',
             position: 1,

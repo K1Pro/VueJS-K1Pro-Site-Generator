@@ -36,7 +36,7 @@ export default {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
         imagesURL: slctd.assets_url + '/src/assets/images/' + slctd.type + '/' + slctd.job + '/',
-        videosURL: app_api_url + 'public/' + slctd.job + '/videos/',
+        videosURL: slctd.assets_url + '/src/assets/videos/' + slctd.type + '/' + slctd.job + '/',
       },
     };
   },

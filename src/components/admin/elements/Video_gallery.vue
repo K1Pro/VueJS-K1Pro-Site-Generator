@@ -14,12 +14,21 @@
           v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
           :src="
             files.videos[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name
-              : endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name + '#t=0.75'
+              ? endPts.videosURL +
+                'video-gallery/' +
+                slctdVideoDir +
+                '/' +
+                files.videos[slctdVideoDir][slctdVideo].file_name
+              : endPts.videosURL +
+                'video-gallery/' +
+                slctdVideoDir +
+                '/' +
+                files.videos[slctdVideoDir][slctdVideo].file_name +
+                '#t=0.75'
           "
           :poster="
             files.videos[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
+              ? endPts.videosURL + 'video-gallery/' + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
               : false
           "
           controls
@@ -52,8 +61,13 @@
               <video
                 :src="
                   files.videos[slctdVideoDir][vidFilesIndx].icon !== null
-                    ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][vidFilesIndx].file_name
+                    ? endPts.videosURL +
+                      'video-gallery/' +
+                      slctdVideoDir +
+                      '/' +
+                      files.videos[slctdVideoDir][vidFilesIndx].file_name
                     : endPts.videosURL +
+                      'video-gallery/' +
                       slctdVideoDir +
                       '/' +
                       files.videos[slctdVideoDir][vidFilesIndx].file_name +
@@ -61,7 +75,11 @@
                 "
                 :poster="
                   files.videos[slctdVideoDir][vidFilesIndx].icon !== null
-                    ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][vidFilesIndx].icon
+                    ? endPts.videosURL +
+                      'video-gallery/' +
+                      slctdVideoDir +
+                      '/' +
+                      files.videos[slctdVideoDir][vidFilesIndx].icon
                     : false
                 "
                 @loadedmetadata="logDuration($event, vidFilesIndx)"

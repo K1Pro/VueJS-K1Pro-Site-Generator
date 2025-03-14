@@ -13,12 +13,21 @@
           v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
           :src="
             files.videos[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name
-              : endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].file_name + '#t=0.75'
+              ? endPts.videosURL +
+                'video-gallery/' +
+                slctdVideoDir +
+                '/' +
+                files.videos[slctdVideoDir][slctdVideo].file_name
+              : endPts.videosURL +
+                'video-gallery/' +
+                slctdVideoDir +
+                '/' +
+                files.videos[slctdVideoDir][slctdVideo].file_name +
+                '#t=0.75'
           "
           :poster="
             files.videos[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
+              ? endPts.videosURL + 'video-gallery/' + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
               : false
           "
           autoplay
@@ -52,8 +61,13 @@
               <video
                 :src="
                   files.videos[slctdVideoDir][vidFilesIndx].icon !== null
-                    ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][vidFilesIndx].file_name
+                    ? endPts.videosURL +
+                      'video-gallery/' +
+                      slctdVideoDir +
+                      '/' +
+                      files.videos[slctdVideoDir][vidFilesIndx].file_name
                     : endPts.videosURL +
+                      'video-gallery/' +
                       slctdVideoDir +
                       '/' +
                       files.videos[slctdVideoDir][vidFilesIndx].file_name +
@@ -61,7 +75,11 @@
                 "
                 :poster="
                   files.videos[slctdVideoDir][vidFilesIndx].icon !== null
-                    ? endPts.videosURL + slctdVideoDir + '/' + files.videos[slctdVideoDir][vidFilesIndx].icon
+                    ? endPts.videosURL +
+                      'video-gallery/' +
+                      slctdVideoDir +
+                      '/' +
+                      files.videos[slctdVideoDir][vidFilesIndx].icon
                     : false
                 "
                 @loadedmetadata="logDuration($event, vidFilesIndx)"
@@ -108,12 +126,17 @@ export default {
   methods: {
     async getVideos() {
       try {
-        const response = await fetch(app_api_url + this.slctd.job + '/videos');
+        const response = await fetch(app_api_url + this.slctd.job + '/videos', {
+          headers: {
+            Authorization: typeof access_token === 'string' ? access_token : '',
+            'Cache-Control': 'no-store',
+          },
+        });
         const resJSON = await response.json();
         if (resJSON.success) {
           console.log(resJSON);
-          this.files.videos = resJSON.data.videos;
-          this.slctdVideoDir = Object.keys(resJSON.data.videos)[0];
+          this.files.videos = resJSON.data.video_gallery;
+          this.slctdVideoDir = Object.keys(resJSON.data.video_gallery)[0];
         } else {
           console.log(resJSON);
         }
