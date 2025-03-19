@@ -11,24 +11,24 @@
     >
       <div class="video-gallery-video">
         <video
-          v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
+          v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
           :src="
-            files.videos[slctdVideoDir][slctdVideo].icon !== null
+            files.vid[slctdVideoDir][slctdVideo].icon !== null
               ? endPts.videosURL +
                 'video-gallery/' +
                 slctdVideoDir +
                 '/' +
-                files.videos[slctdVideoDir][slctdVideo].file_name
+                files.vid[slctdVideoDir][slctdVideo].file_name
               : endPts.videosURL +
                 'video-gallery/' +
                 slctdVideoDir +
                 '/' +
-                files.videos[slctdVideoDir][slctdVideo].file_name +
+                files.vid[slctdVideoDir][slctdVideo].file_name +
                 '#t=0.75'
           "
           :poster="
-            files.videos[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + 'video-gallery/' + slctdVideoDir + '/' + files.videos[slctdVideoDir][slctdVideo].icon
+            files.vid[slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL + 'video-gallery/' + slctdVideoDir + '/' + files.vid[slctdVideoDir][slctdVideo].icon
               : false
           "
           controls
@@ -38,8 +38,8 @@
       <div class="video-gallery-playlist">
         <select @change="slctVideoDir">
           <option
-            v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
-            v-for="video in Object.keys(files.videos)"
+            v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
+            v-for="video in Object.keys(files.vid)"
             :value="video"
           >
             {{
@@ -53,33 +53,33 @@
         <div class="video-gallery-playlist-panel">
           <div
             class="video-gallery-playlist-panel-item"
-            v-if="slctdVideoDir !== null && Object.keys(files.videos).length > 0"
-            v-for="(vidFiles, vidFilesIndx) in files.videos[slctdVideoDir]"
+            v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
+            v-for="(vidFiles, vidFilesIndx) in files.vid[slctdVideoDir]"
             @click="slctVidFile(vidFilesIndx)"
           >
             <div class="video-gallery-playlist-panel-item-icon">
               <video
                 :src="
-                  files.videos[slctdVideoDir][vidFilesIndx].icon !== null
+                  files.vid[slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.videos[slctdVideoDir][vidFilesIndx].file_name
+                      files.vid[slctdVideoDir][vidFilesIndx].file_name
                     : endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.videos[slctdVideoDir][vidFilesIndx].file_name +
+                      files.vid[slctdVideoDir][vidFilesIndx].file_name +
                       '#t=0.9'
                 "
                 :poster="
-                  files.videos[slctdVideoDir][vidFilesIndx].icon !== null
+                  files.vid[slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.videos[slctdVideoDir][vidFilesIndx].icon
+                      files.vid[slctdVideoDir][vidFilesIndx].icon
                     : false
                 "
                 @loadedmetadata="logDuration($event, vidFilesIndx)"
@@ -113,7 +113,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { slctdVideoDir: Object.keys(this.files.videos)[0], slctdVideo: 0, videoDurations: {} };
+    return { slctdVideoDir: Object.keys(this.files.vid)[0], slctdVideo: 0, videoDurations: {} };
   },
 
   methods: {

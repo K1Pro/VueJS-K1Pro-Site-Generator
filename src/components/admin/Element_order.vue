@@ -231,7 +231,7 @@ export default {
         }
       } else {
         if (
-          !this.site.pages['loggedin'][this.slctd.page] ||
+          !this.site.pages['loggedout'][this.slctd.page] ||
           confirm('A loggedin page with the same name already exists. Replace?') === true
         ) {
           this.site.pages['loggedout'][this.slctd.page] = this.site.pages['loggedin'][this.slctd.page];

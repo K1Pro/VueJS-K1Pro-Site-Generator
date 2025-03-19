@@ -44,8 +44,8 @@ export default {
   data() {
     return {
       files: {
-        videos: {},
-        images: [],
+        vid: {},
+        img: [],
       },
       grid: {
         wdth: document.body.clientWidth * 0.5,
@@ -65,7 +65,6 @@ export default {
       },
       slctd: {
         firstUrlSegment: slctd.first_url_segment,
-        filesType: 'loggedout',
         href: slctd.href,
         imgURL: null,
         job: slctd.job,
@@ -113,8 +112,8 @@ export default {
       return {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
-        imagesURL: slctd.assets_url + '/src/assets/images/' + this.slctd.filesType + '/' + slctd.job + '/',
-        videosURL: slctd.assets_url + '/src/assets/videos/' + this.slctd.filesType + '/' + slctd.job + '/',
+        imagesURL: slctd.assets_url + '/src/assets/images/' + this.slctd.type + '/' + slctd.job + '/',
+        videosURL: slctd.assets_url + '/src/assets/videos/' + this.slctd.type + '/' + slctd.job + '/',
       };
     },
     sideMenuItems() {
@@ -263,7 +262,7 @@ export default {
         });
         const resJSON = await response.json();
         if (resJSON.success) {
-          this.files.images = resJSON.data;
+          this.files.img = resJSON.data;
           console.log(resJSON);
         } else {
           console.log(resJSON);
@@ -277,7 +276,7 @@ export default {
         const response = await fetch(app_api_url + this.slctd.job + '/videos');
         const resJSON = await response.json();
         if (resJSON.success) {
-          this.files.videos = resJSON.data.video_gallery;
+          this.files.vid = resJSON.data.video_gallery;
           console.log(resJSON);
         } else {
           console.log(resJSON);
