@@ -273,10 +273,15 @@ export default {
     },
     async getVideos() {
       try {
-        const response = await fetch(app_api_url + this.slctd.job + '/videos');
+        const response = await fetch(app_api_url + this.slctd.job + '/videos', {
+          headers: {
+            Authorization: access_token,
+            'Cache-Control': 'no-store',
+          },
+        });
         const resJSON = await response.json();
         if (resJSON.success) {
-          this.files.vid = resJSON.data.video_gallery;
+          this.files.vid = resJSON.data;
           console.log(resJSON);
         } else {
           console.log(resJSON);

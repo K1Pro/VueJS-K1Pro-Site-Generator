@@ -11,24 +11,28 @@
     >
       <div class="video-gallery-video">
         <video
-          v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
+          v-if="slctdVideoDir !== null && Object.keys(files.vid.video_gallery[slctd.type]).length > 0"
           :src="
-            files.vid[slctdVideoDir][slctdVideo].icon !== null
+            files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon !== null
               ? endPts.videosURL +
                 'video-gallery/' +
                 slctdVideoDir +
                 '/' +
-                files.vid[slctdVideoDir][slctdVideo].file_name
+                files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].file_name
               : endPts.videosURL +
                 'video-gallery/' +
                 slctdVideoDir +
                 '/' +
-                files.vid[slctdVideoDir][slctdVideo].file_name +
+                files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].file_name +
                 '#t=0.75'
           "
           :poster="
-            files.vid[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + 'video-gallery/' + slctdVideoDir + '/' + files.vid[slctdVideoDir][slctdVideo].icon
+            files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL +
+                'video-gallery/' +
+                slctdVideoDir +
+                '/' +
+                files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon
               : false
           "
           controls
@@ -38,8 +42,8 @@
       <div class="video-gallery-playlist">
         <select @change="slctVideoDir">
           <option
-            v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
-            v-for="video in Object.keys(files.vid)"
+            v-if="slctdVideoDir !== null && Object.keys(files.vid.video_gallery[slctd.type]).length > 0"
+            v-for="video in Object.keys(files.vid.video_gallery[slctd.type])"
             :value="video"
           >
             {{
@@ -53,33 +57,33 @@
         <div class="video-gallery-playlist-panel">
           <div
             class="video-gallery-playlist-panel-item"
-            v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
-            v-for="(vidFiles, vidFilesIndx) in files.vid[slctdVideoDir]"
+            v-if="slctdVideoDir !== null && Object.keys(files.vid.video_gallery[slctd.type]).length > 0"
+            v-for="(vidFiles, vidFilesIndx) in files.vid.video_gallery[slctd.type][slctdVideoDir]"
             @click="slctVidFile(vidFilesIndx)"
           >
             <div class="video-gallery-playlist-panel-item-icon">
               <video
                 :src="
-                  files.vid[slctdVideoDir][vidFilesIndx].icon !== null
+                  files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.vid[slctdVideoDir][vidFilesIndx].file_name
+                      files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].file_name
                     : endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.vid[slctdVideoDir][vidFilesIndx].file_name +
+                      files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].file_name +
                       '#t=0.9'
                 "
                 :poster="
-                  files.vid[slctdVideoDir][vidFilesIndx].icon !== null
+                  files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.vid[slctdVideoDir][vidFilesIndx].icon
+                      files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon
                     : false
                 "
                 @loadedmetadata="logDuration($event, vidFilesIndx)"
@@ -113,7 +117,11 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { slctdVideoDir: Object.keys(this.files.vid)[0], slctdVideo: 0, videoDurations: {} };
+    return {
+      slctdVideoDir: Object.keys(this.files.vid.video_gallery[this.slctd.type])[0], //finished here, need to adjust this.
+      slctdVideo: 0,
+      videoDurations: {},
+    };
   },
 
   methods: {
@@ -142,6 +150,12 @@ export default {
     },
     highlightOut(event, vidFilesIndx) {
       if (vidFilesIndx !== this.slctdVideo) event.target.style.backgroundColor = 'white';
+    },
+  },
+
+  watch: {
+    'slctd.type'(newType) {
+      this.slctdVideoDir = Object.keys(this.files.vid.video_gallery[newType])[0];
     },
   },
 };

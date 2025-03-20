@@ -12,22 +12,26 @@
         <video
           v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
           :src="
-            files.vid[slctdVideoDir][slctdVideo].icon !== null
+            files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon !== null
               ? endPts.videosURL +
                 'video-gallery/' +
                 slctdVideoDir +
                 '/' +
-                files.vid[slctdVideoDir][slctdVideo].file_name
+                files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].file_name
               : endPts.videosURL +
                 'video-gallery/' +
                 slctdVideoDir +
                 '/' +
-                files.vid[slctdVideoDir][slctdVideo].file_name +
+                files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].file_name +
                 '#t=0.75'
           "
           :poster="
-            files.vid[slctdVideoDir][slctdVideo].icon !== null
-              ? endPts.videosURL + 'video-gallery/' + slctdVideoDir + '/' + files.vid[slctdVideoDir][slctdVideo].icon
+            files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon !== null
+              ? endPts.videosURL +
+                'video-gallery/' +
+                slctdVideoDir +
+                '/' +
+                files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon
               : false
           "
           autoplay
@@ -38,8 +42,8 @@
       <div class="video-gallery-playlist">
         <select @change="slctVideoDir">
           <option
-            v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
-            v-for="video in Object.keys(files.vid)"
+            v-if="slctdVideoDir !== null && Object.keys(files.vid.video_gallery[slctd.type]).length > 0"
+            v-for="video in Object.keys(files.vid.video_gallery[slctd.type])"
             :value="video"
           >
             {{
@@ -53,33 +57,33 @@
         <div class="video-gallery-playlist-panel">
           <div
             class="video-gallery-playlist-panel-item"
-            v-if="slctdVideoDir !== null && Object.keys(files.vid).length > 0"
-            v-for="(vidFiles, vidFilesIndx) in files.vid[slctdVideoDir]"
+            v-if="slctdVideoDir !== null && Object.keys(files.vid.video_gallery[slctd.type]).length > 0"
+            v-for="(vidFiles, vidFilesIndx) in files.vid.video_gallery[slctd.type][slctdVideoDir]"
             @click="slctVidFile(vidFilesIndx)"
           >
             <div class="video-gallery-playlist-panel-item-icon">
               <video
                 :src="
-                  files.vid[slctdVideoDir][vidFilesIndx].icon !== null
+                  files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.vid[slctdVideoDir][vidFilesIndx].file_name
+                      files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].file_name
                     : endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.vid[slctdVideoDir][vidFilesIndx].file_name +
+                      files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].file_name +
                       '#t=1'
                 "
                 :poster="
-                  files.vid[slctdVideoDir][vidFilesIndx].icon !== null
+                  files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
                       'video-gallery/' +
                       slctdVideoDir +
                       '/' +
-                      files.vid[slctdVideoDir][vidFilesIndx].icon
+                      files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon
                     : false
                 "
                 @loadedmetadata="logDuration($event, vidFilesIndx)"
@@ -118,7 +122,7 @@ export default {
       slctdVideo: 0,
       videoDurations: {},
       files: {
-        videos: {},
+        vid: {},
       },
     };
   },
@@ -135,8 +139,8 @@ export default {
         const resJSON = await response.json();
         if (resJSON.success) {
           console.log(resJSON);
-          this.files.vid = resJSON.data.video_gallery;
-          this.slctdVideoDir = Object.keys(resJSON.data.video_gallery)[0];
+          this.files.vid = resJSON.data;
+          this.slctdVideoDir = Object.keys(resJSON.data.video_gallery[slctd.type])[0];
         } else {
           console.log(resJSON);
         }
