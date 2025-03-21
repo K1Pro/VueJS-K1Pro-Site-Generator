@@ -139,7 +139,9 @@ export default {
       this.site.htmlElmnts[this.elKey].photos.splice(itemIndex, 1);
     },
     async drop(photoIndx) {
-      if (event?.dataTransfer?.files?.[0]?.name) {
+      if (event?.dataTransfer.getData('text')) {
+        this.site.htmlElmnts[this.elKey].photos[photoIndx].src = event.dataTransfer.getData('text');
+      } else if (event?.dataTransfer?.files?.[0]?.name) {
         let formData = new FormData();
         formData.append('uploaded_file', event.dataTransfer.files[0]);
         try {
@@ -160,7 +162,7 @@ export default {
           console.log(error.toString());
         }
       } else {
-        this.site.htmlElmnts[this.elKey].photos[photoIndx].src = event.dataTransfer.getData('text');
+        console.log('error');
       }
     },
   },

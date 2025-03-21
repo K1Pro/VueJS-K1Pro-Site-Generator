@@ -68,7 +68,9 @@
                   outlineOffset: media.img == slctd.imgURL ? '-8px' : '0',
                 }"
                 @click="selectImg($event, media.img)"
-                @dragstart="drag($event, media.img)"
+                @dragstart="
+                  drag($event, media.img.includes(endPts.imagesURL) ? media.img.split(endPts.imagesURL)[1] : media.img)
+                "
               />
               <video
                 v-else-if="media.src && vidFlTps.includes(media.src.split('.').pop())"
@@ -136,7 +138,7 @@ export default {
     mediaSrchArr() {
       const mSArr =
         this.prvdr == 'files' && this.tp == 'img' && this.kywrd == 'misc_images'
-          ? this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type]?.map((el) => ({
+          ? this.files?.[this.tp]?.[this.kywrd]?.map((el) => ({
               src: this.endPts.imagesURL + this.kywrd + '/' + el,
               img: this.endPts.imagesURL + this.kywrd + '/' + el,
             }))
@@ -144,8 +146,8 @@ export default {
           ? Object.keys(this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type])
           : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder != ''
           ? this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type]?.[this.folder]?.map((el) => ({
-              src: this.endPts.videosURL + this.kywrd + '/' + this.folder + '/' + el.file_name,
-              img: this.endPts.videosURL + this.kywrd + '/' + this.folder + '/' + el.icon,
+              src: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.file_name,
+              img: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.icon,
             }))
           : this.prvdr == 'pexels' && this.tp == 'img'
           ? this.pexels?.[this.tp]

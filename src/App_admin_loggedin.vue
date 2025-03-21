@@ -112,8 +112,10 @@ export default {
       return {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
-        imagesURL: slctd.assets_url + '/src/assets/images/' + this.slctd.type + '/' + slctd.job + '/',
-        videosURL: slctd.assets_url + '/src/assets/videos/' + this.slctd.type + '/' + slctd.job + '/',
+        // imagesURL: slctd.assets_url + '/src/assets/images/' + this.slctd.type + '/' + slctd.job + '/', delete this after 3/25/2025
+        // videosURL: slctd.assets_url + '/src/assets/videos/' + this.slctd.type + '/' + slctd.job + '/', delete this after 3/25/2025
+        imagesURL: '../src/assets/images/' + slctd.job + '/',
+        videosURL: '../src/assets/videos/' + slctd.job + '/',
       };
     },
     sideMenuItems() {

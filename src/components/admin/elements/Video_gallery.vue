@@ -15,12 +15,16 @@
           :src="
             files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon !== null
               ? endPts.videosURL +
-                'video-gallery/' +
+                'video_gallery/' +
+                slctd.type +
+                '/' +
                 slctdVideoDir +
                 '/' +
                 files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].file_name
               : endPts.videosURL +
-                'video-gallery/' +
+                'video_gallery/' +
+                slctd.type +
+                '/' +
                 slctdVideoDir +
                 '/' +
                 files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].file_name +
@@ -29,7 +33,9 @@
           :poster="
             files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon !== null
               ? endPts.videosURL +
-                'video-gallery/' +
+                'video_gallery/' +
+                slctd.type +
+                '/' +
                 slctdVideoDir +
                 '/' +
                 files.vid.video_gallery[slctd.type][slctdVideoDir][slctdVideo].icon
@@ -66,12 +72,16 @@
                 :src="
                   files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
-                      'video-gallery/' +
+                      'video_gallery/' +
+                      slctd.type +
+                      '/' +
                       slctdVideoDir +
                       '/' +
                       files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].file_name
                     : endPts.videosURL +
-                      'video-gallery/' +
+                      'video_gallery/' +
+                      slctd.type +
+                      '/' +
                       slctdVideoDir +
                       '/' +
                       files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].file_name +
@@ -80,7 +90,9 @@
                 :poster="
                   files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon !== null
                     ? endPts.videosURL +
-                      'video-gallery/' +
+                      'video_gallery/' +
+                      slctd.type +
+                      '/' +
                       slctdVideoDir +
                       '/' +
                       files.vid.video_gallery[slctd.type][slctdVideoDir][vidFilesIndx].icon

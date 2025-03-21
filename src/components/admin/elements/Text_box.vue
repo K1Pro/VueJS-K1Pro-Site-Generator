@@ -154,7 +154,19 @@ export default {
       this.spanEnable = this.elValue.txt != '' && this.elValue.txt != '<br>' ? false : true;
     },
     async drop() {
-      if (event?.dataTransfer?.files?.[0]?.name) {
+      if (event?.dataTransfer.getData('text')) {
+        this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
+        setTimeout(() => {
+          this.elValue.img.width.forEach((width, index) => {
+            this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+            this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+            this.site.htmlElmnts[this.elKey].img.width[index] =
+              Math.round(
+                ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
+              ) / 100;
+          });
+        }, 100);
+      } else if (event?.dataTransfer?.files?.[0]?.name) {
         let formData = new FormData();
         formData.append('uploaded_file', event.dataTransfer.files[0]);
         try {
@@ -186,17 +198,7 @@ export default {
           console.log(error.toString());
         }
       } else {
-        this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
-        setTimeout(() => {
-          this.elValue.img.width.forEach((width, index) => {
-            this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
-            this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
-            this.site.htmlElmnts[this.elKey].img.width[index] =
-              Math.round(
-                ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
-              ) / 100;
-          });
-        }, 100);
+        console.log('error');
       }
     },
     changeSlctdScrn() {
