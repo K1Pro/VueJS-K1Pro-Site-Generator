@@ -4,7 +4,14 @@
 
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="top-menu-logo" :style="logoImg">
-      <img :src="endPts.appApiUrl + site.logo" alt="logo" />
+      <img
+        :src="
+          elValue.logo.includes('http://') || elValue.logo.includes('https://')
+            ? elValue.logo
+            : endPts.imagesURL + elValue.logo
+        "
+        alt="logo"
+      />
     </div>
     <div :style="[elLi]">
       <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type]">

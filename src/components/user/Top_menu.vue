@@ -1,7 +1,15 @@
 <template>
   <ul class="top-menu" :style="[style.primaryColor, elUl]">
     <li :style="logoLi" @mouseover="highlightMenuItem($event, true)" @mouseout="highlightMenuItem($event, false)">
-      <img :src="endPts.appApiUrl + site.logo" alt="logo" class="top-menu-logo-img" />
+      <img
+        :src="
+          elValue.logo.includes('http://') || elValue.logo.includes('https://')
+            ? elValue.logo
+            : endPts.imagesURL + elValue.logo
+        "
+        alt="logo"
+        class="top-menu-logo-img"
+      />
       <a class="top-menu-icon" v-if="this.wndw.wdth < this.respWidth.md" :style="logoA" @click="toggleRespMenu">
         <i :class="responsive ? 'fa fa-xmark' : 'fa fa-bars'"></i>
       </a>
