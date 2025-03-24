@@ -2,7 +2,11 @@
   <div class="background-image">
     <img
       :width="grid.wdth + 'px'"
-      :src="site.htmlElmnts[elKey].url"
+      :src="
+        elValue.url.includes('http://') || elValue.url.includes('https://')
+          ? elValue.url
+          : endPts.imagesURL + elValue.url
+      "
       @drop.prevent="drop"
       @dragover.prevent
       @dragenter.prevent
@@ -14,7 +18,7 @@
 export default {
   name: 'Background Image',
 
-  inject: ['grid', 'site'],
+  inject: ['endPts', 'grid', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

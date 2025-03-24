@@ -56,7 +56,7 @@
               src="https://api-site.k1pro.net/public/default/logo/dragdrop.jpg"
               style="outline: 1px solid black; outline-offset: -1px"
             />
-            <div v-for="media in mediaSrch" style="position: relative">
+            <div v-for="(media, mediaIndx) in mediaSrch" style="position: relative">
               <img
                 v-if="media.src && imgFlTps.includes(media.src.split('.').pop().split('?')[0])"
                 draggable="true"
@@ -87,10 +87,17 @@
                 src="https://api-site.k1pro.net/public/default/logo/folder.jpg"
                 @click="selectFolder(media)"
               />
+              <input
+                v-if="media.flnm && JSON.stringify(site.htmlElmnts).includes(media.flnm)"
+                type="checkbox"
+                style="position: absolute; margin-left: -32px"
+                checked
+              />
               <i
                 v-if="prvdr == 'files'"
                 class="fa-solid fa-circle-minus redWhiteMinus"
                 style="position: absolute; margin-left: -16px"
+                @click="deleteMedia(media.indx ? media.indx : mediaIndx, media.src)"
               ></i>
               <input
                 v-if="!media.src"
@@ -110,12 +117,12 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['endPts', 'files', 'pexels', 'pexelsReq', 'slctd', 'sttngs', 'sttngsReq'],
+  inject: ['endPts', 'files', 'pexels', 'pexelsReq', 'site', 'slctd', 'sttngs', 'sttngsReq'],
 
   data() {
     return {
       folder: '',
-      imgFlTps: ['jpg', 'jpeg', 'png'],
+      imgFlTps: ['jpg', 'jpeg', 'png', 'webp'],
       vidFlTps: ['mp4'],
       btns: [
         { icon: 'fa-camera', mdTp: 'img' },
@@ -138,16 +145,20 @@ export default {
     mediaSrchArr() {
       const mSArr =
         this.prvdr == 'files' && this.tp == 'img' && this.kywrd == 'misc_images'
-          ? this.files?.[this.tp]?.[this.kywrd]?.map((el) => ({
+          ? this.files?.[this.tp]?.[this.kywrd]?.map((el, elIndx) => ({
+              indx: elIndx,
               src: this.endPts.imagesURL + this.kywrd + '/' + el,
               img: this.endPts.imagesURL + this.kywrd + '/' + el,
+              flnm: this.kywrd + '/' + el,
             }))
           : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder == ''
           ? Object.keys(this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type])
           : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder != ''
-          ? this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type]?.[this.folder]?.map((el) => ({
+          ? this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type]?.[this.folder]?.map((el, elIndx) => ({
+              indx: elIndx,
               src: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.file_name,
               img: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.icon,
+              flnm: this.kywrd + '/' + el,
             }))
           : this.prvdr == 'pexels' && this.tp == 'img'
           ? this.pexels?.[this.tp]
@@ -193,6 +204,38 @@ export default {
     selectVid(event, selectedVidPath) {
       console.log(selectedVidPath);
     },
+    async deleteMedia(mediaIndx, localPath) {
+      if (confirm('Are you sure you would like to delete this file?') === true) {
+        if (Object.keys(this.files[this.tp][this.kywrd]).includes(this.slctd.type) && this.folder != '') {
+          this.files[this.tp][this.kywrd][this.slctd.type][this.folder].splice(mediaIndx, 1);
+        } else if (Object.keys(this.files[this.tp][this.kywrd]).includes(this.slctd.type)) {
+        } else if (this.folder != '') {
+        } else {
+          this.files[this.tp][this.kywrd].splice(mediaIndx, 1);
+        }
+        try {
+          const response = await fetch(app_api_url + this.slctd.job + '/media', {
+            method: 'DELETE',
+            headers: {
+              Authorization: access_token,
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+            body: JSON.stringify({
+              mediaLink: localPath,
+            }),
+          });
+          const resJSON = await response.json();
+          if (resJSON.success) {
+            console.log(resJSON);
+            // this.showMsg(resJSON.messages[0]);
+          }
+        } catch (error) {
+          console.log(error.toString());
+          this.showMsg(error.toString());
+        }
+      }
+    },
     selectFolder(folder) {
       this.folder = folder;
     },
@@ -201,7 +244,7 @@ export default {
     },
     mediaSearch() {
       this.$refs.multimediaGallery.scrollTop = 0;
-      this.pexelsReq('GET', 'img/' + this.$refs.searchInput.value.toLowerCase().replaceAll(' ', '+'));
+      this.pexelsReq('GET', this.tp + '/' + this.$refs.searchInput.value.toLowerCase().replaceAll(' ', '+'));
     },
   },
 

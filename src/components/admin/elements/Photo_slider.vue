@@ -141,6 +141,27 @@ export default {
     async drop(photoIndx) {
       if (event?.dataTransfer.getData('text')) {
         this.site.htmlElmnts[this.elKey].photos[photoIndx].src = event.dataTransfer.getData('text');
+        try {
+          const response = await fetch(app_api_url + this.slctd.job + '/media', {
+            method: 'POST',
+            headers: {
+              Authorization: access_token,
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+            body: JSON.stringify({
+              mediaLink: event.dataTransfer.getData('text'),
+            }),
+          });
+          const resJSON = await response.json();
+          if (resJSON.success) {
+            console.log(resJSON);
+            // this.showMsg(resJSON.messages[0]);
+          }
+        } catch (error) {
+          console.log(error.toString());
+          this.showMsg(error.toString());
+        }
       } else if (event?.dataTransfer?.files?.[0]?.name) {
         let formData = new FormData();
         formData.append('uploaded_file', event.dataTransfer.files[0]);

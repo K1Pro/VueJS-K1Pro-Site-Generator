@@ -1,12 +1,17 @@
 <template>
-  <img class="background-image" :src="site.htmlElmnts[elKey]['url']" />
+  <img
+    class="background-image"
+    :src="
+      elValue.url.includes('http://') || elValue.url.includes('https://') ? elValue.url : endPts.imagesURL + elValue.url
+    "
+  />
 </template>
 
 <script>
 export default {
   name: 'Background Image',
 
-  inject: ['site'],
+  inject: ['endPts'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 };
