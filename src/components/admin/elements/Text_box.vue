@@ -112,7 +112,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['endPts', 'grid', 'respWidth', 'site', 'slctd', 'style'],
+  inject: ['endPts', 'grid', 'imagesReq', 'mediaReq', 'respWidth', 'site', 'slctd', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -156,6 +156,7 @@ export default {
     async drop() {
       if (event?.dataTransfer.getData('text')) {
         this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
+        this.mediaReq('POST', event.dataTransfer.getData('text'));
         setTimeout(() => {
           this.elValue.img.width.forEach((width, index) => {
             this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
@@ -167,36 +168,19 @@ export default {
           });
         }, 100);
       } else if (event?.dataTransfer?.files?.[0]?.name) {
-        let formData = new FormData();
-        formData.append('uploaded_file', event.dataTransfer.files[0]);
-        try {
-          const response = await fetch(app_api_url + this.slctd.job + '/images', {
-            method: 'POST',
-            headers: {
-              Authorization: access_token,
-              'Cache-Control': 'no-store',
-            },
-            body: formData,
-          });
-          const resJSON = await response.json();
-          if (resJSON.success) {
-            this.site.htmlElmnts[this.elKey].img.src = resJSON.data.file_name;
-            setTimeout(() => {
-              this.elValue.img.width.forEach((width, index) => {
-                this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
-                this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
-                this.site.htmlElmnts[this.elKey].img.width[index] =
-                  Math.round(
-                    ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) *
-                      100
-                  ) / 100;
-              });
-            }, 100);
-          } else {
-          }
-        } catch (error) {
-          console.log(error.toString());
-        }
+        this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
+          this.site.htmlElmnts[this.elKey].img.src = resJSON.data.file_name;
+          setTimeout(() => {
+            this.elValue.img.width.forEach((width, index) => {
+              this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+              this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+              this.site.htmlElmnts[this.elKey].img.width[index] =
+                Math.round(
+                  ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
+                ) / 100;
+            });
+          }, 100);
+        });
       } else {
         console.log('error');
       }

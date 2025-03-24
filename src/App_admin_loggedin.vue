@@ -103,6 +103,8 @@ export default {
       respWidth: this.respWidth,
       // methods
       getSite: this.getSite,
+      imagesReq: this.imagesReq,
+      mediaReq: this.mediaReq,
       patchSite: this.patchSite,
     };
   },
@@ -319,6 +321,44 @@ export default {
       } catch (error) {
         console.log(error.toString());
         this.showMsg('Messages error');
+      }
+    },
+    async mediaReq(METHOD, link) {
+      try {
+        const response = await fetch(app_api_url + this.slctd.job + '/media', {
+          method: METHOD,
+          headers: {
+            Authorization: access_token,
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify({
+            mediaLink: link,
+          }),
+        });
+        const resJSON = await response.json();
+        if (resJSON.success) return resJSON;
+      } catch (error) {
+        console.log(error.toString());
+        this.showMsg(error.toString());
+      }
+    },
+    async imagesReq(METHOD, file) {
+      let formData = new FormData();
+      formData.append('uploaded_file', file);
+      try {
+        const response = await fetch(app_api_url + this.slctd.job + '/images', {
+          method: METHOD,
+          headers: {
+            Authorization: access_token,
+            'Cache-Control': 'no-store',
+          },
+          body: formData,
+        });
+        const resJSON = await response.json();
+        if (resJSON.success) return resJSON;
+      } catch (error) {
+        console.log(error.toString());
       }
     },
   },

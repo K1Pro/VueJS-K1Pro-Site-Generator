@@ -128,7 +128,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['endPts', 'grid', 'respWidth', 'slctd', 'site', 'style', 'undoRedo'],
+  inject: ['endPts', 'grid', 'imagesReq', 'respWidth', 'mediaReq', 'slctd', 'site', 'style', 'undoRedo'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -167,26 +167,11 @@ export default {
     async drop(itemIndex) {
       if (event?.dataTransfer.getData('text')) {
         this.site.htmlElmnts[this.elKey].cards[itemIndex].img = event.dataTransfer.getData('text');
+        this.mediaReq('POST', event.dataTransfer.getData('text'));
       } else if (event?.dataTransfer?.files?.[0]?.name) {
-        let formData = new FormData();
-        formData.append('uploaded_file', event.dataTransfer.files[0]);
-        try {
-          const response = await fetch(app_api_url + this.slctd.job + '/images', {
-            method: 'POST',
-            headers: {
-              Authorization: access_token,
-              'Cache-Control': 'no-store',
-            },
-            body: formData,
-          });
-          const resJSON = await response.json();
-          if (resJSON.success) {
-            this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_name;
-          } else {
-          }
-        } catch (error) {
-          console.log(error.toString());
-        }
+        this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
+          this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_name;
+        });
       } else {
         console.log('error');
       }
