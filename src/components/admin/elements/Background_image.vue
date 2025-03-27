@@ -1,11 +1,16 @@
 <template>
-  <div class="background-image">
+  <div
+    class="background-image"
+    :style="{ height: elValue.style.height + 'vh', marginBottom: '-' + elValue.style.height + 'vh' }"
+  >
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
     <img
+      :style="{ height: elValue.style.height + 'vh' }"
       :width="grid.wdth + 'px'"
       :src="
-        elValue.url.includes('http://') || elValue.url.includes('https://')
-          ? elValue.url
-          : endPts.imagesURL + elValue.url
+        elValue.src.includes('http://') || elValue.src.includes('https://')
+          ? elValue.src
+          : endPts.imagesURL + elValue.src
       "
       @drop.prevent="drop"
       @dragover.prevent
@@ -24,8 +29,13 @@ export default {
 
   methods: {
     drop(event) {
-      this.site.htmlElmnts[this.elKey].url = event.dataTransfer.getData('text');
+      this.site.htmlElmnts[this.elKey].src = event.dataTransfer.getData('text');
     },
+  },
+
+  created() {
+    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: 75 };
+    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = 75;
   },
 };
 </script>
@@ -33,12 +43,9 @@ export default {
 <style>
 .background-image {
   position: relative;
-  height: 75vh;
-  margin-bottom: -75vh;
 }
 .background-image img {
   object-fit: cover;
   width: 100%;
-  height: 75vh;
 }
 </style>

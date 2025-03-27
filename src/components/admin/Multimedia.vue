@@ -51,35 +51,41 @@
               'max-width': 'calc(' + 100 / mediaSrchArr.length + '% - ' + mediaSrchArr.length * 2 + 'px)',
             }"
           >
-            <img
-              v-if="medisSrchIndx === 0 && prvdr == 'files'"
-              src="https://api-site.k1pro.net/public/default/logo/dragdrop.jpg"
-              style="outline: 1px solid black; outline-offset: -1px"
-            />
             <div v-for="(media, mediaIndx) in mediaSrch" style="position: relative">
               <img
-                v-if="media.src && imgFlTps.includes(media.src.split('.').pop().split('?')[0])"
+                v-if="media.src && (tp == 'img' || (tp == 'vid' && media.vid != slctd.vidURL))"
                 draggable="true"
                 :src="media.src"
-                :title="media.src"
                 :style="{
+                  height: tp == 'vid' ? '200px' : 'auto',
+                  objectFit: tp == 'vid' ? 'scale-down' : 'cover',
+                  backgroundColor: tp == 'vid' ? 'black' : 'none',
                   border: '1px solid lightgrey',
-                  outline: media.img == slctd.imgURL ? '8px solid LawnGreen' : 'none',
-                  outlineOffset: media.img == slctd.imgURL ? '-8px' : '0',
+                  outline:
+                    (tp == 'img' && media.src == slctd.imgURL) || (tp == 'vid' && media.vid == slctd.vidURL)
+                      ? '8px solid LawnGreen'
+                      : 'none',
+                  outlineOffset:
+                    (tp == 'img' && media.src == slctd.imgURL) || (tp == 'vid' && media.vid == slctd.vidURL)
+                      ? '-8px'
+                      : '0',
                 }"
-                @click="selectImg($event, media.img)"
-                @dragstart="
-                  drag($event, media.img.includes(endPts.imagesURL) ? media.img.split(endPts.imagesURL)[1] : media.img)
-                "
+                @click="selectMedia(media.vid ? 'vid' : 'img', media.vid ? media.vid : media.src)"
+                @dragstart="drag($event, media.flnm ? media.flnm : media.vid ? media.vid : media.img)"
               />
               <video
-                v-else-if="media.src && vidFlTps.includes(media.src.split('.').pop())"
-                :src="media.src"
-                :poster="media.img"
+                v-else-if="media.src && media.vid == slctd.vidURL"
+                draggable="true"
+                :src="media.vid"
                 :style="{
+                  height: '200px',
+                  backgroundColor: 'black',
                   border: '1px solid lightgrey',
+                  outline: tp == 'vid' && media.vid == slctd.vidURL ? '8px solid LawnGreen' : 'none',
+                  outlineOffset: tp == 'vid' && media.vid == slctd.vidURL ? '-8px' : '0',
                 }"
-                @click="selectVid($event, media.src)"
+                @dragstart="drag($event, media.flnm ? media.flnm : media.vid)"
+                autoplay
                 controls
               ></video>
               <img
@@ -145,10 +151,10 @@ export default {
     mediaSrchArr() {
       const mSArr =
         this.prvdr == 'files' && this.tp == 'img' && this.kywrd == 'misc_images'
-          ? this.files?.[this.tp]?.[this.kywrd]?.map((el, elIndx) => ({
+          ? // Files
+            this.files?.[this.tp]?.[this.kywrd]?.map((el, elIndx) => ({
               indx: elIndx,
               src: this.endPts.imagesURL + this.kywrd + '/' + el,
-              img: this.endPts.imagesURL + this.kywrd + '/' + el,
               flnm: this.kywrd + '/' + el,
             }))
           : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder == ''
@@ -156,16 +162,21 @@ export default {
           : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder != ''
           ? this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type]?.[this.folder]?.map((el, elIndx) => ({
               indx: elIndx,
-              src: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.file_name,
-              img: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.icon,
-              flnm: this.kywrd + '/' + el,
+              src: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.icon,
+              vid: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.file_name,
+              flnm: this.kywrd + '/' + el.file_name,
             }))
-          : this.prvdr == 'pexels' && this.tp == 'img'
+          : // Pexels
+          this.prvdr == 'pexels' && this.tp == 'img'
           ? this.pexels?.[this.tp]
               ?.filter((el) => el.search == this.kywrd)?.[0]
               ?.photos?.map((el) => ({ src: el.src.medium, img: el.src.large2x }))
+          : this.prvdr == 'pexels' && this.tp == 'vid'
+          ? this.pexels?.[this.tp]
+              ?.filter((el) => el.search == this.kywrd)?.[0]
+              ?.videos?.map((el) => ({ src: el.video_pictures[0].picture, vid: el.video_files[0].link }))
           : null;
-      return this.tp == 'vid' && this.folder != ''
+      return (this.tp == 'vid' && this.folder != '') || (this.tp == 'vid' && this.prvdr == 'pexels')
         ? [mSArr]
         : [mSArr?.slice(0, mSArr.length / 2), mSArr?.slice(mSArr.length / 2, mSArr.length)];
     },
@@ -198,11 +209,8 @@ export default {
       this.sttngs.user.mediaSrch.prvdr = event.target[event.target.selectedIndex].title;
       this.sttngsReq('PATCH', 'user');
     },
-    selectImg(event, selectedImgPath) {
-      this.slctd.imgURL = selectedImgPath;
-    },
-    selectVid(event, selectedVidPath) {
-      console.log(selectedVidPath);
+    selectMedia(type, path) {
+      this.slctd[type + 'URL'] = path;
     },
     async deleteMedia(mediaIndx, localPath) {
       if (confirm('Are you sure you would like to delete this file?') === true) {
@@ -239,8 +247,9 @@ export default {
     selectFolder(folder) {
       this.folder = folder;
     },
-    drag(event, imgURL) {
-      event.dataTransfer.setData('text', imgURL);
+    drag(event, mediaPath) {
+      console.log(mediaPath);
+      event.dataTransfer.setData('text', mediaPath);
     },
     mediaSearch() {
       this.$refs.multimediaGallery.scrollTop = 0;
@@ -316,13 +325,11 @@ export default {
   margin-bottom: 8px;
   vertical-align: middle;
   width: 100%;
-  height: auto;
 }
 .multimedia-gallery video {
   cursor: pointer;
   margin-bottom: 8px;
   vertical-align: middle;
   width: 100%;
-  height: auto;
 }
 </style>

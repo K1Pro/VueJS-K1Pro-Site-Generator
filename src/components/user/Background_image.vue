@@ -1,8 +1,9 @@
 <template>
   <img
     class="background-image"
+    :style="{ height: elValue.style.height + 'vh' }"
     :src="
-      elValue.url.includes('http://') || elValue.url.includes('https://') ? elValue.url : endPts.imagesURL + elValue.url
+      elValue.src.includes('http://') || elValue.src.includes('https://') ? elValue.src : endPts.imagesURL + elValue.src
     "
   />
 </template>
@@ -11,9 +12,14 @@
 export default {
   name: 'Background Image',
 
-  inject: ['endPts'],
+  inject: ['endPts', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  created() {
+    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: 75 };
+    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = 75;
+  },
 };
 </script>
 
@@ -22,6 +28,5 @@ export default {
   position: absolute;
   object-fit: cover;
   width: 100%;
-  height: 75vh;
 }
 </style>

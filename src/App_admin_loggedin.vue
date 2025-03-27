@@ -367,6 +367,7 @@ export default {
     this.sttngsReq('GET', 'user');
     this.messagesReq('GET');
     this.pexelsReq('GET', 'img');
+    this.pexelsReq('GET', 'vid');
     this.getImages();
     this.getVideos();
     // this.applyStyle();
