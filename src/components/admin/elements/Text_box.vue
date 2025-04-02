@@ -137,7 +137,7 @@ export default {
     changeImgWidth(event) {
       this.site.htmlElmnts[this.elKey].img.width[this.slctdScrn] = Number(event.target.value);
       this.site.htmlElmnts[this.elKey].img.height[this.slctdScrn] = Number(
-        Math.round(((event.target.value * this.textBoxImage.height) / this.textBoxImage.idth) * 100) / 100
+        Math.round(((event.target.value * this.textBoxImage.height) / this.textBoxImage.width) * 100) / 100
       );
     },
     changeImgHeight(event) {
@@ -154,9 +154,12 @@ export default {
       this.spanEnable = this.elValue.txt != '' && this.elValue.txt != '<br>' ? false : true;
     },
     async drop() {
-      if (event?.dataTransfer.getData('text')) {
+      if (
+        event?.dataTransfer.getData('text') &&
+        !event?.dataTransfer.getData('text').includes('http://') &&
+        !event?.dataTransfer.getData('text').includes('https://')
+      ) {
         this.site.htmlElmnts[this.elKey].img.src = event.dataTransfer.getData('text');
-        this.mediaReq('POST', event.dataTransfer.getData('text'));
         setTimeout(() => {
           this.elValue.img.width.forEach((width, index) => {
             this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
@@ -168,19 +171,39 @@ export default {
           });
         }, 100);
       } else if (event?.dataTransfer?.files?.[0]?.name) {
-        this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
-          this.site.htmlElmnts[this.elKey].img.src = resJSON.data.file_name;
-          setTimeout(() => {
-            this.elValue.img.width.forEach((width, index) => {
-              this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
-              this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
-              this.site.htmlElmnts[this.elKey].img.width[index] =
-                Math.round(
-                  ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
-                ) / 100;
-            });
-          }, 100);
-        });
+        // this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
+        //   this.site.htmlElmnts[this.elKey].img.src = resJSON.data.file_name;
+        //   setTimeout(() => {
+        //     this.elValue.img.width.forEach((width, index) => {
+        //       this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+        //       this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+        //       this.site.htmlElmnts[this.elKey].img.width[index] =
+        //         Math.round(
+        //           ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
+        //         ) / 100;
+        //     });
+        //   }, 100);
+        // });
+      } else if (
+        (event?.dataTransfer.getData('text').includes('http://') ||
+          event?.dataTransfer.getData('text').includes('https://')) &&
+        !event?.dataTransfer?.files?.[0]?.name
+      ) {
+        this.mediaReq('POST', event.dataTransfer.getData('text'), 'images/' + slctd.job + '/' + this.elValue.type).then(
+          (resJSON) => {
+            this.site.htmlElmnts[this.elKey].img.src = resJSON.data.asset_path;
+          }
+        );
+        setTimeout(() => {
+          this.elValue.img.width.forEach((width, index) => {
+            this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+            this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+            this.site.htmlElmnts[this.elKey].img.width[index] =
+              Math.round(
+                ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
+              ) / 100;
+          });
+        }, 100);
       } else {
         console.log('error');
       }

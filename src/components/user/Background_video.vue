@@ -3,7 +3,7 @@
     class="background-video"
     :style="{ height: elValue.style.height + 'vh' }"
     :src="
-      elValue.url.includes('http://') || elValue.url.includes('https://') ? elValue.url : endPts.videosURL + elValue.url
+      elValue.src.includes('http://') || elValue.src.includes('https://') ? elValue.src : endPts.videosURL + elValue.src
     "
     muted
     autoplay

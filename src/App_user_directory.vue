@@ -26,7 +26,7 @@
         >
           <a :href="dirKey" target="_blank">
             <div style="height: 50%">
-              <img :src="endPts.appApiUrl + dirValue.logo" :alt="dirKey" height="100%" />
+              <img :src="endPts.imagesURL + dirKey + '/logo.png'" :alt="dirKey" height="100%" />
             </div>
             <div style="position: relative; height: 50%; padding: 0">
               <div style="position: absolute; bottom: 0">
@@ -66,6 +66,7 @@ export default {
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
+        imagesURL: 'src/assets/images/',
       },
       respWidth: {
         sm: 576,

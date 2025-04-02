@@ -9,15 +9,17 @@
     </button>
     <select @change="selectSearch" ref="providers">
       <option v-if="files && files[tp]" disabled selected>=== user files ===</option>
-      <option
-        v-if="files && files[tp]"
-        v-for="file in Object.keys(files[tp])"
-        title="files"
-        :value="file"
-        :selected="prvdr == 'files' && kywrd == file"
-      >
-        {{ file.replaceAll('_', ' ') }}
-      </option>
+      <template v-if="files && files[tp]" v-for="file in Object.keys(files[tp])">
+        <option
+          v-if="files[tp]?.[file].length > 0 || Object.keys(files[tp]?.[file]).length > 0"
+          title="files"
+          :value="file"
+          :selected="prvdr == 'files' && kywrd == file"
+        >
+          {{ file.replaceAll('_', ' ') }}
+        </option>
+      </template>
+
       <option v-if="pexels?.[tp]" disabled>=== pexels searches ===</option>
       <option
         v-if="pexels"
@@ -53,40 +55,46 @@
           >
             <div v-for="(media, mediaIndx) in mediaSrch" style="position: relative">
               <img
-                v-if="media.src && (tp == 'img' || (tp == 'vid' && media.vid != slctd.vidURL))"
+                v-if="media.img && media.flnm != slctd.vidURL"
                 draggable="true"
-                :src="media.src"
+                :src="media.img"
                 :style="{
                   height: tp == 'vid' ? '200px' : 'auto',
                   objectFit: tp == 'vid' ? 'scale-down' : 'cover',
                   backgroundColor: tp == 'vid' ? 'black' : 'none',
                   border: '1px solid lightgrey',
                   outline:
-                    (tp == 'img' && media.src == slctd.imgURL) || (tp == 'vid' && media.vid == slctd.vidURL)
+                    (tp == 'img' && media.flnm == slctd.imgURL) || (tp == 'vid' && media.flnm == slctd.vidURL)
                       ? '8px solid LawnGreen'
                       : 'none',
                   outlineOffset:
-                    (tp == 'img' && media.src == slctd.imgURL) || (tp == 'vid' && media.vid == slctd.vidURL)
+                    (tp == 'img' && media.flnm == slctd.imgURL) || (tp == 'vid' && media.flnm == slctd.vidURL)
                       ? '-8px'
                       : '0',
                 }"
-                @click="selectMedia(media.vid ? 'vid' : 'img', media.vid ? media.vid : media.src)"
-                @dragstart="drag($event, media.flnm ? media.flnm : media.vid ? media.vid : media.img)"
+                @click="selectMedia(tp == 'vid' ? 'vid' : 'img', media.flnm)"
+                @dragstart="drag($event, media.flnm ? media.flnm : media.vid)"
               />
               <video
-                v-else-if="media.src && media.vid == slctd.vidURL"
+                v-else-if="media.flnm == slctd.vidURL && slctd.vidURL !== null"
                 draggable="true"
-                :src="media.vid"
+                :src="media.vid ? media.vid : media.flnm"
                 :style="{
-                  height: '200px',
-                  backgroundColor: 'black',
                   border: '1px solid lightgrey',
-                  outline: tp == 'vid' && media.vid == slctd.vidURL ? '8px solid LawnGreen' : 'none',
-                  outlineOffset: tp == 'vid' && media.vid == slctd.vidURL ? '-8px' : '0',
+                  outline: '8px solid LawnGreen',
+                  outlineOffset: '-8px',
                 }"
-                @dragstart="drag($event, media.flnm ? media.flnm : media.vid)"
+                @dragstart="drag($event, media.flnm)"
+                playsinline
                 autoplay
                 controls
+              ></video>
+              <video
+                v-else-if="media.vid"
+                draggable="true"
+                :src="media.vid + '#t=0.75'"
+                @click="selectMedia('vid', media.flnm)"
+                @dragstart="drag($event, media.flnm)"
               ></video>
               <img
                 v-else
@@ -103,10 +111,10 @@
                 v-if="prvdr == 'files'"
                 class="fa-solid fa-circle-minus redWhiteMinus"
                 style="position: absolute; margin-left: -16px"
-                @click="deleteMedia(media.indx ? media.indx : mediaIndx, media.src)"
+                @click="deleteMedia(media.flnm ? media.flnm : media)"
               ></i>
               <input
-                v-if="!media.src"
+                v-if="!media.flnm && !media.vid && !media.img"
                 type="text"
                 :value="media.replaceAll('_', ' ')"
                 style="position: absolute; bottom: 10%; margin: 0px 5%; left: 0px; width: 90%"
@@ -123,7 +131,7 @@
 export default {
   name: 'Multimedia',
 
-  inject: ['endPts', 'files', 'pexels', 'pexelsReq', 'site', 'slctd', 'sttngs', 'sttngsReq'],
+  inject: ['endPts', 'files', 'getVideos', 'getImages', 'pexels', 'pexelsReq', 'site', 'slctd', 'sttngs', 'sttngsReq'],
 
   data() {
     return {
@@ -150,33 +158,36 @@ export default {
     },
     mediaSrchArr() {
       const mSArr =
-        this.prvdr == 'files' && this.tp == 'img' && this.kywrd == 'misc_images'
-          ? // Files
-            this.files?.[this.tp]?.[this.kywrd]?.map((el, elIndx) => ({
-              indx: elIndx,
-              src: this.endPts.imagesURL + this.kywrd + '/' + el,
+        this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder == ''
+          ? Object.keys(this.files?.[this.tp]?.[this.kywrd]?.[slctd.type])
+          : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder != ''
+          ? this.files?.[this.tp]?.[this.kywrd]?.[slctd.type]?.[this.folder]?.map((el) => ({
+              vid: this.endPts.videosURL + this.kywrd + '/' + slctd.type + '/' + this.folder + '/' + el.file_name,
+              flnm: this.kywrd + '/' + slctd.type + '/' + this.folder + '/' + el.file_name,
+            }))
+          : this.prvdr == 'files' && this.tp == 'vid' && Object.keys(this.files.vid).includes(this.kywrd)
+          ? this.files?.[this.tp]?.[this.kywrd]?.map((el) => ({
+              vid: this.endPts.videosURL + this.kywrd + '/' + el,
               flnm: this.kywrd + '/' + el,
             }))
-          : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder == ''
-          ? Object.keys(this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type])
-          : this.prvdr == 'files' && this.tp == 'vid' && this.kywrd == 'video_gallery' && this.folder != ''
-          ? this.files?.[this.tp]?.[this.kywrd]?.[this.slctd.type]?.[this.folder]?.map((el, elIndx) => ({
-              indx: elIndx,
-              src: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.icon,
-              vid: this.endPts.videosURL + this.kywrd + '/' + this.slctd.type + '/' + this.folder + '/' + el.file_name,
-              flnm: this.kywrd + '/' + el.file_name,
+          : this.prvdr == 'files' && this.tp == 'img'
+          ? this.files?.[this.tp]?.[this.kywrd]?.map((el) => ({
+              img: this.endPts.imagesURL + this.kywrd + '/' + el,
+              flnm: this.kywrd + '/' + el,
             }))
           : // Pexels
           this.prvdr == 'pexels' && this.tp == 'img'
           ? this.pexels?.[this.tp]
               ?.filter((el) => el.search == this.kywrd)?.[0]
-              ?.photos?.map((el) => ({ src: el.src.medium, img: el.src.large2x }))
+              ?.photos?.map((el) => ({ img: el.src.medium, flnm: el.src.large2x }))
           : this.prvdr == 'pexels' && this.tp == 'vid'
           ? this.pexels?.[this.tp]
               ?.filter((el) => el.search == this.kywrd)?.[0]
-              ?.videos?.map((el) => ({ src: el.video_pictures[0].picture, vid: el.video_files[0].link }))
+              ?.videos?.map((el) => ({ img: el.video_pictures[0].picture, flnm: el.video_files[0].link }))
           : null;
-      return (this.tp == 'vid' && this.folder != '') || (this.tp == 'vid' && this.prvdr == 'pexels')
+      return (!this.files?.vid?.[this.kywrd]?.length && this.folder != '') ||
+        this.files?.vid?.[this.kywrd]?.length ||
+        (this.tp == 'vid' && this.prvdr == 'pexels')
         ? [mSArr]
         : [mSArr?.slice(0, mSArr.length / 2), mSArr?.slice(mSArr.length / 2, mSArr.length)];
     },
@@ -184,7 +195,6 @@ export default {
 
   methods: {
     selectMediaType(mediaType) {
-      this.folder = '';
       this.sttngs.user.mediaSrch.tp = mediaType;
       const firstOption = [];
       setTimeout(() => {
@@ -202,25 +212,20 @@ export default {
           this.sttngsReq('PATCH', 'user');
         }
       }, 1);
+      this.folder = '';
     },
     selectSearch(event) {
       this.$refs.multimediaGallery.scrollTop = 0;
       this.sttngs.user.mediaSrch.kywrd = event.target.value;
       this.sttngs.user.mediaSrch.prvdr = event.target[event.target.selectedIndex].title;
       this.sttngsReq('PATCH', 'user');
+      this.folder = '';
     },
     selectMedia(type, path) {
       this.slctd[type + 'URL'] = path;
     },
-    async deleteMedia(mediaIndx, localPath) {
+    async deleteMedia(link) {
       if (confirm('Are you sure you would like to delete this file?') === true) {
-        if (Object.keys(this.files[this.tp][this.kywrd]).includes(this.slctd.type) && this.folder != '') {
-          this.files[this.tp][this.kywrd][this.slctd.type][this.folder].splice(mediaIndx, 1);
-        } else if (Object.keys(this.files[this.tp][this.kywrd]).includes(this.slctd.type)) {
-        } else if (this.folder != '') {
-        } else {
-          this.files[this.tp][this.kywrd].splice(mediaIndx, 1);
-        }
         try {
           const response = await fetch(app_api_url + this.slctd.job + '/media', {
             method: 'DELETE',
@@ -230,14 +235,12 @@ export default {
               'Cache-Control': 'no-store',
             },
             body: JSON.stringify({
-              mediaLink: localPath,
+              mediaLink: link,
+              folder: this.tp == 'img' ? 'images' : 'videos',
             }),
           });
           const resJSON = await response.json();
-          if (resJSON.success) {
-            console.log(resJSON);
-            // this.showMsg(resJSON.messages[0]);
-          }
+          if (resJSON.success) this.tp == 'img' ? this.getImages() : this.getVideos();
         } catch (error) {
           console.log(error.toString());
           this.showMsg(error.toString());
@@ -248,12 +251,12 @@ export default {
       this.folder = folder;
     },
     drag(event, mediaPath) {
-      console.log(mediaPath);
       event.dataTransfer.setData('text', mediaPath);
     },
     mediaSearch() {
       this.$refs.multimediaGallery.scrollTop = 0;
       this.pexelsReq('GET', this.tp + '/' + this.$refs.searchInput.value.toLowerCase().replaceAll(' ', '+'));
+      this.folder = '';
     },
   },
 
@@ -331,5 +334,7 @@ export default {
   margin-bottom: 8px;
   vertical-align: middle;
   width: 100%;
+  height: 200px;
+  background-color: black;
 }
 </style>

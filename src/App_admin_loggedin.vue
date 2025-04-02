@@ -106,6 +106,8 @@ export default {
       imagesReq: this.imagesReq,
       mediaReq: this.mediaReq,
       patchSite: this.patchSite,
+      getVideos: this.getVideos,
+      getImages: this.getImages,
     };
   },
 
@@ -323,7 +325,9 @@ export default {
         this.showMsg('Messages error');
       }
     },
-    async mediaReq(METHOD, link) {
+    async mediaReq(METHOD, link, folder) {
+      console.log(link);
+      console.log(folder);
       try {
         const response = await fetch(app_api_url + this.slctd.job + '/media', {
           method: METHOD,
@@ -334,6 +338,7 @@ export default {
           },
           body: JSON.stringify({
             mediaLink: link,
+            folder: folder,
           }),
         });
         const resJSON = await response.json();

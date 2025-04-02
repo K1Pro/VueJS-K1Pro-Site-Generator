@@ -31,6 +31,7 @@ const defaultsMixin = {
           'privacy_policy',
           'product_card',
           'spacer',
+          'subscribe',
           'terms_of_use',
           'test',
           'text_box',
@@ -45,13 +46,13 @@ const defaultsMixin = {
           background_image: {
             type: 'background_image',
             position: 1,
-            url: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+            src: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
             style: { height: 75 },
           },
           background_video: {
             type: 'background_video',
             position: 1,
-            url: 'https://videos.pexels.com/video-files/1918465/1918465-uhd_3840_2160_24fps.mp4',
+            src: 'https://videos.pexels.com/video-files/1918465/1918465-uhd_3840_2160_24fps.mp4',
             style: { height: 75 },
           },
           contact: { type: 'contact', style: {} },
@@ -148,7 +149,7 @@ const defaultsMixin = {
             },
           },
           spacer: { type: 'spacer', style: { height: 50 } },
-
+          subscribe: { type: 'subscribe' },
           terms_of_use: { type: 'terms_of_use', style: {} },
           test: { type: 'test' },
           text_box: {

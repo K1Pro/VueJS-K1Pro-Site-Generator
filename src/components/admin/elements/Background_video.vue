@@ -8,9 +8,9 @@
       :style="{ height: elValue.style.height + 'vh' }"
       :width="grid.wdth + 'px'"
       :src="
-        elValue.url.includes('http://') || elValue.url.includes('https://')
-          ? elValue.url
-          : endPts.videosURL + elValue.url
+        elValue.src.includes('http://') || elValue.src.includes('https://')
+          ? elValue.src
+          : endPts.videosURL + elValue.src
       "
       @drop.prevent="drop"
       @dragover.prevent
@@ -27,13 +27,35 @@
 export default {
   name: 'Background video',
 
-  inject: ['endPts', 'grid', 'site'],
+  inject: ['endPts', 'grid', 'mediaReq', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
   methods: {
-    drop(event) {
-      this.site.htmlElmnts[this.elKey].url = event.dataTransfer.getData('text');
+    drop() {
+      if (
+        event?.dataTransfer.getData('text') &&
+        !event?.dataTransfer.getData('text').includes('http://') &&
+        !event?.dataTransfer.getData('text').includes('https://')
+      ) {
+        this.site.htmlElmnts[this.elKey].src = event.dataTransfer.getData('text');
+      } else if (event?.dataTransfer?.files?.[0]?.name) {
+        // this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
+        //   this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_name;
+        // });
+      } else if (
+        (event?.dataTransfer.getData('text').includes('http://') ||
+          event?.dataTransfer.getData('text').includes('https://')) &&
+        !event?.dataTransfer?.files?.[0]?.name
+      ) {
+        this.mediaReq('POST', event.dataTransfer.getData('text'), 'videos/' + slctd.job + '/' + this.elValue.type).then(
+          (resJSON) => {
+            this.site.htmlElmnts[this.elKey].src = resJSON.data.asset_path;
+          }
+        );
+      } else {
+        console.log('error');
+      }
     },
   },
 
