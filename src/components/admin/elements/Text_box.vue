@@ -171,19 +171,22 @@ export default {
           });
         }, 100);
       } else if (event?.dataTransfer?.files?.[0]?.name) {
-        // this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
-        //   this.site.htmlElmnts[this.elKey].img.src = resJSON.data.file_name;
-        //   setTimeout(() => {
-        //     this.elValue.img.width.forEach((width, index) => {
-        //       this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
-        //       this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
-        //       this.site.htmlElmnts[this.elKey].img.width[index] =
-        //         Math.round(
-        //           ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
-        //         ) / 100;
-        //     });
-        //   }, 100);
-        // });
+        this.imagesReq('POST', event.dataTransfer.files[0], 'images/' + slctd.job + '/' + this.elValue.type).then(
+          (resJSON) => {
+            this.site.htmlElmnts[this.elKey].img.src = resJSON.data.asset_path;
+            setTimeout(() => {
+              this.elValue.img.width.forEach((width, index) => {
+                this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+                this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+                this.site.htmlElmnts[this.elKey].img.width[index] =
+                  Math.round(
+                    ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) *
+                      100
+                  ) / 100;
+              });
+            }, 100);
+          }
+        );
       } else if (
         (event?.dataTransfer.getData('text').includes('http://') ||
           event?.dataTransfer.getData('text').includes('https://')) &&
@@ -192,18 +195,19 @@ export default {
         this.mediaReq('POST', event.dataTransfer.getData('text'), 'images/' + slctd.job + '/' + this.elValue.type).then(
           (resJSON) => {
             this.site.htmlElmnts[this.elKey].img.src = resJSON.data.asset_path;
+            setTimeout(() => {
+              this.elValue.img.width.forEach((width, index) => {
+                this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
+                this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
+                this.site.htmlElmnts[this.elKey].img.width[index] =
+                  Math.round(
+                    ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) *
+                      100
+                  ) / 100;
+              });
+            }, 100);
           }
         );
-        setTimeout(() => {
-          this.elValue.img.width.forEach((width, index) => {
-            this.site.htmlElmnts[this.elKey].img.height[index] = this.elValue.img.height[this.slctdScrn];
-            this.site.htmlElmnts[this.elKey].img.scales[index] = this.elValue.img.scales[this.slctdScrn];
-            this.site.htmlElmnts[this.elKey].img.width[index] =
-              Math.round(
-                ((this.elValue.img.height[this.slctdScrn] * this.textBoxImage.width) / this.textBoxImage.height) * 100
-              ) / 100;
-          });
-        }, 100);
       } else {
         console.log('error');
       }

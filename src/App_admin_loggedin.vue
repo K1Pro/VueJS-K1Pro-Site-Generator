@@ -104,6 +104,7 @@ export default {
       // methods
       getSite: this.getSite,
       imagesReq: this.imagesReq,
+      videosReq: this.videosReq,
       mediaReq: this.mediaReq,
       patchSite: this.patchSite,
       getVideos: this.getVideos,
@@ -348,11 +349,32 @@ export default {
         this.showMsg(error.toString());
       }
     },
-    async imagesReq(METHOD, file) {
+    async imagesReq(METHOD, file, folder) {
       let formData = new FormData();
       formData.append('uploaded_file', file);
+      formData.append('folder', folder);
       try {
         const response = await fetch(app_api_url + this.slctd.job + '/images', {
+          method: METHOD,
+          headers: {
+            Authorization: access_token,
+            'Cache-Control': 'no-store',
+          },
+          body: formData,
+        });
+        const resJSON = await response.json();
+        if (resJSON.success) return resJSON;
+      } catch (error) {
+        console.log(error.toString());
+      }
+    },
+    async videosReq(METHOD, file, folder) {
+      console.log(folder);
+      let formData = new FormData();
+      formData.append('folder', folder);
+      formData.append('uploaded_file', file);
+      try {
+        const response = await fetch(app_api_url + this.slctd.job + '/videos', {
           method: METHOD,
           headers: {
             Authorization: access_token,

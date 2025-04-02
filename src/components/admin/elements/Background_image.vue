@@ -23,7 +23,7 @@
 export default {
   name: 'Background Image',
 
-  inject: ['endPts', 'grid', 'mediaReq', 'site'],
+  inject: ['endPts', 'grid', 'imagesReq', 'mediaReq', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -36,9 +36,11 @@ export default {
       ) {
         this.site.htmlElmnts[this.elKey].src = event.dataTransfer.getData('text');
       } else if (event?.dataTransfer?.files?.[0]?.name) {
-        // this.imagesReq('POST', event.dataTransfer.files[0]).then((resJSON) => {
-        //   this.site.htmlElmnts[this.elKey].cards[itemIndex].img = resJSON.data.file_name;
-        // });
+        this.imagesReq('POST', event.dataTransfer.files[0], 'images/' + slctd.job + '/' + this.elValue.type).then(
+          (resJSON) => {
+            this.site.htmlElmnts[this.elKey].src = resJSON.data.asset_path;
+          }
+        );
       } else if (
         (event?.dataTransfer.getData('text').includes('http://') ||
           event?.dataTransfer.getData('text').includes('https://')) &&
