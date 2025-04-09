@@ -171,8 +171,8 @@ export default {
         const response = await fetch(api_path.time, {
           method: 'GET',
         });
-        const getServerTimeJSON = await response.json();
-        this.msgDate = getServerTimeJSON.data.server_Time_YmdHis;
+        const resJSON = await response.json();
+        this.msgDate = resJSON.data.server_Time_YmdHis;
         this.spinUpdateCaptcha = false;
       } catch (error) {
         console.log(error.toString());

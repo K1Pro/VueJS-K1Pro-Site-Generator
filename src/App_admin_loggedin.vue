@@ -43,6 +43,12 @@ export default {
 
   data() {
     return {
+      endPts: {
+        appApiUrl: app_api_url,
+        captchaURL: api_path.captcha,
+        imagesURL: '../src/assets/images/' + slctd.job + '/',
+        videosURL: '../src/assets/videos/' + slctd.job + '/',
+      },
       files: {
         vid: {},
         img: [],
@@ -113,16 +119,6 @@ export default {
   },
 
   computed: {
-    endPts() {
-      return {
-        appApiUrl: app_api_url,
-        captchaURL: api_path.captcha,
-        // imagesURL: slctd.assets_url + '/src/assets/images/' + this.slctd.type + '/' + slctd.job + '/', delete this after 3/25/2025
-        // videosURL: slctd.assets_url + '/src/assets/videos/' + this.slctd.type + '/' + slctd.job + '/', delete this after 3/25/2025
-        imagesURL: '../src/assets/images/' + slctd.job + '/',
-        videosURL: '../src/assets/videos/' + slctd.job + '/',
-      };
-    },
     sideMenuItems() {
       const sideMenuItemsArray = [
         ['fa fa-gear', null, 'Website'],
@@ -270,7 +266,6 @@ export default {
         const resJSON = await response.json();
         if (resJSON.success) {
           this.files.img = resJSON.data;
-          console.log(resJSON);
         } else {
           console.log(resJSON);
         }
@@ -289,7 +284,6 @@ export default {
         const resJSON = await response.json();
         if (resJSON.success) {
           this.files.vid = resJSON.data;
-          console.log(resJSON);
         } else {
           console.log(resJSON);
         }
@@ -327,8 +321,6 @@ export default {
       }
     },
     async mediaReq(METHOD, link, folder) {
-      console.log(link);
-      console.log(folder);
       try {
         const response = await fetch(app_api_url + this.slctd.job + '/media', {
           method: METHOD,
@@ -343,7 +335,11 @@ export default {
           }),
         });
         const resJSON = await response.json();
-        if (resJSON.success) return resJSON;
+        if (resJSON.success) {
+          this.getImages();
+          this.getVideos();
+          return resJSON;
+        }
       } catch (error) {
         console.log(error.toString());
         this.showMsg(error.toString());
@@ -363,13 +359,15 @@ export default {
           body: formData,
         });
         const resJSON = await response.json();
-        if (resJSON.success) return resJSON;
+        if (resJSON.success) {
+          this.getImages();
+          return resJSON;
+        }
       } catch (error) {
         console.log(error.toString());
       }
     },
     async videosReq(METHOD, file, folder) {
-      console.log(folder);
       let formData = new FormData();
       formData.append('folder', folder);
       formData.append('uploaded_file', file);
@@ -383,7 +381,10 @@ export default {
           body: formData,
         });
         const resJSON = await response.json();
-        if (resJSON.success) return resJSON;
+        if (resJSON.success) {
+          this.getVideos();
+          return resJSON;
+        }
       } catch (error) {
         console.log(error.toString());
       }

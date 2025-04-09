@@ -35,6 +35,7 @@ export default {
       endPts: {
         appApiUrl: app_api_url,
         captchaURL: api_path.captcha,
+        email: api_path.email,
         imagesURL: (slctd.is_valid_first_url_segment ? '../' : '') + 'src/assets/images/' + slctd.job + '/',
         videosURL: (slctd.is_valid_first_url_segment ? '../' : '') + 'src/assets/videos/' + slctd.job + '/',
       },

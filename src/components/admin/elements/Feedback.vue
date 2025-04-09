@@ -1,50 +1,36 @@
 <template>
-  <div :id="elKey" class="feedback" :style="[style.outline.borderColor]">
-    <div
-      class="feedback-rate-btns"
-      :style="{
-        padding: grid.wdth > respWidth.md ? '0px 10%' : '0px 5px',
-      }"
-    >
-      <div class="feedback-rate-btns-title-container">Rate our services:</div>
-      <div class="feedback-rate-btns-container">
-        <div class="feedback-rate-btn" v-for="(btn, btnIndx) in [1, 0, 2, 0, 3, 0, 4, 0, 5]" style="text-align: center">
-          <div v-if="(btnIndx + 1) % 2">{{ btn }}</div>
-          <div v-else></div>
-        </div>
-        <div class="feedback-rate-btn" v-for="btn in 9" style="text-align: center">
-          <div v-if="btn % 2"><input type="radio" name="rate" value="button" /></div>
-          <div v-else></div>
-        </div>
-      </div>
-    </div>
-    <p></p>
-    <div
-      class="feedback-written-feedback"
-      :style="{
-        padding: grid.wdth > respWidth.md ? '0px 10%' : '5px',
-      }"
-    >
-      <div class="feedback-written-feedback-title">Give us some feedback:</div>
-      <textarea rows="7"></textarea>
-    </div>
+  <div
+    class="feedback"
+    :style="[
+      style.outline.borderColor,
+      {
+        padding: grid.wdth > respWidth.md ? '0px calc(10% + 5px)' : '0px 5px',
+      },
+    ]"
+  >
+    <div><b>Give us some feedback:</b></div>
+    <textarea rows="7" placeholder="Feedback"></textarea>
 
-    <p></p>
+    <br />
+    <br />
 
-    <div
-      style="width: 100%"
-      :style="{
-        padding: grid.wdth > respWidth.md ? '0px calc(10% + 7.5px)' : '10px',
-      }"
-    >
-      <div
-        :style="{
-          width: grid.wdth > respWidth.md ? 'calc(25% + 50px)' : '50%',
-        }"
-      >
-        <img :src="endPts.captchaURL + msgDate + '.jpg'" ref="cntctUsCaptcha" style="width: 100%" />
-        <input type="text" style="height: 4vh; width: calc(100% - 30px)" placeholder="Verify captcha..." />
-        <button style="width: 30px; height: 4vh">
+    <div><b>Rate:</b></div>
+    <input type="range" min="0" max="4" step="1" value="2" />
+
+    <br />
+    <br />
+
+    <div><b>Your name:</b> (optional)</div>
+    <input type="text" placeholder="Name" />
+
+    <br />
+    <br />
+
+    <div class="feedback-captcha-container">
+      <div class="feedback-captcha-inputs">
+        <img class="feedback-captcha-img" :src="endPts.captchaURL + msgDate + '.jpg'" />
+        <input type="text" style="height: 4vh; width: calc(100% - 30px)" placeholder="Verify captcha" />
+        <button class="feedback-captcha-btn">
           <i class="fa-solid fa-arrows-rotate"></i>
         </button>
       </div>
@@ -52,14 +38,7 @@
 
     <p></p>
 
-    <div
-      class="feedback-submit"
-      :style="{
-        padding: grid.wdth > respWidth.md ? '0px 10%' : '5px',
-      }"
-    >
-      <button style="padding: 5px">Submit</button>
-    </div>
+    <button type="submit">Submit</button>
   </div>
 </template>
 
@@ -67,7 +46,7 @@
 export default {
   name: 'feedback',
 
-  inject: ['endPts', 'grid', 'respWidth', 'site', 'slctd', 'style'],
+  inject: ['endPts', 'grid', 'respWidth', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -86,7 +65,30 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
 }
-.feedback img {
+.feedback textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 5px;
+  width: 100%;
+  resize: none;
+}
+.feedback input[type='range'],
+.feedback-captcha-container {
+  width: 100%;
+}
+.feedback input[type='text'] {
+  padding: 5px;
+  height: 4vh;
+  width: 100%;
+}
+.feedback button[type='submit'] {
+  padding: 5px;
+  width: 20%;
+}
+.feedback-captcha-inputs {
+  width: 50%;
+}
+.feedback-captcha-img {
+  width: 100%;
   max-height: 5vh;
   min-height: 3vh;
   height: 15vw;
@@ -100,30 +102,17 @@ export default {
   margin-top: -0.5vh;
   margin-bottom: -0.5vh;
 }
-.feedback-rate-btns-title-container {
-  padding-left: 5px;
-  font-weight: bold;
-}
-.feedback-rate-btns-container {
-  display: grid;
-  grid-template-columns: repeat(4, 5% 18.75%) 5%;
-  overflow: visible;
-}
-.feedback-written-feedback-title {
-  padding-left: 5px;
-  font-weight: bold;
-}
-.feedback-written-feedback textarea {
-  width: calc(100% - 10px);
-  margin-left: 5px;
-  resize: none;
-}
-.feedback-submit {
-  margin-left: 5px;
+.feedback-captcha-btn {
+  width: 30px;
+  height: 4vh;
 }
 @media only screen and (min-width: 650px) {
-  .feedback img {
+  .feedback-captcha-img {
     height: 4.5vw;
+  }
+  .feedback-captcha-inputs,
+  .feedback input[type='text'] {
+    width: calc(25% + 50px);
   }
 }
 </style>
