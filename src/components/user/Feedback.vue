@@ -10,19 +10,16 @@
       @invalid="$event.target.classList.add('invalid')"
       @input="emailBody.feedback ? $event.target.classList.remove('invalid') : false"
     ></textarea>
-
     <br />
     <br />
 
     <div><b>Rate:</b> {{ ['Very bad', 'Bad', 'Average', 'Good', 'Very good'][emailBody.rating] }}</div>
     <input type="range" min="0" max="4" step="1" v-model="emailBody.rating" />
-
     <br />
     <br />
 
     <div><b>Your name:</b> (optional)</div>
     <input type="text" placeholder="Name" v-model="emailBody.name" @click="submitBtnTxt = 'Submit'" />
-
     <br />
     <br />
 
@@ -46,11 +43,10 @@
             submitBtnTxt = 'Submit';
           "
         >
-          <i :class="{ spin: spinUpdateCaptcha }" class="fa-solid fa-arrows-rotate"></i>
+          <i :class="{ spin: captchaSpin }" class="fa-solid fa-arrows-rotate"></i>
         </button>
       </div>
     </div>
-
     <br />
 
     <button type="submit" @click.prevent="sendEmail" :disabled="submitBtnTxt == 'Feedback submitted'">
@@ -64,23 +60,21 @@
 export default {
   name: 'Feedback',
 
-  inject: ['endPts', 'site'],
-
-  props: ['elKey', 'elValue', 'elIndex'],
+  inject: ['emailReq', 'endPts'],
 
   data() {
     return {
       captcha: '',
       captchaDate: server_datetime_YmdHis,
-      spinUpdateCaptcha: false,
+      captchaSpin: false,
       submitting: false,
+      submitBtnTxt: 'Submit',
       emailBody: {
         type: 'Feedback',
         feedback: '',
         rating: 2,
         name: '',
       },
-      submitBtnTxt: 'Submit',
     };
   },
 
@@ -89,45 +83,28 @@ export default {
       this.submitBtnTxt = 'Submit';
       if (this.$refs.feedbackForm.checkValidity()) {
         this.submitting = true;
-        try {
-          const response = await fetch(this.endPts.email + this.captchaDate + '/' + this.captcha, {
-            method: 'POST',
-            headers: {
-              Authorization: btoa(site.email),
-              'Content-Type': 'application/json',
-              'Cache-Control': 'no-store',
-            },
-            body: JSON.stringify(this.emailBody),
-          });
-          const resJSON = await response.json();
+        this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
           if (resJSON.success) {
-            this.submitting = false;
-            this.captcha = '';
-            this.emailBody.name = '';
-            this.emailBody.rating = 2;
-            this.emailBody.feedback = '';
+            Object.assign(this.$data, this.$options.data.apply(this));
             this.submitBtnTxt = 'Submitted';
             this.updateCaptcha();
           } else {
             this.submitting = false;
           }
-        } catch (error) {
-          this.submitting = false;
-          console.log(error.toString());
-        }
+        });
       }
     },
 
     async updateCaptcha() {
-      this.spinUpdateCaptcha = true;
+      this.captchaSpin = true;
       try {
         const response = await fetch(api_path.time);
         const resJSON = await response.json();
         this.captchaDate = resJSON.data.server_Time_YmdHis;
-        this.spinUpdateCaptcha = false;
+        this.captchaSpin = false;
       } catch (error) {
         console.log(error.toString());
-        this.spinUpdateCaptcha = false;
+        this.captchaSpin = false;
       }
     },
   },
@@ -182,7 +159,7 @@ export default {
 }
 @media only screen and (min-width: 650px) {
   .feedback {
-    padding: 0px calc(10% + 5px);
+    padding: 0px calc(10% + 10px);
   }
   .feedback-captcha-img {
     height: 4.5vw;

@@ -1,100 +1,175 @@
 <template>
-  <div class="subscribe">
-    <p><input type="text" placeholder="Full name" ref="fullname" v-model="name" /></p>
-    <p><input type="number" placeholder="Phone number" ref="phonenumber" v-model="number" /></p>
-    <p><input type="radio" name="agree" ref="subscribeyes" checked /> I agree to receive promotional text messages</p>
-    <p><input type="radio" name="agree" ref="subscribeno" /> Remove me from all promotional phone lists</p>
+  <form class="subscribe" ref="subscribeForm">
+    <template v-if="elValue.inputs.includes('nameInput')">
+      <input
+        required
+        type="text"
+        placeholder="Full name"
+        v-model="emailBody.name"
+        @click="submitBtnTxt = 'Submit'"
+        @invalid="$event.target.classList.add('invalid')"
+        @input="emailBody.name ? $event.target.classList.remove('invalid') : false"
+      />
+      <br />
+      <br />
+    </template>
 
-    <div
-      :style="{
-        width: wndw.wdth > respWidth.md ? '50%' : '100%',
-      }"
-    >
-      <div
-        :style="{
-          width: wndw.wdth > respWidth.md ? 'calc(25% + 50px)' : '50%',
-        }"
-      >
-        <img :src="endPts.captchaURL + captchaDate + '.jpg'" style="width: 100%" />
+    <template v-if="elValue.inputs.includes('phoneInput')">
+      <input
+        type="number"
+        placeholder="Phone number"
+        v-model.number="emailBody.phone"
+        @invalid="$event.target.classList.add('invalid')"
+        @input="emailBody.phone ? $event.target.classList.remove('invalid') : false"
+      />
+      <br />
+      <br />
+    </template>
+
+    <template v-if="elValue.inputs.includes('emailInput')">
+      <input
+        type="email"
+        placeholder="Email"
+        v-model="emailBody.email"
+        @invalid="$event.target.classList.add('invalid')"
+        @input="emailBody.email ? $event.target.classList.remove('invalid') : false"
+      />
+      <br />
+      <br />
+    </template>
+
+    <template v-if="elValue.inputs.includes('faxInput')">
+      <input
+        type="number"
+        placeholder="Fax"
+        v-model="emailBody.fax"
+        @invalid="$event.target.classList.add('invalid')"
+        @input="emailBody.fax ? $event.target.classList.remove('invalid') : false"
+      />
+      <br />
+      <br />
+    </template>
+
+    <template v-if="elValue.inputs.includes('phoneCheck')">
+      <input type="checkbox" v-model="emailBody.textSubscribe" /> I agree to receive text messages
+      <br />
+      <br />
+    </template>
+
+    <template v-if="elValue.inputs.includes('emailCheck')">
+      <input type="checkbox" v-model="emailBody.emailSubscribe" /> I agree to receive email messages
+      <br />
+      <br />
+    </template>
+
+    <template v-if="elValue.inputs.includes('faxCheck')">
+      <input type="checkbox" v-model="emailBody.faxSubscribe" /> I agree to receive fax messages
+      <br />
+      <br />
+    </template>
+
+    <div class="subscribe-captcha-container">
+      <div class="subscribe-captcha-inputs">
+        <img class="subscribe-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" />
         <input
+          required
           type="text"
+          placeholder="Verify captcha"
           style="height: 4vh; width: calc(100% - 30px)"
-          placeholder="Verify captcha..."
           v-model="captcha"
+          @invalid="$event.target.classList.add('invalid')"
+          @input="captcha ? $event.target.classList.remove('invalid') : false"
+          @click="submitBtnTxt = 'Submit'"
         />
-        <button style="width: 30px; height: 4vh" @click="updateCaptcha">
-          <i :class="{ spin: spinUpdateCaptcha }" class="fa-solid fa-arrows-rotate"></i>
+        <button
+          class="subscribe-captcha-btn"
+          @click.prevent="
+            updateCaptcha();
+            submitBtnTxt = 'Submit';
+          "
+        >
+          <i :class="{ spin: captchaSpin }" class="fa-solid fa-arrows-rotate"></i>
         </button>
       </div>
     </div>
-    <p><input type="submit" v-model="submitText" @click.prevent="subcribeSubmit" /></p>
-  </div>
+    <br />
+
+    <button type="submit" @click.prevent="sendEmail" :disabled="submitBtnTxt == 'Subscription updated'">
+      <i v-if="submitting" class="spin fa-solid fa-arrows-rotate"></i>
+      <template v-else>{{ submitBtnTxt }}</template>
+    </button>
+  </form>
 </template>
 
 <script>
 export default {
   name: 'Subscribe',
 
-  inject: ['endPts', 'wndw', 'respWidth'],
+  inject: ['emailReq', 'endPts', 'site'],
+
+  props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
     return {
-      name: '',
-      number: null,
-      submitText: 'Submit',
       captcha: '',
       captchaDate: server_datetime_YmdHis,
-      spinUpdateCaptcha: false,
+      captchaSpin: false,
+      submitting: false,
+      submitBtnTxt: 'Submit',
+      emailBody: {
+        type: 'Subscribe',
+        name: '',
+        phone: '',
+        email: '',
+        fax: '',
+        textSubscribe: false,
+        emailSubscribe: false,
+        faxSubscribe: false,
+      },
     };
   },
 
   methods: {
-    subcribeSubmit() {
-      if (this.name.length < 2) {
-        this.$refs.fullname.classList.add('subscribe-red');
-        this.submitText = 'Submit';
-      } else {
-        this.$refs.fullname.classList.remove('subscribe-red');
-        this.submitText = 'Submit';
-      }
-      if (this.$refs.phonenumber.value.length < 3) {
-        this.$refs.phonenumber.classList.add('subscribe-red');
-        this.submitText = 'Submit';
-      } else {
-        this.$refs.phonenumber.classList.remove('subscribe-red');
-        this.submitText = 'Submit';
-      }
-
-      if (this.name.length >= 2 && this.$refs.phonenumber.value.length >= 3 && this.$refs.subscribeyes.checked) {
-        this.$refs.subscribeyes.checked = false;
-        this.submitText = 'Thank you for subscribing';
-        this.name = '';
-        this.number = null;
-        this.captcha = '';
-        this.updateCaptcha();
-      }
-      if (this.name.length >= 2 && this.$refs.phonenumber.value.length >= 3 && this.$refs.subscribeno.checked) {
-        this.$refs.subscribeno.checked = false;
-        this.submitText = 'Thank you for unsubscribing';
-        this.name = '';
-        this.number = null;
-        this.captcha = '';
-        this.updateCaptcha();
+    async sendEmail() {
+      this.submitBtnTxt = 'Submit';
+      if (this.$refs.subscribeForm.checkValidity()) {
+        this.submitting = true;
+        this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
+          if (resJSON.success) {
+            Object.assign(this.$data, this.$options.data.apply(this));
+            this.submitBtnTxt = 'Submitted';
+            this.updateCaptcha();
+          } else {
+            this.submitting = false;
+          }
+        });
       }
     },
 
     async updateCaptcha() {
-      this.spinUpdateCaptcha = true;
+      this.captchaSpin = true;
       try {
         const response = await fetch(api_path.time);
         const resJSON = await response.json();
         this.captchaDate = resJSON.data.server_Time_YmdHis;
-        this.spinUpdateCaptcha = false;
+        this.captchaSpin = false;
       } catch (error) {
         console.log(error.toString());
-        this.spinUpdateCaptcha = false;
+        this.captchaSpin = false;
       }
     },
+  },
+
+  watch: {
+    'emailBody.phone'(newPhone, oldPhone) {
+      console.log(newPhone);
+      console.log(oldPhone);
+      // this.emailBody.phone = newPhone.replaceAll('-', ' ');
+    },
+  },
+
+  created() {
+    if (!this.site.htmlElmnts[this.elKey].inputs) this.site.htmlElmnts[this.elKey].inputs = [];
   },
 };
 </script>
@@ -104,7 +179,24 @@ export default {
   position: relative;
   padding: 0px 10px;
 }
-.subscribe img {
+.subscribe input[type='text'],
+.subscribe input[type='number'],
+.subscribe input[type='email'] {
+  height: 4vh;
+  width: 100%;
+}
+.subscribe button[type='submit'] {
+  padding: 5px;
+  width: 20%;
+}
+.subscribe-captcha-container {
+  width: 100%;
+}
+.subscribe-captcha-inputs {
+  width: 50%;
+}
+.subscribe-captcha-img {
+  width: 100%;
   max-height: 5vh;
   min-height: 3vh;
   height: 15vw;
@@ -118,25 +210,24 @@ export default {
   margin-top: -0.5vh;
   margin-bottom: -0.5vh;
 }
-.subscribe input[type='text'],
-.subscribe input[type='number'] {
+.subscribe-captcha-btn {
+  width: 30px;
   height: 4vh;
-  width: 350px;
-}
-.subscribe input[type='submit'] {
-  padding: 5px;
-}
-.subscribe-red {
-  outline-color: red;
-  outline-style: solid;
 }
 @media only screen and (min-width: 650px) {
   .subscribe {
-    position: relative;
-    padding: 0px 10%;
+    padding: 0px calc(10% + 10px);
   }
-  .subscribe img {
+  .subscribe input[type='text'],
+  .subscribe input[type='number'],
+  .subscribe input[type='email'] {
+    width: 50%;
+  }
+  .subscribe-captcha-img {
     height: 4.5vw;
+  }
+  .subscribe-captcha-inputs {
+    width: calc(25% + 50px);
   }
 }
 </style>

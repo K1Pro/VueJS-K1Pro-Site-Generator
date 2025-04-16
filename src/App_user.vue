@@ -49,7 +49,29 @@ export default {
       site: this.site,
       slctd: this.slctd,
       style: this.style,
+      // methods
+      emailReq: this.emailReq,
     };
+  },
+
+  methods: {
+    async emailReq(METHOD, captchaDate, captcha, emailBody) {
+      try {
+        const response = await fetch(this.endPts.email + captchaDate + '/' + captcha, {
+          method: METHOD,
+          headers: {
+            Authorization: btoa(site.email),
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+          },
+          body: JSON.stringify(emailBody),
+        });
+        const resJSON = await response.json();
+        return resJSON;
+      } catch (error) {
+        console.log(error.toString());
+      }
+    },
   },
 
   computed: {

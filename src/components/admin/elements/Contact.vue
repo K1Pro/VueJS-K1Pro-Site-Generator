@@ -1,18 +1,21 @@
 <template>
-  <div class="contact-us" :style="[contactUs, style.outline.borderColor, { marginBottom: cntctUsCaptchaMrgn + 'vh' }]">
-    <div class="contact-us-form" :style="[contactUsForm]">
-      <input type="text" class="cntctInpts" placeholder="Name" />
-      <input type="text" class="cntctInpts" placeholder="Email" />
-      <textarea rows="3" class="cntctInpts" :placeholder="!footKey ? elValue.messageText : 'Message'"></textarea>
-      <img :src="endPts.captchaURL + msgDate + '.jpg'" ref="cntctUsCaptcha" />
-      <input type="text" class="cntctInpts" style="width: calc(100% - 30px)" placeholder="Verify captcha..." />
-      <button style="width: 30px; height: 4vh">
-        <i class="fa-solid fa-arrows-rotate"></i>
-      </button>
-      <button style="margin-bottom: 1vh; height: 4vh">
+  <div class="contact" :style="[contactUs, style.outline.borderColor]">
+    <div class="contact-form" :style="[contactUsForm]">
+      <input type="text" placeholder="Name" />
+      <input type="text" placeholder="Email" />
+      <textarea rows="3" :placeholder="!footKey ? elValue.messageText : 'Message'"></textarea>
+      <div class="contact-captcha-container">
+        <div class="contact-captcha-inputs">
+          <img class="contact-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" ref="cntctUsCaptcha" />
+          <input type="text" style="width: calc(100% - 30px)" placeholder="Verify captcha" />
+          <button class="contact-captcha-btn">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+      </div>
+      <button type="submit" style="margin-bottom: 1vh; height: 4vh">
         <span>{{ !footKey ? elValue.buttonText : 'Send' }}</span>
       </button>
-      <div style="height: 3vh"></div>
     </div>
   </div>
 </template>
@@ -42,51 +45,49 @@ export default {
 
   data() {
     return {
-      msgDate: server_datetime_YmdHis,
-      cntctUsCaptchaMrgn: 0,
+      captchaDate: server_datetime_YmdHis,
     };
-  },
-  watch: {
-    'grid.wdth'() {
-      this.cntctUsCaptchaMrgn = 5 - (this.$refs.cntctUsCaptcha.getBoundingClientRect().height / this.grid.hght) * 100;
-    },
   },
 };
 </script>
 
 <style>
-.contact-us {
+.contact {
   position: relative;
   outline-width: 2px;
   outline-offset: -2px;
 }
-.contact-us-form {
+.contact-form {
   backdrop-filter: blur(20px);
 }
-.contact-us-form textarea {
+.contact-form textarea {
   height: 8vh;
 }
-.contact-us-form input[type='text'] {
+.contact-form input[type='text'] {
   height: 4vh;
 }
-.contact-us-form input[type='text'],
-.contact-us-form textarea {
+.contact-form input[type='text'],
+.contact-form textarea {
   width: 100%;
   padding: 0.5vh;
   margin-bottom: 1.5vh;
   resize: none;
-  /* font-size: 2vh; */
   font-family: Arial, Helvetica, sans-serif;
 }
-.contact-us-form button {
-  /* padding: 1vh; */
+.contact-form button[type='submit'] {
   width: 100%;
 }
-.contact-us-form img {
+.contact-captcha-container {
+  width: 100%;
+}
+.contact-captcha-inputs {
+  width: 100%;
+}
+.contact-captcha-img {
+  width: 100%;
   max-height: 5vh;
   min-height: 3vh;
   height: 15vw;
-  width: 100%;
   margin: 0px;
   padding: 0px;
   object-fit: cover;
@@ -97,9 +98,12 @@ export default {
   margin-top: -0.5vh;
   margin-bottom: -0.5vh;
 }
-
+.contact-captcha-btn {
+  width: 30px;
+  height: 4vh;
+}
 @media only screen and (min-width: 650px) {
-  .contact-us-form img {
+  .contact-captcha-img {
     height: 4.5vw;
   }
 }

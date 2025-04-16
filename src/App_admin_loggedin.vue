@@ -109,12 +109,12 @@ export default {
       respWidth: this.respWidth,
       // methods
       getSite: this.getSite,
+      getImages: this.getImages,
+      getVideos: this.getVideos,
       imagesReq: this.imagesReq,
-      videosReq: this.videosReq,
       mediaReq: this.mediaReq,
       patchSite: this.patchSite,
-      getVideos: this.getVideos,
-      getImages: this.getImages,
+      videosReq: this.videosReq,
     };
   },
 
@@ -264,11 +264,7 @@ export default {
           },
         });
         const resJSON = await response.json();
-        if (resJSON.success) {
-          this.files.img = resJSON.data;
-        } else {
-          console.log(resJSON);
-        }
+        if (resJSON.success) this.files.img = resJSON.data;
       } catch (error) {
         console.log(error.toString());
       }
@@ -282,11 +278,7 @@ export default {
           },
         });
         const resJSON = await response.json();
-        if (resJSON.success) {
-          this.files.vid = resJSON.data;
-        } else {
-          console.log(resJSON);
-        }
+        if (resJSON.success) this.files.vid = resJSON.data;
       } catch (error) {
         console.log(error.toString());
       }
