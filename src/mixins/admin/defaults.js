@@ -8,7 +8,7 @@ const defaultsMixin = {
           'background_video',
           'contact',
           'feedback',
-          'forms',
+          'form',
           'login',
           'photo_gallery',
           'video_gallery',
@@ -21,7 +21,7 @@ const defaultsMixin = {
           'contact',
           'feedback',
           'footer',
-          'forms',
+          'form',
           'headline',
           'icon_slider',
           'login',
@@ -71,8 +71,8 @@ const defaultsMixin = {
               color: '#000000',
             },
           },
-          forms: {
-            type: 'forms',
+          form: {
+            type: 'form',
           },
           headline: {
             type: 'headline',

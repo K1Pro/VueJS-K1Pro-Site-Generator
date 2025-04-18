@@ -74,6 +74,7 @@ export default {
       captchaDate: server_datetime_YmdHis,
     };
   },
+  
   mounted() {
     if (!this.site.htmlElmnts[this.elKey].inputs) this.site.htmlElmnts[this.elKey].inputs = [];
   },
