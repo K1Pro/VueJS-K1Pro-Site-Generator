@@ -16,25 +16,40 @@
       >
         <template v-for="(subInput, subInputIndx) in input" :key="'column_' + inputIndx + '_' + subInputIndx">
           <span
+            :title="
+              JSON.stringify(Object.entries(subInput))
+                .replaceAll('&quot;', '')
+                .replace('[mod,' + subInput.mod + '],', '')
+                .replace('[mod,' + subInput.mod + ']]', '')
+                .replace('[[', '')
+                .replace(']]', '')
+                .replaceAll('],[', '__________')
+                .replaceAll('],', '')
+                .replaceAll(',', ': ')
+                .replaceAll('__________', ' --- ')
+            "
             :style="{
               borderTop:
                 elValue.form?.[inputIndx - 1] &&
                 subInput.child &&
                 subInput.child !== elValue.form[inputIndx - 1]?.[0]?.child
                   ? '3px solid #' + subInput.child
-                  : false,
-              borderRight: subInput.child && subInputIndx === input.length - 1 ? '3px solid #' + subInput.child : false,
+                  : '0px solid #00000000',
+              borderRight:
+                subInput.child && subInputIndx === input.length - 1
+                  ? '3px solid #' + subInput.child
+                  : '0px solid #00000000',
               borderBottom:
                 elValue.form?.[inputIndx + 1] &&
                 subInput.child &&
                 subInput.child !== elValue.form[inputIndx + 1]?.[0]?.child
                   ? '3px solid #' + subInput.child
-                  : false,
-              borderLeft: subInput.child && subInputIndx === 0 ? '3px solid #' + subInput.child : false,
+                  : '0px solid #00000000',
+              borderLeft: subInput.child && subInputIndx === 0 ? '3px solid #' + subInput.child : '0px solid #00000000',
               backgroundImage:
                 subInput.parent && subInput.conditional == 'true'
                   ? 'linear-gradient(90deg, #' + subInput.parent + ' 0 20px, #ffffff00 20px 100%)'
-                  : false,
+                  : 'linear-gradient(90deg, #00000000 0 20px, #00000000 20px 100%)',
             }"
           >
             <!-- Attributes select -->
@@ -44,7 +59,7 @@
               @change="slctAttr($event, inputIndx, subInputIndx)"
             >
               <option selected disabled></option>
-              <option value="type" :disabled="!subInput.mod">type</option>
+              <option value="type" :disabled="!subInput.mod || subInput?.mod == 'type'">type</option>
               <option v-for="attr in elements[subInput.type]" :value="attr" :disabled="subInput?.mod == attr">
                 {{ attr }}
               </option>
@@ -124,12 +139,20 @@
                   ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type) ? subInput.type : false
                 "
               ></option>
-              <option v-for="element in Object.keys(elements)" :value="element" :disabled="element == subInput.type">
-                {{ element.replaceAll('_', '-') }}
-                {{
-                  ['break', 'horizontal_rule', 'label', 'row_increaser', 'textarea'].includes(element) ? '' : 'input'
-                }}
-              </option>
+              <template v-for="element in Object.keys(elements)">
+                <option
+                  :value="element"
+                  :disabled="
+                    element == subInput.type ||
+                    (JSON.stringify(input).includes('row_increaser') && element == 'row_increaser')
+                  "
+                >
+                  {{ element.replaceAll('_', '-') }}
+                  {{
+                    ['break', 'horizontal_rule', 'label', 'row_increaser', 'textarea'].includes(element) ? '' : 'input'
+                  }}
+                </option>
+              </template>
             </select>
             <hr
               v-if="subInput.type == 'horizontal_rule'"
@@ -217,17 +240,21 @@ export default {
   },
   methods: {
     slctAttr(event, inputIndx, subInputIndx) {
+      console.log('slctAttr');
+      console.log(event.target.value);
       this.elValue.form[inputIndx][subInputIndx].mod = event.target.value;
       event.srcElement.selectedIndex = 0;
+      console.log('==============');
     },
     slctCondition(event, inputIndx, subInputIndx, mod) {
+      console.log('slctCondition');
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       tempForm[inputIndx][subInputIndx][mod] = event.target.value;
       if (mod == 'conditional') {
         if (event.target.value == 'true') {
           const colorHex = Math.floor(Math.random() * 16777215).toString(16);
           tempForm[inputIndx][subInputIndx].parent = colorHex;
-          tempForm.splice(inputIndx + 1, 0, [{ type: 'text', mod: 'placeholder', child: colorHex }]);
+          tempForm.splice(inputIndx + 1, 0, [{ type: 'break', child: colorHex }]);
         } else {
           let findChildren = [];
           tempForm.forEach((row, rowIndx) => {
@@ -237,28 +264,23 @@ export default {
           delete tempForm[inputIndx][subInputIndx].parent;
         }
       }
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = [];
-      }, 1);
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = tempForm;
-      }, 1);
+      console.log(tempForm[inputIndx][tempForm[inputIndx].length - 1]);
+      this.site.htmlElmnts[this.elKey].form = tempForm;
+      console.log('==============');
     },
     attrRptr(event, inputIndx, subInputIndx, mod) {
-      // console.log('attrRptr');
-      // console.log(event);
-      // console.log(inputIndx);
-      // console.log(subInputIndx);
-      // console.log(mod);
-      // console.log(this.elValue.form[inputIndx][subInputIndx]?.type);
+      console.log('attrRptr');
       if (['radio', 'checkbox'].includes(this.elValue.form[inputIndx][subInputIndx]?.type) && mod == 'name') {
         this.elValue.form[inputIndx].forEach((xInput, xInputIndx) => {
           if (['radio', 'checkbox'].includes(xInput.type))
             this.elValue.form[inputIndx][xInputIndx][mod] = event.target.value;
         });
       }
+      console.log(this.elValue.form[inputIndx]);
+      console.log('==============');
     },
     checkInput(event, inputIndx, subInputIndx) {
+      console.log('checkInput');
       if (this.elValue.form[inputIndx][subInputIndx].checked === true) {
         this.elValue.form[inputIndx][subInputIndx].checked = false;
         event.target.checked = false;
@@ -266,12 +288,15 @@ export default {
         this.elValue.form[inputIndx][subInputIndx].checked = true;
         event.target.checked = true;
       }
+      console.log(this.elValue.form[inputIndx]);
+      console.log('==============');
     },
     addInput(inputIndx) {
+      console.log('addInput');
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       if (tempForm[inputIndx][0]?.child) {
         // prettier-ignore
-        tempForm.splice(inputIndx + 1, 0, [{ type: 'text', mod: 'placeholder', child: tempForm[inputIndx][0]?.child, }, ]);
+        tempForm.splice(inputIndx + 1, 0, [{ type: 'break', child: tempForm[inputIndx][0]?.child, }, ]);
       } else {
         let firstNonChild = [];
         if (tempForm[inputIndx + 1]) {
@@ -280,23 +305,21 @@ export default {
               if (inputIndx < rowIndx && !row[0].child) firstNonChild.push(rowIndx);
             });
             firstNonChild.length === 0
-              ? tempForm.splice(tempForm.length, 0, [{ type: 'text', mod: 'placeholder' }])
-              : tempForm.splice(firstNonChild[0], 0, [{ type: 'text', mod: 'placeholder' }]);
+              ? tempForm.splice(tempForm.length, 0, [{ type: 'break' }])
+              : tempForm.splice(firstNonChild[0], 0, [{ type: 'break' }]);
           } else {
-            tempForm.splice(inputIndx + 1, 0, [{ type: 'text', mod: 'placeholder' }]);
+            tempForm.splice(inputIndx + 1, 0, [{ type: 'break' }]);
           }
         } else {
-          tempForm.splice(inputIndx + 1, 0, [{ type: 'text', mod: 'placeholder' }]);
+          tempForm.splice(inputIndx + 1, 0, [{ type: 'break' }]);
         }
       }
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = [];
-      }, 1);
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = tempForm;
-      }, 1);
+      console.log(tempForm[inputIndx + 1]);
+      this.site.htmlElmnts[this.elKey].form = tempForm;
+      console.log('==============');
     },
     changeInput(event, inputIndx, subInputIndx) {
+      console.log('changeInput');
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       if (tempForm[inputIndx][subInputIndx].parent) {
         let findChildren = [];
@@ -309,25 +332,30 @@ export default {
       if (tempForm[inputIndx][subInputIndx].child) changedInput.child = tempForm[inputIndx][subInputIndx].child;
       if (this.elements[event.target.value].length > 0) changedInput.mod = this.elements[event.target.value][0];
       tempForm[inputIndx][subInputIndx] = changedInput;
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = [];
-      }, 1);
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = tempForm;
-      }, 1);
+      console.log(changedInput);
+      this.site.htmlElmnts[this.elKey].form = tempForm;
+
+      console.log('==============');
     },
     addSubInput(event, inputIndx) {
+      console.log('addSubInput');
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       const newColumnAmount = event.target.value;
       const existingColumnAmount = tempForm[inputIndx].length;
       if (newColumnAmount > existingColumnAmount) {
         for (let i = 0; i < newColumnAmount - existingColumnAmount; i++) {
-          if (tempForm[inputIndx][tempForm[inputIndx].length - 1]?.child) {
-            // prettier-ignore
-            tempForm[inputIndx].push({ type: 'text', mod: 'placeholder', child: tempForm[inputIndx][tempForm[inputIndx].length - 1]?.child, });
-          } else {
-            tempForm[inputIndx].push({ type: 'text', mod: 'placeholder' });
-          }
+          const prevSubInput = tempForm[inputIndx][tempForm[inputIndx].length - 1];
+          const newSubInput = { type: prevSubInput.type != 'row_increaser' ? prevSubInput.type : 'text' };
+          if (this.elements[newSubInput.type][0]) newSubInput.mod = this.elements[newSubInput.type][0];
+          if (prevSubInput.child) newSubInput.child = prevSubInput.child;
+          if (
+            JSON.stringify(tempForm[inputIndx]).includes('"type":"radio"') ||
+            JSON.stringify(tempForm[inputIndx]).includes('"type":"checkbox"')
+          )
+            tempForm[inputIndx].forEach((subInput) => {
+              if (subInput.type == newSubInput.type && subInput.name) newSubInput.name = subInput.name;
+            });
+          tempForm[inputIndx].push(newSubInput);
         }
       } else if (newColumnAmount <= 0) {
         if (tempForm[inputIndx][0].parent) {
@@ -350,18 +378,15 @@ export default {
           tempForm[inputIndx].splice(i, 1);
         }
       }
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = [];
-      }, 1);
-      setTimeout(() => {
-        this.site.htmlElmnts[this.elKey].form = tempForm;
-      }, 1);
+      console.log(tempForm[inputIndx][tempForm[inputIndx].length - 1]);
+      this.site.htmlElmnts[this.elKey].form = tempForm;
+      console.log('==============');
     },
   },
 
   created() {
     if (!this.elValue.form || this.elValue.form.length < 1) {
-      this.site.htmlElmnts[this.elKey].form = [[{ type: 'text', mod: 'placeholder' }]];
+      this.site.htmlElmnts[this.elKey].form = [[{ type: 'break' }]];
     }
   },
 };

@@ -185,7 +185,7 @@ export default {
       this.elValue.form.forEach((row, rowIndx) => {
         Object.values(row).forEach((inpt, inptIndx) => {
           if (inpt.value && inpt.type) {
-            console.log(inpt);
+            // console.log(inpt);
             const emailBodyKeyCount = inpt.count ? '_' + inpt.count : '';
             if (['checkbox'].includes(inpt.type)) {
               if (this.emailBody[inpt.name]) {
