@@ -63,6 +63,7 @@
               <option v-for="attr in elements[subInput.type]" :value="attr" :disabled="subInput?.mod == attr">
                 {{ attr }}
               </option>
+              <option v-if="subInput.parent">color</option>
             </select>
             <!-- Checkbox or radio input -->
             <input
@@ -102,7 +103,9 @@
                 {{ 'is this ' + subInput.type + ' input ' + subInput.mod + '?' }}
               </option>
               <option :disabled="subInput[subInput.mod] == 'true'" value="true">true</option>
-              <option :disabled="subInput[subInput.mod] == 'false'" value="false">false</option>
+              <option :disabled="subInput[subInput.mod] == 'false' || !subInput.conditional" value="false">
+                false
+              </option>
             </select>
             <!-- Min, max, step and rows input -->
             <input
@@ -111,6 +114,14 @@
               type="number"
               style="width: calc(100% - 20px); height: 28px"
               v-model="subInput[subInput.mod]"
+            />
+            <!-- Color input for checkbox or radio inputs -->
+            <input
+              v-else-if="['color'].includes(subInput?.mod) && ['checkbox', 'radio'].includes(subInput?.type)"
+              type="color"
+              style="width: calc(100% - 40px); height: 28px"
+              :value="'#' + subInput.parent"
+              @input="chngCndtnlClor($event, subInput.parent, inputIndx, subInputIndx)"
             />
             <!-- Type input -->
             <select
@@ -216,6 +227,7 @@ export default {
   data() {
     return {
       captchaDate: server_datetime_YmdHis,
+      tempMod: null,
       elements: {
         break: [],
         checkbox: ['label', 'name', 'required', 'conditional'],
@@ -252,9 +264,32 @@ export default {
       tempForm[inputIndx][subInputIndx][mod] = event.target.value;
       if (mod == 'conditional') {
         if (event.target.value == 'true') {
-          const colorHex = Math.floor(Math.random() * 16777215).toString(16);
+          let colorHex;
+          do {
+            colorHex = Math.floor(Math.random() * 16777215).toString(16);
+          } while (colorHex.length !== 6 || JSON.stringify(tempForm).includes('"parent":"' + colorHex + '"'));
+          if (JSON.stringify(tempForm[inputIndx]).includes('"parent":"')) {
+            let previousParent = null;
+            for (let subInputIndex = tempForm[inputIndx].length - 1; subInputIndex >= 0; subInputIndex--) {
+              if (tempForm[inputIndx][subInputIndex].parent) {
+                previousParent = tempForm[inputIndx][subInputIndex].parent;
+                break;
+              }
+            }
+            if (JSON.stringify(tempForm).includes('"child":"' + previousParent + '"')) {
+              let lastChildIndx = null;
+              for (let inputIndex = tempForm.length - 1; inputIndex >= 0; inputIndex--) {
+                if (tempForm[inputIndex][0].child == previousParent) {
+                  lastChildIndx = inputIndex;
+                  break;
+                }
+              }
+              tempForm.splice(lastChildIndx + 1, 0, [{ type: 'break', child: colorHex }]);
+            }
+          } else {
+            tempForm.splice(inputIndx + 1, 0, [{ type: 'break', child: colorHex }]);
+          }
           tempForm[inputIndx][subInputIndx].parent = colorHex;
-          tempForm.splice(inputIndx + 1, 0, [{ type: 'break', child: colorHex }]);
         } else {
           let findChildren = [];
           tempForm.forEach((row, rowIndx) => {
@@ -380,6 +415,28 @@ export default {
       }
       console.log(tempForm[inputIndx][tempForm[inputIndx].length - 1]);
       this.site.htmlElmnts[this.elKey].form = tempForm;
+      console.log('==============');
+    },
+    chngCndtnlClor(event, parent, inputIndx, subInputIndx) {
+      console.log('chngCndtnlClor');
+      if (JSON.stringify(this.elValue.form).includes('"parent":"' + event.target.value.replaceAll('#', '') + '"')) {
+        event.target.value = '#' + parent;
+      } else {
+        const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
+        if (JSON.stringify(this.elValue.form).includes('"child":"' + parent + '"')) {
+          tempForm.forEach((row, rowIndx) => {
+            row.forEach((subInput, subInputIndex) => {
+              if (tempForm[rowIndx][subInputIndex].child == parent) {
+                tempForm[rowIndx][subInputIndex].child = event.target.value.replaceAll('#', '');
+              }
+            });
+          });
+        }
+        tempForm[inputIndx][subInputIndx].parent = event.target.value.replaceAll('#', '');
+        console.log(tempForm[inputIndx][subInputIndx]);
+        this.site.htmlElmnts[this.elKey].form = tempForm;
+      }
+
       console.log('==============');
     },
   },
