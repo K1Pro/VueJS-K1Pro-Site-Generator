@@ -64,6 +64,8 @@
                 {{ attr }}
               </option>
               <option v-if="subInput.parent">color</option>
+              <option>insert</option>
+              <option>remove</option>
             </select>
             <!-- Checkbox or radio input -->
             <input
@@ -254,8 +256,19 @@ export default {
     slctAttr(event, inputIndx, subInputIndx) {
       console.log('slctAttr');
       console.log(event.target.value);
-      this.elValue.form[inputIndx][subInputIndx].mod = event.target.value;
-      event.srcElement.selectedIndex = 0;
+
+      if (['insert', 'remove'].includes(event.target.value)) {
+        const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
+        if (event.target.value == 'insert') tempForm[inputIndx].splice(subInputIndx, 0, { type: 'break' });
+        if (event.target.value == 'remove') tempForm[inputIndx].splice(subInputIndx, 1);
+
+        this.site.htmlElmnts[this.elKey].form = tempForm;
+        event.srcElement.selectedIndex = 0;
+      } else {
+        this.elValue.form[inputIndx][subInputIndx].mod = event.target.value;
+        event.srcElement.selectedIndex = 0;
+      }
+
       console.log('==============');
     },
     slctCondition(event, inputIndx, subInputIndx, mod) {
@@ -393,6 +406,7 @@ export default {
           tempForm[inputIndx].push(newSubInput);
         }
       } else if (newColumnAmount <= 0) {
+        // this deletes are children if parent checkbox or radio is deleted
         if (tempForm[inputIndx][0].parent) {
           let findChildren = [];
           tempForm.forEach((row, rowIndx) => {
@@ -400,7 +414,16 @@ export default {
           });
           tempForm.splice(findChildren[0], findChildren.length);
         }
+        const rowChild = tempForm[inputIndx][0].child ? tempForm[inputIndx][0].child : false;
         tempForm.splice(inputIndx, 1);
+        // this deletes a parent checkbox or radio input if all children are deleted
+        if (rowChild && !JSON.stringify(tempForm).includes('"child":"' + rowChild + '"')) {
+          tempForm.forEach((row, rowIndx) => {
+            row.forEach((subInput, subInputIndex) => {
+              if (subInput.parent == rowChild) delete tempForm[rowIndx][subInputIndex].parent;
+            });
+          });
+        }
       } else {
         for (let i = newColumnAmount; i < existingColumnAmount; i++) {
           if (tempForm[inputIndx][i].parent) {
