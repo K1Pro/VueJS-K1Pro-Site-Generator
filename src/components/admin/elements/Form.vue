@@ -105,9 +105,7 @@
                 {{ 'is this ' + subInput.type + ' input ' + subInput.mod + '?' }}
               </option>
               <option :disabled="subInput[subInput.mod] == 'true'" value="true">true</option>
-              <option :disabled="subInput[subInput.mod] == 'false' || !subInput.conditional" value="false">
-                false
-              </option>
+              <option :disabled="subInput[subInput.mod] == 'false'" value="false">false</option>
             </select>
             <!-- Min, max, step and rows input -->
             <input
@@ -273,23 +271,29 @@ export default {
     },
     slctCondition(event, inputIndx, subInputIndx, mod) {
       console.log('slctCondition');
+      // console.log('subInputIndx: ' + subInputIndx);
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       tempForm[inputIndx][subInputIndx][mod] = event.target.value;
       if (mod == 'conditional') {
+        console.log('conditional');
         if (event.target.value == 'true') {
+          console.log('true');
           let colorHex;
           do {
             colorHex = Math.floor(Math.random() * 16777215).toString(16);
           } while (colorHex.length !== 6 || JSON.stringify(tempForm).includes('"parent":"' + colorHex + '"'));
           if (JSON.stringify(tempForm[inputIndx]).includes('"parent":"')) {
+            console.log('parents exist');
             let previousParent = null;
-            for (let subInputIndex = tempForm[inputIndx].length - 1; subInputIndex >= 0; subInputIndex--) {
+            for (let subInputIndex = subInputIndx - 1; subInputIndex >= 0; subInputIndex--) {
               if (tempForm[inputIndx][subInputIndex].parent) {
                 previousParent = tempForm[inputIndx][subInputIndex].parent;
                 break;
               }
             }
+            console.log(previousParent);
             if (JSON.stringify(tempForm).includes('"child":"' + previousParent + '"')) {
+              console.log('children exist');
               let lastChildIndx = null;
               for (let inputIndex = tempForm.length - 1; inputIndex >= 0; inputIndex--) {
                 if (tempForm[inputIndex][0].child == previousParent) {
@@ -300,10 +304,12 @@ export default {
               tempForm.splice(lastChildIndx + 1, 0, [{ type: 'break', child: colorHex }]);
             }
           } else {
+            console.log('parents do not exist');
             tempForm.splice(inputIndx + 1, 0, [{ type: 'break', child: colorHex }]);
           }
           tempForm[inputIndx][subInputIndx].parent = colorHex;
         } else {
+          console.log('false');
           let findChildren = [];
           tempForm.forEach((row, rowIndx) => {
             if (row[0].child == tempForm[inputIndx][subInputIndx].parent) findChildren.push(rowIndx);
