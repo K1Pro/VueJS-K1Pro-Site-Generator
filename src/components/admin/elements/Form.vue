@@ -194,7 +194,12 @@
             />
           </span>
         </template>
-        <input type="number" style="width: 60px" :value="input.length" @change="addSubInput($event, inputIndx)" />
+        <input
+          type="number"
+          style="width: 60px"
+          :value="input.length"
+          @change="changeSubInputAmnt($event, inputIndx)"
+        />
         <button style="width: 30px; height: 28px" @click="addInput(inputIndx)">
           <i class="fa-solid fa-plus"></i>
         </button>
@@ -257,8 +262,26 @@ export default {
 
       if (['insert', 'remove'].includes(event.target.value)) {
         const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
-        if (event.target.value == 'insert') tempForm[inputIndx].splice(subInputIndx, 0, { type: 'break' });
-        if (event.target.value == 'remove') tempForm[inputIndx].splice(subInputIndx, 1);
+        if (event.target.value == 'insert') {
+          tempForm[inputIndx].splice(subInputIndx, 0, { type: 'break' });
+          //needed to add children here if present
+        }
+        if (event.target.value == 'remove') {
+          if (tempForm[inputIndx][subInputIndx].parent) {
+            console.log('this deletes all children if parent checkbox or radio is deleted');
+            console.log(tempForm[inputIndx][subInputIndx].parent);
+            let findChildren = [];
+            tempForm.forEach((row, rowIndx) => {
+              if (row[0].child == tempForm[inputIndx][subInputIndx].parent) findChildren.push(rowIndx);
+            });
+            console.log(findChildren);
+            tempForm.splice(findChildren[0], findChildren.length);
+          }
+          console.log(tempForm[inputIndx].length);
+          tempForm[inputIndx].length === 1
+            ? tempForm.splice(inputIndx, 1)
+            : tempForm[inputIndx].splice(subInputIndx, 1);
+        }
 
         this.site.htmlElmnts[this.elKey].form = tempForm;
         event.srcElement.selectedIndex = 0;
@@ -271,6 +294,7 @@ export default {
     },
     slctCondition(event, inputIndx, subInputIndx, mod) {
       console.log('slctCondition');
+      console.log('inputIndx: ' + inputIndx);
       // console.log('subInputIndx: ' + subInputIndx);
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       tempForm[inputIndx][subInputIndx][mod] = event.target.value;
@@ -282,10 +306,14 @@ export default {
           do {
             colorHex = Math.floor(Math.random() * 16777215).toString(16);
           } while (colorHex.length !== 6 || JSON.stringify(tempForm).includes('"parent":"' + colorHex + '"'));
-          if (JSON.stringify(tempForm[inputIndx]).includes('"parent":"')) {
+          if (subInputIndx === 0) {
+            console.log('this is the first subinput');
+            tempForm.splice(inputIndx + 1, 0, [{ type: 'break', child: colorHex }]);
+          } else if (JSON.stringify(tempForm[inputIndx]).includes('"parent":"')) {
             console.log('parents exist');
             let previousParent = null;
             for (let subInputIndex = subInputIndx - 1; subInputIndex >= 0; subInputIndex--) {
+              console.log(subInputIndex);
               if (tempForm[inputIndx][subInputIndex].parent) {
                 previousParent = tempForm[inputIndx][subInputIndex].parent;
                 break;
@@ -391,12 +419,13 @@ export default {
 
       console.log('==============');
     },
-    addSubInput(event, inputIndx) {
-      console.log('addSubInput');
+    changeSubInputAmnt(event, inputIndx) {
+      console.log('changeSubInputAmnt');
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       const newColumnAmount = event.target.value;
       const existingColumnAmount = tempForm[inputIndx].length;
       if (newColumnAmount > existingColumnAmount) {
+        console.log('increases subinputs');
         for (let i = 0; i < newColumnAmount - existingColumnAmount; i++) {
           const prevSubInput = tempForm[inputIndx][tempForm[inputIndx].length - 1];
           const newSubInput = { type: prevSubInput.type != 'row_increaser' ? prevSubInput.type : 'text' };
@@ -412,8 +441,10 @@ export default {
           tempForm[inputIndx].push(newSubInput);
         }
       } else if (newColumnAmount <= 0) {
-        // this deletes are children if parent checkbox or radio is deleted
+        console.log('deleting entire row');
+        // this deletes all children if parent checkbox or radio is deleted
         if (tempForm[inputIndx][0].parent) {
+          console.log('this deletes all children if parent checkbox or radio is deleted');
           let findChildren = [];
           tempForm.forEach((row, rowIndx) => {
             if (row[0].child == tempForm[inputIndx][0].parent) findChildren.push(rowIndx);
@@ -424,13 +455,18 @@ export default {
         tempForm.splice(inputIndx, 1);
         // this deletes a parent checkbox or radio input if all children are deleted
         if (rowChild && !JSON.stringify(tempForm).includes('"child":"' + rowChild + '"')) {
+          console.log('this deletes a parent checkbox or radio input if all children are deleted');
           tempForm.forEach((row, rowIndx) => {
             row.forEach((subInput, subInputIndex) => {
-              if (subInput.parent == rowChild) delete tempForm[rowIndx][subInputIndex].parent;
+              if (subInput.parent == rowChild) {
+                delete tempForm[rowIndx][subInputIndex].parent;
+                tempForm[rowIndx][subInputIndex].conditional = 'false';
+              }
             });
           });
         }
       } else {
+        console.log('decreases subinputs');
         for (let i = newColumnAmount; i < existingColumnAmount; i++) {
           if (tempForm[inputIndx][i].parent) {
             let findChildren = [];
