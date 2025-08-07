@@ -259,12 +259,15 @@ export default {
     slctAttr(event, inputIndx, subInputIndx) {
       console.log('slctAttr');
       console.log(event.target.value);
-
       if (['insert', 'remove'].includes(event.target.value)) {
         const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
         if (event.target.value == 'insert') {
-          tempForm[inputIndx].splice(subInputIndx, 0, { type: 'break' });
-          //needed to add children here if present
+          tempForm[inputIndx][0].child
+            ? tempForm[inputIndx].splice(subInputIndx, 0, {
+                type: tempForm[inputIndx][subInputIndx].type,
+                child: tempForm[inputIndx][0].child,
+              })
+            : tempForm[inputIndx].splice(subInputIndx, 0, { type: tempForm[inputIndx][subInputIndx].type });
         }
         if (event.target.value == 'remove') {
           if (tempForm[inputIndx][subInputIndx].parent) {
@@ -276,6 +279,18 @@ export default {
             });
             console.log(findChildren);
             tempForm.splice(findChildren[0], findChildren.length);
+          }
+          // work on this if statement below!!!!!!!!!!
+          if (rowChild && !JSON.stringify(tempForm).includes('"child":"' + rowChild + '"')) {
+            console.log('this deletes a parent checkbox or radio input if all children are deleted');
+            tempForm.forEach((row, rowIndx) => {
+              row.forEach((subInput, subInputIndex) => {
+                if (subInput.parent == rowChild) {
+                  delete tempForm[rowIndx][subInputIndex].parent;
+                  tempForm[rowIndx][subInputIndex].conditional = 'false';
+                }
+              });
+            });
           }
           console.log(tempForm[inputIndx].length);
           tempForm[inputIndx].length === 1
