@@ -90,6 +90,7 @@
                 background: ['checkbox', 'radio'].includes(subInput.type) ? 'transparent' : 'white',
                 border: ['checkbox', 'radio'].includes(subInput.type) ? '1px dashed black' : '1px solid black',
               }"
+              @focusin="tempMod = $event.target.value"
               @change="attrRptr($event, inputIndx, subInputIndx, subInput.mod)"
             />
             <!-- Required and conditional inputs -->
@@ -225,7 +226,7 @@
 export default {
   name: 'Form',
 
-  inject: ['grid', 'endPts', 'site', 'style'],
+  inject: ['grid', 'endPts', 'showMsg', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -255,6 +256,7 @@ export default {
       },
     };
   },
+
   methods: {
     slctAttr(event, inputIndx, subInputIndx) {
       console.log('slctAttr');
@@ -361,11 +363,28 @@ export default {
     attrRptr(event, inputIndx, subInputIndx, mod) {
       console.log('attrRptr');
       if (['radio', 'checkbox'].includes(this.elValue.form[inputIndx][subInputIndx]?.type) && mod == 'name') {
+        // This applies the same name for radio and checkbox inputs in the same
         this.elValue.form[inputIndx].forEach((xInput, xInputIndx) => {
           if (['radio', 'checkbox'].includes(xInput.type))
-            this.elValue.form[inputIndx][xInputIndx][mod] = event.target.value;
+            event.target.value == ''
+              ? delete this.elValue.form[inputIndx][xInputIndx][mod]
+              : (this.elValue.form[inputIndx][xInputIndx][mod] = event.target.value);
+        });
+      } else if (mod == 'name') {
+        // This reverts a new input (non-radio and non-checkbox) name that exists already
+        this.elValue.form.forEach((row, rowIndex) => {
+          row.forEach((subInput, subInputIndex) => {
+            if (
+              '' + inputIndx + subInputIndx !== '' + rowIndex + subInputIndex &&
+              subInput.name == event.target.value
+            ) {
+              this.showMsg('This name already exists!');
+              this.elValue.form[inputIndx][subInputIndx][mod] = this.tempMod;
+            }
+          });
         });
       }
+      if (event.target.value == '') delete this.elValue.form[inputIndx][subInputIndx][mod];
       console.log(this.elValue.form[inputIndx]);
       console.log('==============');
     },
