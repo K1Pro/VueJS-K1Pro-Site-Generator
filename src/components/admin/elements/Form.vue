@@ -184,6 +184,7 @@
               v-else-if="['label'].includes(subInput.type)"
               type="text"
               placeholder="label"
+              :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
               style="
                 background: transparent;
                 height: 28px;
@@ -192,6 +193,7 @@
                 margin-left: -100%;
               "
               v-model="subInput.label"
+              @keyup.ctrl="changeBold($event, inputIndx, subInputIndx)"
             />
           </span>
         </template>
@@ -258,6 +260,13 @@ export default {
   },
 
   methods: {
+    changeBold(event, inputIndx, subInputIndx) {
+      if (event.key == 'b') {
+        this.elValue.form[inputIndx][subInputIndx].bold == 'true'
+          ? (this.elValue.form[inputIndx][subInputIndx].bold = 'false')
+          : (this.elValue.form[inputIndx][subInputIndx].bold = 'true');
+      }
+    },
     slctAttr(event, inputIndx, subInputIndx) {
       console.log('slctAttr');
       if (['insert', 'remove'].includes(event.target.value)) {
@@ -309,7 +318,7 @@ export default {
       const tempForm = JSON.parse(JSON.stringify(this.elValue.form));
       tempForm[inputIndx][subInputIndx][mod] = event.target.value;
       if (mod == 'conditional') {
-        // console.log('conditional');
+        console.log('conditional');
         if (event.target.value == 'true') {
           // console.log('true');
           let colorHex;
@@ -355,6 +364,12 @@ export default {
           tempForm.splice(findChildren[0], findChildren.length);
           delete tempForm[inputIndx][subInputIndx].parent;
         }
+      } else if (mod == 'required') {
+        console.log('required');
+        tempForm[inputIndx].forEach((subInput, subInputIndex) => {
+          if (subInput.type == 'checkbox' || subInput.type == 'radio')
+            tempForm[inputIndx][subInputIndex].required = event.target.value == 'true' ? 'true' : 'false';
+        });
       }
       console.log(tempForm[inputIndx][tempForm[inputIndx].length - 1]);
       this.site.htmlElmnts[this.elKey].form = tempForm;
