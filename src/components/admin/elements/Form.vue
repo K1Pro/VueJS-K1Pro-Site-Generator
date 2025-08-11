@@ -106,7 +106,7 @@
                 {{ 'is this ' + subInput.type + ' input ' + subInput.mod + '?' }}
               </option>
               <option :disabled="subInput[subInput.mod] == 'true'" value="true">true</option>
-              <option :disabled="subInput[subInput.mod] == 'false'" value="false">false</option>
+              <option :disabled="subInput[subInput.mod] != 'true'" value="false">false</option>
             </select>
             <!-- Min, max, step and rows input -->
             <input
@@ -367,8 +367,10 @@ export default {
       } else if (mod == 'required') {
         console.log('required');
         tempForm[inputIndx].forEach((subInput, subInputIndex) => {
-          if (subInput.type == 'checkbox' || subInput.type == 'radio')
-            tempForm[inputIndx][subInputIndex].required = event.target.value == 'true' ? 'true' : 'false';
+          if (subInput.type == tempForm[inputIndx][subInputIndx].type)
+            event.target.value == 'true'
+              ? (tempForm[inputIndx][subInputIndex].required = 'true')
+              : delete tempForm[inputIndx][subInputIndex].required;
         });
       }
       console.log(tempForm[inputIndx][tempForm[inputIndx].length - 1]);

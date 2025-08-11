@@ -22,29 +22,7 @@
           <br v-else-if="subInput.type == 'break'" />
           <hr v-else-if="subInput.type == 'horizontal_rule'" style="width: 100%" />
           <span
-            v-else-if="subInput.type == 'checkbox'"
-            style="margin: 5px 0px; white-space: nowrap; overflow: hidden; text-overflow: clip"
-          >
-            <!-- finished 7/10 check if checkbox input name needs to be the same as radio input name -->
-            <input
-              title="test"
-              style="width: 13px; margin: 3px 3px 3px 4px"
-              :id="'input_' + inputIndx + '_' + subInputIndx"
-              :type="subInput.type"
-              :name="subInput.name"
-              :required="subInput.required"
-              :checked="subInput.checked"
-              v-model="subInput.value"
-              @change="subInput.parent ? conditional($event.target.checked, subInput.parent) : false"
-            />
-            <label
-              :for="'input_' + inputIndx + '_' + subInputIndx"
-              @change="subInput.parent ? conditional($event.target.checked, subInput.parent) : false"
-              >{{ subInput.label }}</label
-            >
-          </span>
-          <span
-            v-else-if="subInput.type == 'radio'"
+            v-else-if="subInput.type == 'checkbox' || subInput.type == 'radio'"
             style="margin: 5px 0px; white-space: nowrap; overflow: hidden; text-overflow: clip"
           >
             <input
@@ -55,7 +33,12 @@
               :required="subInput.required"
               :checked="subInput.checked"
               v-model="subInput.value"
-              @change="subInput.parent ? conditional($event.target.checked, subInput.parent) : false"
+              @invalid="$event.target.classList.add('invalid')"
+              @change="
+                $event.target.classList.remove('invalid');
+                subInput.parent ? conditional($event.target.checked, subInput.parent) : false;
+                subInput.required ? required($event, inputIndx, subInputIndx) : false;
+              "
             />
             <label
               :for="'input_' + inputIndx + '_' + subInputIndx"
@@ -66,8 +49,8 @@
           <textarea
             v-else-if="subInput.type == 'textarea'"
             style="margin: 5px 0px; resize: none"
-            :rows="subInput.rowsPlaceholder ? subInput.rowsPlaceholder.split('|')[0] : 3"
-            :placeholder="subInput.rowsPlaceholder ? subInput.rowsPlaceholder.split('|')[1] : 'Enter text here'"
+            :rows="subInput.rows ? subInput.rows : 1"
+            :placeholder="subInput.placeholder ? subInput.placeholder : 'Enter text here'"
           ></textarea>
           <span v-else-if="subInput.type == 'row_increaser'" style="margin: 5px 0px">
             <button
@@ -89,7 +72,7 @@
             v-else
             :type="subInput.type"
             :name="subInput.name"
-            :placeholder="subInput.placeholder"
+            :placeholder="subInput.placeholder + (subInput.required ? '*' : '')"
             :required="subInput.required"
             :min="subInput.min"
             :max="subInput.max"
@@ -97,6 +80,8 @@
             :pattern="subInput.pattern"
             style="margin: 5px 0px"
             v-model="subInput.value"
+            @invalid="$event.target.classList.add('invalid')"
+            @input="$event.target.classList.remove('invalid')"
           />
         </template>
       </div>
@@ -165,6 +150,24 @@ export default {
         if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
       }
     },
+    required(event, inputIndx, subInputIndx) {
+      // console.log(event.target.checked);
+      this.elValue.form[inputIndx].forEach((subInput, subInputIndex) => {
+        if (
+          this.elValue.form[inputIndx][subInputIndex].type == this.elValue.form[inputIndx][subInputIndx].type &&
+          subInputIndex !== subInputIndx
+        )
+          event.target.checked
+            ? delete this.elValue.form[inputIndx][subInputIndex].required
+            : (this.elValue.form[inputIndx][subInputIndex].required = 'true');
+      });
+      // console.log(Array.from(this.$refs.formsForm));
+      // console.log(this.$refs.formsForm);
+      Array.from(this.$refs.formsForm).forEach((input) => {
+        console.log(input.id);
+        if (input.id.split('_')[1] == inputIndx) input.classList.remove('invalid');
+      });
+    },
     rowIncrease(inputIndx, subInputIndx, subInputID) {
       this.elValue.form[inputIndx][subInputIndx].count++;
       let tempIncreasers = JSON.parse(JSON.stringify(this.increasers[subInputID]));
@@ -181,37 +184,38 @@ export default {
       this.elValue.form.splice(inputIndx - this.increasers[subInputID].length, this.increasers[subInputID].length);
     },
     async sendEmail() {
-      this.submitBtnTxt = 'Submit';
-      this.elValue.form.forEach((row, rowIndx) => {
-        Object.values(row).forEach((inpt, inptIndx) => {
-          if (inpt.value && inpt.type) {
-            // console.log(inpt);
-            const emailBodyKeyCount = inpt.count ? '_' + inpt.count : '';
-            if (['checkbox'].includes(inpt.type)) {
-              if (this.emailBody[inpt.name]) {
-                this.emailBody[inpt.name + emailBodyKeyCount] += inpt.label ? inpt.label + ', ' : inpt.value + ', ';
-              } else {
-                this.emailBody[inpt.name + emailBodyKeyCount] = inpt.label ? inpt.label + ', ' : inpt.value + ', ';
-              }
-            } else {
-              this.emailBody[inpt.name + emailBodyKeyCount] = inpt.label ? inpt.label : inpt.value;
-            }
-          }
-        });
-      });
-      console.log();
-      if (this.$refs.formsForm.checkValidity()) {
-        // this.submitting = true;
-        // this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
-        //   if (resJSON.success) {
-        //     Object.assign(this.$data, this.$options.data.apply(this));
-        //     this.submitBtnTxt = 'Submitted';
-        //     this.updateCaptcha();
-        //   } else {
-        //     this.submitting = false;
-        //   }
-        // });
-      }
+      console.log(this.$refs.formsForm.checkValidity());
+      // this.submitBtnTxt = 'Submit';
+      // this.elValue.form.forEach((row, rowIndx) => {
+      //   Object.values(row).forEach((inpt, inptIndx) => {
+      //     if (inpt.value && inpt.type) {
+      //       // console.log(inpt);
+      //       const emailBodyKeyCount = inpt.count ? '_' + inpt.count : '';
+      //       if (['checkbox'].includes(inpt.type)) {
+      //         if (this.emailBody[inpt.name]) {
+      //           this.emailBody[inpt.name + emailBodyKeyCount] += inpt.label ? inpt.label + ', ' : inpt.value + ', ';
+      //         } else {
+      //           this.emailBody[inpt.name + emailBodyKeyCount] = inpt.label ? inpt.label + ', ' : inpt.value + ', ';
+      //         }
+      //       } else {
+      //         this.emailBody[inpt.name + emailBodyKeyCount] = inpt.label ? inpt.label : inpt.value;
+      //       }
+      //     }
+      //   });
+      // });
+      // console.log();
+      // if (this.$refs.formsForm.checkValidity()) {
+      //   // this.submitting = true;
+      //   // this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
+      //   //   if (resJSON.success) {
+      //   //     Object.assign(this.$data, this.$options.data.apply(this));
+      //   //     this.submitBtnTxt = 'Submitted';
+      //   //     this.updateCaptcha();
+      //   //   } else {
+      //   //     this.submitting = false;
+      //   //   }
+      //   // });
+      // }
     },
     async updateCaptcha() {
       this.captchaSpin = true;
