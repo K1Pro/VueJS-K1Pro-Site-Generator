@@ -11,7 +11,7 @@
     :style="{
       textAlign: elValue.style.align,
       fontSize: elValue.style.fontSize + 'vh',
-      padding: elValue.style.padding + 'vh ' + (this.wndw.wdth > this.respWidth.md ? 'calc(10% + 10px)' : '10px'),
+      padding: elValue.style.padding + 'vh' + (this.wndw.wdth > this.respWidth.md ? ' 10%' : ' 5px'),
     }"
   >
     {{ elValue.text }}

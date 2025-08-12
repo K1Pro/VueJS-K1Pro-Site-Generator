@@ -18,7 +18,12 @@
           v-for="(subInput, subInputIndx) in input"
           v-if="!input[0].child || (input[0].child && conditionals.includes(input[0].child))"
         >
-          <label v-if="subInput.type == 'label'" style="margin: 5px 0px">{{ subInput.label }}</label>
+          <span
+            v-if="subInput.type == 'label'"
+            style="margin: 5px 0px"
+            :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
+            >{{ subInput.label }}</span
+          >
           <br v-else-if="subInput.type == 'break'" />
           <hr v-else-if="subInput.type == 'horizontal_rule'" style="width: 100%" />
           <span
