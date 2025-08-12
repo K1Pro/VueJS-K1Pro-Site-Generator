@@ -6,11 +6,23 @@
         :style="{
           gridTemplateColumns:
             'repeat(' +
-            input.length +
+            (site.htmlElmnts[elKey].style.responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+              ? input.filter((el) => el.type != 'break').length
+              : input.length) +
             ', calc(' +
-            100 / input.length +
+            100 /
+              (site.htmlElmnts[elKey].style.responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+                ? input.filter((el) => el.type != 'break').length
+                : input.length) +
             '% - ' +
-            (5 * (input.length - 1)) / input.length +
+            (5 *
+              ((site.htmlElmnts[elKey].style.responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+                ? input.filter((el) => el.type != 'break').length
+                : input.length) -
+                1)) /
+              (site.htmlElmnts[elKey].style.responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+                ? input.filter((el) => el.type != 'break').length
+                : input.length) +
             'px))',
         }"
       >
@@ -18,76 +30,101 @@
           v-for="(subInput, subInputIndx) in input"
           v-if="!input[0].child || (input[0].child && conditionals.includes(input[0].child))"
         >
-          <span
-            v-if="subInput.type == 'label'"
-            style="margin: 5px 0px"
-            :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
-            >{{ subInput.label }}</span
+          <template
+            v-if="
+              wndw.wdth > respWidth.xs ||
+              subInput.type != 'break' ||
+              input.length === 1 ||
+              (subInput.type == 'break' && wndw.wdth <= respWidth.xs && !site.htmlElmnts[elKey].style.responsive)
+            "
           >
-          <br v-else-if="subInput.type == 'break'" />
-          <hr v-else-if="subInput.type == 'horizontal_rule'" style="width: 100%" />
-          <span
-            v-else-if="subInput.type == 'checkbox' || subInput.type == 'radio'"
-            style="margin: 5px 0px; white-space: nowrap; overflow: hidden; text-overflow: clip"
-          >
-            <input
-              style="width: 13px; margin: 3px 3px 3px 4px"
-              :id="'input_' + inputIndx + '_' + subInputIndx"
-              :type="subInput.type"
-              :name="subInput.name"
-              :required="subInput.required"
-              :checked="subInput.checked"
-              v-model="subInput.value"
-              @invalid="$event.target.classList.add('invalid')"
-              @change="
-                $event.target.classList.remove('invalid');
-                subInput.parent ? conditional($event.target.checked, subInput.parent) : false;
-                subInput.required ? required($event, inputIndx, subInputIndx) : false;
+            <span
+              v-if="subInput.type == 'label'"
+              style="margin: 5px 0px"
+              :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
+              >{{ subInput.label }}</span
+            >
+            <br v-else-if="subInput.type == 'break'" />
+            <hr v-else-if="subInput.type == 'horizontal_rule'" style="width: 100%" />
+            <span
+              v-else-if="subInput.type == 'checkbox' || subInput.type == 'radio'"
+              style="margin: 5px 0px; white-space: nowrap; overflow: hidden; text-overflow: clip"
+            >
+              <input
+                style="width: 13px; margin: 3px 3px 3px 4px"
+                :type="subInput.type"
+                :id="subInput.type + '_' + inputIndx + '_' + subInputIndx"
+                :name="
+                  (subInput.name
+                    ? subInput.name
+                    : subInput.placeholder
+                    ? subInput.placeholder
+                    : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
+                "
+                :required="subInput.required"
+                @invalid="$event.target.classList.add('invalid')"
+                @change="
+                  $event.target.classList.remove('invalid');
+                  subInput.parent ? conditional($event.target.checked, subInput.parent) : false;
+                  subInput.required ? required($event, inputIndx, subInputIndx) : false;
+                "
+              />
+              <label
+                :for="'input_' + inputIndx + '_' + subInputIndx"
+                @change="subInput.parent ? conditional($event.target.checked, subInput.parent) : false"
+                >{{ subInput.label }}</label
+              >
+            </span>
+            <textarea
+              v-else-if="subInput.type == 'textarea'"
+              :name="
+                (subInput.name
+                  ? subInput.name
+                  : subInput.placeholder
+                  ? subInput.placeholder
+                  : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
               "
+              style="margin: 5px 0px; resize: none"
+              :rows="subInput.rows ? subInput.rows : 1"
+              :placeholder="subInput.placeholder ? subInput.placeholder : 'Enter text here'"
+            ></textarea>
+            <span v-else-if="subInput.type == 'row_increaser'" style="margin: 5px 0px">
+              <button
+                style="width: 30px; height: 28px"
+                @click.prevent="rowIncrease(inputIndx, subInputIndx, subInput.id)"
+              >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <button
+                style="width: 30px; height: 28px"
+                :disabled="subInput.count === 1"
+                @click.prevent="rowDecrease(inputIndx, subInputIndx, subInput.id)"
+              >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <label>{{ subInput.label }}</label>
+            </span>
+            <input
+              v-else
+              :type="subInput.type"
+              :name="
+                (subInput.name
+                  ? subInput.name
+                  : subInput.placeholder
+                  ? subInput.placeholder
+                  : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
+              "
+              :placeholder="subInput.placeholder + (subInput.required ? '*' : '')"
+              :required="subInput.required"
+              :min="subInput.min"
+              :max="subInput.max"
+              :step="subInput.step"
+              :pattern="subInput.pattern"
+              style="margin: 5px 0px"
+              @invalid="$event.target.classList.add('invalid')"
+              @input="$event.target.classList.remove('invalid')"
             />
-            <label
-              :for="'input_' + inputIndx + '_' + subInputIndx"
-              @change="subInput.parent ? conditional($event.target.checked, subInput.parent) : false"
-              >{{ subInput.label }}</label
-            >
-          </span>
-          <textarea
-            v-else-if="subInput.type == 'textarea'"
-            style="margin: 5px 0px; resize: none"
-            :rows="subInput.rows ? subInput.rows : 1"
-            :placeholder="subInput.placeholder ? subInput.placeholder : 'Enter text here'"
-          ></textarea>
-          <span v-else-if="subInput.type == 'row_increaser'" style="margin: 5px 0px">
-            <button
-              style="width: 30px; height: 28px"
-              @click.prevent="rowIncrease(inputIndx, subInputIndx, subInput.id)"
-            >
-              <i class="fa-solid fa-plus"></i>
-            </button>
-            <button
-              style="width: 30px; height: 28px"
-              :disabled="subInput.count === 1"
-              @click.prevent="rowDecrease(inputIndx, subInputIndx, subInput.id)"
-            >
-              <i class="fa-solid fa-minus"></i>
-            </button>
-            <label>{{ subInput.label }}</label>
-          </span>
-          <input
-            v-else
-            :type="subInput.type"
-            :name="subInput.name"
-            :placeholder="subInput.placeholder + (subInput.required ? '*' : '')"
-            :required="subInput.required"
-            :min="subInput.min"
-            :max="subInput.max"
-            :step="subInput.step"
-            :pattern="subInput.pattern"
-            style="margin: 5px 0px"
-            v-model="subInput.value"
-            @invalid="$event.target.classList.add('invalid')"
-            @input="$event.target.classList.remove('invalid')"
-          />
+          </template>
         </template>
       </div>
     </template>
@@ -129,7 +166,7 @@
 export default {
   name: 'Form',
 
-  inject: ['emailReq', 'endPts', 'site', 'slctd'],
+  inject: ['emailReq', 'endPts', 'respWidth', 'site', 'slctd', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -156,7 +193,6 @@ export default {
       }
     },
     required(event, inputIndx, subInputIndx) {
-      // console.log(event.target.checked);
       this.elValue.form[inputIndx].forEach((subInput, subInputIndex) => {
         if (
           this.elValue.form[inputIndx][subInputIndex].type == this.elValue.form[inputIndx][subInputIndx].type &&
@@ -166,10 +202,7 @@ export default {
             ? delete this.elValue.form[inputIndx][subInputIndex].required
             : (this.elValue.form[inputIndx][subInputIndex].required = 'true');
       });
-      // console.log(Array.from(this.$refs.formsForm));
-      // console.log(this.$refs.formsForm);
       Array.from(this.$refs.formsForm).forEach((input) => {
-        console.log(input.id);
         if (input.id.split('_')[1] == inputIndx) input.classList.remove('invalid');
       });
     },
@@ -190,6 +223,21 @@ export default {
     },
     async sendEmail() {
       console.log(this.$refs.formsForm.checkValidity());
+      this.emailBody = {};
+      Array.from(this.$refs.formsForm).forEach((input) => {
+        if (input.name && (input.checked || input.value)) {
+          if (input.type == 'checkbox' || input.type == 'radio') {
+            if (input.checked) {
+              this.emailBody[input.name]
+                ? (this.emailBody[input.name] = this.emailBody[input.name] + ', ' + input.nextSibling.innerHTML)
+                : (this.emailBody[input.name] = input.nextSibling.innerHTML);
+            }
+          } else {
+            this.emailBody[input.name] = input.value;
+          }
+        }
+      });
+      console.log(this.emailBody);
       // this.submitBtnTxt = 'Submit';
       // this.elValue.form.forEach((row, rowIndx) => {
       //   Object.values(row).forEach((inpt, inptIndx) => {
@@ -249,23 +297,23 @@ export default {
             }
           }
         }
-        if (
-          !['row_increaser', 'horizontal_rule', 'break', 'label'].includes(this.elValue.form[rowIndx][inptIndx].type)
-        ) {
-          this.elValue.form[rowIndx][inptIndx].row = rowIndx;
-          this.elValue.form[rowIndx][inptIndx].col = inptIndx;
-          let htmlInpt = this.elValue.form[rowIndx][inptIndx];
-          this.elValue.form[rowIndx][inptIndx].name = htmlInpt.name
-            ? htmlInpt.name.replaceAll(' ', '_')
-            : htmlInpt.type == 'checkbox'
-            ? 'checkbox_group_' + rowIndx
-            : htmlInpt.label
-            ? htmlInpt.label.replaceAll(' ', '_') + '_' + rowIndx + '_' + inptIndx
-            : htmlInpt.placeholder
-            ? htmlInpt.placeholder.replaceAll(' ', '_') + '_' + rowIndx + '_' + inptIndx
-            : htmlInpt.type.replaceAll(' ', '_') + '_input_' + rowIndx + '_' + inptIndx;
-          console.log(this.elValue.form[rowIndx][inptIndx].name);
-        }
+        // if (
+        //   !['row_increaser', 'horizontal_rule', 'break', 'label'].includes(this.elValue.form[rowIndx][inptIndx].type)
+        // ) {
+        //   this.elValue.form[rowIndx][inptIndx].row = rowIndx;
+        //   this.elValue.form[rowIndx][inptIndx].col = inptIndx;
+        //   let htmlInpt = this.elValue.form[rowIndx][inptIndx];
+        //   this.elValue.form[rowIndx][inptIndx].name = htmlInpt.name
+        //     ? htmlInpt.name.replaceAll(' ', '_')
+        //     : htmlInpt.type == 'checkbox'
+        //     ? 'checkbox_group_' + rowIndx
+        //     : htmlInpt.label
+        //     ? htmlInpt.label.replaceAll(' ', '_') + '_' + rowIndx + '_' + inptIndx
+        //     : htmlInpt.placeholder
+        //     ? htmlInpt.placeholder.replaceAll(' ', '_') + '_' + rowIndx + '_' + inptIndx
+        //     : htmlInpt.type.replaceAll(' ', '_') + '_input_' + rowIndx + '_' + inptIndx;
+        //   console.log(this.elValue.form[rowIndx][inptIndx].name);
+        // }
       });
     });
   },
@@ -280,6 +328,7 @@ export default {
 .forms input:not([type='checkbox']):not([type='radio']) {
   padding: 5px;
   height: 28px;
+  width: 100%;
 }
 .forms button[type='submit'] {
   padding: 5px;

@@ -79,7 +79,9 @@
       title="padding"
       v-model="site.htmlElmnts[elKey].style.padding"
     />
-    <!-- 'text-box_image' -->
+    <!-- responsive -->
+    <input type="checkbox" v-if="option == 'responsive'" v-model="site.htmlElmnts[elKey].style.responsive" />
+    <!-- text-box_image -->
     <input
       type="checkbox"
       v-if="option == 'text-box_image' && options.includes('text-box_image')"

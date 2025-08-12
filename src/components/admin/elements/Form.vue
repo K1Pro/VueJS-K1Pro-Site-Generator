@@ -1,5 +1,6 @@
 <template>
-  <div class="forms">
+  <div class="forms" :style="[style.outline.borderColor]">
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['responsive']"></edit_menu>
     <template v-for="(input, inputIndx) in elValue.form" :key="'row_' + inputIndx">
       <div
         style="display: grid; grid-gap: 5px"
@@ -561,6 +562,9 @@ export default {
 <style>
 .forms {
   position: relative;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
   padding: 0px 10px;
 }
 .forms-captcha-container {
