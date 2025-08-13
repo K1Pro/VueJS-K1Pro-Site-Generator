@@ -213,7 +213,7 @@
     <div class="forms-captcha-container">
       <div class="forms-captcha-inputs">
         <img class="forms-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" />
-        <input type="text" placeholder="Verify captcha" style="height: 4vh; width: calc(100% - 90px)" />
+        <input type="text" placeholder="Verify captcha" style="height: 4vh; width: calc(100% - 30px)" />
         <button class="forms-captcha-btn">
           <i class="fa-solid fa-arrows-rotate"></i>
         </button>
@@ -221,7 +221,13 @@
     </div>
     <br />
 
-    <button type="submit">Submit</button>
+    <!-- <button type="submit">Submit</button> -->
+    <span
+      class="forms-submit"
+      contenteditable="plaintext-only"
+      v-on:blur="site.htmlElmnts[elKey].button = $event.target.innerHTML"
+      >{{ site.htmlElmnts[elKey].button }}</span
+    >
   </div>
 </template>
 
@@ -610,10 +616,21 @@ export default {
   padding: 5px;
 }
 .forms span {
-  /* float: left; */
   white-space: nowrap;
   overflow: hidden;
-  /* width: calc(100% - 90px); */
+}
+.forms-submit {
+  display: inline-block;
+  background-color: #efefef;
+  border: 1px solid #767676;
+  border-radius: 2px;
+  height: 30px;
+  cursor: default;
+  padding: 6px 5px 5px 5px;
+  font-size: 13px;
+}
+.forms-submit:hover {
+  background-color: #e5e5e5;
 }
 @media only screen and (min-width: 650px) {
   .forms {

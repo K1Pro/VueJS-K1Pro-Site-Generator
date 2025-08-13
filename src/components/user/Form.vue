@@ -28,7 +28,11 @@
       >
         <template
           v-for="(subInput, subInputIndx) in input"
-          v-if="!input[0].child || (input[0].child && conditionals.includes(input[0].child))"
+          v-if="
+            !input[0].child ||
+            (input[0].child &&
+              (conditionals.includes(input[0].child) || conditionals.includes(input[0].child + '_' + input[0].count)))
+          "
         >
           <template
             v-if="
@@ -65,13 +69,13 @@
                 @invalid="$event.target.classList.add('invalid')"
                 @change="
                   $event.target.classList.remove('invalid');
-                  subInput.parent ? conditional($event.target.checked, subInput.parent) : false;
+                  conditional($event, inputIndx, subInput.parent, subInput.count);
                   subInput.required ? required($event, inputIndx, subInputIndx) : false;
                 "
               />
               <label
-                :for="'input_' + inputIndx + '_' + subInputIndx"
-                @change="subInput.parent ? conditional($event.target.checked, subInput.parent) : false"
+                :for="subInput.type + '_' + inputIndx + '_' + subInputIndx"
+                @change="conditional($event, inputIndx, subInput.parent, subInput.count)"
                 >{{ subInput.label }}</label
               >
             </span>
@@ -114,7 +118,9 @@
                   ? subInput.placeholder
                   : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
               "
-              :placeholder="subInput.placeholder + (subInput.required ? '*' : '')"
+              :placeholder="
+                subInput.placeholder + (subInput.count > 1 ? ' ' + subInput.count : '') + (subInput.required ? '*' : '')
+              "
               :required="subInput.required"
               :min="subInput.min"
               :max="subInput.max"
@@ -176,7 +182,7 @@ export default {
       captchaDate: server_datetime_YmdHis,
       captchaSpin: false,
       submitting: false,
-      submitBtnTxt: 'Submit',
+      submitBtnTxt: this.site.htmlElmnts[this.elKey].button,
       conditionals: [],
       emailBody: {},
       increasers: {},
@@ -184,13 +190,36 @@ export default {
   },
 
   methods: {
-    conditional(event, parent) {
-      if (event) {
-        this.conditionals.push(parent);
+    conditional(event, inputIndx, parent, count) {
+      console.log('=====================');
+      if (event.target.checked) {
+        if (event.target.type == 'radio') {
+          this.elValue.form[inputIndx].forEach((row, rowIndx) => {
+            if (parent !== undefined && row.parent == parent) {
+              console.log('add ' + parent);
+              this.conditionals.push(parent + (count ? '_' + count : ''));
+            } else if (row.parent !== undefined) {
+              console.log('delete ' + row.parent + (count ? '_' + count : ''));
+              const conditionalIndx = this.conditionals.indexOf(row.parent + (count ? '_' + count : ''));
+
+              if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
+            }
+          });
+        } else if (parent) {
+          this.conditionals.push(parent + (count ? '_' + count : ''));
+        }
       } else {
-        const conditionalIndx = this.conditionals.indexOf(parent);
-        if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
+        if (parent) {
+          const conditionalIndx = this.conditionals.indexOf(parent);
+          if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
+        }
       }
+
+      console.log(event.target.type);
+      console.log(event.target.checked);
+      console.log(parent);
+      console.log(count);
+      console.log(this.conditionals);
     },
     required(event, inputIndx, subInputIndx) {
       this.elValue.form[inputIndx].forEach((subInput, subInputIndex) => {
@@ -207,6 +236,7 @@ export default {
       });
     },
     rowIncrease(inputIndx, subInputIndx, subInputID) {
+      console.log('rowIncrease');
       this.elValue.form[inputIndx][subInputIndx].count++;
       let tempIncreasers = JSON.parse(JSON.stringify(this.increasers[subInputID]));
       console.log(tempIncreasers);
@@ -290,12 +320,22 @@ export default {
           inpt.id = new Date().getTime();
           inpt.count = 1;
           if (!this.increasers[inpt.id]) this.increasers[inpt.id] = [];
-          for (let i = inpt.rows; i > 0; i--) {
-            this.increasers[inpt.id].push(JSON.parse(JSON.stringify(this.elValue.form[rowIndx - i])));
-            for (let x = 0; x < this.elValue.form[rowIndx - i].length; x++) {
-              this.elValue.form[rowIndx - i][x].count = 1;
+          let increaserRows = inpt.rows;
+          let increaserRowIndx = rowIndx - 1;
+          while (increaserRowIndx >= 0 && increaserRows > 0) {
+            if (this.elValue.form[increaserRowIndx][0].child == inpt.child) {
+              // this adds the row that matches a child value to the increasers computed object
+
+              increaserRows--;
             }
+            this.increasers[inpt.id].push(JSON.parse(JSON.stringify(this.elValue.form[increaserRowIndx])));
+            // this adds a counter to each row defined within the row_increaser row count
+            for (let x = 0; x < this.elValue.form[increaserRowIndx].length; x++) {
+              this.elValue.form[increaserRowIndx][x].count = 1;
+            }
+            increaserRowIndx--;
           }
+          this.increasers[inpt.id].reverse();
         }
         // if (
         //   !['row_increaser', 'horizontal_rule', 'break', 'label'].includes(this.elValue.form[rowIndx][inptIndx].type)
