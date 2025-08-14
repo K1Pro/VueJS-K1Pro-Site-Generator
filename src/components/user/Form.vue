@@ -56,8 +56,11 @@
               style="margin: 5px 0px; white-space: nowrap; overflow: hidden; text-overflow: clip"
             >
               <input
-                style="width: 13px; margin: 3px 3px 3px 4px"
                 :type="subInput.type"
+                :checked="subInput.checked"
+                :required="subInput.required"
+                :disabled="submitBtnTxt == 'Submitted'"
+                style="width: 13px; margin: 3px 3px 3px 4px"
                 :id="subInput.type + '_' + inputIndx + '_' + subInputIndx"
                 :name="
                   (subInput.name
@@ -66,23 +69,25 @@
                     ? subInput.placeholder + '_' + inputIndx + '_' + subInputIndx
                     : subInput.type + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
                 "
-                :required="subInput.required"
-                :disabled="submitBtnTxt == 'Submitted'"
                 @invalid="$event.target.classList.add('invalid')"
                 @change="
                   $event.target.classList.remove('invalid');
-                  conditional($event, inputIndx, subInput.parent, subInput.count);
+                  conditional($event, inputIndx, subInputIndx, subInput.parent, subInput.count);
                   subInput.required ? required($event, inputIndx, subInputIndx) : false;
                 "
               />
               <label
                 :for="subInput.type + '_' + inputIndx + '_' + subInputIndx"
-                @change="conditional($event, inputIndx, subInput.parent, subInput.count)"
+                @change="conditional($event, inputIndx, subInputIndx, subInput.parent, subInput.count)"
                 >{{ subInput.label }}</label
               >
             </span>
             <textarea
               v-else-if="subInput.type == 'textarea'"
+              v-model="subInput.value"
+              style="margin: 5px 0px; resize: none"
+              :disabled="submitBtnTxt == 'Submitted'"
+              :rows="subInput.rows ? subInput.rows : 1"
               :name="
                 (subInput.name
                   ? subInput.name
@@ -90,10 +95,7 @@
                   ? subInput.placeholder + '_' + inputIndx + '_' + subInputIndx
                   : subInput.type + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
               "
-              style="margin: 5px 0px; resize: none"
-              :rows="subInput.rows ? subInput.rows : 1"
               :placeholder="subInput.placeholder ? subInput.placeholder : 'Enter text here'"
-              :disabled="submitBtnTxt == 'Submitted'"
             ></textarea>
             <span v-else-if="subInput.type == 'row_increaser'" style="margin: 5px 0px">
               <button
@@ -114,8 +116,15 @@
             </span>
             <input
               v-else
+              :min="subInput.min"
+              :max="subInput.max"
+              :step="subInput.step"
               :type="subInput.type"
               style="margin: 5px 0px"
+              v-model="subInput.value"
+              :pattern="subInput.pattern"
+              :required="subInput.required"
+              :disabled="submitBtnTxt == 'Submitted'"
               :name="
                 (subInput.name
                   ? subInput.name
@@ -129,12 +138,6 @@
                 (subInput.required ? '*' : '')
               "
               :title="subInput.name ? subInput.name : subInput.required ? 'Please fill out this field.' : ''"
-              :required="subInput.required"
-              :min="subInput.min"
-              :max="subInput.max"
-              :step="subInput.step"
-              :pattern="subInput.pattern"
-              :disabled="submitBtnTxt == 'Submitted'"
               @invalid="$event.target.classList.add('invalid')"
               @input="$event.target.classList.remove('invalid')"
             />
@@ -197,8 +200,9 @@ export default {
   },
 
   methods: {
-    conditional(event, inputIndx, parent, count) {
+    conditional(event, inputIndx, subInputIndx, parent, count) {
       if (event.target.checked) {
+        this.elValue.form[inputIndx][subInputIndx].checked = true;
         if (event.target.type == 'radio') {
           this.elValue.form[inputIndx].forEach((row, rowIndx) => {
             if (parent !== undefined && row.parent == parent) {
@@ -213,6 +217,7 @@ export default {
           this.conditionals.push(parent + (count ? '_' + count : ''));
         }
       } else {
+        this.elValue.form[inputIndx][subInputIndx].checked = false;
         if (parent) {
           const conditionalIndx = this.conditionals.indexOf(parent);
           if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
@@ -266,10 +271,9 @@ export default {
           }
         });
         this.submitBtnTxt = null;
-        // this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
-        //   if (resJSON.success) this.submitBtnTxt = 'Submitted';
-        // });
-        this.submitBtnTxt = 'Submitted';
+        this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
+          this.submitBtnTxt = resJSON.success ? 'Submitted' : this.site.htmlElmnts[this.elKey].button;
+        });
       }
     },
     async updateCaptcha() {
