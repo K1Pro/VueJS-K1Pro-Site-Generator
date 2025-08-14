@@ -266,9 +266,10 @@ export default {
           }
         });
         this.submitBtnTxt = null;
-        this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
-          if (resJSON.success) this.submitBtnTxt = 'Submitted';
-        });
+        // this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
+        //   if (resJSON.success) this.submitBtnTxt = 'Submitted';
+        // });
+        this.submitBtnTxt = 'Submitted';
       }
     },
     async updateCaptcha() {
@@ -327,6 +328,15 @@ export default {
   padding: 5px;
   width: 50%;
 }
+.forms button[type='submit']:disabled {
+  color: rgb(16, 184, 16);
+  font-weight: bolder;
+  cursor: not-allowed;
+  background-color: #efefef;
+  border: 1px solid #767676;
+  border-radius: 2px;
+  height: 30px;
+}
 .forms-captcha-container {
   width: 100%;
 }
@@ -363,6 +373,9 @@ export default {
 @media only screen and (min-width: 650px) {
   .forms {
     padding: 0px 10%;
+  }
+  .forms button[type='submit'] {
+    width: calc(50px + 15%);
   }
   .forms-captcha-img {
     height: 4.5vw;
