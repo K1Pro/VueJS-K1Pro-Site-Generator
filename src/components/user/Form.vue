@@ -48,7 +48,8 @@
               :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
               >{{ subInput.label }}</span
             >
-            <br v-else-if="subInput.type == 'break'" />
+            <br v-else-if="input[0].type == 'break' && input.length === 1" />
+            <span v-else-if="subInput.type == 'break'" />
             <hr v-else-if="subInput.type == 'horizontal_rule'" style="width: 100%" />
             <span
               v-else-if="subInput.type == 'checkbox' || subInput.type == 'radio'"
@@ -62,10 +63,11 @@
                   (subInput.name
                     ? subInput.name
                     : subInput.placeholder
-                    ? subInput.placeholder
-                    : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
+                    ? subInput.placeholder + '_' + inputIndx + '_' + subInputIndx
+                    : subInput.type + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
                 "
                 :required="subInput.required"
+                :disabled="submitBtnTxt == 'Submitted'"
                 @invalid="$event.target.classList.add('invalid')"
                 @change="
                   $event.target.classList.remove('invalid');
@@ -85,23 +87,25 @@
                 (subInput.name
                   ? subInput.name
                   : subInput.placeholder
-                  ? subInput.placeholder
-                  : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
+                  ? subInput.placeholder + '_' + inputIndx + '_' + subInputIndx
+                  : subInput.type + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
               "
               style="margin: 5px 0px; resize: none"
               :rows="subInput.rows ? subInput.rows : 1"
               :placeholder="subInput.placeholder ? subInput.placeholder : 'Enter text here'"
+              :disabled="submitBtnTxt == 'Submitted'"
             ></textarea>
             <span v-else-if="subInput.type == 'row_increaser'" style="margin: 5px 0px">
               <button
                 style="width: 30px; height: 28px"
+                :disabled="submitBtnTxt == 'Submitted'"
                 @click.prevent="rowIncrease(inputIndx, subInputIndx, subInput.id)"
               >
                 <i class="fa-solid fa-plus"></i>
               </button>
               <button
                 style="width: 30px; height: 28px"
-                :disabled="subInput.count === 1"
+                :disabled="subInput.count === 1 || submitBtnTxt == 'Submitted'"
                 @click.prevent="rowDecrease(inputIndx, subInputIndx, subInput.id)"
               >
                 <i class="fa-solid fa-minus"></i>
@@ -111,22 +115,26 @@
             <input
               v-else
               :type="subInput.type"
+              style="margin: 5px 0px"
               :name="
                 (subInput.name
                   ? subInput.name
                   : subInput.placeholder
-                  ? subInput.placeholder
-                  : 'input_' + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
+                  ? subInput.placeholder + '_' + inputIndx + '_' + subInputIndx
+                  : subInput.type + inputIndx + '_' + subInputIndx) + (subInput.count ? ' ' + subInput.count : '')
               "
               :placeholder="
-                subInput.placeholder + (subInput.count > 1 ? ' ' + subInput.count : '') + (subInput.required ? '*' : '')
+                (subInput.placeholder ? subInput.placeholder : '') +
+                (subInput.count > 1 ? ' ' + subInput.count : '') +
+                (subInput.required ? '*' : '')
               "
+              :title="subInput.name ? subInput.name : subInput.required ? 'Please fill out this field.' : ''"
               :required="subInput.required"
               :min="subInput.min"
               :max="subInput.max"
               :step="subInput.step"
               :pattern="subInput.pattern"
-              style="margin: 5px 0px"
+              :disabled="submitBtnTxt == 'Submitted'"
               @invalid="$event.target.classList.add('invalid')"
               @input="$event.target.classList.remove('invalid')"
             />
@@ -141,29 +149,29 @@
         <input
           required
           type="text"
+          v-model="captcha"
           placeholder="Verify captcha"
           style="height: 4vh; width: calc(100% - 30px)"
-          v-model="captcha"
+          :disabled="submitBtnTxt == 'Submitted'"
           @invalid="$event.target.classList.add('invalid')"
           @input="captcha ? $event.target.classList.remove('invalid') : false"
-          @click="submitBtnTxt = 'Submit'"
         />
-        <button
-          class="forms-captcha-btn"
-          @click.prevent="
-            updateCaptcha();
-            submitBtnTxt = 'Submit';
-          "
-        >
+        <button class="forms-captcha-btn" @click.prevent="updateCaptcha()" :disabled="submitBtnTxt == 'Submitted'">
           <i :class="{ spin: captchaSpin }" class="fa-solid fa-arrows-rotate"></i>
         </button>
       </div>
     </div>
     <br />
 
-    <button type="submit" @click.prevent="sendEmail" :disabled="submitBtnTxt == 'Subscription updated'">
-      <i v-if="submitting" class="spin fa-solid fa-arrows-rotate"></i>
-      <template v-else>{{ submitBtnTxt }}</template>
+    <button
+      type="submit"
+      @click.prevent="sendEmail"
+      :disabled="submitBtnTxt == 'Submitted' || submitBtnTxt == 'Subscription updated'"
+    >
+      <template v-if="submitBtnTxt == 'Submitted' || submitBtnTxt == site.htmlElmnts[elKey].button">
+        {{ submitBtnTxt }}
+      </template>
+      <i v-else class="spin fa-solid fa-arrows-rotate"></i>
     </button>
   </form>
 </template>
@@ -181,7 +189,6 @@ export default {
       captcha: '',
       captchaDate: server_datetime_YmdHis,
       captchaSpin: false,
-      submitting: false,
       submitBtnTxt: this.site.htmlElmnts[this.elKey].button,
       conditionals: [],
       emailBody: {},
@@ -191,15 +198,12 @@ export default {
 
   methods: {
     conditional(event, inputIndx, parent, count) {
-      console.log('=====================');
       if (event.target.checked) {
         if (event.target.type == 'radio') {
           this.elValue.form[inputIndx].forEach((row, rowIndx) => {
             if (parent !== undefined && row.parent == parent) {
-              console.log('add ' + parent);
               this.conditionals.push(parent + (count ? '_' + count : ''));
             } else if (row.parent !== undefined) {
-              console.log('delete ' + row.parent + (count ? '_' + count : ''));
               const conditionalIndx = this.conditionals.indexOf(row.parent + (count ? '_' + count : ''));
 
               if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
@@ -214,12 +218,6 @@ export default {
           if (conditionalIndx > -1) this.conditionals.splice(conditionalIndx, 1);
         }
       }
-
-      console.log(event.target.type);
-      console.log(event.target.checked);
-      console.log(parent);
-      console.log(count);
-      console.log(this.conditionals);
     },
     required(event, inputIndx, subInputIndx) {
       this.elValue.form[inputIndx].forEach((subInput, subInputIndex) => {
@@ -236,10 +234,8 @@ export default {
       });
     },
     rowIncrease(inputIndx, subInputIndx, subInputID) {
-      console.log('rowIncrease');
       this.elValue.form[inputIndx][subInputIndx].count++;
       let tempIncreasers = JSON.parse(JSON.stringify(this.increasers[subInputID]));
-      console.log(tempIncreasers);
       tempIncreasers.forEach((row, rowIndx) => {
         tempIncreasers[rowIndx].forEach((col, colIndx) => {
           tempIncreasers[rowIndx][colIndx].count = this.elValue.form[inputIndx][subInputIndx].count;
@@ -252,53 +248,28 @@ export default {
       this.elValue.form.splice(inputIndx - this.increasers[subInputID].length, this.increasers[subInputID].length);
     },
     async sendEmail() {
-      console.log(this.$refs.formsForm.checkValidity());
       this.emailBody = {};
-      Array.from(this.$refs.formsForm).forEach((input) => {
-        if (input.name && (input.checked || input.value)) {
-          if (input.type == 'checkbox' || input.type == 'radio') {
-            if (input.checked) {
-              this.emailBody[input.name]
-                ? (this.emailBody[input.name] = this.emailBody[input.name] + ', ' + input.nextSibling.innerHTML)
-                : (this.emailBody[input.name] = input.nextSibling.innerHTML);
+      if (this.$refs.formsForm.checkValidity()) {
+        Array.from(this.$refs.formsForm).forEach((input) => {
+          if (input.name && (input.checked || input.value)) {
+            if (input.type == 'checkbox' || input.type == 'radio') {
+              if (input.checked) {
+                this.emailBody[input.name]
+                  ? (this.emailBody[input.name] = this.emailBody[input.name] + ', ' + input.nextSibling.innerHTML)
+                  : (this.emailBody[input.name] = input.nextSibling.innerHTML);
+              }
+            } else {
+              this.emailBody[input.name] = this.emailBody[input.name]
+                ? this.emailBody[input.name] + ' ' + input.value
+                : input.value;
             }
-          } else {
-            this.emailBody[input.name] = input.value;
           }
-        }
-      });
-      console.log(this.emailBody);
-      // this.submitBtnTxt = 'Submit';
-      // this.elValue.form.forEach((row, rowIndx) => {
-      //   Object.values(row).forEach((inpt, inptIndx) => {
-      //     if (inpt.value && inpt.type) {
-      //       // console.log(inpt);
-      //       const emailBodyKeyCount = inpt.count ? '_' + inpt.count : '';
-      //       if (['checkbox'].includes(inpt.type)) {
-      //         if (this.emailBody[inpt.name]) {
-      //           this.emailBody[inpt.name + emailBodyKeyCount] += inpt.label ? inpt.label + ', ' : inpt.value + ', ';
-      //         } else {
-      //           this.emailBody[inpt.name + emailBodyKeyCount] = inpt.label ? inpt.label + ', ' : inpt.value + ', ';
-      //         }
-      //       } else {
-      //         this.emailBody[inpt.name + emailBodyKeyCount] = inpt.label ? inpt.label : inpt.value;
-      //       }
-      //     }
-      //   });
-      // });
-      // console.log();
-      // if (this.$refs.formsForm.checkValidity()) {
-      //   // this.submitting = true;
-      //   // this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
-      //   //   if (resJSON.success) {
-      //   //     Object.assign(this.$data, this.$options.data.apply(this));
-      //   //     this.submitBtnTxt = 'Submitted';
-      //   //     this.updateCaptcha();
-      //   //   } else {
-      //   //     this.submitting = false;
-      //   //   }
-      //   // });
-      // }
+        });
+        this.submitBtnTxt = null;
+        this.emailReq('POST', this.captchaDate, this.captcha, this.emailBody).then((resJSON) => {
+          if (resJSON.success) this.submitBtnTxt = 'Submitted';
+        });
+      }
     },
     async updateCaptcha() {
       this.captchaSpin = true;
@@ -325,7 +296,6 @@ export default {
           while (increaserRowIndx >= 0 && increaserRows > 0) {
             if (this.elValue.form[increaserRowIndx][0].child == inpt.child) {
               // this adds the row that matches a child value to the increasers computed object
-
               increaserRows--;
             }
             this.increasers[inpt.id].push(JSON.parse(JSON.stringify(this.elValue.form[increaserRowIndx])));
@@ -337,23 +307,6 @@ export default {
           }
           this.increasers[inpt.id].reverse();
         }
-        // if (
-        //   !['row_increaser', 'horizontal_rule', 'break', 'label'].includes(this.elValue.form[rowIndx][inptIndx].type)
-        // ) {
-        //   this.elValue.form[rowIndx][inptIndx].row = rowIndx;
-        //   this.elValue.form[rowIndx][inptIndx].col = inptIndx;
-        //   let htmlInpt = this.elValue.form[rowIndx][inptIndx];
-        //   this.elValue.form[rowIndx][inptIndx].name = htmlInpt.name
-        //     ? htmlInpt.name.replaceAll(' ', '_')
-        //     : htmlInpt.type == 'checkbox'
-        //     ? 'checkbox_group_' + rowIndx
-        //     : htmlInpt.label
-        //     ? htmlInpt.label.replaceAll(' ', '_') + '_' + rowIndx + '_' + inptIndx
-        //     : htmlInpt.placeholder
-        //     ? htmlInpt.placeholder.replaceAll(' ', '_') + '_' + rowIndx + '_' + inptIndx
-        //     : htmlInpt.type.replaceAll(' ', '_') + '_input_' + rowIndx + '_' + inptIndx;
-        //   console.log(this.elValue.form[rowIndx][inptIndx].name);
-        // }
       });
     });
   },
@@ -372,13 +325,13 @@ export default {
 }
 .forms button[type='submit'] {
   padding: 5px;
-  width: 20%;
+  width: 50%;
 }
 .forms-captcha-container {
   width: 100%;
 }
 .forms-captcha-inputs {
-  width: 50%;
+  width: 75%;
 }
 .forms-captcha-img {
   width: 100%;
@@ -398,6 +351,14 @@ export default {
 .forms-captcha-btn {
   width: 30px;
   height: 4vh;
+}
+@media only screen and (min-width: 400px) {
+  .forms button[type='submit'] {
+    width: calc(50px + 20%);
+  }
+  .forms-captcha-inputs {
+    width: 50%;
+  }
 }
 @media only screen and (min-width: 650px) {
   .forms {

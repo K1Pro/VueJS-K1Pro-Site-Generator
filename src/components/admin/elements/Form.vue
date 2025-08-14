@@ -167,10 +167,12 @@
                 </option>
               </template>
             </select>
+            <!-- Horizontal rule -->
             <hr
               v-if="subInput.type == 'horizontal_rule'"
               style="margin-left: -1px; width: calc(100% - 21px); margin-top: -15px"
             />
+            <!-- Row increaser -->
             <span v-else-if="subInput.type == 'row_increaser'" style="margin-left: -100%">
               <button style="width: 30px; height: 28px"><i class="fa-solid fa-plus"></i></button>
               <button style="width: 30px; height: 28px"><i class="fa-solid fa-minus"></i></button>
@@ -181,6 +183,7 @@
                 v-model="subInput.label"
               />
             </span>
+            <!-- Label -->
             <input
               v-else-if="['label'].includes(subInput.type)"
               type="text"
@@ -209,7 +212,7 @@
         </button>
       </div>
     </template>
-
+    <!-- Captcha -->
     <div class="forms-captcha-container">
       <div class="forms-captcha-inputs">
         <img class="forms-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" />
@@ -220,8 +223,7 @@
       </div>
     </div>
     <br />
-
-    <!-- <button type="submit">Submit</button> -->
+    <!-- Editable submit button -->
     <span
       class="forms-submit"
       contenteditable="plaintext-only"
@@ -309,7 +311,6 @@ export default {
             });
           }
         }
-
         this.site.htmlElmnts[this.elKey].form = tempForm;
         event.srcElement.selectedIndex = 0;
       } else {
@@ -372,13 +373,15 @@ export default {
           delete tempForm[inputIndx][subInputIndx].parent;
         }
       } else if (mod == 'required') {
-        console.log('required');
-        tempForm[inputIndx].forEach((subInput, subInputIndex) => {
-          if (subInput.type == tempForm[inputIndx][subInputIndx].type)
-            event.target.value == 'true'
-              ? (tempForm[inputIndx][subInputIndex].required = 'true')
-              : delete tempForm[inputIndx][subInputIndex].required;
-        });
+        if (['radio', 'checkbox'].includes(tempForm[inputIndx][subInputIndx].type)) {
+          console.log('required');
+          tempForm[inputIndx].forEach((subInput, subInputIndex) => {
+            if (subInput.type == tempForm[inputIndx][subInputIndx].type)
+              event.target.value == 'true'
+                ? (tempForm[inputIndx][subInputIndex].required = 'true')
+                : delete tempForm[inputIndx][subInputIndex].required;
+          });
+        }
       }
       console.log(tempForm[inputIndx][tempForm[inputIndx].length - 1]);
       this.site.htmlElmnts[this.elKey].form = tempForm;
@@ -393,19 +396,6 @@ export default {
             event.target.value == ''
               ? delete this.elValue.form[inputIndx][xInputIndx][mod]
               : (this.elValue.form[inputIndx][xInputIndx][mod] = event.target.value);
-        });
-      } else if (mod == 'name') {
-        // This reverts a new input (non-radio and non-checkbox) name that exists already
-        this.elValue.form.forEach((row, rowIndex) => {
-          row.forEach((subInput, subInputIndex) => {
-            if (
-              '' + inputIndx + subInputIndx !== '' + rowIndex + subInputIndex &&
-              subInput.name == event.target.value
-            ) {
-              this.showMsg('This name already exists!');
-              this.elValue.form[inputIndx][subInputIndx][mod] = this.tempMod;
-            }
-          });
         });
       }
       if (event.target.value == '') delete this.elValue.form[inputIndx][subInputIndx][mod];
@@ -552,7 +542,6 @@ export default {
         console.log(tempForm[inputIndx][subInputIndx]);
         this.site.htmlElmnts[this.elKey].form = tempForm;
       }
-
       console.log('==============');
     },
   },
