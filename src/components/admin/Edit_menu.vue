@@ -23,13 +23,27 @@
     <input
       v-if="option == 'anchor' && options.includes('anchor')"
       type="text"
+      class="edit-menu-inputs"
       v-model="site.pages[slctd.type][slctd.page][elIndex][2]"
-      class="edit-height"
+    />
+    <!-- background -->
+    <input
+      v-if="option == 'background' && options.includes('background')"
+      type="checkbox"
+      class="edit-menu-inputs"
+      v-model="site.htmlElmnts[elKey].style.background"
+    />
+    <!-- color -->
+    <input
+      v-if="option.includes('color') && options.includes(option)"
+      type="color"
+      class="edit-menu-inputs"
+      v-model="site.htmlElmnts[elKey].style[option]"
     />
     <!-- column gap -->
     <input
       v-if="option == 'column-gap' && options.includes('column-gap')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       step="0.01"
       title="column gap"
@@ -38,7 +52,7 @@
     <!-- font-size -->
     <input
       v-if="option == 'font-size' && options.includes('font-size')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       step="0.01"
       title="font size"
@@ -47,7 +61,7 @@
     <!-- font-size -->
     <input
       v-if="option == 'title-font-size' && options.includes('title-font-size')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       step="1"
       title="title font size"
@@ -56,7 +70,7 @@
     <!-- grid-template-columns -->
     <input
       v-if="option == 'grid-template-columns' && options.includes('grid-template-columns')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       title="columns"
       v-model="site.htmlElmnts[elKey].style.gridTemplateColumns"
@@ -64,16 +78,25 @@
     <!-- height -->
     <input
       v-if="option == 'height' && options.includes('height')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       step="0.01"
       title="height"
       v-model="site.htmlElmnts[elKey].style.height"
     />
+    <!-- margin -->
+    <input
+      v-if="option == 'margin' && options.includes('margin')"
+      type="number"
+      step="0.01"
+      title="margin"
+      class="edit-menu-inputs"
+      v-model="site.htmlElmnts[elKey].style.margin"
+    />
     <!-- padding -->
     <input
       v-if="option == 'padding' && options.includes('padding')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       step="0.01"
       title="padding"
@@ -88,10 +111,18 @@
       :checked="site.htmlElmnts[elKey].img && site.htmlElmnts[elKey].img != ''"
       @change="toggleTextBoxImg"
     />
+    <!-- url -->
+    <input
+      v-if="option == 'url' && options.includes('url')"
+      type="text"
+      title="url"
+      class="edit-menu-inputs"
+      v-model="site.htmlElmnts[elKey].style.url"
+    />
     <!-- width -->
     <input
       v-if="option == 'width' && options.includes('width')"
-      class="edit-height"
+      class="edit-menu-inputs"
       type="number"
       step="0.01"
       title="width"
@@ -145,7 +176,7 @@ export default {
   z-index: 6;
   height: 25px;
 }
-.edit-height {
+.edit-menu-inputs {
   width: 50px;
 }
 .edit-menu select {
