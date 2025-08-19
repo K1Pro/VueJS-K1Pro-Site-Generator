@@ -24,6 +24,7 @@
         {
           paddingTop: elValue.style.margin ? elValue.style.margin + 'vh' : '0vh',
           paddingBottom: elValue.style.margin ? elValue.style.margin + 'vh' : '0vh',
+          textAlign: elValue.style.align ? elValue.style.align : false,
         },
       ]"
     >
@@ -34,10 +35,37 @@
           backgroundColor:
             elValue.style.background && elValue.style['background-color'] ? elValue.style['background-color'] : false,
           color: elValue.style.color ? elValue.style.color : 'black',
-          fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'vh' : '3vh',
-          padding: elValue.style.padding ? elValue.style.padding + 'vh' : '0vh',
+          fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'px' : '3vh',
+          marginLeft: elValue.style.align == 'left' ? '10%' : false,
+          marginRight: elValue.style.align == 'right' ? '10%' : false,
+          paddingTop: elValue.style.padding ? elValue.style.padding + 'vh' : false,
+          paddingBottom: elValue.style.padding ? elValue.style.padding + 'vh' : false,
+          paddingLeft:
+            elValue.style.align == 'center'
+              ? elValue.style.padding + 'vh'
+              : elValue.style.padding && grid.wdth > respWidth.md
+              ? '10%'
+              : grid.wdth > respWidth.md
+              ? '10%'
+              : elValue.style.padding
+              ? elValue.style.padding + 'vh'
+              : false,
+          paddingRight:
+            elValue.style.align == 'center'
+              ? elValue.style.padding + 'vh'
+              : elValue.style.padding && grid.wdth > respWidth.md
+              ? '10%'
+              : grid.wdth > respWidth.md
+              ? '10%'
+              : elValue.style.padding
+              ? elValue.style.padding + 'vh'
+              : false,
           textAlign: elValue.style.align ? elValue.style.align : 'center',
-          width: elValue.style.width ? elValue.style.width + 'px' : '100%',
+          width:
+            !elValue.style.width && !elValue.style.widthUnit
+              ? '100%'
+              : (elValue.style.widthUnit == 'vw' ? grid.wdth * (elValue.style.width / 100) : elValue.style.width) +
+                (elValue.style.widthUnit == 'vw' ? 'px' : elValue.style.widthUnit ? elValue.style.widthUnit : 'px'),
         }"
         ref="headline"
         type="text"
@@ -68,6 +96,5 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
   border: none;
-  text-align: center;
 }
 </style>

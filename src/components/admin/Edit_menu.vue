@@ -19,99 +19,14 @@
         @click="changeAlign($event.target.classList[1])"
       ></i>
     </button>
-    <!-- anchor -->
+    <!-- text [anchor, url] -->
     <input
       v-if="option == 'anchor' && options.includes('anchor')"
       type="text"
+      title="anchor"
       class="edit-menu-inputs"
       v-model="site.pages[slctd.type][slctd.page][elIndex][2]"
     />
-    <!-- background -->
-    <input
-      v-if="option == 'background' && options.includes('background')"
-      type="checkbox"
-      class="edit-menu-inputs"
-      v-model="site.htmlElmnts[elKey].style.background"
-    />
-    <!-- color -->
-    <input
-      v-if="option.includes('color') && options.includes(option)"
-      type="color"
-      class="edit-menu-inputs"
-      v-model="site.htmlElmnts[elKey].style[option]"
-    />
-    <!-- column gap -->
-    <input
-      v-if="option == 'column-gap' && options.includes('column-gap')"
-      class="edit-menu-inputs"
-      type="number"
-      step="0.01"
-      title="column gap"
-      v-model="site.htmlElmnts[elKey].style.columnGap"
-    />
-    <!-- font-size -->
-    <input
-      v-if="option == 'font-size' && options.includes('font-size')"
-      class="edit-menu-inputs"
-      type="number"
-      step="0.01"
-      title="font size"
-      v-model="site.htmlElmnts[elKey].style.fontSize"
-    />
-    <!-- font-size -->
-    <input
-      v-if="option == 'title-font-size' && options.includes('title-font-size')"
-      class="edit-menu-inputs"
-      type="number"
-      step="1"
-      title="title font size"
-      v-model="site.htmlElmnts[elKey].style.titleFontSize"
-    />
-    <!-- grid-template-columns -->
-    <input
-      v-if="option == 'grid-template-columns' && options.includes('grid-template-columns')"
-      class="edit-menu-inputs"
-      type="number"
-      title="columns"
-      v-model="site.htmlElmnts[elKey].style.gridTemplateColumns"
-    />
-    <!-- height -->
-    <input
-      v-if="option == 'height' && options.includes('height')"
-      class="edit-menu-inputs"
-      type="number"
-      step="0.01"
-      title="height"
-      v-model="site.htmlElmnts[elKey].style.height"
-    />
-    <!-- margin -->
-    <input
-      v-if="option == 'margin' && options.includes('margin')"
-      type="number"
-      step="0.01"
-      title="margin"
-      class="edit-menu-inputs"
-      v-model="site.htmlElmnts[elKey].style.margin"
-    />
-    <!-- padding -->
-    <input
-      v-if="option == 'padding' && options.includes('padding')"
-      class="edit-menu-inputs"
-      type="number"
-      step="0.01"
-      title="padding"
-      v-model="site.htmlElmnts[elKey].style.padding"
-    />
-    <!-- responsive -->
-    <input type="checkbox" v-if="option == 'responsive'" v-model="site.htmlElmnts[elKey].style.responsive" />
-    <!-- text-box_image -->
-    <input
-      type="checkbox"
-      v-if="option == 'text-box_image' && options.includes('text-box_image')"
-      :checked="site.htmlElmnts[elKey].img && site.htmlElmnts[elKey].img != ''"
-      @change="toggleTextBoxImg"
-    />
-    <!-- url -->
     <input
       v-if="option == 'url' && options.includes('url')"
       type="text"
@@ -119,15 +34,45 @@
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style.url"
     />
-    <!-- width -->
+    <!-- checkbox [backgound, responsive, text-box-image]-->
     <input
-      v-if="option == 'width' && options.includes('width')"
+      v-if="option == 'background' || option == 'responsive'"
+      type="checkbox"
+      v-model="site.htmlElmnts[elKey].style[option]"
+    />
+    <input
+      v-if="option == 'text-box_image' && options.includes('text-box_image')"
+      type="checkbox"
+      :checked="site.htmlElmnts[elKey].img && site.htmlElmnts[elKey].img != ''"
+      @change="toggleTextBoxImg"
+    />
+    <!-- color [color] -->
+    <input
+      v-if="option.includes('color') && options.includes(option)"
+      type="color"
+      class="edit-menu-inputs"
+      v-model="site.htmlElmnts[elKey].style[option]"
+    />
+    <!-- number [column gap, font-size, height, margin, padding, title-font-size, width ] -->
+    <input
+      v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"
       class="edit-menu-inputs"
       type="number"
       step="0.01"
-      title="width"
-      v-model="site.htmlElmnts[elKey].style.width"
+      :title="option"
+      v-model="
+        site.htmlElmnts[elKey].style[option.replace(/\-[a-z]/g, (match) => match.toUpperCase()).replaceAll('-', '')]
+      "
     />
+    <select
+      v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"
+      v-model="site.htmlElmnts[elKey].style[option.replaceAll('-', '') + 'Unit']"
+      style="width: 45px"
+    >
+      <option>px</option>
+      <option>vh</option>
+      <option>vw</option>
+    </select>
   </div>
 </template>
 
@@ -177,19 +122,23 @@ export default {
   height: 25px;
 }
 .edit-menu-inputs {
+  height: 100%;
   width: 50px;
 }
 .edit-menu select {
   width: 80px;
 }
 .edit-menu button,
-.edit-menu input,
+.edit-menu input:not([type='checkbox']),
 .edit-menu select {
   padding: 0px 3px;
   font-size: 12px;
   margin: 0px;
   opacity: 0.25;
-  /* height: 100%; */
+  height: 100%;
+}
+.edit-menu input[type='checkbox'] {
+  opacity: 0.25;
 }
 .edit-menu button:hover,
 .edit-menu input:hover,

@@ -6,26 +6,52 @@
     ></a>
   </template>
   <div
+    style="position: relative; display: flex"
     :style="{
       paddingTop: elValue.style.margin ? elValue.style.margin + 'vh' : false,
       paddingBottom: elValue.style.margin ? elValue.style.margin + 'vh' : false,
+      justifyContent: elValue.style.align ? elValue.style.align : 'center',
     }"
   >
-    <div
+    <component
+      :is="elValue.style.url ? 'a' : 'div'"
+      :href="elValue.style.url ? elValue.style.url : false"
       class="headline"
       :style="{
         background: elValue.style.background ? elValue.style.background : 'transparent',
         backgroundColor:
           elValue.style.background && elValue.style['background-color'] ? elValue.style['background-color'] : false,
         color: elValue.style.color ? elValue.style.color : 'black',
-        fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'vh' : '3vh',
-        padding: elValue.style.padding ? elValue.style.padding + 'vh' : false,
+        fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'px' : '3vh',
+        margin: elValue.style.align == 'center' ? 'auto' : false,
+        // marginLeft: elValue.style.align == 'left' ? '10%' : false,
+        // marginLeft: elValue.style.align == 'right' ? 'calc(' + wndw.wdth + 'px - 50%)' : false,
+        paddingTop: elValue.style.padding ? elValue.style.padding + 'vh' : false,
+        paddingBottom: elValue.style.padding ? elValue.style.padding + 'vh' : false,
+        paddingLeft:
+          elValue.style.align == 'center'
+            ? elValue.style.padding + 'vh'
+            : wndw.wdth > respWidth.md
+            ? '10%'
+            : elValue.style.padding
+            ? elValue.style.padding + 'vh'
+            : false,
+        paddingRight:
+          elValue.style.align == 'center'
+            ? elValue.style.padding + 'vh'
+            : wndw.wdth > respWidth.md
+            ? '10%'
+            : elValue.style.padding
+            ? elValue.style.padding + 'vh'
+            : false,
         justifyContent: elValue.style.align ? elValue.style.align : 'center',
-        width: elValue.style.width ? elValue.style.width + 'px' : '100%',
+        width: elValue.style.width
+          ? elValue.style.width + (elValue.style.widthUnit ? elValue.style.widthUnit : 'px')
+          : '100%',
       }"
     >
       {{ elValue.text }}
-    </div>
+    </component>
   </div>
 </template>
 
@@ -46,7 +72,6 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  position: relative;
-  margin: auto;
+  text-decoration: none;
 }
 </style>
