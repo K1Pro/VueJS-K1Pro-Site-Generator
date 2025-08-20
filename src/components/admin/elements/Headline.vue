@@ -5,13 +5,14 @@
       :elIndex="elIndex"
       :options="[
         'font-size',
-        'align',
         'anchor',
         'background',
         'background-color',
         'color',
+        'justify-content',
         'margin',
         'padding',
+        'text-align',
         'url',
         'width',
       ]"
@@ -34,9 +35,15 @@ export default {
   computed: {
     divStyle() {
       return {
-        paddingTop: this.elValue.style.margin ? this.elValue.style.margin + 'vh' : '0vh',
-        paddingBottom: this.elValue.style.margin ? this.elValue.style.margin + 'vh' : '0vh',
-        textAlign: this.elValue.style.align ? this.elValue.style.align : false,
+        paddingTop:
+          this.elValue.style.margin && this.elValue.style['margin-unit']
+            ? this.elValue.style.margin + this.elValue.style['margin-unit']
+            : '0px',
+        paddingBottom:
+          this.elValue.style.margin && this.elValue.style['margin-unit']
+            ? this.elValue.style.margin + this.elValue.style['margin-unit']
+            : '0px',
+        justifyContent: this.elValue.style['justify-content'] ? this.elValue.style['justify-content'] : 'center',
       };
     },
     inputStyle() {
@@ -48,60 +55,34 @@ export default {
             : false,
         color: this.elValue.style.color ? this.elValue.style.color : 'black',
         fontSize:
-          !this.elValue.style.fontSize &&
-          !this.elValue.style.fontSizeUnit &&
-          !this.site.body.style.fontSize &&
-          !this.site.body.style.fontSizeUnit
+          !this.elValue.style['font-size'] &&
+          !this.elValue.style['font-size-unit'] &&
+          !this.site.body.style['font-size'] &&
+          !this.site.body.style['font-size-unit']
             ? '12px'
-            : !this.elValue.style.fontSize &&
-              !this.elValue.style.fontSizeUnit &&
-              this.site.body.style.fontSize &&
-              this.site.body.style.fontSizeUnit
-            ? this.site.body.style.fontSize + this.site.body.style.fontSizeUnit
-            : (this.elValue.style.fontSizeUnit == 'vw'
-                ? this.grid.wdth * (this.elValue.style.fontSize / 100)
-                : this.elValue.style.fontSize) +
-              (this.elValue.style.fontSizeUnit == 'vw'
-                ? 'px'
-                : this.elValue.style.fontSizeUnit
-                ? this.elValue.style.fontSizeUnit
-                : 'px'),
-        marginLeft: this.elValue.style.align == 'left' ? '10%' : false,
-        marginRight: this.elValue.style.align == 'right' ? '10%' : false,
-        paddingTop: this.elValue.style.padding ? this.elValue.style.padding + 'vh' : false,
-        paddingBottom: this.elValue.style.padding ? this.elValue.style.padding + 'vh' : false,
-        paddingLeft:
-          this.elValue.style.align == 'center'
-            ? this.elValue.style.padding + 'vh'
-            : this.elValue.style.padding && this.grid.wdth > this.respWidth.md
-            ? '10%'
-            : this.grid.wdth > this.respWidth.md
-            ? '10%'
-            : this.elValue.style.padding
-            ? this.elValue.style.padding + 'vh'
-            : false,
-        paddingRight:
-          this.elValue.style.align == 'center'
-            ? this.elValue.style.padding + 'vh'
-            : this.elValue.style.padding && this.grid.wdth > this.respWidth.md
-            ? '10%'
-            : this.grid.wdth > this.respWidth.md
-            ? '10%'
-            : this.elValue.style.padding
-            ? this.elValue.style.padding + 'vh'
-            : false,
-        textAlign: this.elValue.style.align ? this.elValue.style.align : 'center',
+            : (!this.elValue.style['font-size'] || !this.elValue.style['font-size-unit']) &&
+              this.site.body.style['font-size'] &&
+              this.site.body.style['font-size-unit']
+            ? this.site.body.style['font-size'] + this.site.body.style['font-size-unit']
+            : (this.elValue.style['font-size-unit'] == 'vw'
+                ? this.grid.wdth * (this.elValue.style['font-size'] / 100)
+                : this.elValue.style['font-size']) +
+              (this.elValue.style['font-size-unit'] == 'vw' ? 'px' : this.elValue.style['font-size-unit']),
+        padding:
+          !this.elValue.style.padding || !this.elValue.style['padding-unit']
+            ? '0px'
+            : (this.elValue.style['padding-unit'] == 'vw'
+                ? this.grid.wdth * (this.elValue.style.padding / 100)
+                : this.elValue.style.padding) +
+              (this.elValue.style['padding-unit'] == 'vw' ? 'px' : this.elValue.style['padding-unit']),
+        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'center',
         width:
-          !this.elValue.style.width && !this.elValue.style.widthUnit
+          !this.elValue.style.width || !this.elValue.style['width-unit']
             ? '100%'
-            : (this.elValue.style.widthUnit == 'vw'
+            : (this.elValue.style['width-unit'] == 'vw'
                 ? this.grid.wdth * (this.elValue.style.width / 100)
                 : this.elValue.style.width) +
-              (this.elValue.style.widthUnit == 'vw'
-                ? 'px'
-                : this.elValue.style.widthUnit
-                ? this.elValue.style.widthUnit
-                : 'px'),
+              (this.elValue.style['width-unit'] == 'vw' ? 'px' : this.elValue.style['width-unit']),
       };
     },
   },
@@ -112,16 +93,17 @@ export default {
 .headline {
   position: relative;
 }
-.headline-input input {
-  height: 100%;
-  border: none;
-}
 .headline-input {
   height: 100%;
   width: 100%;
+  border: none;
+  display: flex;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
+}
+.headline-input input {
+  height: 100%;
   border: none;
 }
 </style>

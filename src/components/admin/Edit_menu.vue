@@ -6,17 +6,17 @@
       </option>
     </select>
     <!-- align -->
-    <button v-if="option == 'align' && options.includes('align')" title="align">
+    <button v-if="option == 'justify-content' || JSON.stringify(option).includes('align')" :title="option">
       <i
         class="fa-solid"
         :class="
-          site.htmlElmnts[elKey].style.align == 'left'
+          ['left', 'flex-start'].includes(site.htmlElmnts[elKey].style[option])
             ? 'fa-align-left'
-            : site.htmlElmnts[elKey].style.align == 'center'
+            : ['center'].includes(site.htmlElmnts[elKey].style[option])
             ? 'fa-align-center'
             : 'fa-align-right'
         "
-        @click="changeAlign($event.target.classList[1])"
+        @click="changeAlign($event.target.classList[1], option)"
       ></i>
     </button>
     <!-- text [anchor, url] -->
@@ -60,17 +60,11 @@
       type="number"
       step="0.01"
       :title="option"
-      v-model="
-        site.htmlElmnts[elKey].style[option.replace(/\-[a-z]/g, (match) => match.toUpperCase()).replaceAll('-', '')]
-      "
+      v-model="site.htmlElmnts[elKey].style[option]"
     />
     <select
       v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"
-      v-model="
-        site.htmlElmnts[elKey].style[
-          option.replace(/\-[a-z]/g, (match) => match.toUpperCase()).replaceAll('-', '') + 'Unit'
-        ]
-      "
+      v-model="site.htmlElmnts[elKey].style[option + '-unit']"
       style="width: 45px"
     >
       <option>px</option>
@@ -93,11 +87,11 @@ export default {
   },
 
   methods: {
-    changeAlign(event) {
-      const align = ['left', 'center', 'right'];
-      let alignPosition = align.findIndex((align) => align == event.split('-')[2]);
+    changeAlign(event, option) {
+      const align = option == 'justify-content' ? ['flex-start', 'center', 'flex-end'] : ['left', 'center', 'right'];
+      let alignPosition = ['left', 'center', 'right'].findIndex((pos) => pos == event.split('-')[2]);
       alignPosition = alignPosition > 1 ? 0 : alignPosition + 1;
-      this.site.htmlElmnts[this.elKey].style.align = align[alignPosition];
+      this.site.htmlElmnts[this.elKey].style[option] = align[alignPosition];
     },
     toggleTextBoxImg(event) {
       if (event.target.checked) {
@@ -147,15 +141,4 @@ export default {
   margin: 0px;
   height: 100%;
 }
-/* .edit-menu input[type='checkbox'] {
-  opacity: 0.25;
-}
-.edit-menu button:hover,
-.edit-menu input:hover,
-.edit-menu select:hover,
-.edit-menu button:focus,
-.edit-menu input:focus,
-.edit-menu select:focus {
-  opacity: 1;
-} */
 </style>
