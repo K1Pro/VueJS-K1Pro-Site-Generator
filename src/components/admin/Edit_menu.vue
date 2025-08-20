@@ -66,7 +66,11 @@
     />
     <select
       v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"
-      v-model="site.htmlElmnts[elKey].style[option.replaceAll('-', '') + 'Unit']"
+      v-model="
+        site.htmlElmnts[elKey].style[
+          option.replace(/\-[a-z]/g, (match) => match.toUpperCase()).replaceAll('-', '') + 'Unit'
+        ]
+      "
       style="width: 45px"
     >
       <option>px</option>
@@ -120,6 +124,13 @@ export default {
   right: 5px;
   z-index: 6;
   height: 25px;
+  opacity: 0.25;
+}
+.edit-menu:hover {
+  opacity: 1;
+}
+.edit-menu:focus-within {
+  opacity: 1;
 }
 .edit-menu-inputs {
   height: 100%;
@@ -134,10 +145,9 @@ export default {
   padding: 0px 3px;
   font-size: 12px;
   margin: 0px;
-  opacity: 0.25;
   height: 100%;
 }
-.edit-menu input[type='checkbox'] {
+/* .edit-menu input[type='checkbox'] {
   opacity: 0.25;
 }
 .edit-menu button:hover,
@@ -147,5 +157,5 @@ export default {
 .edit-menu input:focus,
 .edit-menu select:focus {
   opacity: 1;
-}
+} */
 </style>

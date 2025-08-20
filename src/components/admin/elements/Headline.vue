@@ -17,60 +17,8 @@
       ]"
     ></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ elValue.style.fontSize }}%</span>
-    <div
-      class="headline-input"
-      :style="[
-        style.outline.borderColor,
-        {
-          paddingTop: elValue.style.margin ? elValue.style.margin + 'vh' : '0vh',
-          paddingBottom: elValue.style.margin ? elValue.style.margin + 'vh' : '0vh',
-          textAlign: elValue.style.align ? elValue.style.align : false,
-        },
-      ]"
-    >
-      <input
-        style="height: 100%; border: none"
-        :style="{
-          background: elValue.style.background ? elValue.style.background : 'transparent',
-          backgroundColor:
-            elValue.style.background && elValue.style['background-color'] ? elValue.style['background-color'] : false,
-          color: elValue.style.color ? elValue.style.color : 'black',
-          fontSize: elValue.style.fontSize ? elValue.style.fontSize + 'px' : '3vh',
-          marginLeft: elValue.style.align == 'left' ? '10%' : false,
-          marginRight: elValue.style.align == 'right' ? '10%' : false,
-          paddingTop: elValue.style.padding ? elValue.style.padding + 'vh' : false,
-          paddingBottom: elValue.style.padding ? elValue.style.padding + 'vh' : false,
-          paddingLeft:
-            elValue.style.align == 'center'
-              ? elValue.style.padding + 'vh'
-              : elValue.style.padding && grid.wdth > respWidth.md
-              ? '10%'
-              : grid.wdth > respWidth.md
-              ? '10%'
-              : elValue.style.padding
-              ? elValue.style.padding + 'vh'
-              : false,
-          paddingRight:
-            elValue.style.align == 'center'
-              ? elValue.style.padding + 'vh'
-              : elValue.style.padding && grid.wdth > respWidth.md
-              ? '10%'
-              : grid.wdth > respWidth.md
-              ? '10%'
-              : elValue.style.padding
-              ? elValue.style.padding + 'vh'
-              : false,
-          textAlign: elValue.style.align ? elValue.style.align : 'center',
-          width:
-            !elValue.style.width && !elValue.style.widthUnit
-              ? '100%'
-              : (elValue.style.widthUnit == 'vw' ? grid.wdth * (elValue.style.width / 100) : elValue.style.width) +
-                (elValue.style.widthUnit == 'vw' ? 'px' : elValue.style.widthUnit ? elValue.style.widthUnit : 'px'),
-        }"
-        ref="headline"
-        type="text"
-        v-model="site.htmlElmnts[elKey].text"
-      />
+    <div class="headline-input" :style="[style.outline.borderColor, divStyle]">
+      <input type="text" :style="inputStyle" v-model="site.htmlElmnts[elKey].text" />
     </div>
   </div>
 </template>
@@ -82,12 +30,91 @@ export default {
   inject: ['grid', 'respWidth', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  computed: {
+    divStyle() {
+      return {
+        paddingTop: this.elValue.style.margin ? this.elValue.style.margin + 'vh' : '0vh',
+        paddingBottom: this.elValue.style.margin ? this.elValue.style.margin + 'vh' : '0vh',
+        textAlign: this.elValue.style.align ? this.elValue.style.align : false,
+      };
+    },
+    inputStyle() {
+      return {
+        background: this.elValue.style.background ? this.elValue.style.background : 'transparent',
+        backgroundColor:
+          this.elValue.style.background && this.elValue.style['background-color']
+            ? this.elValue.style['background-color']
+            : false,
+        color: this.elValue.style.color ? this.elValue.style.color : 'black',
+        fontSize:
+          !this.elValue.style.fontSize &&
+          !this.elValue.style.fontSizeUnit &&
+          !this.site.body.style.fontSize &&
+          !this.site.body.style.fontSizeUnit
+            ? '12px'
+            : !this.elValue.style.fontSize &&
+              !this.elValue.style.fontSizeUnit &&
+              this.site.body.style.fontSize &&
+              this.site.body.style.fontSizeUnit
+            ? this.site.body.style.fontSize + this.site.body.style.fontSizeUnit
+            : (this.elValue.style.fontSizeUnit == 'vw'
+                ? this.grid.wdth * (this.elValue.style.fontSize / 100)
+                : this.elValue.style.fontSize) +
+              (this.elValue.style.fontSizeUnit == 'vw'
+                ? 'px'
+                : this.elValue.style.fontSizeUnit
+                ? this.elValue.style.fontSizeUnit
+                : 'px'),
+        marginLeft: this.elValue.style.align == 'left' ? '10%' : false,
+        marginRight: this.elValue.style.align == 'right' ? '10%' : false,
+        paddingTop: this.elValue.style.padding ? this.elValue.style.padding + 'vh' : false,
+        paddingBottom: this.elValue.style.padding ? this.elValue.style.padding + 'vh' : false,
+        paddingLeft:
+          this.elValue.style.align == 'center'
+            ? this.elValue.style.padding + 'vh'
+            : this.elValue.style.padding && this.grid.wdth > this.respWidth.md
+            ? '10%'
+            : this.grid.wdth > this.respWidth.md
+            ? '10%'
+            : this.elValue.style.padding
+            ? this.elValue.style.padding + 'vh'
+            : false,
+        paddingRight:
+          this.elValue.style.align == 'center'
+            ? this.elValue.style.padding + 'vh'
+            : this.elValue.style.padding && this.grid.wdth > this.respWidth.md
+            ? '10%'
+            : this.grid.wdth > this.respWidth.md
+            ? '10%'
+            : this.elValue.style.padding
+            ? this.elValue.style.padding + 'vh'
+            : false,
+        textAlign: this.elValue.style.align ? this.elValue.style.align : 'center',
+        width:
+          !this.elValue.style.width && !this.elValue.style.widthUnit
+            ? '100%'
+            : (this.elValue.style.widthUnit == 'vw'
+                ? this.grid.wdth * (this.elValue.style.width / 100)
+                : this.elValue.style.width) +
+              (this.elValue.style.widthUnit == 'vw'
+                ? 'px'
+                : this.elValue.style.widthUnit
+                ? this.elValue.style.widthUnit
+                : 'px'),
+      };
+    },
+  },
 };
 </script>
 
 <style>
 .headline {
   position: relative;
+}
+.headline-input input {
+  height: 100%;
+  border: none;
 }
 .headline-input {
   height: 100%;
