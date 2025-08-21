@@ -6,7 +6,10 @@
       </option>
     </select>
     <!-- align -->
-    <button v-if="option == 'justify-content' || JSON.stringify(option).includes('align')" :title="option">
+    <button
+      v-if="option == 'justify-content' || (JSON.stringify(option).includes('align') && option != 'vertical-align')"
+      :title="option"
+    >
       <i
         class="fa-solid"
         :class="
@@ -14,7 +17,9 @@
             ? 'fa-align-left'
             : ['center'].includes(site.htmlElmnts[elKey].style[option])
             ? 'fa-align-center'
-            : 'fa-align-right'
+            : ['right', 'flex-end'].includes(site.htmlElmnts[elKey].style[option])
+            ? 'fa-align-right'
+            : 'fa-align-justify'
         "
         @click="changeAlign($event.target.classList[1], option)"
       ></i>
@@ -34,9 +39,9 @@
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style.url"
     />
-    <!-- checkbox [backgound, responsive, text-box-image]-->
+    <!-- checkbox [backgound, responsive, text-box-image, vertical-align]-->
     <input
-      v-if="option == 'background' || option == 'responsive'"
+      v-if="option == 'background' || option == 'responsive' || option == 'vertical-align'"
       type="checkbox"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
@@ -88,9 +93,10 @@ export default {
 
   methods: {
     changeAlign(event, option) {
-      const align = option == 'justify-content' ? ['flex-start', 'center', 'flex-end'] : ['left', 'center', 'right'];
-      let alignPosition = ['left', 'center', 'right'].findIndex((pos) => pos == event.split('-')[2]);
-      alignPosition = alignPosition > 1 ? 0 : alignPosition + 1;
+      const align =
+        option == 'justify-content' ? ['flex-start', 'center', 'flex-end', false] : ['left', 'center', 'right', false];
+      let alignPosition = ['left', 'center', 'right', false].findIndex((pos) => pos == event.split('-')[2]);
+      alignPosition = alignPosition > 2 ? 0 : alignPosition + 1;
       this.site.htmlElmnts[this.elKey].style[option] = align[alignPosition];
     },
     toggleTextBoxImg(event) {

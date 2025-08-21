@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="headline">
+  <div :id="elKey" class="headline" ref="headlineDiv">
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -9,6 +9,7 @@
         'background',
         'background-color',
         'color',
+        'height',
         'justify-content',
         'margin',
         'padding',
@@ -17,7 +18,7 @@
         'width',
       ]"
     ></edit_menu>
-    <span :style="[style.outline.color]" class="dim">{{ elValue.style.fontSize }}%</span>
+    <span :style="[style.outline.color]" class="dim">{{ headlineHght }}px x {{ headlineWdth }}px</span>
     <div class="headline-input" :style="[style.outline.borderColor, divStyle]">
       <input type="text" :style="inputStyle" v-model="site.htmlElmnts[elKey].text" />
     </div>
@@ -28,9 +29,26 @@
 export default {
   name: 'Headline',
 
-  inject: ['grid', 'respWidth', 'site', 'style'],
+  inject: ['grid', 'respWidth', 'site', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  data() {
+    return {
+      headlineHght: 0,
+      headlineWdth: 0,
+    };
+  },
+
+  mounted() {
+    this.headlineHght = this.$refs?.headlineDiv?.scrollHeight;
+    this.headlineWdth = this.$refs?.headlineDiv?.scrollWidth;
+  },
+
+  updated() {
+    this.headlineHght = this.$refs?.headlineDiv?.scrollHeight;
+    this.headlineWdth = this.$refs?.headlineDiv?.scrollWidth;
+  },
 
   computed: {
     divStyle() {
@@ -43,7 +61,7 @@ export default {
           this.elValue.style.margin && this.elValue.style['margin-unit']
             ? this.elValue.style.margin + this.elValue.style['margin-unit']
             : '0px',
-        justifyContent: this.elValue.style['justify-content'] ? this.elValue.style['justify-content'] : 'center',
+        justifyContent: this.elValue.style['justify-content'] ? this.elValue.style['justify-content'] : 'initial',
       };
     },
     inputStyle() {
@@ -68,6 +86,10 @@ export default {
                 ? this.grid.wdth * (this.elValue.style['font-size'] / 100)
                 : this.elValue.style['font-size']) +
               (this.elValue.style['font-size-unit'] == 'vw' ? 'px' : this.elValue.style['font-size-unit']),
+        height:
+          this.elValue.style.height && this.elValue.style['height-unit']
+            ? this.elValue.style.height + this.elValue.style['height-unit']
+            : 'initial',
         padding:
           !this.elValue.style.padding || !this.elValue.style['padding-unit']
             ? '0px'
@@ -75,10 +97,10 @@ export default {
                 ? this.grid.wdth * (this.elValue.style.padding / 100)
                 : this.elValue.style.padding) +
               (this.elValue.style['padding-unit'] == 'vw' ? 'px' : this.elValue.style['padding-unit']),
-        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'center',
+        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'initial',
         width:
           !this.elValue.style.width || !this.elValue.style['width-unit']
-            ? '100%'
+            ? 'initial'
             : (this.elValue.style['width-unit'] == 'vw'
                 ? this.grid.wdth * (this.elValue.style.width / 100)
                 : this.elValue.style.width) +
@@ -92,10 +114,9 @@ export default {
 <style>
 .headline {
   position: relative;
+  min-height: 35px;
 }
 .headline-input {
-  height: 100%;
-  width: 100%;
   border: none;
   display: flex;
   outline-style: dashed;
@@ -103,7 +124,6 @@ export default {
   outline-offset: -2px;
 }
 .headline-input input {
-  height: 100%;
   border: none;
 }
 </style>

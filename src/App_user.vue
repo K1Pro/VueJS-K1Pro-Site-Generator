@@ -104,4 +104,32 @@ export default {
   text-align: left;
   padding-left: 5px;
 }
+.resp-padding {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+@media only screen and (min-width: 400px) {
+  .resp-padding {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}
+@media only screen and (min-width: 650px) {
+  .resp-padding {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .resp-padding {
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+}
+@media only screen and (min-width: 1140px) {
+  .resp-padding {
+    padding-left: 20%;
+    padding-right: 20%;
+  }
+}
 </style>
