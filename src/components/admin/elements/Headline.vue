@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="headline" ref="headlineDiv">
+  <div :id="elKey" class="headline" ref="headline">
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -41,13 +41,13 @@ export default {
   },
 
   mounted() {
-    this.headlineHght = this.$refs?.headlineDiv?.scrollHeight;
-    this.headlineWdth = this.$refs?.headlineDiv?.scrollWidth;
+    this.headlineHght = this.$refs?.headline?.scrollHeight;
+    this.headlineWdth = this.$refs?.headline?.scrollWidth;
   },
 
   updated() {
-    this.headlineHght = this.$refs?.headlineDiv?.scrollHeight;
-    this.headlineWdth = this.$refs?.headlineDiv?.scrollWidth;
+    this.headlineHght = this.$refs?.headline?.scrollHeight;
+    this.headlineWdth = this.$refs?.headline?.scrollWidth;
   },
 
   computed: {
@@ -61,6 +61,8 @@ export default {
           this.elValue.style.margin && this.elValue.style['margin-unit']
             ? this.elValue.style.margin + this.elValue.style['margin-unit']
             : '0px',
+        paddingLeft: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
+        paddingRight: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
         justifyContent: this.elValue.style['justify-content'] ? this.elValue.style['justify-content'] : 'initial',
       };
     },
@@ -115,13 +117,13 @@ export default {
 .headline {
   position: relative;
   min-height: 35px;
-}
-.headline-input {
   border: none;
-  display: flex;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
+}
+.headline-input {
+  display: flex;
 }
 .headline-input input {
   border: none;

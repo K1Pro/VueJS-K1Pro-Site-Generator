@@ -1,10 +1,8 @@
 <template>
-  <div :id="elKey" :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]">
+  <div :id="elKey" :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]" ref="spacer">
     <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
-    <span class="dim" :style="[style.outline.color]"
-      >{{ elValue.style.height >= 1 ? Math.round(elValue.style.height * 100) / 100 : '1' }}%</span
-    >
-    <p :style="[spacerHeight]"></p>
+    <span :style="[style.outline.color]" class="dim">{{ spacerHght }}px x {{ spacerWdth }}px</span>
+    <p :style="[pStyle]"></p>
   </div>
 </template>
 
@@ -16,9 +14,31 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
+  data() {
+    return {
+      spacerHght: 0,
+      spacerWdth: 0,
+    };
+  },
+
+  mounted() {
+    this.spacerHght = this.$refs?.spacer?.scrollHeight;
+    this.spacerWdth = this.$refs?.spacer?.scrollWidth;
+  },
+
+  updated() {
+    this.spacerHght = this.$refs?.spacer?.scrollHeight;
+    this.spacerWdth = this.$refs?.spacer?.scrollWidth;
+  },
+
   computed: {
-    spacerHeight() {
-      return { height: this.elValue.style.height >= 1 ? this.elValue.style.height + 'vh' : '1vh' };
+    pStyle() {
+      return {
+        height:
+          this.elValue.style.height && this.elValue.style['height-unit']
+            ? this.elValue.style.height + this.elValue.style['height-unit']
+            : 'initial',
+      };
     },
   },
 };
@@ -27,6 +47,7 @@ export default {
 <style>
 .spacer {
   position: relative;
+  min-height: 35px;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;

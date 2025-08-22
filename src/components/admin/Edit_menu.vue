@@ -58,6 +58,13 @@
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
+    <!-- mod menu -->
+    <select v-if="option == 'edit-mode1'" v-model="site.htmlElmnts[elKey].mod">
+      <option>titles</option>
+      <option>pages</option>
+      <option>anchors</option>
+      <option>links</option>
+    </select>
     <!-- number [column gap, font-size, height, margin, padding, title-font-size, width ] -->
     <input
       v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"

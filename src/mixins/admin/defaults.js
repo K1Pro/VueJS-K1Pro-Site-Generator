@@ -78,9 +78,12 @@ const defaultsMixin = {
             type: 'headline',
             text: 'Headline',
             style: {
-              align: 'center',
-              fontSize: 4,
-              padding: 4,
+              'font-size': 12,
+              'font-size-unit': 'px',
+              'justify-content': 'center',
+              margin: 12,
+              'margin-unit': 'px',
+              'text-align': 'center',
             },
           },
           icon_slider: {

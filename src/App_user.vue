@@ -120,7 +120,7 @@ export default {
     padding-right: 10%;
   }
 }
-@media only screen and (min-width: 992px) {
+/* @media only screen and (min-width: 992px) {
   .resp-padding {
     padding-left: 15%;
     padding-right: 15%;
@@ -131,5 +131,5 @@ export default {
     padding-left: 20%;
     padding-right: 20%;
   }
-}
+} */
 </style>
