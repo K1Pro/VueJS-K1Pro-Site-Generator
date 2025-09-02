@@ -144,16 +144,19 @@
       :style="{
         backgroundColor: elmntButtonKey == slctdElmntButton ? 'darkgrey' : '#eee',
       }"
-      @click="slctdElmntButton = elmntButtonKey"
+      @click="
+        slctdElmntButton = elmntButtonKey;
+        copyingElmnt = null;
+      "
     >
       <i :class="elmntButtonVal"></i>
     </button>
-    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl($event)">
-      <option disabled selected>{{ slctdElmntButton }} element</option>
+    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl($event)" @focusout="copyingElmnt = null">
+      <option v-if="!copyingElmnt" disabled selected>{{ slctdElmntButton }} element</option>
       <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(defaults.htmlElmnts).sort()">
         <option
           v-if="
-            (!siteElTypes.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
+            (!siteElmnts.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
             (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt)) &&
             !defaults.htmlReqrdPageElmnts.includes(htmlElmnt)
           "
@@ -162,14 +165,24 @@
           {{ htmlElmnt.replaceAll('_', ' ') }}
         </option>
       </template>
-      {{
-        site
-      }}
       <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
-        <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
+        <template v-if="!copyingElmnt" v-for="siteUniqElType in siteUniqElTypes.sort()">
           <option
             v-if="
-              (!siteElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
+              (!siteElmnts.includes(siteUniqElType) || !defaults.htmlUniqSiteElmnts.includes(siteUniqElType)) &&
+              (!pageElTypes.includes(siteUniqElType) || !defaults.htmlUniqPageElmnts.includes(siteUniqElType)) &&
+              !defaults.htmlReqrdPageElmnts.includes(siteUniqElType)
+            "
+            :value="siteUniqElType"
+          >
+            {{ siteUniqElType.replaceAll('_', ' ') }}
+          </option>
+        </template>
+        <template v-else v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
+          <option
+            v-if="
+              htmlElmntVal.type == copyingElmnt &&
+              (!siteElmnts.includes(htmlElmntVal.type) || !defaults.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
               (!pageElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqPageElmnts.includes(htmlElmntVal.type)) &&
               !defaults.htmlReqrdPageElmnts.includes(htmlElmntKey)
             "
@@ -179,6 +192,7 @@
           </option>
         </template>
       </template>
+
       <template v-if="slctdElmntButton == 'Delete' && Object.keys(site.htmlElmnts).length > 0">
         <template v-for="htmlElmnt in Object.keys(site.htmlElmnts).sort()">
           <option v-if="!defaults.htmlReqrdPageElmnts.includes(htmlElmnt)" :value="htmlElmnt">
@@ -202,7 +216,8 @@ export default {
     'pageElTypes',
     'showMsg',
     'site',
-    'siteElTypes',
+    'siteElmnts',
+    'siteUniqElTypes',
     'slctd',
   ],
 
@@ -211,6 +226,7 @@ export default {
       elmntButtons: { Add: 'fa-solid fa-plus', Copy: 'fa-regular fa-copy', Delete: 'fa-solid fa-trash' },
       slctdElmntButton: 'Add',
       addingPage: false,
+      copyingElmnt: null,
       renamingPos: null,
       isHoverRenameSave: false,
       pageSlctd: 'Home',
@@ -351,37 +367,44 @@ export default {
         }
       } else {
         console.log('copying');
-        const elPosition =
-          this.slctdElmntButton == 'Copy'
-            ? this.site.htmlElmnts[elmnt]?.position
-            : this.defaults.htmlElmnts[elmnt]?.position;
-        let newElPosition;
-        if (0 < elPosition) {
-          newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
-          newElPosition++;
-        }
-        if (0 > elPosition) {
-          newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
-          newElPosition = 0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
-        }
-        if (elPosition === undefined) {
-          newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
-          newElPosition = 0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
-        }
-        if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
-          if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
-          Object.keys(this.site.pages).forEach((slctdType) => {
-            for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
-              !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
-                this.site.pages[slctdType][pageKey].splice(newElPosition, 0, [elmnt, true]);
-            }
-          });
-        } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
-          const newElName = elmnt + '_' + new Date().getTime();
-          this.site.htmlElmnts[newElName] = this.defaults.htmlElmnts[elmnt];
-          this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [newElName, true]);
+        if (!this.copyingElmnt) {
+          this.copyingElmnt = elmnt;
         } else {
-          this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
+          const elPosition =
+            this.slctdElmntButton == 'Copy'
+              ? this.site.htmlElmnts[elmnt]?.position
+              : this.defaults.htmlElmnts[elmnt]?.position;
+          let newElPosition;
+          if (0 < elPosition) {
+            newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
+            newElPosition++;
+          }
+          if (0 > elPosition) {
+            newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
+            newElPosition =
+              0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
+          }
+          if (elPosition === undefined) {
+            newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
+            newElPosition =
+              0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
+          }
+          if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
+            if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
+            Object.keys(this.site.pages).forEach((slctdType) => {
+              for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
+                !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
+                  this.site.pages[slctdType][pageKey].splice(newElPosition, 0, [elmnt, true]);
+              }
+            });
+          } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
+            const newElName = elmnt + '_' + new Date().getTime();
+            this.site.htmlElmnts[newElName] = this.defaults.htmlElmnts[elmnt];
+            this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [newElName, true]);
+          } else {
+            this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
+          }
+          this.copyingElmnt = null;
         }
       }
       if (event?.srcElement?.selectedIndex) event.srcElement.selectedIndex = 0;
@@ -433,7 +456,7 @@ export default {
       if (this.addingPage) {
         this.site.pages[this.slctd.type][this.$refs.newPageName.value] = [];
         this.slctd.page = this.$refs.newPageName.value;
-        this.siteElTypes.forEach((elType) => {
+        this.siteElmnts.forEach((elType) => {
           if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
             this.slctdElmntButton = 'Copy';
             this.createCopyDeleteEl(elType);

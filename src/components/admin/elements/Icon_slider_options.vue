@@ -1,5 +1,5 @@
 <template>
-  <option value="" disabled>Choose Icon</option>
+  <option value="" disabled selected></option>
   <option value="fa-brands fa-apple">Apple</option>
   <option value="fa-solid fa-anchor-circle-check">Anchor circle check</option>
   <option value="fa-solid fa-arrows-to-circle">Arrows to circle</option>
@@ -67,6 +67,7 @@
   <option value="fa-brands fa-whatsapp">Whatsapp</option>
   <option value="fa-brands fa-windows">Windows</option>
   <option value="fa-brands fa-square-x-twitter">X</option>
+  <option value="fa-brands fa-yelp">Yelp</option>
   <option value="fa-brands fa-youtube">YouTube</option>
 </template>
 

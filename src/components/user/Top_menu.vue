@@ -43,7 +43,7 @@
       </template>
     </template>
   </ul>
-  <div :style="{ height: elValue.style.height + 'vh' }"></div>
+  <div :style="{ height: elValue.style.height }"></div>
 </template>
 
 <script>
@@ -76,14 +76,18 @@ export default {
     logoLi() {
       return {
         float: this.wndw.wdth < this.respWidth.md ? 'none' : 'left',
-        height: this.elValue.style.height + 'vh',
+        height: this.elValue.style.height,
       };
     },
     logoA() {
       return {
         color: this.site.body.style.textColor,
-        height: this.elValue.style.height + 'vh',
-        padding: 'calc(' + this.elValue.style.height / 2 + 'vh - 1vh) 20px',
+        height: this.elValue.style.height,
+        padding:
+          'calc(' +
+          this.elValue.style.height?.replace(/\D/g, '') / 2 +
+          this.elValue.style.height?.replace(/[0-9]/g, '') +
+          ' - 1vh) 20px',
       };
     },
     linksLi() {
@@ -95,8 +99,13 @@ export default {
       return {
         color: this.site.body.style.textColor,
         padding:
-          this.wndw.wdth < this.respWidth.md ? '15px' : 'calc(' + this.elValue.style.height / 2 + 'vh - 1vh) 20px',
-        height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height + 'vh',
+          this.wndw.wdth < this.respWidth.md
+            ? '15px'
+            : 'calc(' +
+              this.elValue.style.height?.replace(/\D/g, '') / 2 +
+              this.elValue.style.height?.replace(/[0-9]/g, '') +
+              ' - 1vh) 20px',
+        height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height,
       };
     },
     menuLinks() {

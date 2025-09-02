@@ -6,10 +6,7 @@
       </option>
     </select>
     <!-- align -->
-    <button
-      v-if="option == 'justify-content' || (JSON.stringify(option).includes('align') && option != 'vertical-align')"
-      :title="option"
-    >
+    <button v-if="JSON.stringify(option).includes('align') && option != 'vertical-align'" :title="option">
       <i
         class="fa-solid"
         :class="
@@ -24,6 +21,12 @@
         @click="changeAlign($event.target.classList[1], option)"
       ></i>
     </button>
+    <!-- justify-content -->
+    <select v-if="option == 'justify-content'" v-model="site.htmlElmnts[elKey].style['justify-content']">
+      <option>space-between</option>
+      <option>space-around</option>
+      <option>space-evenly</option>
+    </select>
     <!-- text [anchor, url] -->
     <input
       v-if="option == 'anchor' && options.includes('anchor')"
@@ -53,7 +56,7 @@
     />
     <!-- color [color] -->
     <input
-      v-if="option.includes('color') && options.includes(option)"
+      v-if="option.includes('color')"
       type="color"
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style[option]"
@@ -65,23 +68,36 @@
       <option>anchors</option>
       <option>links</option>
     </select>
-    <!-- number [column gap, font-size, height, margin, padding, title-font-size, width ] -->
     <input
-      v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"
+      v-if="option == 'edit-mode1' && site.htmlElmnts[elKey].mod == 'titles'"
+      type="checkbox"
+      v-model="site.htmlElmnts[elKey].titles"
+    />
+    <!-- number [unitInputs] -->
+    <input
+      v-if="unitInputs.includes(option)"
       class="edit-menu-inputs"
       type="number"
       step="0.01"
       :title="option"
-      v-model="site.htmlElmnts[elKey].style[option]"
+      :value="noInput.no"
+      @input="site.htmlElmnts[elKey].style[option] = $event.target.value + noInput.unit"
     />
     <select
-      v-if="['column-gap', 'font-size', 'height', 'margin', 'padding', 'title-font-size', 'width'].includes(option)"
-      v-model="site.htmlElmnts[elKey].style[option + '-unit']"
+      v-if="unitInputs.includes(option)"
       style="width: 45px"
+      :value="noInput.unit"
+      @input="site.htmlElmnts[elKey].style[option] = noInput.no + $event.target.value"
     >
       <option>px</option>
       <option>vh</option>
       <option>vw</option>
+    </select>
+    <select v-if="option.includes('paste-style')" @change="pasteTemplate">
+      <option selected disabled>Choose template</option>
+      <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts)">
+        <option v-if="htmlElmntVal.type == site.htmlElmnts[elKey].type">{{ htmlElmntKey }}</option>
+      </template>
     </select>
   </div>
 </template>
@@ -95,13 +111,42 @@ export default {
   props: ['elKey', 'elIndex', 'options'],
 
   data() {
-    return { option: this.options[0] };
+    return {
+      option: this.options[0],
+      unitInputs: [
+        'border-radius',
+        'border-width',
+        'column-gap',
+        'font-size',
+        'height',
+        'icon-size',
+        'image-height',
+        'margin',
+        'padding',
+        'title-font-size',
+        'width',
+      ],
+    };
+  },
+
+  computed: {
+    noInput() {
+      return this.unitInputs.includes(this.option)
+        ? {
+            no: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/\D/g, ''),
+            unit: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/[0-9]/g, ''),
+          }
+        : { no: '', unit: '' };
+    },
   },
 
   methods: {
+    pasteTemplate(event) {
+      console.log(event.target.value);
+    },
     changeAlign(event, option) {
       const align =
-        option == 'justify-content' ? ['flex-start', 'center', 'flex-end', false] : ['left', 'center', 'right', false];
+        option == 'align-content' ? ['flex-start', 'center', 'flex-end', false] : ['left', 'center', 'right', false];
       let alignPosition = ['left', 'center', 'right', false].findIndex((pos) => pos == event.split('-')[2]);
       alignPosition = alignPosition > 2 ? 0 : alignPosition + 1;
       this.site.htmlElmnts[this.elKey].style[option] = align[alignPosition];
@@ -127,7 +172,7 @@ export default {
 <style>
 .edit-menu {
   position: absolute;
-  top: 5px;
+  bottom: 5px;
   right: 5px;
   z-index: 6;
   height: 25px;

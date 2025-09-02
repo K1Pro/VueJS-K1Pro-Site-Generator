@@ -108,6 +108,11 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
 }
+.scroller {
+  width: 100%;
+  border: none;
+  background: none;
+}
 @media only screen and (min-width: 400px) {
   .resp-padding {
     padding-left: 5%;
@@ -120,16 +125,28 @@ export default {
     padding-right: 10%;
   }
 }
-/* @media only screen and (min-width: 992px) {
+@media only screen and (min-width: 992px) {
   .resp-padding {
     padding-left: 15%;
     padding-right: 15%;
   }
 }
-@media only screen and (min-width: 1140px) {
+@media only screen and (min-width: 1200px) {
+  .resp-padding {
+    padding-left: 17.5%;
+    padding-right: 17.5%;
+  }
+}
+@media only screen and (min-width: 1400px) {
   .resp-padding {
     padding-left: 20%;
     padding-right: 20%;
   }
-} */
+}
+@media only screen and (min-width: 1600px) {
+  .resp-padding {
+    padding-left: 22.5%;
+    padding-right: 22.5%;
+  }
+}
 </style>

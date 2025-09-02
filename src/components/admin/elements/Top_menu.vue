@@ -100,13 +100,17 @@ export default {
     allInputs() {
       return {
         height: '2vh',
-        margin: 'calc(' + this.elValue.style.height / 2 + 'vh - 1vh) 0px',
+        margin:
+          'calc(' +
+          this.elValue.style.height?.replace(/\D/g, '') / 2 +
+          this.elValue.style.height?.replace(/[0-9]/g, '') +
+          ' - 1vh) 0px',
         border: '0px',
       };
     },
     elUl() {
       return {
-        height: this.elValue.style.height + 'vh',
+        height: this.elValue.style.height,
       };
     },
     elLi() {
@@ -115,14 +119,23 @@ export default {
     logoImg() {
       return {
         padding: '10px',
-        height: this.elValue.style.height + 'vh',
+        height: this.elValue.style.height,
       };
     },
     topMenuLinksIcon() {
-      return { top: this.elValue.style.height / 3.5 + 'vh' };
+      return {
+        top: this.elValue.style.height?.replace(/\D/g, '') / 3.5 + this.elValue.style.height?.replace(/[0-9]/g, ''),
+      };
     },
     topMenuLinksAddItem() {
-      return { margin: 'calc(' + this.elValue.style.height / 2 + 'vh - 8px)' + ' 20px' };
+      return {
+        margin:
+          'calc(' +
+          this.elValue.style.height?.replace(/\D/g, '') / 2 +
+          this.elValue.style.height?.replace(/[0-9]/g, '') +
+          ' - 8px)' +
+          ' 20px',
+      };
     },
   },
   methods: {

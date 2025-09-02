@@ -2,7 +2,7 @@
   <div
     class="spacer"
     :style="{
-      height: elValue.style.height + 'vh',
+      height: elValue.style.height,
     }"
   ></div>
 </template>

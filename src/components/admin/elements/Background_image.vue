@@ -1,11 +1,8 @@
 <template>
-  <div
-    class="background-image"
-    :style="{ height: elValue.style.height + 'vh', marginBottom: '-' + elValue.style.height + 'vh' }"
-  >
+  <div class="background-image" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
     <img
-      :style="{ height: elValue.style.height + 'vh' }"
+      :style="{ height: elValue.style.height }"
       :width="grid.wdth + 'px'"
       :src="
         elValue.src.includes('http://') || elValue.src.includes('https://')
@@ -58,8 +55,8 @@ export default {
   },
 
   created() {
-    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: 75 };
-    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = 75;
+    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: '75vh' };
+    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = '75vh';
   },
 };
 </script>

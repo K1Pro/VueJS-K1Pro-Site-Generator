@@ -100,7 +100,8 @@ export default {
       selectedVideo: Vue.computed(() => this.selectedVideo),
       sideMenuSlctdLnk: Vue.computed(() => this.sideMenuSlctdLnk),
       site: Vue.computed(() => this.site),
-      siteElTypes: Vue.computed(() => this.siteElTypes),
+      siteElmnts: Vue.computed(() => this.siteElmnts),
+      siteUniqElTypes: Vue.computed(() => this.siteUniqElTypes),
       slctd: Vue.computed(() => this.slctd),
       style: Vue.computed(() => this.style),
       undoRedo: Vue.computed(() => this.undoRedo),
@@ -144,8 +145,11 @@ export default {
       });
       return pageElTypesArray;
     },
-    siteElTypes() {
+    siteElmnts() {
       return Object.keys(this.site.htmlElmnts);
+    },
+    siteUniqElTypes() {
+      return [...new Set(Object.values(this.site.htmlElmnts).map((htmlElmnt) => htmlElmnt.type))];
     },
     style() {
       return {
@@ -171,6 +175,10 @@ export default {
               ? 'rgb(32, 32, 32)'
               : 'rgb(128, 128, 128)',
           },
+        },
+        respPadding: {
+          paddingLeft: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
+          paddingRight: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
         },
       };
     },
@@ -418,6 +426,11 @@ export default {
   position: absolute;
   bottom: 0px;
   padding: 0px 3px;
+}
+.scroller {
+  width: 100%;
+  border: none;
+  background: none;
 }
 .greenWhitePlus::before {
   font-size: 16px;

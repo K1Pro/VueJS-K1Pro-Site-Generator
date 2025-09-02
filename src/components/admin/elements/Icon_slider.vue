@@ -8,114 +8,128 @@
         'anchor',
         'background',
         'background-color',
+        'border-color',
+        'border-radius',
+        'border-width',
         'color',
         'font-size',
         'height',
+        'icon-size',
+        'justify-content',
+        'margin',
         'padding',
         'text-align',
         'url',
         'width',
+        'paste-style',
       ]"
     ></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ iconSliderHght }}px x {{ iconSliderWdth }}px</span>
 
-    <div :style="iconSliderContainer" style="display: grid; grid-template-columns: 30px auto 30px">
-      <button
-        style="width: 100%; border: none"
-        :disabled="itemStart === 0"
-        :style="{
-          backgroundColor: site.body.style.backgroundColor,
-          cursor: itemStart !== 0 ? 'pointer' : 'default',
-        }"
-        @click="itemStart--"
-      >
+    <div :style="style.respPadding" style="display: grid; grid-template-columns: 30px auto 30px">
+      <button class="scroller" :disabled="itemStart === 0" @click="itemStart--">
         <i class="fa-solid fa-chevron-left"></i>
       </button>
 
-      <div class="icon-slider-container">
+      <div
+        class="icon-slider-cntnr"
+        :style="{
+          justifyContent: elValue.style['justify-content'] ? elValue.style['justify-content'] : 'space-evenly',
+        }"
+      >
         <template v-for="(icon, iconIndx) in elValue.icons">
           <div
             v-if="iconIndx < respvItemAmnt + itemStart && iconIndx >= itemStart"
-            :style="{
-              width:
-                elValue.style.width && elValue.style['width-unit']
-                  ? elValue.style.width + elValue.style['width-unit']
-                  : '50px',
-            }"
-            style="position: relative"
+            class="icon-slider-item"
+            :style="componentStyle"
           >
-            <button :style="{ right: elValue.icons.length > 1 ? '27px' : '0px' }" @click="addIcon(iconIndx)">
+            <button class="icon-slider-add-rem" style="right: 0px">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <select
+              class="icon-slider-select"
+              :value="slctdIconIndx === iconIndx ? slctdIcon : ''"
+              :style="{ height: slctdIconIndx === iconIndx ? '1px' : '15px' }"
+              @focusin="slctIcon(iconIndx, icon.icon)"
+              @focusout="slctIcon(null, '')"
+              @change="
+                icon.icon = $event.target.value;
+                slctIcon(null, '');
+              "
+            >
+              <icon_slider_options></icon_slider_options>
+            </select>
+            <button
+              class="icon-slider-add-rem"
+              :style="{ right: elValue.icons.length > 1 ? '30px' : '15px' }"
+              @click="addItem(iconIndx)"
+            >
               <i class="fa-solid fa-plus"></i>
             </button>
-            <button v-if="elValue.icons.length > 1" style="right: 0px" @click="removeItem(iconIndx)">
+            <button
+              class="icon-slider-add-rem"
+              v-if="elValue.icons.length > 1"
+              style="right: 15px"
+              @click="removeItem(iconIndx)"
+            >
               <i class="fa-solid fa-minus"></i>
             </button>
-            <div
-              class="icon-slider-item"
-              :style="[
-                {
-                  border: '1px solid ' + site.body.style.borderColor,
-                  'border-radius': elValue.style.borderRadius + 'px',
-                },
-                style.primaryColor.backgroundColor,
-              ]"
+
+            <i :style="iStyle" :class="icon.icon"></i>
+
+            <input
+              v-if="elValue.mod == 'links'"
+              type="text"
+              placeholder="Link"
+              v-model="icon.link"
+              @change="linkKeysDlt(iconIndx, elValue.mod)"
+            />
+            <select v-else-if="elValue.mod == 'pages'" v-model="icon.page" @change="linkKeysDlt(iconIndx, elValue.mod)">
+              <option disabled selected>Pages</option>
+              <template v-for="(siteType, siteTypeIndx) in Object.keys(site.pages)">
+                <option value="Choose page" disabled>
+                  ==={{ siteType.charAt(0).toUpperCase() + siteType.slice(1) }} pages===
+                </option>
+                <option v-for="sitePage in Object.keys(site.pages[siteType])" :selected="icon.page == sitePage">
+                  {{ sitePage }}
+                </option>
+              </template>
+            </select>
+            <select
+              v-else-if="elValue.mod == 'anchors'"
+              v-model="icon.anchor"
+              @change="linkKeysDlt(iconIndx, elValue.mod)"
             >
-              <div class="icon-slider-icon">
-                <i
-                  :style="{
-                    fontSize: elValue.style.iconSize + 'px',
-                  }"
-                  :class="icon.icon"
-                ></i>
-              </div>
-
-              <select v-model="icon.icon">
-                <icon_slider_options></icon_slider_options>
-              </select>
-
-              <input v-if="elValue.mod == 'links'" type="text" placeholder="Link" v-model="icon.link" />
-              <select v-else-if="elValue.mod == 'pages'">
-                <option disabled selected>Pages</option>
-                <template v-for="(siteType, siteTypeIndx) in Object.keys(site.pages)">
-                  <option value="Choose page" disabled>
-                    ==={{ siteType.charAt(0).toUpperCase() + siteType.slice(1) }} pages===
-                  </option>
-                  <option v-for="sitePage in Object.keys(site.pages[siteType])" :selected="icon.page == sitePage">
-                    {{ sitePage }}
-                  </option>
-                </template>
-              </select>
-              <select v-else-if="elValue.mod == 'anchors'">
-                <option disabled selected>Anchors</option>
-                <template v-for="siteType in Object.keys(site.pages)">
-                  <template v-for="[sitePage, sitePageEls] in Object.entries(site.pages[siteType])">
-                    <template v-for="sitePageEl in sitePageEls">
-                      <option
-                        v-if="sitePageEl[1] && sitePageEl[2] && sitePageEl[2] != ''"
-                        :value="[sitePage, sitePageEl[2]]"
-                        :selected="icon.anchor == sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()"
-                      >
-                        {{ sitePageEl[2] }} ({{ sitePage }})
-                      </option>
-                    </template>
+              <option disabled selected>Anchors</option>
+              <template v-for="siteType in Object.keys(site.pages)">
+                <template v-for="[sitePage, sitePageEls] in Object.entries(site.pages[siteType])">
+                  <template v-for="sitePageEl in sitePageEls">
+                    <option
+                      v-if="sitePageEl[1] && sitePageEl[2] && sitePageEl[2] != ''"
+                      :value="sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()"
+                    >
+                      {{ sitePageEl[2] }} ({{ sitePage }})
+                    </option>
                   </template>
                 </template>
-              </select>
-              <input v-else type="text" placeholder="Title" v-model="icon.title" />
-            </div>
+              </template>
+            </select>
+            <input
+              v-else-if="elValue.mod == 'titles' && elValue.titles"
+              type="text"
+              placeholder="Title"
+              v-model="icon.title"
+              :style="{
+                color: elValue.style.color ? elValue.style.color : 'black',
+                fontSize: elValue.style['font-size'] ? elValue.style['font-size'] : '12px',
+                textAlign: elValue.style['text-align'] ? elValue.style['text-align'] : 'center',
+              }"
+            />
           </div>
         </template>
       </div>
 
-      <button
-        style="width: 100%; border: none"
-        :disabled="respvItemAmnt + itemStart >= elValue.icons.length"
-        :style="{
-          backgroundColor: site.body.style.backgroundColor,
-          cursor: respvItemAmnt + itemStart < elValue.icons.length ? 'pointer' : 'default',
-        }"
-        @click="itemStart++"
-      >
+      <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.icons.length" @click="itemStart++">
         <i class="fa-solid fa-chevron-right"></i>
       </button>
     </div>
@@ -135,6 +149,8 @@ export default {
       itemStart: 0,
       iconSliderHght: 0,
       iconSliderWdth: 0,
+      slctdIconIndx: null,
+      slctdIcon: '',
     };
   },
 
@@ -142,6 +158,9 @@ export default {
     this.iconSliderHght = this.$refs?.iconSlider?.scrollHeight;
     this.iconSliderWdth = this.$refs?.iconSlider?.scrollWidth;
     if (!this.elValue.mod) this.elValue.mod = 'titles';
+    if (!this.elValue.style['background-color'])
+      this.elValue.style['background-color'] = this.style.primaryColor.backgroundColor.backgroundColor;
+    if (!this.elValue.style['border-color']) this.elValue.style['border-color'] = this.site.body.style.borderColor;
   },
 
   updated() {
@@ -150,23 +169,57 @@ export default {
   },
 
   computed: {
-    iconSliderContainer() {
+    iStyle() {
       return {
-        paddingLeft: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
-        paddingRight: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
+        fontSize: this.elValue.style['icon-size'] ? this.elValue.style['icon-size'] : '12px',
+        paddingTop: this.elValue.style.margin ? this.elValue.style.margin : '0px',
+        paddingBottom: this.elValue.style.margin ? this.elValue.style.margin : '0px',
+      };
+    },
+    componentStyle() {
+      return {
+        border:
+          (this.elValue.style['border-width'] ? this.elValue.style['border-width'] : '0px') +
+          ' solid ' +
+          (this.elValue.style['border-color']
+            ? this.elValue.style['border-color']
+            : this.site.body.style.borderColor
+            ? this.site.body.style.borderColor
+            : 'white'),
+        borderRadius: this.elValue.style['border-radius'] ? this.elValue.style['border-radius'] : '0px',
+        backgroundColor:
+          this.elValue.style.background && this.elValue.style['background-color']
+            ? this.elValue.style['background-color']
+            : this.elValue.style.background && this.site.body.style.backgroundColor
+            ? this.site.body.style.backgroundColor
+            : '#FFFFFF00',
+        color: this.elValue.style.color ? this.elValue.style.color : 'black',
+        height: this.elValue.style.height ? this.elValue.style.height : false,
+        padding: this.elValue.style.padding ? this.elValue.style.padding : '0px',
+        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'center',
+        width:
+          this.grid.wdth < this.respWidth.xs
+            ? 'calc(33.33% - 10px)'
+            : this.elValue.style.width && this.elValue.style.width.charAt(0) != '0'
+            ? this.elValue.style.width
+            : '50px',
       };
     },
     wndwWdthRoundDown() {
       const wndwWdthRoundDownTemp = Math.floor(
         (this.grid.wdth - 60 - (this.grid.wdth >= this.respWidth.xs ? this.grid.wdth * 0.2 : 0)) /
-          (this.elValue.style.width ? this.elValue.style.width : 100)
+          (this.elValue.style.width?.replace(/\D/g, '') && this.elValue.style.width?.replace(/\D/g, '') != '0'
+            ? this.elValue.style.width?.replace(/\D/g, '')
+            : 50)
       );
       return Math.floor(
         (this.grid.wdth -
           60 -
           wndwWdthRoundDownTemp * 10 -
           (this.grid.wdth >= this.respWidth.xs ? this.grid.wdth * 0.2 : 0)) /
-          (this.elValue.style.width ? this.elValue.style.width : 100)
+          (this.elValue.style.width?.replace(/\D/g, '') && this.elValue.style.width?.replace(/\D/g, '') != '0'
+            ? this.elValue.style.width?.replace(/\D/g, '')
+            : 50)
       );
     },
     respvItemAmnt() {
@@ -179,11 +232,22 @@ export default {
   },
 
   methods: {
-    addIcon(iconIndx) {
+    slctIcon(iconIndx, icon) {
+      this.slctdIconIndx = iconIndx;
+      this.slctdIcon = icon;
+    },
+    linkKeysDlt(iconIndx, linkTp) {
+      let slctdLinkTps = ['link', 'page', 'anchor'].filter((linkType) => linkType != linkTp.slice(0, -1));
+      slctdLinkTps.forEach((linkType) => {
+        if (this.site.htmlElmnts?.[this.elKey]?.icons?.[iconIndx]?.[linkType])
+          delete this.site.htmlElmnts[this.elKey].icons[iconIndx][linkType];
+      });
+    },
+    addItem(iconIndx) {
       this.site.htmlElmnts[this.elKey].icons.splice(iconIndx + 1, 0, { title: '', icon: 'fa-solid fa-question' });
     },
     removeItem(iconIndx) {
-      this.itemStart--;
+      this.itemStart = this.itemStart === 0 ? 0 : this.itemStart - 1;
       this.site.htmlElmnts[this.elKey].icons.splice(iconIndx, 1);
     },
   },
@@ -205,32 +269,42 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
 }
-.icon-slider-container {
+.icon-slider-cntnr {
   display: flex;
-  justify-content: space-evenly;
-}
-.icon-slider-container button {
-  position: absolute;
 }
 .icon-slider-item {
+  position: relative;
   overflow: hidden;
-  height: 22vh;
-  padding: 20px 0px;
-  text-align: center;
 }
-.icon-slider-icon {
-  height: 50%;
-}
-.icon-slider-item input[type='text'] {
-  width: 85%;
+.icon-slider-item input[type='text'],
+.icon-slider-item select {
+  width: 100%;
   padding: 5px;
   border-style: none;
   background: transparent;
 }
-.icon-slider-item select {
-  width: 85%;
-  padding: 5px 2px;
+.icon-slider-add-rem {
+  position: absolute;
+  top: 0;
+  width: 15px;
+  height: 15px;
+}
+.icon-slider-add-rem i {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  font-size: 8px;
+}
+.icon-slider-select {
+  position: absolute;
+  top: 0;
+  appearance: none;
+  right: 0px;
+  width: 100%;
   border-style: none;
   background: transparent;
+}
+.icon-slider-select:focus {
+  outline: none;
 }
 </style>

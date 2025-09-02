@@ -6,7 +6,7 @@
         style="display: block; margin-top: -100px; margin-bottom: 100px"
       ></a>
     </template>
-    <div style="position: relative; display: flex" :style="divStyle">
+    <div :style="divStyle">
       <component
         class="headline"
         :is="elValue.style.url ? 'a' : 'div'"
@@ -30,15 +30,11 @@ export default {
   computed: {
     divStyle() {
       return {
-        paddingTop:
-          this.elValue.style.margin && this.elValue.style['margin-unit']
-            ? this.elValue.style.margin + this.elValue.style['margin-unit']
-            : false,
-        paddingBottom:
-          this.elValue.style.margin && this.elValue.style['margin-unit']
-            ? this.elValue.style.margin + this.elValue.style['margin-unit']
-            : false,
-        justifyContent: this.elValue.style['justify-content'],
+        position: 'relative',
+        display: 'flex',
+        paddingTop: this.elValue.style.margin,
+        paddingBottom: this.elValue.style.margin,
+        justifyContent: this.elValue.style['align-content'],
       };
     },
     inputStyle() {
@@ -50,33 +46,16 @@ export default {
             : false,
         color: this.elValue.style.color ? this.elValue.style.color : 'black',
         fontSize:
-          !this.elValue.style['font-size'] &&
-          !this.elValue.style['font-size-unit'] &&
-          !this.site.body.style['font-size'] &&
-          !this.site.body.style['font-size-unit']
+          !this.elValue.style['font-size'] && !this.site.body.style['font-size']
             ? '12px'
-            : (!this.elValue.style['font-size'] || !this.elValue.style['font-size-unit']) &&
-              this.site.body.style['font-size'] &&
-              this.site.body.style['font-size-unit']
-            ? this.site.body.style['font-size'] + this.site.body.style['font-size-unit']
-            : this.elValue.style['font-size'] + this.elValue.style['font-size-unit'],
-        height:
-          this.elValue.style.height && this.elValue.style['height-unit']
-            ? this.elValue.style.height + this.elValue.style['height-unit']
-            : false,
-        lineHeight:
-          !this.elValue.style.padding || !this.elValue.style['padding-unit']
-            ? this.elValue.style.height + this.elValue.style['height-unit']
-            : false,
-        padding:
-          this.elValue.style.padding && this.elValue.style['padding-unit']
-            ? this.elValue.style.padding + this.elValue.style['padding-unit']
-            : false,
+            : !this.elValue.style['font-size'] && this.site.body.style['font-size']
+            ? this.site.body.style['font-size']
+            : this.elValue.style['font-size'],
+        height: this.elValue.style.height,
+        lineHeight: !this.elValue.style.padding ? this.elValue.style.height : false,
+        padding: this.elValue.style.padding,
         textAlign: this.elValue.style['text-align'],
-        width:
-          this.elValue.style.width && this.elValue.style['width-unit']
-            ? this.elValue.style.width + this.elValue.style['width-unit']
-            : '100%',
+        width: this.elValue.style.width ? this.elValue.style.width : '100%',
       };
     },
   },

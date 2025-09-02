@@ -34,10 +34,7 @@ export default {
   computed: {
     pStyle() {
       return {
-        height:
-          this.elValue.style.height && this.elValue.style['height-unit']
-            ? this.elValue.style.height + this.elValue.style['height-unit']
-            : 'initial',
+        height: this.elValue.style.height ? this.elValue.style.height : 'initial',
       };
     },
   },

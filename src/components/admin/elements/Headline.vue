@@ -5,12 +5,12 @@
       :elIndex="elIndex"
       :options="[
         'font-size',
+        'align-content',
         'anchor',
         'background',
         'background-color',
         'color',
         'height',
-        'justify-content',
         'margin',
         'padding',
         'text-align',
@@ -53,17 +53,11 @@ export default {
   computed: {
     divStyle() {
       return {
-        paddingTop:
-          this.elValue.style.margin && this.elValue.style['margin-unit']
-            ? this.elValue.style.margin + this.elValue.style['margin-unit']
-            : '0px',
-        paddingBottom:
-          this.elValue.style.margin && this.elValue.style['margin-unit']
-            ? this.elValue.style.margin + this.elValue.style['margin-unit']
-            : '0px',
+        paddingTop: this.elValue.style.margin ? this.elValue.style.margin : '0px',
+        paddingBottom: this.elValue.style.margin ? this.elValue.style.margin : '0px',
         paddingLeft: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
         paddingRight: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
-        justifyContent: this.elValue.style['justify-content'] ? this.elValue.style['justify-content'] : 'initial',
+        justifyContent: this.elValue.style['align-content'] ? this.elValue.style['align-content'] : 'initial',
       };
     },
     inputStyle() {
@@ -75,38 +69,25 @@ export default {
             : false,
         color: this.elValue.style.color ? this.elValue.style.color : 'black',
         fontSize:
-          !this.elValue.style['font-size'] &&
-          !this.elValue.style['font-size-unit'] &&
-          !this.site.body.style['font-size'] &&
-          !this.site.body.style['font-size-unit']
+          !this.elValue.style['font-size'] && !this.site.body.style['font-size']
             ? '12px'
-            : (!this.elValue.style['font-size'] || !this.elValue.style['font-size-unit']) &&
-              this.site.body.style['font-size'] &&
-              this.site.body.style['font-size-unit']
-            ? this.site.body.style['font-size'] + this.site.body.style['font-size-unit']
-            : (this.elValue.style['font-size-unit'] == 'vw'
-                ? this.grid.wdth * (this.elValue.style['font-size'] / 100)
-                : this.elValue.style['font-size']) +
-              (this.elValue.style['font-size-unit'] == 'vw' ? 'px' : this.elValue.style['font-size-unit']),
-        height:
-          this.elValue.style.height && this.elValue.style['height-unit']
-            ? this.elValue.style.height + this.elValue.style['height-unit']
-            : 'initial',
-        padding:
-          !this.elValue.style.padding || !this.elValue.style['padding-unit']
-            ? '0px'
-            : (this.elValue.style['padding-unit'] == 'vw'
-                ? this.grid.wdth * (this.elValue.style.padding / 100)
-                : this.elValue.style.padding) +
-              (this.elValue.style['padding-unit'] == 'vw' ? 'px' : this.elValue.style['padding-unit']),
+            : !this.elValue.style['font-size'] && this.site.body.style['font-size']
+            ? this.site.body.style['font-size']
+            : this.elValue.style['font-size'].includes('vw')
+            ? this.grid.wdth * (this.elValue.style['font-size']?.replace(/\D/g, '') / 100) + 'px'
+            : this.elValue.style['font-size'],
+        height: this.elValue.style.height ? this.elValue.style.height : 'initial',
+        padding: !this.elValue.style.padding
+          ? '0px'
+          : this.elValue.style?.padding?.includes('vw')
+          ? this.grid.wdth * (this.elValue.style.padding?.replace(/\D/g, '') / 100) + 'px'
+          : this.elValue.style.padding,
         textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'initial',
-        width:
-          !this.elValue.style.width || !this.elValue.style['width-unit']
-            ? 'initial'
-            : (this.elValue.style['width-unit'] == 'vw'
-                ? this.grid.wdth * (this.elValue.style.width / 100)
-                : this.elValue.style.width) +
-              (this.elValue.style['width-unit'] == 'vw' ? 'px' : this.elValue.style['width-unit']),
+        width: !this.elValue.style.width
+          ? 'initial'
+          : this.elValue.style.width.includes('vw')
+          ? this.grid.wdth * (this.elValue.style.width?.replace(/\D/g, '') / 100) + 'px'
+          : this.elValue.style.width,
       };
     },
   },

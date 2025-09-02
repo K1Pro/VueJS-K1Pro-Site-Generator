@@ -1,11 +1,8 @@
 <template>
-  <div
-    class="background-video"
-    :style="{ height: elValue.style.height + 'vh', marginBottom: '-' + elValue.style.height + 'vh' }"
-  >
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
+  <div class="background-video" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
+    <!-- <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu> -->
     <video
-      :style="{ height: elValue.style.height + 'vh' }"
+      :style="{ height: elValue.style.height }"
       :width="grid.wdth + 'px'"
       :src="
         elValue.src.includes('http://') || elValue.src.includes('https://')
@@ -62,8 +59,8 @@ export default {
   },
 
   created() {
-    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: 75 };
-    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = 75;
+    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: '75px' };
+    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = '75px';
   },
 };
 </script>
