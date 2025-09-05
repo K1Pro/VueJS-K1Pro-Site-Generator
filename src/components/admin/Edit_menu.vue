@@ -73,6 +73,7 @@
       type="checkbox"
       v-model="site.htmlElmnts[elKey].titles"
     />
+    <input v-if="option == 'text-editor'" type="checkbox" v-model="site.htmlElmnts[elKey].textEditor" />
     <!-- number [unitInputs] -->
     <input
       v-if="unitInputs.includes(option)"
@@ -133,8 +134,10 @@ export default {
     noInput() {
       return this.unitInputs.includes(this.option)
         ? {
-            no: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/\D/g, ''),
-            unit: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/[0-9]/g, ''),
+            no: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/[^0-9.]/g, ''),
+            unit: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/[0-9.]/g, ''),
+            // no: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/\D/g, ''),
+            // unit: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/[0-9]/g, ''),
           }
         : { no: '', unit: '' };
     },

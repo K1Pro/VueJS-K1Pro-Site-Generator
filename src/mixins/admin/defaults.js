@@ -34,6 +34,7 @@ const defaultsMixin = {
           'subscribe',
           'terms_of_use',
           'test',
+          'text_box',
           'text_pic_box',
           'top_menu',
           'video_gallery',
@@ -160,7 +161,9 @@ const defaultsMixin = {
           spacer: { type: 'spacer', style: { height: 50 } },
           subscribe: { type: 'subscribe' },
           terms_of_use: { type: 'terms_of_use', style: {} },
+
           test: { type: 'test' },
+          text_box: { type: 'text_box', style: { 'font-size': '12px' }, text: '', mod: 'html' },
           text_pic_box: {
             type: 'text_pic_box',
             style: {

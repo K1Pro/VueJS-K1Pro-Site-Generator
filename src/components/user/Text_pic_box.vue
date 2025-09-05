@@ -1,13 +1,13 @@
 <template>
-  <div class="text-box">
+  <div class="text-pic-box">
     <template v-if="slctd.hash && Object.values(site.pages[slctd.type])[0][elIndex][2]">
       <a :id="Object.values(site.pages[slctd.type])[0][elIndex][2]"></a>
     </template>
 
-    <div class="text-box-container">
+    <div class="text-pic-box-container">
       <img
         v-if="elValue.img || elValue.img == ''"
-        class="text-box-img-item"
+        class="text-pic-box-img-item"
         :src="
           elValue.img.src.includes('http://') || elValue.img.src.includes('https://')
             ? elValue.img.src
@@ -20,7 +20,7 @@
           objectFit: elValue.img.scale ? 'cover' : false,
         }"
       />
-      <div class="text-box-txt-item" v-html="elValue.txt"></div>
+      <div class="text-pic-box-txt-item" v-html="elValue.txt"></div>
       <div style="clear: both"></div>
     </div>
   </div>
@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  name: 'Text box',
+  name: 'Text pic box',
 
   inject: ['endPts', 'respWidth', 'site', 'slctd', 'wndw'],
 
@@ -43,20 +43,20 @@ export default {
 </script>
 
 <style>
-.text-box {
+.text-pic-box {
   position: relative;
 }
-.text-box-container {
+.text-pic-box-container {
   width: 100%;
 }
-.text-box-txt-item {
+.text-pic-box-txt-item {
   padding: 10px;
 }
-.text-box-img-item {
+.text-pic-box-img-item {
   padding: 0px 10px 0px 10px;
 }
 @media only screen and (min-width: 650px) {
-  .text-box-container {
+  .text-pic-box-container {
     padding: 0px 10%;
   }
 }

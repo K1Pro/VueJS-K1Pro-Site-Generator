@@ -367,7 +367,7 @@ export default {
         }
       } else {
         console.log('copying');
-        if (!this.copyingElmnt) {
+        if (this.slctdElmntButton == 'Copy' && !this.copyingElmnt) {
           this.copyingElmnt = elmnt;
         } else {
           const elPosition =

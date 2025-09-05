@@ -110,7 +110,7 @@
 
 <script>
 export default {
-  name: 'Text box',
+  name: 'Text pic box',
 
   inject: ['endPts', 'grid', 'imagesReq', 'mediaReq', 'respWidth', 'site', 'slctd', 'style'],
 
