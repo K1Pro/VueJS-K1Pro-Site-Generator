@@ -3,16 +3,6 @@
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['color', 'font-size', 'text-editor']"></edit_menu>
 
     <div v-if="site.htmlElmnts[elKey].textEditor" class="text-box-editor">
-      <button
-        v-if="elValue.mod == 'html'"
-        @click="editDsbld ? false : (elValue.mod = 'source-code')"
-        style="width: 30px"
-      >
-        <i class="fa-solid fa-code"></i>
-      </button>
-      <button v-else @click="editDsbld ? false : (elValue.mod = 'html')" style="width: 30px">
-        <i class="fa-solid fa-align-justify"></i>
-      </button>
       <button @click="editDsbld ? false : styleChng('span', 'font-weight', 'bold')">
         <i class="fa-solid fa-bold"></i>
       </button>
@@ -36,6 +26,16 @@
       <button @click="editDsbld ? false : (site.htmlElmnts[elKey].text = elValue.text.replace(/<[^>]*>?/gm, ''))">
         <i class="fa-solid fa-eraser"></i>
       </button>
+      <button
+        v-if="elValue.mod == 'html'"
+        @click="editDsbld ? false : (elValue.mod = 'source-code')"
+        style="width: 30px"
+      >
+        <i class="fa-solid fa-code"></i>
+      </button>
+      <button v-else @click="editDsbld ? false : (elValue.mod = 'html')" style="width: 30px">
+        <i class="fa-solid fa-align-justify"></i>
+      </button>
     </div>
 
     <span
@@ -49,6 +49,8 @@
       v-html="elValue.text"
       v-on:blur="elValue.text = $event.target.innerHTML"
       @click="spanClick"
+      @mousedown="slctdSpanID = null"
+      @paste="onPaste"
     >
     </span>
     <textarea v-else v-model="elValue.text" :style="{ height: spanHght }"></textarea>
@@ -72,7 +74,15 @@ export default {
   },
 
   methods: {
+    onPaste() {
+      setTimeout(() => {
+        this.elValue.text = this.$refs.textBoxSpan.innerHTML
+          .replace(/<[^>]*>/g, '__________')
+          .replaceAll('__________', '<br>');
+      }, 2);
+    },
     spanClick() {
+      console.log('span click');
       this.slctdSpanID = null;
       let selection = window.getSelection();
       let nodes = [];
