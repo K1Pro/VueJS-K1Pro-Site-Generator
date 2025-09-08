@@ -163,7 +163,12 @@ const defaultsMixin = {
           terms_of_use: { type: 'terms_of_use', style: {} },
 
           test: { type: 'test' },
-          text_box: { type: 'text_box', style: { 'font-size': '12px' }, text: '', mod: 'html' },
+          text_box: {
+            type: 'text_box',
+            style: { color: 'black', 'font-size': '12px', 'text-align': 'left' },
+            text: '',
+            mod: 'html',
+          },
           text_pic_box: {
             type: 'text_pic_box',
             style: {

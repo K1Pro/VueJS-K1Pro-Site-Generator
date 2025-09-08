@@ -1,29 +1,52 @@
 <template>
   <div :id="elKey" class="text-box" :style="[style.outline.borderColor, divStyle]">
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['color', 'font-size', 'text-editor']"></edit_menu>
+    <edit_menu
+      :elKey="elKey"
+      :elIndex="elIndex"
+      :options="['text-editor', 'color', 'font-size', 'text-align']"
+    ></edit_menu>
 
     <div v-if="site.htmlElmnts[elKey].textEditor" class="text-box-editor">
-      <button @click="editDsbld ? false : styleChng('span', 'font-weight', 'bold')">
+      <button
+        @click="editDsbld ? false : styleChng('span', 'font-weight', 'bold')"
+        :disabled="elValue.mod == 'source-code'"
+      >
         <i class="fa-solid fa-bold"></i>
       </button>
-      <button @click="editDsbld ? false : styleChng('span', 'font-style', 'italic')">
+      <button
+        @click="editDsbld ? false : styleChng('span', 'font-style', 'italic')"
+        :disabled="elValue.mod == 'source-code'"
+      >
         <i class="fa-solid fa-italic"></i>
       </button>
-      <button @click="editDsbld ? false : styleChng('span', 'text-decoration', 'underline')">
+      <button
+        @click="editDsbld ? false : styleChng('span', 'text-decoration', 'underline')"
+        :disabled="elValue.mod == 'source-code'"
+      >
         <i class="fa-solid fa-underline"></i>
       </button>
-      <button @click.prevent="editDsbld ? false : styleChng('span', 'font-size', 1)">
+      <button
+        @click.prevent="editDsbld ? false : styleChng('span', 'font-size', 1)"
+        :disabled="elValue.mod == 'source-code'"
+      >
         <i class="fa-solid fa-plus"></i>
       </button>
-      <button @click="editDsbld ? false : styleChng('span', 'font-size', -1)">
+      <button @click="editDsbld ? false : styleChng('span', 'font-size', -1)" :disabled="elValue.mod == 'source-code'">
         <i class="fa-solid fa-minus"></i>
       </button>
-      <input type="color" @input="editDsbld ? false : styleChng('span', 'color', $event.target.value)" />
-      <input type="text" placeholder="URL" style="width: 45px" v-model="url" />
-      <button :disabled="url == ''" @click="editDsbld ? false : styleChng('a')">
+      <input
+        type="color"
+        @input="editDsbld ? false : styleChng('span', 'color', $event.target.value)"
+        :disabled="elValue.mod == 'source-code'"
+      />
+      <input type="text" placeholder="URL" style="width: 45px" v-model="url" :disabled="elValue.mod == 'source-code'" />
+      <button :disabled="url == '' || elValue.mod == 'source-code'" @click="editDsbld ? false : styleChng('a')">
         <i class="fa-solid fa-link"></i>
       </button>
-      <button @click="editDsbld ? false : (site.htmlElmnts[elKey].text = elValue.text.replace(/<[^>]*>?/gm, ''))">
+      <button
+        @click="editDsbld ? false : (site.htmlElmnts[elKey].text = elValue.text.replace(/<[^>]*>?/gm, ''))"
+        :disabled="elValue.mod == 'source-code'"
+      >
         <i class="fa-solid fa-eraser"></i>
       </button>
       <button
@@ -75,14 +98,24 @@ export default {
 
   methods: {
     onPaste() {
+      console.log('image pasted in');
       setTimeout(() => {
         this.elValue.text = this.$refs.textBoxSpan.innerHTML
           .replace(/<[^>]*>/g, '__________')
-          .replaceAll('__________', '<br>');
+          .replaceAll('__________', '<br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>')
+          .replaceAll('<br><br><br>', '<br><br>');
       }, 2);
     },
     spanClick() {
-      console.log('span click');
       this.slctdSpanID = null;
       let selection = window.getSelection();
       let nodes = [];
@@ -188,6 +221,7 @@ export default {
     },
     spanStyle() {
       return {
+        color: this.elValue.style.color ? this.elValue.style.color : 'blue',
         fontSize:
           !this.elValue.style['font-size'] && !this.site.body.style['font-size']
             ? '12px'
@@ -196,6 +230,7 @@ export default {
             : this.elValue.style['font-size'].includes('vw')
             ? this.grid.wdth * (this.elValue.style['font-size']?.replace(/\D/g, '') / 100) + 'px'
             : this.elValue.style['font-size'],
+        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'center',
       };
     },
   },
@@ -219,6 +254,9 @@ export default {
 .text-box-main-span {
   display: block;
   min-height: 35px;
+}
+.text-box-main-span:focus {
+  outline: none;
 }
 .text-box span[contenteditable]:empty::before {
   content: 'Text box';
