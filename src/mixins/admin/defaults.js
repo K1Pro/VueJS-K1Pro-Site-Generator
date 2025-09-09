@@ -24,6 +24,7 @@ const defaultsMixin = {
           'form',
           'headline',
           'icon_slider',
+          'image_banner',
           'login',
           'legal_links',
           'photo_gallery',
@@ -105,6 +106,11 @@ const defaultsMixin = {
               width: '120px',
             },
             titles: true,
+          },
+          image_banner: {
+            type: 'image_banner',
+            images: [],
+            style: { height: '250px' },
           },
           legal_links: {
             type: 'legal_links',
