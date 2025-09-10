@@ -367,29 +367,37 @@ export default {
         }
       } else {
         console.log('copying');
+        console.log(this.copyingElmnt);
         if (this.slctdElmntButton == 'Copy' && !this.copyingElmnt) {
+          console.log('step1');
           this.copyingElmnt = elmnt;
         } else {
+          console.log('step2');
           const elPosition =
             this.slctdElmntButton == 'Copy'
               ? this.site.htmlElmnts[elmnt]?.position
               : this.defaults.htmlElmnts[elmnt]?.position;
           let newElPosition;
           if (0 < elPosition) {
+            console.log('step3');
             newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
             newElPosition++;
           }
           if (0 > elPosition) {
+            console.log('step4');
             newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
             newElPosition =
               0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
           }
           if (elPosition === undefined) {
+            console.log('step5');
             newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
             newElPosition =
               0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
           }
           if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
+            console.log('step6');
+            console.log(elmnt);
             if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
             Object.keys(this.site.pages).forEach((slctdType) => {
               for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
@@ -459,6 +467,7 @@ export default {
         this.siteElmnts.forEach((elType) => {
           if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
             this.slctdElmntButton = 'Copy';
+            this.copyingElmnt = elType;
             this.createCopyDeleteEl(elType);
           }
         });

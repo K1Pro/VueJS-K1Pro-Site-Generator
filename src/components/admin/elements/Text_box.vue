@@ -101,7 +101,22 @@ export default {
       console.log('image pasted in');
       setTimeout(() => {
         this.elValue.text = this.$refs.textBoxSpan.innerHTML
-          .replace(/<[^>]*>/g, '__________')
+          .replace(/<a[^>]*>/g, '__________')
+          .replace(/<b[^>]*>/g, '__________')
+          .replace(/<button[^>]*>/g, '__________')
+          .replace(/<div[^>]*>/g, '__________')
+          .replace(/<h[^>]*>/g, '__________')
+          .replace(/<i[^>]*>/g, '__________')
+          .replace(/<img[^>]*>/g, '__________')
+          .replace(/<ul[^>]*>/g, '__________')
+          .replace(/<li[^>]*>/g, '__________')
+          .replaceAll('<p>', '__________')
+          .replaceAll('</p>', '__________')
+          .replace(/<p[^>]*>/g, '__________')
+          .replace(/<span style[^>]*>/g, '__________')
+          .replace(/<span class[^>]*>/g, '__________')
+          .replace(/<sup[^>]*>/g, '__________')
+          .replace(/<u[^>]*>/g, '__________')
           .replaceAll('__________', '<br>')
           .replaceAll('<br><br><br>', '<br><br>')
           .replaceAll('<br><br><br>', '<br><br>')

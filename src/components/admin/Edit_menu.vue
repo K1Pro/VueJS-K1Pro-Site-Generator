@@ -10,13 +10,11 @@
       <i
         class="fa-solid"
         :class="
-          ['left', 'flex-start'].includes(site.htmlElmnts[elKey].style[option])
-            ? 'fa-align-left'
-            : ['center'].includes(site.htmlElmnts[elKey].style[option])
+          ['center'].includes(site.htmlElmnts[elKey].style[option])
             ? 'fa-align-center'
             : ['right', 'flex-end'].includes(site.htmlElmnts[elKey].style[option])
             ? 'fa-align-right'
-            : 'fa-align-justify'
+            : 'fa-align-left'
         "
         @click="changeAlign($event.target.classList[1], option)"
       ></i>
@@ -37,14 +35,14 @@
     </select>
     <!-- text [anchor, url] -->
     <input
-      v-if="option == 'anchor' && options.includes('anchor')"
+      v-if="option == 'anchor'"
       type="text"
       title="anchor"
       class="edit-menu-inputs"
       v-model="site.pages[slctd.type][slctd.page][elIndex][2]"
     />
     <input
-      v-if="option == 'url' && options.includes('url')"
+      v-if="option == 'url'"
       type="text"
       title="url"
       class="edit-menu-inputs"
@@ -52,12 +50,12 @@
     />
     <!-- checkbox [backgound, responsive, text-box-image, vertical-align]-->
     <input
-      v-if="option == 'background' || option == 'responsive' || option == 'vertical-align'"
+      v-if="['background', 'responsive', 'vertical-align'].includes(option)"
       type="checkbox"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
     <input
-      v-if="option == 'text-box_image' && options.includes('text-box_image')"
+      v-if="option == 'text-box_image'"
       type="checkbox"
       :checked="site.htmlElmnts[elKey].img && site.htmlElmnts[elKey].img != ''"
       @change="toggleTextBoxImg"
@@ -104,7 +102,11 @@
       <option>%</option>
     </select>
     <input
-      v-if="(unitInputs.includes(option) || option == 'object-fit') && site.htmlElmnts[elKey].style[option]"
+      v-if="
+        site.htmlElmnts[elKey].style[option] &&
+        !option.includes('edit-mode') &&
+        !['background', 'responsive', 'text-editor', 'vertical-align'].includes(option)
+      "
       type="checkbox"
       :checked="site.htmlElmnts[elKey].style[option]"
       @change="deleteStyle($event.target.checked, option)"
@@ -166,10 +168,9 @@ export default {
       console.log(event.target.value);
     },
     changeAlign(event, option) {
-      const align =
-        option == 'align-content' ? ['flex-start', 'center', 'flex-end', false] : ['left', 'center', 'right', false];
-      let alignPosition = ['left', 'center', 'right', false].findIndex((pos) => pos == event.split('-')[2]);
-      alignPosition = alignPosition > 2 ? 0 : alignPosition + 1;
+      const align = option == 'align-content' ? ['flex-start', 'center', 'flex-end'] : ['left', 'center', 'right'];
+      let alignPosition = ['left', 'center', 'right'].findIndex((pos) => pos == event.split('-')[2]);
+      alignPosition = alignPosition > 1 ? 0 : alignPosition + 1;
       this.site.htmlElmnts[this.elKey].style[option] = align[alignPosition];
     },
     toggleTextBoxImg(event) {

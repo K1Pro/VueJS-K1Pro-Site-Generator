@@ -83,11 +83,14 @@ export default {
           ? this.grid.wdth * (this.elValue.style.padding?.replace(/\D/g, '') / 100) + 'px'
           : this.elValue.style.padding,
         textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'initial',
-        width: !this.elValue.style.width
-          ? 'initial'
-          : this.elValue.style.width.includes('vw')
-          ? this.grid.wdth * (this.elValue.style.width?.replace(/\D/g, '') / 100) + 'px'
-          : this.elValue.style.width,
+        width:
+          this.grid.wdth < this.respWidth.xs
+            ? '100%'
+            : !this.elValue.style.width
+            ? 'initial'
+            : this.elValue.style.width.includes('vw')
+            ? this.grid.wdth * (this.elValue.style.width?.replace(/\D/g, '') / 100) + 'px'
+            : this.elValue.style.width,
       };
     },
   },

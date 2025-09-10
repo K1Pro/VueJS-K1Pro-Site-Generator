@@ -2,7 +2,7 @@ const defaultsMixin = {
   data() {
     return {
       defaults: {
-        htmlUniqSiteElmnts: ['footer', 'legal_links', 'top_menu'],
+        htmlUniqSiteElmnts: ['top_menu', 'footer', 'legal_links'],
         htmlUniqPageElmnts: [
           'background_image',
           'background_video',
@@ -110,7 +110,7 @@ const defaultsMixin = {
           image_banner: {
             type: 'image_banner',
             images: [],
-            style: { height: '250px' },
+            style: {},
           },
           legal_links: {
             type: 'legal_links',

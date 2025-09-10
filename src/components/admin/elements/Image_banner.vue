@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="image-banner" :style="[style.outline.borderColor, divStyle]">
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height', 'object-fit', 'responsive', 'width']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height', 'object-fit', 'width']"></edit_menu>
     <template v-for="image in elValue.images">
       <img :src="image" alt="image" :style="[imgStyle]" />
     </template>
