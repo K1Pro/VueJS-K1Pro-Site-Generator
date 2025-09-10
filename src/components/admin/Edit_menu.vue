@@ -27,6 +27,14 @@
       <option>space-around</option>
       <option>space-evenly</option>
     </select>
+    <!-- object-fit -->
+    <select v-if="option == 'object-fit'" v-model="site.htmlElmnts[elKey].style['object-fit']">
+      <option>contain</option>
+      <option>cover</option>
+      <option>fill</option>
+      <option>none</option>
+      <option>scale-down</option>
+    </select>
     <!-- text [anchor, url] -->
     <input
       v-if="option == 'anchor' && options.includes('anchor')"
@@ -93,7 +101,14 @@
       <option>px</option>
       <option>vh</option>
       <option>vw</option>
+      <option>%</option>
     </select>
+    <input
+      v-if="(unitInputs.includes(option) || option == 'object-fit') && site.htmlElmnts[elKey].style[option]"
+      type="checkbox"
+      :checked="site.htmlElmnts[elKey].style[option]"
+      @change="deleteStyle($event.target.checked, option)"
+    />
     <select v-if="option.includes('paste-style')" @change="pasteTemplate">
       <option selected disabled>Choose template</option>
       <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts)">
@@ -144,6 +159,9 @@ export default {
   },
 
   methods: {
+    deleteStyle(event, option) {
+      if (!event) delete this.site.htmlElmnts[this.elKey].style[option];
+    },
     pasteTemplate(event) {
       console.log(event.target.value);
     },

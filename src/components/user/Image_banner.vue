@@ -17,7 +17,9 @@ export default {
   computed: {
     imgStyle() {
       return {
-        height: this.elValue.style.height ? this.elValue.style.height : '250px',
+        height: this.elValue.style.height ? this.elValue.style.height : 'auto',
+        width: this.elValue.style.width ? this.elValue.style.width : 'auto',
+        objectFit: this.elValue.style['object-fit'] ? this.elValue.style['object-fit'] : 'initial',
       };
     },
   },
@@ -29,7 +31,12 @@ export default {
   position: relative;
 }
 .image-banner img {
-  object-fit: cover;
-  width: 100%;
+  max-width: 100%;
+}
+
+@media only screen and (max-width: 400px) {
+  .image-banner img {
+    min-width: 100%;
+  }
 }
 </style>

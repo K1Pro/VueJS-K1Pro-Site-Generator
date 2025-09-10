@@ -1,6 +1,6 @@
 <template>
   <div :id="elKey" class="image-banner" :style="[style.outline.borderColor, divStyle]">
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height', 'object-fit', 'responsive', 'width']"></edit_menu>
     <template v-for="image in elValue.images">
       <img :src="image" alt="image" :style="[imgStyle]" />
     </template>
@@ -24,11 +24,15 @@ export default {
     },
     imgStyle() {
       return {
-        height: this.elValue.style.height ? this.elValue.style.height : '250px',
+        height: this.elValue.style.height ? this.elValue.style.height : 'auto',
+        width:
+          this.grid.wdth < this.respWidth.xs ? '100%' : this.elValue.style.width ? this.elValue.style.width : 'auto',
+        objectFit: this.elValue.style['object-fit'] ? this.elValue.style['object-fit'] : 'initial',
       };
     },
   },
   mounted() {
+    if (Array.isArray(this.elValue.style)) this.elValue.style = {};
     if (this.elValue.images.length === 0 && this.site.keywords.length > 0) {
       this.pexelsReq(
         'GET',
@@ -56,7 +60,6 @@ export default {
   outline-offset: -2px;
 }
 .image-banner img {
-  object-fit: cover;
-  width: 100%;
+  max-width: 100%;
 }
 </style>
