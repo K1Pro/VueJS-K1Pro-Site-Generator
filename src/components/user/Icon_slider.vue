@@ -28,7 +28,7 @@
                   ? icon.link
                   : false
               "
-              :target="icon.link ? '_blank' : false"
+              :target="icon.link ? '_blank' : '_self'"
             >
               <i :style="iStyle" :class="icon.icon"></i>
               <div

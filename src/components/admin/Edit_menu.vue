@@ -55,6 +55,12 @@
       v-model="site.htmlElmnts[elKey].style[option]"
     />
     <input
+      v-if="['caption'].includes(option)"
+      type="checkbox"
+      :checked="site.htmlElmnts[elKey][option]"
+      @change="changeCaption($event.target.checked, option)"
+    />
+    <input
       v-if="option == 'text-box_image'"
       type="checkbox"
       :checked="site.htmlElmnts[elKey].img && site.htmlElmnts[elKey].img != ''"
@@ -111,10 +117,12 @@
       :checked="site.htmlElmnts[elKey].style[option]"
       @change="deleteStyle($event.target.checked, option)"
     />
-    <select v-if="option.includes('paste-style')" @change="pasteTemplate">
-      <option selected disabled>Choose template</option>
+    <select v-if="option.includes('paste')" @change="pasteTemplate">
+      <option selected disabled>{{ site.htmlElmnts[elKey]?.type.replaceAll('_', ' ') }} style</option>
       <template v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts)">
-        <option v-if="htmlElmntVal.type == site.htmlElmnts[elKey].type">{{ htmlElmntKey }}</option>
+        <option v-if="htmlElmntVal.type == site.htmlElmnts[elKey].type && htmlElmntKey != elKey" :value="htmlElmntKey">
+          {{ htmlElmntKey.replaceAll(htmlElmntVal.type, '').replaceAll('_', ' ') }}
+        </option>
       </template>
     </select>
   </div>
@@ -164,8 +172,18 @@ export default {
     deleteStyle(event, option) {
       if (!event) delete this.site.htmlElmnts[this.elKey].style[option];
     },
+    changeCaption(event, option) {
+      if (event) {
+        this.site.htmlElmnts[this.elKey] = 'true';
+      } else {
+        delete this.site.htmlElmnts[this.elKey][option];
+        delete this.site.htmlElmnts[this.elKey].style.color;
+        delete this.site.htmlElmnts[this.elKey].style['font-size'];
+        delete this.site.htmlElmnts[this.elKey].style['text-align'];
+      }
+    },
     pasteTemplate(event) {
-      console.log(event.target.value);
+      this.site.htmlElmnts[this.elKey].style = this.site.htmlElmnts[event.target.value].style;
     },
     changeAlign(event, option) {
       const align = option == 'align-content' ? ['flex-start', 'center', 'flex-end'] : ['left', 'center', 'right'];

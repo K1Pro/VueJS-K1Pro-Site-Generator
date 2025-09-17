@@ -1,20 +1,15 @@
 <template>
   <div :id="elKey" class="footer" :style="[style.outline.borderColor]">
-    <div
-      class="footer-container"
-      :style="[
-        {
-          gridTemplateColumns: gridTemplateLogOut,
-        },
-        style.primaryColor.backgroundColor,
-      ]"
-    >
-      <div class="footer-item0"></div>
-      <template v-for="(siteFooterItem, siteFooterIndex) in site.htmlElmnts[elKey].components">
-        <div v-if="siteFooterItem != 'none'" :class="'footer-item' + Number(siteFooterIndex + 1)">
+    <div class="footer-cntnr" :style="[style.primaryColor.backgroundColor, style.respPadding]">
+      <template v-for="(siteFooterItem, siteFooterIndex) in elValue.components">
+        <div
+          v-if="siteFooterItem != 'none'"
+          :class="'footer-item' + Number(siteFooterIndex + 1)"
+          :style="{ width: 100 / elValue.components.length + '%' }"
+        >
           <select
-            :value="site.htmlElmnts[elKey].components[siteFooterIndex]"
-            @focusin="tempFootComponents = JSON.stringify(site.htmlElmnts[elKey].components)"
+            :value="elValue.components[siteFooterIndex]"
+            @focusin="tempFootComponents = JSON.stringify(elValue.components)"
             @change="changeFootItem($event, siteFooterIndex)"
           >
             <option value="empty" selected disabled>Select</option>
@@ -40,7 +35,6 @@
           ></component>
         </div>
       </template>
-      <div :class="'footer-item' + Number(site.htmlElmnts[elKey]['components'].length + 1)"></div>
     </div>
   </div>
 </template>
@@ -110,26 +104,17 @@ export default {
 
 <style>
 .footer {
-  /* border-top: 1px solid rgba(0, 0, 0, 0.8); */
   position: relative;
-  width: 100%;
+  min-height: 35px;
+  border: none;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
-  /* text-align: left;
-    padding: 0vw 3vw;
-    background-color: grey;
-    color: white; */
 }
-
-.footer-container {
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto;
-  /* background-color: grey; */
-  /* padding: 10px; */
+.footer-cntnr {
+  display: flex;
+  justify-content: space-evenly;
 }
-
 .footer-item0,
 .footer-item1,
 .footer-item2,
@@ -168,7 +153,7 @@ export default {
 }
 
 @media only screen and (min-width: 650px) {
-  /* .footer-container {
+  /* .footer-cntnr {
     grid-template-columns: 0% 20% 25% 35% 20% 0%;
   } */
 
@@ -179,7 +164,7 @@ export default {
 }
 
 @media only screen and (min-width: 1200px) {
-  /* .footer-container {
+  /* .footer-cntnr {
     grid-template-columns: auto 15% 25% 25% 15% auto;
   } */
   /* 

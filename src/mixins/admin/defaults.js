@@ -109,7 +109,7 @@ const defaultsMixin = {
           },
           image_banner: {
             type: 'image_banner',
-            images: [],
+            src: null,
             style: {},
           },
           legal_links: {

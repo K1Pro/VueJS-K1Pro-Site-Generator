@@ -21,7 +21,7 @@
         'text-align',
         'url',
         'width',
-        'paste-style',
+        'paste',
       ]"
     ></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ iconSliderHght }}px x {{ iconSliderWdth }}px</span>

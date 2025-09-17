@@ -13,7 +13,7 @@ export default {
   computed: {
     spanStyle() {
       return {
-        color: this.elValue.style.color ? this.elValue.style.color : 'blue',
+        color: this.elValue.style.color ? this.elValue.style.color : 'black',
         fontSize:
           !this.elValue.style['font-size'] && !this.site.body.style['font-size']
             ? '12px'
@@ -22,7 +22,7 @@ export default {
             : this.elValue.style['font-size'].includes('vw')
             ? this.grid.wdth * (this.elValue.style['font-size']?.replace(/\D/g, '') / 100) + 'px'
             : this.elValue.style['font-size'],
-        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'center',
+        textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'left',
       };
     },
   },
