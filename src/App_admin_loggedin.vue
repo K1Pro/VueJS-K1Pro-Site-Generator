@@ -321,6 +321,7 @@ export default {
       }
     },
     async mediaReq(METHOD, link, folder) {
+      console.log('what is going on?');
       try {
         const response = await fetch(app_api_url + this.slctd.job + '/media', {
           method: METHOD,
@@ -445,6 +446,19 @@ export default {
   background-color: white;
   border-radius: 25px;
   cursor: pointer;
+}
+.admin-links {
+  position: absolute;
+  top: 15px;
+  left: 0px;
+  height: 20px;
+  width: 100%;
+}
+.admin-links input[type='text'],
+.admin-links select {
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
 }
 @media only screen and (max-width: 767px) {
   .app-grid-container {

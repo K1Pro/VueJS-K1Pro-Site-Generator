@@ -34,6 +34,7 @@
       <option>scale-down</option>
     </select>
     <!-- text [anchor, url] -->
+    <!-- need to handle elIndex for footer items so anchor is not used -->
     <input
       v-if="option == 'anchor'"
       type="text"
@@ -48,12 +49,13 @@
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style.url"
     />
-    <!-- checkbox [backgound, responsive, text-box-image, vertical-align]-->
+    <!-- checkbox [backgound, responsive, text-box-image, titles, vertical-align]-->
     <input
       v-if="['background', 'responsive', 'vertical-align'].includes(option)"
       type="checkbox"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
+    <input v-if="['titles'].includes(option)" type="checkbox" v-model="site.htmlElmnts[elKey][option]" />
     <input
       v-if="['caption'].includes(option)"
       type="checkbox"
@@ -74,17 +76,12 @@
       v-model="site.htmlElmnts[elKey].style[option]"
     />
     <!-- mod menu -->
-    <select v-if="option == 'edit-mode1'" v-model="site.htmlElmnts[elKey].mod">
-      <option>titles</option>
+    <select v-if="option == 'links'" v-model="site.htmlElmnts[elKey].mod">
+      <option>disable</option>
       <option>pages</option>
       <option>anchors</option>
       <option>links</option>
     </select>
-    <input
-      v-if="option == 'edit-mode1' && site.htmlElmnts[elKey].mod == 'titles'"
-      type="checkbox"
-      v-model="site.htmlElmnts[elKey].titles"
-    />
     <input v-if="option == 'text-editor'" type="checkbox" v-model="site.htmlElmnts[elKey].textEditor" />
     <!-- number [unitInputs] -->
     <input
@@ -110,7 +107,6 @@
     <input
       v-if="
         site.htmlElmnts[elKey].style[option] &&
-        !option.includes('edit-mode') &&
         !['background', 'responsive', 'text-editor', 'vertical-align'].includes(option)
       "
       type="checkbox"

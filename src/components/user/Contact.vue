@@ -62,7 +62,7 @@
 
       <button type="submit" style="margin-bottom: 1vh; height: 4vh" @click.prevent="sendEmail">
         <i v-if="submitting" class="spin fa-sharp fa-solid fa-circle-notch"></i>
-        <span v-else>{{ !footKey ? elValue.buttonText : 'Send' }}</span>
+        <span v-else>{{ elValue.buttonText }}</span>
       </button>
     </div>
   </form>
@@ -74,17 +74,7 @@ export default {
 
   inject: ['emailReq', 'endPts'],
 
-  props: ['elKey', 'elValue', 'elIndex', 'footKey'],
-
-  computed: {
-    contactUsForm() {
-      return {
-        width: !this.footKey ? '300px' : false,
-        marginLeft: !this.footKey ? 'calc(50% - 150px)' : false,
-        padding: !this.footKey ? '1.5vh' : false,
-      };
-    },
-  },
+  props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
     return {
@@ -141,6 +131,9 @@ export default {
 }
 .contact-form {
   backdrop-filter: blur(20px);
+  width: 300px;
+  margin-left: calc(50% - 150px);
+  padding: 1.5vh;
 }
 .contact-form textarea {
   height: 8vh;

@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="text-box" :style="[style.outline.borderColor, divStyle]">
+  <div class="text-box" :style="[style.outline.borderColor, divStyle]">
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -7,62 +7,49 @@
     ></edit_menu>
 
     <div v-if="site.htmlElmnts[elKey].textEditor" class="text-box-editor">
-      <button
-        @click="editDsbld ? false : styleChng('span', 'font-weight', 'bold')"
-        :disabled="elValue.mod == 'source-code'"
-      >
+      <button @click="editDsbld ? false : styleChng('span', 'font-weight', 'bold')" :disabled="mod == 'source-code'">
         <i class="fa-solid fa-bold"></i>
       </button>
-      <button
-        @click="editDsbld ? false : styleChng('span', 'font-style', 'italic')"
-        :disabled="elValue.mod == 'source-code'"
-      >
+      <button @click="editDsbld ? false : styleChng('span', 'font-style', 'italic')" :disabled="mod == 'source-code'">
         <i class="fa-solid fa-italic"></i>
       </button>
       <button
         @click="editDsbld ? false : styleChng('span', 'text-decoration', 'underline')"
-        :disabled="elValue.mod == 'source-code'"
+        :disabled="mod == 'source-code'"
       >
         <i class="fa-solid fa-underline"></i>
       </button>
-      <button
-        @click.prevent="editDsbld ? false : styleChng('span', 'font-size', 1)"
-        :disabled="elValue.mod == 'source-code'"
-      >
+      <button @click.prevent="editDsbld ? false : styleChng('span', 'font-size', 1)" :disabled="mod == 'source-code'">
         <i class="fa-solid fa-plus"></i>
       </button>
-      <button @click="editDsbld ? false : styleChng('span', 'font-size', -1)" :disabled="elValue.mod == 'source-code'">
+      <button @click="editDsbld ? false : styleChng('span', 'font-size', -1)" :disabled="mod == 'source-code'">
         <i class="fa-solid fa-minus"></i>
       </button>
       <input
         type="color"
         @input="editDsbld ? false : styleChng('span', 'color', $event.target.value)"
-        :disabled="elValue.mod == 'source-code'"
+        :disabled="mod == 'source-code'"
       />
-      <input type="text" placeholder="URL" style="width: 45px" v-model="url" :disabled="elValue.mod == 'source-code'" />
-      <button :disabled="url == '' || elValue.mod == 'source-code'" @click="editDsbld ? false : styleChng('a')">
+      <input type="text" placeholder="URL" style="width: 45px" v-model="url" :disabled="mod == 'source-code'" />
+      <button :disabled="url == '' || mod == 'source-code'" @click="editDsbld ? false : styleChng('a')">
         <i class="fa-solid fa-link"></i>
       </button>
       <button
         @click="editDsbld ? false : (site.htmlElmnts[elKey].text = elValue.text.replace(/<[^>]*>?/gm, ''))"
-        :disabled="elValue.mod == 'source-code'"
+        :disabled="mod == 'source-code'"
       >
         <i class="fa-solid fa-eraser"></i>
       </button>
-      <button
-        v-if="elValue.mod == 'html'"
-        @click="editDsbld ? false : (elValue.mod = 'source-code')"
-        style="width: 30px"
-      >
+      <button v-if="mod == 'html'" @click="editDsbld ? false : (mod = 'source-code')" style="width: 30px">
         <i class="fa-solid fa-code"></i>
       </button>
-      <button v-else @click="editDsbld ? false : (elValue.mod = 'html')" style="width: 30px">
+      <button v-else @click="editDsbld ? false : (mod = 'html')" style="width: 30px">
         <i class="fa-solid fa-align-justify"></i>
       </button>
     </div>
 
     <span
-      v-if="elValue.mod == 'html'"
+      v-if="mod == 'html'"
       ref="textBoxSpan"
       spellcheck="false"
       contenteditable="true"
@@ -89,7 +76,7 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { spanHght: '35px', editDsbld: false, slctdSpanID: null, url: '' };
+    return { spanHght: '35px', editDsbld: false, slctdSpanID: null, url: '', mod: 'html' };
   },
 
   updated() {
@@ -101,12 +88,12 @@ export default {
       console.log('image pasted in');
       setTimeout(() => {
         this.elValue.text = this.$refs.textBoxSpan.innerHTML
-          .replace(/<a[^>]*>/g, '__________')
+          .replace(/<a href[^>]*>/g, '__________')
           .replace(/<b[^>]*>/g, '__________')
           .replace(/<button[^>]*>/g, '__________')
           .replace(/<div[^>]*>/g, '__________')
           .replace(/<h[^>]*>/g, '__________')
-          .replace(/<i[^>]*>/g, '__________')
+          // .replace(/<i[^>]*>/g, '__________')
           .replace(/<img[^>]*>/g, '__________')
           .replace(/<ul[^>]*>/g, '__________')
           .replace(/<li[^>]*>/g, '__________')

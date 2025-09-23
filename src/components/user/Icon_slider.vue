@@ -36,7 +36,7 @@
                   fontSize: elValue.style['font-size'] ? elValue.style['font-size'] : '12px',
                 }"
               >
-                {{ icon.title }}
+                <template v-if="elValue?.titles">{{ icon.title }}</template>
               </div>
             </component>
           </template>

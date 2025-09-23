@@ -137,7 +137,20 @@
         }}</span>
       </div>
     </div>
-
+    <hr />
+    <button title="Add"><i class="fa-solid fa-plus"></i></button>
+    <button title="Copy"><i class="fa-solid fa-copy"></i></button>
+    <button title="Order"><i class="fa-solid fa-up-down"></i></button>
+    <button title="Enable"><i class="fa-solid fa-play"></i></button>
+    <button title="Disable"><i class="fa-solid fa-pause"></i></button>
+    <button title="Individual edit mode"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+    <button title="Individual edit mode"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+    <button title="Rename"><i class="fa-solid fa-pen-to-square"></i></button>
+    <button title="Default"><i class="fa-solid fa-file-circle-check"></i></button>
+    <button title="Default"><i class="fa-solid fa-file-circle-xmark"></i></button>
+    <button title="Logged in"><i class="fa-solid fa-file-circle-plus"></i></button>
+    <button title="Logged in "><i class="fa-solid fa-file-circle-minus"></i></button>
+    <button title="Delete "><i class="fa-solid fa-trash"></i></button>
     <hr />
     <button
       v-for="[elmntButtonKey, elmntButtonVal] in Object.entries(elmntButtons)"
@@ -151,7 +164,7 @@
     >
       <i :class="elmntButtonVal"></i>
     </button>
-    <select style="width: calc(100% - 75px)" @change="createCopyDeleteEl($event)" @focusout="copyingElmnt = null">
+    <select style="width: calc(100% - 75px)" @change="addCopyDeleteEl($event)" @focusout="copyingElmnt = null">
       <option v-if="!copyingElmnt" disabled selected>{{ slctdElmntButton }} element</option>
       <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(defaults.htmlElmnts).sort()">
         <option
@@ -166,6 +179,7 @@
         </option>
       </template>
       <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
+        <option v-if="copyingElmnt" disabled selected>Choose to copy this element</option>
         <template v-if="!copyingElmnt" v-for="siteUniqElType in siteUniqElTypes.sort()">
           <option
             v-if="
@@ -343,7 +357,8 @@ export default {
       }
     },
 
-    createCopyDeleteEl(event) {
+    addCopyDeleteEl(event) {
+      console.log('===============================');
       const elmnt = event?.target?.value ? event.target.value : event;
       if (this.slctdElmntButton == 'Delete') {
         // still need to properly delete unique elements here!!!!!!!!!!!
@@ -366,7 +381,7 @@ export default {
           delete this.site.htmlElmnts[elmnt];
         }
       } else {
-        console.log('copying');
+        console.log(this.slctdElmntButton + 'ing');
         console.log(this.copyingElmnt);
         if (this.slctdElmntButton == 'Copy' && !this.copyingElmnt) {
           console.log('step1');
@@ -406,10 +421,12 @@ export default {
               }
             });
           } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
+            console.log('step7');
             const newElName = elmnt + '_' + new Date().getTime();
-            this.site.htmlElmnts[newElName] = this.defaults.htmlElmnts[elmnt];
+            this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[elmnt]));
             this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [newElName, true]);
           } else {
+            console.log('step8');
             this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
           }
           this.copyingElmnt = null;
@@ -468,7 +485,7 @@ export default {
           if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
             this.slctdElmntButton = 'Copy';
             this.copyingElmnt = elType;
-            this.createCopyDeleteEl(elType);
+            this.addCopyDeleteEl(elType);
           }
         });
         this.slctdElmntButton = 'Add';

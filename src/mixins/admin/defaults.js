@@ -62,14 +62,11 @@ const defaultsMixin = {
           footer: {
             type: 'footer',
             position: -2,
-            items: ['about', 'description', 'contact', 'location', 'links'],
-            about: { name: false, author: false, business: false, address: false, email: false, phone: false },
-            location: { lng: '-87.629799', lat: '41.878113', zoom: '11' },
-            links: [],
+            items: [],
             style: {
               align: 'right',
-              backgroundColor: '#FFFFFF',
-              borderColor: '#FFFFFF',
+              'background-color': '#FFFFFF',
+              'border-color': '#FFFFFF',
               color: '#000000',
             },
           },
@@ -173,7 +170,6 @@ const defaultsMixin = {
             type: 'text_box',
             style: { color: 'black', 'font-size': '12px', 'text-align': 'left' },
             text: '',
-            mod: 'html',
           },
           text_pic_box: {
             type: 'text_pic_box',

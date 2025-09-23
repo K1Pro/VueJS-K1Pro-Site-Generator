@@ -1,9 +1,9 @@
 <template>
-  <div class="contact" :style="[contactUs, style.outline.borderColor]">
+  <div class="contact" :style="[style.outline.borderColor]">
     <div class="contact-form" :style="[contactUsForm]">
       <input type="text" placeholder="Name" />
       <input type="text" placeholder="Email" />
-      <textarea rows="3" :placeholder="!footKey ? elValue.messageText : 'Message'"></textarea>
+      <textarea rows="3" :placeholder="elValue.messageText"></textarea>
       <div class="contact-captcha-container">
         <div class="contact-captcha-inputs">
           <img class="contact-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" ref="cntctUsCaptcha" />
@@ -14,7 +14,7 @@
         </div>
       </div>
       <button type="submit" style="margin-bottom: 1vh; height: 4vh">
-        <span>{{ !footKey ? elValue.buttonText : 'Send' }}</span>
+        <span>{{ elValue.buttonText }}</span>
       </button>
     </div>
   </div>
@@ -26,20 +26,11 @@ export default {
 
   inject: ['grid', 'endPts', 'style'],
 
-  props: ['elKey', 'elValue', 'elIndex', 'footKey'],
+  props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
-    contactUs() {
-      return {
-        outlineStyle: !this.footKey ? 'dashed' : 'none',
-      };
-    },
     contactUsForm() {
-      return {
-        width: !this.footKey ? '300px' : false,
-        marginLeft: !this.footKey ? 'calc(50% - 150px)' : false,
-        padding: !this.footKey ? '1.5vh' : false,
-      };
+      return {};
     },
   },
 
@@ -56,9 +47,13 @@ export default {
   position: relative;
   outline-width: 2px;
   outline-offset: -2px;
+  outline-style: dashed;
 }
 .contact-form {
   backdrop-filter: blur(20px);
+  width: 300px;
+  margin-left: calc(50% - 150px);
+  padding: 1.5vh;
 }
 .contact-form textarea {
   height: 8vh;
