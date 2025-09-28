@@ -1,5 +1,5 @@
 <template>
-  <div class="privacy-policy" v-for="legalElmnt in legalElmnts">
+  <div :id="'site_page_el_' + elIndex" class="privacy-policy" v-for="legalElmnt in legalElmnts">
     <div
       v-html="
         legalElmnt

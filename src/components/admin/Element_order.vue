@@ -1,5 +1,45 @@
 <template>
   <div class="element-order">
+    <!-- new buttons -->
+    <div class="element-order-mode-buttons">
+      <button title="Add" @click="modeChng" class="fa-solid fa-plus element-order-mode-button"></button>
+      <button title="Delete" @click="modeChng" class="fa-solid fa-minus element-order-mode-button"></button>
+      <button title="Order" @click="modeChng" class="fa-solid fa-up-down element-order-mode-button"></button>
+      <button title="Disable" @click="modeChng" class="fa-solid fa-pause element-order-mode-button"></button>
+      <button
+        title="Individual edit mode on"
+        @click="modeChng"
+        class="fa-solid fa-magnifying-glass-plus element-order-mode-button"
+      ></button>
+      <button title="Rename" @click="modeChng" class="fa-solid fa-pen-to-square element-order-mode-button"></button>
+      <button
+        title="Default yes"
+        v-if="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
+        @click="site.defaultPage[slctd.type] = slctd.page.toLowerCase()"
+        class="fa-solid fa-file-circle-check element-order-mode-button"
+      ></button>
+      <button
+        title="Default no"
+        v-if="slctd.page.toLowerCase() != site.defaultPage[slctd.type]"
+        class="fa-solid fa-file-circle-xmark element-order-mode-button"
+      ></button>
+      <button
+        title="Logged in"
+        v-if="Object.keys(site.pages.loggedin).includes(slctd.page)"
+        class="fa-solid fa-file-circle-plus element-order-mode-button"
+      ></button>
+      <button
+        title="Logged out"
+        v-if="Object.keys(site.pages.loggedout).includes(slctd.page)"
+        @click="modeChng"
+        class="fa-solid fa-file-circle-minus element-order-mode-button"
+      ></button>
+      <button class="fa-solid fa-floppy-disk element-order-mode-button" @click="patchSite"></button>
+      <button class="fa-solid fa-rotate-left element-order-mode-button" @click="getSite"></button>
+      <button class="fa-solid fa-rotate-right element-order-mode-button"></button>
+    </div>
+    <!-- new buttons -->
+    <hr />
     <select v-if="!addingPage" style="width: calc(100% - 40px)" @change="pageSlctdChange" @focus="pageSlctdFocus">
       <template v-for="siteType in Object.keys(site.pages)">
         <option disabled>==={{ siteType }}===</option>
@@ -35,8 +75,8 @@
       style="padding-left: 2px"
       @click="deletePage(slctd.page)"
     ></i>
-
-    <div v-if="!defaults.reqrdPages.includes(slctd.page) && !addingPage">
+    <hr />
+    <!-- <div v-if="!defaults.reqrdPages.includes(slctd.page) && !addingPage">
       Default:<input
         type="checkbox"
         :disabled="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
@@ -48,110 +88,171 @@
         :checked="slctd.type == 'loggedin' && Object.keys(site.pages.loggedin).includes(slctd.page)"
         @change="changeLogInOut"
       />
-    </div>
+    </div> -->
 
     <div class="element-order-list">
       <div
-        v-for="(pageElmnt, pageElmntIndx) in site.pages[slctd.type][slctd.page]"
+        v-for="(pageElmnt, pageElmntIndx) in pageEls"
         class="element-order-items"
-        :draggable="site.htmlElmnts[pageElmnt[0]].position ? false : true"
+        :style="{ backgroundColor: pageElmnt[1] ? 'lightgrey' : '#e8e8e8' }"
+        @mouseover="pageElmnt[1] ? mouseoverPageEl(pageElmntIndx) : false"
+        @mouseout="pageElmnt[1] ? mouseoutPageEl(pageElmntIndx) : false"
+        :draggable="pageElmnt[0] == 'new_element' || site.htmlElmnts[pageElmnt[0]].position ? false : true"
         @dragstart="drag($event, pageElmntIndx)"
         @drop.prevent="drop($event, pageElmntIndx)"
         @dragover.prevent
         @dragenter.prevent
       >
-        <input
-          :ref="'renameInput' + pageElmntIndx"
-          type="text"
-          v-show="pageElmntIndx == renamingPos"
-          style="width: calc(100% - 20px)"
-          :value="pageElmnt[0].replaceAll('_', ' ')"
-          v-on:blur="isHoverRenameSave ? (renamingPos = pageElmntIndx) : (renamingPos = null)"
-        />
-        <i
-          v-if="pageElmntIndx == renamingPos"
-          class="fa-solid fa-floppy-disk"
-          @click="renameEl(pageElmnt, pageElmntIndx)"
-          @mouseover="isHoverRenameSave = true"
-          @mouseout="isHoverRenameSave = false"
-        ></i>
-        <i
-          v-if="renamingPos != pageElmntIndx"
-          class="fa-solid fa-circle-minus"
-          :style="{
-            color:
-              individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0]) ? '#ff0000' : 'grey',
-            cursor:
-              individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])
-                ? 'pointer'
-                : 'default',
-            float: 'right',
-          }"
-          @click="deletePageEl(pageElmntIndx)"
-        ></i>
-        <input
-          type="radio"
-          style="float: right"
-          name="individEdit"
-          :checked="pageElmntIndx === individEdit.elmntIndx"
-          @click="toggleIndivEdit(pageElmntIndx)"
-        />
-        <input
-          style="float: right"
-          type="checkbox"
-          v-if="renamingPos != pageElmntIndx"
-          :disabled="individEdit.elmnts !== null || defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])"
-          :checked="pageElmnt[1]"
-          @change="toggleElmnt($event.target.checked, pageElmnt[0], pageElmntIndx)"
-        />
-        <i
-          v-if="
-            pageElmntIndx != site.pages[slctd.type][slctd.page].length - 1 &&
-            !site.htmlElmnts[pageElmnt[0]].position &&
-            !site.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx + 1][0]]?.position &&
-            renamingPos != pageElmntIndx
-          "
-          class="fa-solid fa-circle-down"
-          :style="{
-            color: individEdit.elmnts === null ? 'black' : 'grey',
-            cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-          }"
-          @click="moveDown(pageElmntIndx)"
-        ></i>
-        <i
-          v-if="
-            pageElmntIndx != 0 &&
-            !site.htmlElmnts[pageElmnt[0]].position &&
-            !site.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx - 1][0]]?.position &&
-            renamingPos != pageElmntIndx
-          "
-          class="fa-solid fa-circle-up"
-          :style="{
-            color: individEdit.elmnts === null ? 'black' : 'grey',
-            cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-          }"
-          @click.prevent="moveUp(pageElmntIndx)"
-        ></i>
-        <span v-on:dblclick="revealRenameInput(pageElmnt, pageElmntIndx)">{{
-          pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : ''
-        }}</span>
+        <template v-if="pageElmnt[0] == 'new_element'">
+          <select @change="addTempPageEl($event.target.value, pageElmntIndx)" style="width: calc(50% - 13px)">
+            <option v-if="!copyingElmnt" disabled selected>{{ slctdElmntButton }} element</option>
+            <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(defaults.htmlElmnts).sort()">
+              <option
+                v-if="
+                  (!siteElmnts.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
+                  (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt)) &&
+                  !defaults.htmlReqrdPageElmnts.includes(htmlElmnt)
+                "
+                :value="htmlElmnt"
+              >
+                {{ htmlElmnt.replaceAll('_', ' ') }}
+              </option>
+            </template>
+          </select>
+          <select
+            v-if="tempPageEls[pageElmntIndx]"
+            @change="addPageEl($event.target.value, pageElmntIndx)"
+            style="width: calc(50% - 13px)"
+          >
+            <option disabled selected>Choose new</option>
+            <option>new {{ tempPageEls[pageElmntIndx] }}</option>
+            <!-- <template v-if="!copyingElmnt" v-for="siteUniqElType in siteUniqElTypes.sort()">
+              <option
+                v-if="
+                  (!siteElmnts.includes(siteUniqElType) || !defaults.htmlUniqSiteElmnts.includes(siteUniqElType)) &&
+                  (!pageElTypes.includes(siteUniqElType) || !defaults.htmlUniqPageElmnts.includes(siteUniqElType)) &&
+                  !defaults.htmlReqrdPageElmnts.includes(siteUniqElType)
+                "
+                :value="siteUniqElType"
+              >
+                {{ siteUniqElType.replaceAll('_', ' ') }}
+              </option>
+            </template> -->
+            <option
+              v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts)
+                .filter(([elKey, elVal]) => {
+                  return elVal.type == tempPageEls[pageElmntIndx];
+                })
+                .sort()"
+              :value="htmlElmntKey"
+            >
+              {{ htmlElmntKey.replaceAll('_', ' ') }}
+            </option>
+          </select>
+        </template>
+        <template v-else>
+          <input
+            :ref="'renameInput' + pageElmntIndx"
+            type="text"
+            v-show="pageElmntIndx == renamingPos"
+            style="width: calc(100% - 20px)"
+            :value="pageElmnt[0].replaceAll('_', ' ')"
+            v-on:blur="isHoverRenameSave ? (renamingPos = pageElmntIndx) : (renamingPos = null)"
+          />
+          <i
+            v-if="pageElmntIndx == renamingPos"
+            class="fa-solid fa-floppy-disk"
+            @click="renameEl(pageElmnt, pageElmntIndx)"
+            @mouseover="isHoverRenameSave = true"
+            @mouseout="isHoverRenameSave = false"
+          ></i>
+          <i
+            v-if="slctdEditMode == 'Add' && renamingPos != pageElmntIndx"
+            class="fa-solid fa-square-plus element-order-btn"
+            :style="{
+              color:
+                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0]) ? 'black' : 'grey',
+              cursor:
+                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])
+                  ? 'pointer'
+                  : 'default',
+              float: 'right',
+            }"
+            @click="addNewEl(pageElmntIndx)"
+          ></i>
+          <i
+            v-if="slctdEditMode == 'Delete' && renamingPos != pageElmntIndx"
+            class="fa-solid fa-square-minus element-order-btn"
+            :style="{
+              color:
+                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0]) ? 'black' : 'grey',
+              cursor:
+                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])
+                  ? 'pointer'
+                  : 'default',
+              float: 'right',
+            }"
+            @click="deletePageEl(pageElmntIndx)"
+          ></i>
+          <input
+            v-if="slctdEditMode == 'Individual edit mode on'"
+            type="radio"
+            style="float: right"
+            name="individEdit"
+            :checked="pageElmntIndx === individEdit.elmntIndx"
+            @click="toggleIndivEdit(pageElmntIndx)"
+          />
+          <input
+            style="float: right"
+            type="checkbox"
+            v-if="slctdEditMode == 'Disable' && renamingPos != pageElmntIndx"
+            :disabled="individEdit.elmnts !== null || defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])"
+            :checked="pageElmnt[1]"
+            @change="toggleElmnt($event.target.checked, pageElmnt[0], pageElmntIndx)"
+          />
+          <i
+            v-if="
+              slctdEditMode == 'Order' &&
+              pageElmntIndx != site.pages[slctd.type][slctd.page].length - 1 &&
+              !site.htmlElmnts[pageElmnt[0]].position &&
+              !site.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx + 1][0]]?.position &&
+              renamingPos != pageElmntIndx
+            "
+            class="fa-solid fa-square-caret-down"
+            :style="{
+              color: individEdit.elmnts === null ? 'black' : 'grey',
+              cursor: individEdit.elmnts === null ? 'pointer' : 'default',
+            }"
+            @click="moveDown(pageElmntIndx)"
+          ></i>
+          <i
+            v-if="
+              slctdEditMode == 'Order' &&
+              pageElmntIndx != 0 &&
+              !site.htmlElmnts[pageElmnt[0]].position &&
+              !site.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx - 1][0]]?.position &&
+              renamingPos != pageElmntIndx
+            "
+            class="fa-solid fa-square-caret-up"
+            :style="{
+              color: individEdit.elmnts === null ? 'black' : 'grey',
+              cursor: individEdit.elmnts === null ? 'pointer' : 'default',
+            }"
+            @click.prevent="moveUp(pageElmntIndx)"
+          ></i>
+          <input v-if="slctdEditMode == 'Rename'" type="text" :value="pageElmnt[0]" style="width: 100%" />
+          <span
+            v-else
+            v-on:dblclick="highlightPageEl(pageElmntIndx)"
+            :style="{ color: pageElmnt[1] ? 'black' : 'grey' }"
+            :title="site.htmlElmnts[pageElmnt[0]].type ? site.htmlElmnts[pageElmnt[0]].type : false"
+            >{{ pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : '' }}</span
+          >
+        </template>
       </div>
     </div>
-    <hr />
-    <button title="Add"><i class="fa-solid fa-plus"></i></button>
-    <button title="Copy"><i class="fa-solid fa-copy"></i></button>
-    <button title="Order"><i class="fa-solid fa-up-down"></i></button>
-    <button title="Enable"><i class="fa-solid fa-play"></i></button>
-    <button title="Disable"><i class="fa-solid fa-pause"></i></button>
-    <button title="Individual edit mode"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
-    <button title="Individual edit mode"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
-    <button title="Rename"><i class="fa-solid fa-pen-to-square"></i></button>
-    <button title="Default"><i class="fa-solid fa-file-circle-check"></i></button>
-    <button title="Default"><i class="fa-solid fa-file-circle-xmark"></i></button>
-    <button title="Logged in"><i class="fa-solid fa-file-circle-plus"></i></button>
-    <button title="Logged in "><i class="fa-solid fa-file-circle-minus"></i></button>
-    <button title="Delete "><i class="fa-solid fa-trash"></i></button>
-    <hr />
+
+    <!-- <hr />
     <button
       v-for="[elmntButtonKey, elmntButtonVal] in Object.entries(elmntButtons)"
       :style="{
@@ -214,7 +315,7 @@
           </option>
         </template>
       </template>
-    </select>
+    </select> -->
   </div>
 </template>
 
@@ -225,9 +326,11 @@ export default {
   inject: [
     'defaults',
     'endPts',
+    'getSite',
     'individEdit',
     'pageElPositions',
     'pageElTypes',
+    'patchSite',
     'showMsg',
     'site',
     'siteElmnts',
@@ -245,10 +348,39 @@ export default {
       isHoverRenameSave: false,
       pageSlctd: 'Home',
       typeSlctd: 'loggedout',
+      slctdEditMode: 'Add',
+      pageEls: this.site.pages[this.slctd.type][this.slctd.page],
+      tempPageEls: {},
+      tempBackground: null,
     };
   },
 
   methods: {
+    mouseoverPageEl(pageElmntIndx) {
+      if (document.getElementById('site_page_el_' + pageElmntIndx)) {
+        if (document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor)
+          this.tempBackground = document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor;
+      }
+    },
+    highlightPageEl(pageElmntIndx) {
+      if (document.getElementById('site_page_el_' + pageElmntIndx)) {
+        document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor = '#87CEFA50';
+        document.getElementById('site_page_el_' + pageElmntIndx).scrollIntoView();
+      }
+    },
+    mouseoutPageEl(pageElmntIndx) {
+      if (document.getElementById('site_page_el_' + pageElmntIndx))
+        document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor = this.tempBackground
+          ? this.tempBackground
+          : '#87CEFA00';
+      this.tempBackground = null;
+    },
+    modeChng(event) {
+      console.log(event.target.title);
+      this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
+      this.tempPageEls = {};
+      this.slctdEditMode = event.target.title;
+    },
     changeLogInOut(event) {
       if (event.target.checked) {
         if (
@@ -342,19 +474,21 @@ export default {
       this.pageSlctd = event.target.value.split(',')[1];
     },
     pageSlctdChange(event) {
+      this.pageEls = this.site.pages[event.target.value.split(',')[0]][event.target.value.split(',')[1]];
       this.slctd.type = event.target.value.split(',')[0];
       this.slctd.page = event.target.value.split(',')[1];
+
       // We might be able to get rid of the below since we are not using v-model anymore
-      if (this.individEdit.elmnts !== null) {
-        this.site.pages[this.typeSlctd][this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
-        this.individEdit.elmntIndx = null;
-        this.individEdit.elmnts = null;
-        this.typeSlctd = this.slctd.type;
-        this.pageSlctd = this.slctd.page;
-      } else {
-        this.typeSlctd = this.slctd.type;
-        this.pageSlctd = this.slctd.page;
-      }
+      // if (this.individEdit.elmnts !== null) {
+      //   this.site.pages[this.typeSlctd][this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
+      //   this.individEdit.elmntIndx = null;
+      //   this.individEdit.elmnts = null;
+      //   this.typeSlctd = this.slctd.type;
+      //   this.pageSlctd = this.slctd.page;
+      // } else {
+      //   this.typeSlctd = this.slctd.type;
+      //   this.pageSlctd = this.slctd.page;
+      // }
     },
 
     addCopyDeleteEl(event) {
@@ -504,6 +638,17 @@ export default {
         }
       }
     },
+    addTempPageEl(event, elementIndex) {
+      this.tempPageEls[elementIndex] = event;
+    },
+    addNewEl(elementIndex) {
+      let tempPageEls = JSON.parse(JSON.stringify(this.pageEls));
+      tempPageEls.splice(elementIndex + 1, 0, ['new_element', true]);
+      this.pageEls = tempPageEls;
+    },
+    addPageEl(event, elementIndex) {
+      this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 0, [event, true]);
+    },
     deletePageEl(elementIndex) {
       if (
         this.individEdit.elmnts === null &&
@@ -513,6 +658,7 @@ export default {
       }
     },
     moveDown(elementIndex) {
+      console.log('moveDown');
       if (this.individEdit.elmnts === null) {
         const chosenElement = this.site.pages[this.slctd.type][this.slctd.page][elementIndex];
         this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
@@ -520,6 +666,7 @@ export default {
       }
     },
     moveUp(elementIndex) {
+      console.log('moveUp');
       if (this.individEdit.elmnts === null) {
         const chosenElement = this.site.pages[this.slctd.type][this.slctd.page][elementIndex];
         this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
@@ -532,7 +679,6 @@ export default {
 
 <style>
 .element-order-items {
-  background-color: lightgrey;
   color: black;
   padding: 3px;
   margin-top: 5px;
@@ -542,15 +688,19 @@ export default {
   height: 26px;
 }
 
-.element-order select {
+/* .element-order select {
   height: 25px;
-}
-.element-order button {
-  border-width: 1px 0px 1px 1px;
+} */
+/* .element-order button {
+  border-width: 1px;
   border-color: black;
   border-style: solid;
-  height: 25px;
-  width: 25px;
+  height: 100%;
+  width: 20px;
+  font-size: 12px;
+} */
+.element-order-btn {
+  font-size: 18px;
 }
 
 .element-order-list {
@@ -561,5 +711,30 @@ export default {
 .element-order-items i {
   padding-left: 2px;
   float: right;
+}
+.element-order-mode-buttons {
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  flex-wrap: wrap;
+  column-gap: 0px;
+  overflow: hidden;
+}
+.element-order-mode-button {
+  border-width: 0px 1px 0px 0px;
+  border-color: darkgrey;
+  border-style: solid;
+  height: 100%;
+  width: 30px;
+  font-size: 20px;
+}
+.element-order span {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 </style>

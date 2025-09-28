@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="headline" ref="headline">
+  <div :id="'site_page_el_' + elIndex" class="headline" ref="headline">
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -79,7 +79,7 @@ export default {
         height: this.elValue.style.height ? this.elValue.style.height : 'initial',
         padding: !this.elValue.style.padding
           ? '0px'
-          : this.elValue.style?.padding?.includes('vw')
+          : String(this.elValue?.style?.padding)?.includes('vw')
           ? this.grid.wdth * (this.elValue.style.padding?.replace(/\D/g, '') / 100) + 'px'
           : this.elValue.style.padding,
         textAlign: this.elValue.style['text-align'] ? this.elValue.style['text-align'] : 'initial',

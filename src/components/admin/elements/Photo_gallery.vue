@@ -1,5 +1,5 @@
 <template>
-  <div class="photo-gallery">photo gallery</div>
+  <div :id="'site_page_el_' + elIndex" class="photo-gallery">photo gallery</div>
 </template>
 
 <script>

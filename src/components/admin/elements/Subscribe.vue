@@ -1,5 +1,5 @@
 <template>
-  <form class="subscribe" ref="subscribeForm">
+  <form :id="'site_page_el_' + elIndex" class="subscribe" ref="subscribeForm">
     <input type="checkbox" value="nameInput" @change="changeInput" />
     | <input type="text" placeholder="Full name" />
     <br />
@@ -74,7 +74,7 @@ export default {
       captchaDate: server_datetime_YmdHis,
     };
   },
-  
+
   mounted() {
     if (!this.site.htmlElmnts[this.elKey].inputs) this.site.htmlElmnts[this.elKey].inputs = [];
   },

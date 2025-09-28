@@ -1,5 +1,10 @@
 <template>
-  <div :id="elKey" :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]" ref="spacer">
+  <div
+    :id="'site_page_el_' + elIndex"
+    :class="'spacer spacer_' + elKey"
+    :style="[style.outline.borderColor]"
+    ref="spacer"
+  >
     <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ spacerHght }}px x {{ spacerWdth }}px</span>
     <p :style="[pStyle]"></p>

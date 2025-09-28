@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="photo-slider" :style="[style.outline.borderColor]">
+  <div :id="'site_page_el_' + elIndex" class="photo-slider" :style="[style.outline.borderColor]">
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height', 'width', 'column-gap']"></edit_menu>
     <div
       class="photo-slider-container"

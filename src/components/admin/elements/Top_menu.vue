@@ -1,5 +1,9 @@
 <template>
-  <div :id="elKey" class="top-menu" :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]">
+  <div
+    :id="'site_page_el_' + elIndex"
+    class="top-menu"
+    :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]"
+  >
     <edit_menu :elKey="elKey" :options="['height', 'align']"></edit_menu>
 
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>

@@ -1,5 +1,5 @@
 <template>
-  <div class="contact" :style="[style.outline.borderColor]">
+  <div :id="'site_page_el_' + elIndex" class="contact" :style="[style.outline.borderColor]">
     <div class="contact-form" :style="[contactUsForm]">
       <input type="text" placeholder="Name" />
       <input type="text" placeholder="Email" />

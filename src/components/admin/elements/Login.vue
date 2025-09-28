@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div :id="'site_page_el_' + elIndex" class="login-container">
     <div class="login">
       <div class="login-body">
         <div class="login-username">
@@ -38,6 +38,8 @@
 <script>
 export default {
   name: 'Login',
+
+  props: ['elKey', 'elValue', 'elIndex'],
 };
 </script>
 

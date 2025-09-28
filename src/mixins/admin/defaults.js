@@ -61,6 +61,9 @@ const defaultsMixin = {
           feedback: { type: 'feedback' },
           footer: {
             type: 'footer',
+            info: {
+              components: ['image_banner', 'text_box'],
+            },
             position: -2,
             items: [],
             style: {

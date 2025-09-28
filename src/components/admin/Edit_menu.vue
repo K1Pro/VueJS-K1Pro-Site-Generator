@@ -153,6 +153,28 @@ export default {
 
   computed: {
     noInput() {
+      if (this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]) {
+        // if option is not a string, convert to string
+        if (typeof this.site.htmlElmnts[this.elKey].style[this.option] != 'string')
+          this.site.htmlElmnts[this.elKey].style[this.option] = String(
+            this.site.htmlElmnts[this.elKey].style[this.option]
+          );
+        // if unit does not exist, add default px
+        if (
+          this.site.htmlElmnts[this.elKey].style[this.option].replace(/[^0-9.]/g, '') &&
+          !this.site.htmlElmnts[this.elKey].style[this.option].replace(/[0-9.]/g, '')
+        )
+          this.site.htmlElmnts[this.elKey].style[this.option] =
+            this.site.htmlElmnts[this.elKey].style[this.option].replace(/[^0-9.]/g, '') + 'px';
+        // if no does not exist, add default 100
+        if (
+          !this.site.htmlElmnts[this.elKey].style[this.option].replace(/[^0-9.]/g, '') &&
+          this.site.htmlElmnts[this.elKey].style[this.option].replace(/[0-9.]/g, '')
+        )
+          this.site.htmlElmnts[this.elKey].style[this.option] =
+            '0' + this.site.htmlElmnts[this.elKey].style[this.option].replace(/[0-9.]/g, '');
+      }
+
       return this.unitInputs.includes(this.option)
         ? {
             no: this?.site?.htmlElmnts?.[this.elKey]?.style?.[this.option]?.replace(/[^0-9.]/g, ''),

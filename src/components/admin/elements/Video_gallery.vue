@@ -1,5 +1,5 @@
 <template>
-  <div class="video-gallery">
+  <div :id="'site_page_el_' + elIndex" class="video-gallery">
     <div
       class="video-gallery-container"
       :style="{

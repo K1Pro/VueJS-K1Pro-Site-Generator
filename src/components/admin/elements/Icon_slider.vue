@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="icon-slider" :style="[style.outline.borderColor]" ref="iconSlider">
+  <div :id="'site_page_el_' + elIndex" class="icon-slider" :style="[style.outline.borderColor]" ref="iconSlider">
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -74,7 +74,7 @@
             >
               <i class="fa-solid fa-minus"></i>
             </button>
-            <div class="admin-links">
+            <!-- <div class="admin-links">
               <input
                 v-if="elValue.mod == 'links'"
                 type="text"
@@ -116,8 +116,15 @@
                   </template>
                 </template>
               </select>
-            </div>
-
+            </div> -->
+            <links
+              :elKey="elKey"
+              :elValue="elValue"
+              :elIndex="elIndex"
+              itemKey="icons"
+              :itemVal="icon"
+              :itemIndx="iconIndx"
+            ></links>
             <i :style="iStyle" :class="icon.icon"></i>
 
             <input
@@ -243,13 +250,13 @@ export default {
       this.slctdIconIndx = iconIndx;
       this.slctdIcon = icon;
     },
-    linkKeysDlt(iconIndx, linkTp) {
-      let slctdLinkTps = ['link', 'page', 'anchor'].filter((linkType) => linkType != linkTp.slice(0, -1));
-      slctdLinkTps.forEach((linkType) => {
-        if (this.site.htmlElmnts?.[this.elKey]?.icons?.[iconIndx]?.[linkType])
-          delete this.site.htmlElmnts[this.elKey].icons[iconIndx][linkType];
-      });
-    },
+    // linkKeysDlt(iconIndx, linkTp) {
+    //   let slctdLinkTps = ['link', 'page', 'anchor'].filter((linkType) => linkType != linkTp.slice(0, -1));
+    //   slctdLinkTps.forEach((linkType) => {
+    //     if (this.site.htmlElmnts?.[this.elKey]?.icons?.[iconIndx]?.[linkType])
+    //       delete this.site.htmlElmnts[this.elKey].icons[iconIndx][linkType];
+    //   });
+    // },
     addItem(iconIndx) {
       this.site.htmlElmnts[this.elKey].icons.splice(iconIndx + 1, 0, { title: '', icon: 'fa-solid fa-question' });
     },

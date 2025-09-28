@@ -1,5 +1,5 @@
 <template>
-  <div class="forms" :style="[style.outline.borderColor]">
+  <div :id="'site_page_el_' + elIndex" class="forms" :style="[style.outline.borderColor]">
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['responsive']"></edit_menu>
     <template v-for="(input, inputIndx) in elValue.form" :key="'row_' + inputIndx">
       <div

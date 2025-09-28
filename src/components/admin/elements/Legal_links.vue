@@ -1,5 +1,9 @@
 <template>
-  <div class="legal-links" :style="[style.outline.borderColor, style.primaryColor.backgroundColor]">
+  <div
+    :id="'site_page_el_' + elIndex"
+    class="legal-links"
+    :style="[style.outline.borderColor, style.primaryColor.backgroundColor]"
+  >
     <template v-for="linkKey in Object.keys(site.htmlElmnts[elKey].links)">
       <input type="checkbox" v-model="site.htmlElmnts.legal_links.links[linkKey]" />{{ linkKey.replaceAll('_', ' ') }}
     </template>

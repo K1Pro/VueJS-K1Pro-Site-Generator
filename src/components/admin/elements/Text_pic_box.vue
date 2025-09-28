@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="text-pic-box" :style="[style.outline.borderColor]">
+  <div :id="'site_page_el_' + elIndex" class="text-pic-box" :style="[style.outline.borderColor]">
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['text-box_image', 'anchor', 'horizontal-rule']"></edit_menu>
 
     <div

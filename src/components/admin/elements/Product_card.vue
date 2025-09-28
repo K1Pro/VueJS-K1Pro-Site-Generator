@@ -1,5 +1,5 @@
 <template>
-  <div :id="elKey" class="product-card" :style="[style.outline.borderColor]" ref="productCard">
+  <div :id="'site_page_el_' + elIndex" class="product-card" :style="[style.outline.borderColor]" ref="productCard">
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -73,6 +73,8 @@
 
               <input type="text" placeholder="Title" :style="testStyle" v-model="card.title" />
               <textarea placeholder="Description" :style="textareaStyle" v-model="card.txt"></textarea>
+              <input class="product-card-read-more-check" type="checkbox" :checked="card.readMore" />
+              <input type="text" class="product-card-read-more-text" placeholder="Read more" v-model="card.readMore" />
             </div>
           </div>
         </template>
@@ -270,8 +272,10 @@ export default {
   object-fit: cover;
   margin-bottom: 0px;
 }
-.product-card-group input {
+.product-card-group input:not(.product-card-read-more-text, [type='checkbox']) {
   width: 100%;
+}
+.product-card-group input:not([type='checkbox']) {
   border: 0px;
   background: transparent;
   font-family: Arial, Helvetica, sans-serif;
@@ -285,5 +289,12 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0%;
   border: none;
+}
+.product-card-read-more-check {
+  width: 13px;
+  margin: 0px;
+}
+.product-card-read-more-text {
+  width: calc(100% - 13px);
 }
 </style>

@@ -1,5 +1,9 @@
 <template>
-  <div class="background-image" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
+  <div
+    :id="'site_page_el_' + elIndex"
+    class="background-image"
+    :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }"
+  >
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
     <img
       :style="{ height: elValue.style.height }"

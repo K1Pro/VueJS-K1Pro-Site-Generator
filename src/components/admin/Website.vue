@@ -1,8 +1,8 @@
 <template>
   <div class="website">
-    <button type="button" @click="patchSite" style="width: calc(50% - 10px)">Update</button>
+    <!-- <button type="button" @click="patchSite" style="width: calc(50% - 10px)">Update</button>
     <button type="button" @click="getSite" style="width: calc(50%); margin-left: 10px">Reset</button>
-    <hr />
+    <hr /> -->
     <element_order></element_order>
     <hr />
     <select style="width: 100%" v-model="pageStyle">
