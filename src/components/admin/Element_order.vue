@@ -240,7 +240,13 @@
             }"
             @click.prevent="moveUp(pageElmntIndx)"
           ></i>
-          <input v-if="slctdEditMode == 'Rename'" type="text" :value="pageElmnt[0]" style="width: 100%" />
+          <input
+            v-if="slctdEditMode == 'Rename'"
+            type="text"
+            :value="pageElmnt[0]"
+            style="width: 100%"
+            @change="renameEl2($event.target.value, pageElmntIndx)"
+          />
           <span
             v-else
             v-on:dblclick="highlightPageEl(pageElmntIndx)"
@@ -576,6 +582,15 @@ export default {
         }, 1);
       }
     },
+    renameEl2(event, pageElmntIndx) {
+      const crrntElName = this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0];
+      this.site.htmlElmnts[event] = this.site.htmlElmnts[crrntElName];
+      this.site.pages = JSON.parse(
+        JSON.stringify(this.site.pages).replaceAll('"' + crrntElName + '"', '"' + event + '"')
+      );
+      this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
+      delete this.site.htmlElmnts[crrntElName];
+    },
     renameEl(pageElmnt, pageElmntIndx) {
       const newPageElName = this.$refs['renameInput' + pageElmntIndx][0].value
         .trim()
@@ -704,7 +719,7 @@ export default {
 }
 
 .element-order-list {
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
 

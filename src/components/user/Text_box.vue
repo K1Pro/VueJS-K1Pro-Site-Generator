@@ -1,5 +1,5 @@
 <template>
-  <div class="resp-padding">
+  <div :class="{ 'resp-padding': !isSubComp }">
     <div class="text-box"><span v-html="elValue.text" class="text-box-main-span" :style="[spanStyle]"></span></div>
   </div>
 </template>
@@ -11,6 +11,9 @@ export default {
   props: ['elKey', 'elValue', 'elIndex'],
 
   computed: {
+    isSubComp() {
+      return String(this.elIndex).includes('.');
+    },
     spanStyle() {
       return {
         color: this.elValue.style.color ? this.elValue.style.color : 'black',

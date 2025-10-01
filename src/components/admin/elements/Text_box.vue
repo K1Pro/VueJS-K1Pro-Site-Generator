@@ -215,10 +215,14 @@ export default {
   },
 
   computed: {
+    isSubComp() {
+      return String(this.elIndex).includes('.');
+    },
     divStyle() {
       return {
-        paddingLeft: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
-        paddingRight: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
+        outlineStyle: this.isSubComp ? 'none' : 'dashed',
+        paddingLeft: this.isSubComp ? false : this.grid.wdth > this.respWidth.md ? '10%' : '5px',
+        paddingRight: this.isSubComp ? false : this.grid.wdth > this.respWidth.md ? '10%' : '5px',
       };
     },
     spanStyle() {
@@ -244,7 +248,7 @@ export default {
   position: relative;
   min-height: 35px;
   border: none;
-  outline-style: dashed;
+
   outline-width: 2px;
   outline-offset: -2px;
 }

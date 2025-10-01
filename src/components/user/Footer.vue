@@ -3,7 +3,7 @@
     <div class="resp-padding">
       <div class="footer-cntnr">
         <template v-for="(component, componentIndex) in elValue.components">
-          <div class="footer-item" :style="{ width: 100 / elValue.components.length + '%' }">
+          <div class="footer-item" :style="[divStyle]">
             <component
               :is="site.htmlElmnts[component].type"
               :elKey="component"
@@ -24,6 +24,15 @@ export default {
   inject: ['site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  computed: {
+    divStyle() {
+      return {
+        padding: this.elValue.style.padding ? this.elValue.style.padding : '0px',
+        width: 100 / this.elValue.components.length + '%',
+      };
+    },
+  },
 };
 </script>
 

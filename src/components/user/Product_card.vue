@@ -137,7 +137,7 @@ export default {
         fontSize: this.elValue.style['font-size'] ? this.elValue.style['font-size'] : '12px',
         height:
           this.cntnrWdth <= this.respWidth.xs && !this.elValue.style.responsive && this.elValue.style.height
-            ? '100%'
+            ? 'auto'
             : this.elValue.style.height
             ? this.elValue.style.height
             : '100px',
