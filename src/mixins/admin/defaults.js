@@ -2,67 +2,40 @@ const defaultsMixin = {
   data() {
     return {
       defaults: {
-        htmlUniqSiteElmnts: ['top_menu', 'footer', 'legal_links'],
-        htmlUniqPageElmnts: [
-          'background_image',
-          'background_video',
-          'contact',
-          'feedback',
-          'form',
-          'login',
-          'photo_gallery',
-          'video_gallery',
-        ],
-        htmlReqrdPageElmnts: ['terms_of_use', 'privacy_policy'],
-        htmlAllElmnts: [
-          'account_info',
-          'background_image',
-          'background_video',
-          'contact',
-          'feedback',
-          'footer',
-          'form',
-          'headline',
-          'icon_slider',
-          'image_banner',
-          'login',
-          'legal_links',
-          'photo_gallery',
-          'photo_slider',
-          'privacy_policy',
-          'product_card',
-          'spacer',
-          'subscribe',
-          'terms_of_use',
-          'test',
-          'text_box',
-          'text_pic_box',
-          'top_menu',
-          'video_gallery',
-        ],
-        reqrdPages: ['Terms-of-use', 'Privacy-policy'],
         htmlElmnts: {
           account_info: {
             type: 'account_info',
+            info: {
+              required: true,
+            },
           },
           background_image: {
             type: 'background_image',
+            info: {
+              position: 0,
+              unique: { page: true },
+            },
             position: 1,
             src: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
             style: { height: 75 },
           },
           background_video: {
             type: 'background_video',
+            info: {
+              position: 0,
+              unique: { page: true },
+            },
             position: 1,
             src: 'https://videos.pexels.com/video-files/1918465/1918465-uhd_3840_2160_24fps.mp4',
             style: { height: 75 },
           },
-          contact: { type: 'contact', style: {} },
-          feedback: { type: 'feedback' },
           footer: {
             type: 'footer',
             info: {
-              components: ['image_banner', 'text_box'],
+              position: -2,
+              newPageCopy: true,
+              unique: { site: true },
+              components: ['image_banner', 'map', 'text_box'],
             },
             position: -2,
             items: [],
@@ -75,6 +48,9 @@ const defaultsMixin = {
           },
           form: {
             type: 'form',
+            info: {
+              unique: { page: true },
+            },
           },
           headline: {
             type: 'headline',
@@ -115,6 +91,10 @@ const defaultsMixin = {
           legal_links: {
             type: 'legal_links',
             position: -1,
+            info: {
+              position: -1,
+              unique: { site: true },
+            },
             links: {
               Copyright: false,
               'Terms-of-Use': false,
@@ -126,19 +106,33 @@ const defaultsMixin = {
           },
           login: {
             type: 'login',
+            info: {
+              unique: { page: true },
+            },
             style: {},
           },
-          photo_gallery: { type: 'photo_gallery' },
-          photo_slider: {
-            type: 'photo_slider',
-            photos: [
-              { src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png' },
-              { src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png' },
-              { src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png' },
-            ],
-            style: { height: 35, width: 200, columnGap: 50 },
+          map: {
+            type: 'map',
+            info: {
+              unique: { page: true },
+            },
+            lng: -87.6298,
+            lat: 41.87811,
+            zoom: 9,
           },
-          privacy_policy: { type: 'privacy_policy', style: {} },
+          photo_gallery: {
+            type: 'photo_gallery',
+            info: {
+              unique: { page: true },
+            },
+          },
+          privacy_policy: {
+            type: 'privacy_policy',
+            info: {
+              required: true,
+            },
+            style: {},
+          },
           product_card: {
             type: 'product_card',
             cards: [
@@ -165,34 +159,26 @@ const defaultsMixin = {
             },
           },
           spacer: { type: 'spacer', style: { height: 50 } },
-          subscribe: { type: 'subscribe' },
-          terms_of_use: { type: 'terms_of_use', style: {} },
-
-          test: { type: 'test' },
+          terms_of_use: {
+            type: 'terms_of_use',
+            info: {
+              required: true,
+            },
+            style: {},
+          },
           text_box: {
             type: 'text_box',
             style: { color: 'black', 'font-size': '12px', 'text-align': 'left' },
             text: '',
           },
-          text_pic_box: {
-            type: 'text_pic_box',
-            style: {
-              align: 'center',
-              height: 40,
-            },
-            img: {
-              src: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
-              align: 'left',
-              width: [200, 250, 300],
-              height: [200, 250, 300],
-              scale: true,
-              scales: [100, 50, 45],
-            },
-            txt: '',
-          },
           top_menu: {
             type: 'top_menu',
             position: 2,
+            info: {
+              newPageCopy: true,
+              position: 1,
+              unique: { site: true },
+            },
             loggedin: [
               { title: 'Menu Item 1', link: 'https://example.com' },
               { title: 'Menu Item 2', link: 'https://example.com' },
@@ -208,6 +194,9 @@ const defaultsMixin = {
           },
           video_gallery: {
             type: 'video_gallery',
+            info: {
+              unique: { page: true },
+            },
           },
         },
       },

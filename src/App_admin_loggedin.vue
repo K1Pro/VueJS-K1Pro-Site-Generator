@@ -134,14 +134,29 @@ export default {
     pageElPositions() {
       const pageElPositionsArray = [];
       this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
-        pageElPositionsArray.push(this.site.htmlElmnts[el[0]]?.position);
+        if (this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position !== undefined)
+          pageElPositionsArray.push(this.defaults.htmlElmnts[this.site.htmlElmnts[el[0]].type].info.position);
       });
       return pageElPositionsArray;
     },
+    // pageElPositions() {
+    //   const pageElPositionsArray = [];
+    //   this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
+    //     pageElPositionsArray.push(this.defaults.htmlElmnts[this.site.htmlElmnts[el[0]]?.type]?.info?.position);
+    //   });
+    //   return pageElPositionsArray;
+    // },
     pageElTypes() {
       const pageElTypesArray = [];
       this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
-        pageElTypesArray.push(this.site.htmlElmnts[el[0]].type);
+        if (!pageElTypesArray.includes(this.site.htmlElmnts[el[0]].type))
+          pageElTypesArray.push(this.site.htmlElmnts[el[0]].type);
+        if (this.site.htmlElmnts[el[0]].components) {
+          this.site.htmlElmnts[el[0]].components.forEach((subComponentEl) => {
+            if (!pageElTypesArray.includes(this.site.htmlElmnts[subComponentEl].type))
+              pageElTypesArray.push(this.site.htmlElmnts[subComponentEl].type);
+          });
+        }
       });
       return pageElTypesArray;
     },

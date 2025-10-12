@@ -40,7 +40,13 @@
     </div>
     <!-- new buttons -->
     <hr />
-    <select v-if="!addingPage" style="width: calc(100% - 40px)" @change="pageSlctdChange" @focus="pageSlctdFocus">
+    <select
+      v-if="!['Rename'].includes(slctdEditMode)"
+      :style="{ width: ['Add', 'Delete'].includes(slctdEditMode) ? 'calc(100% - 30px)' : '100%' }"
+      style="margin-right: 10px"
+      @change="pageSlctdChange"
+      @focus="pageSlctdFocus"
+    >
       <template v-for="siteType in Object.keys(site.pages)">
         <option disabled>==={{ siteType }}===</option>
         <option
@@ -52,8 +58,12 @@
         </option>
       </template>
     </select>
-    <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 40px)" placeholder="Page name" />
-    <i
+    <input v-if="slctdEditMode == 'Rename'" type="text" style="width: 100%" :value="slctd.page" @change="renamePg" />
+    <i v-if="slctdEditMode == 'Add'" class="fa-solid fa-square-plus element-order-btn" @click="addPg"></i>
+    <i v-if="slctdEditMode == 'Delete'" class="fa-solid fa-square-minus element-order-btn" @click="deletePg"></i>
+
+    <!-- <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 40px)" placeholder="Page name" />
+     <i
       v-if="!addingPage"
       class="fa-solid fa-circle-plus"
       style="padding-left: 2px; color: limegreen"
@@ -74,7 +84,7 @@
       }"
       style="padding-left: 2px"
       @click="deletePage(slctd.page)"
-    ></i>
+    ></i> -->
     <hr />
     <!-- <div v-if="!defaults.reqrdPages.includes(slctd.page) && !addingPage">
       Default:<input
@@ -97,7 +107,12 @@
         :style="{ backgroundColor: pageElmnt[1] ? 'lightgrey' : '#e8e8e8' }"
         @mouseover="pageElmnt[1] ? mouseoverPageEl(pageElmntIndx) : false"
         @mouseout="pageElmnt[1] ? mouseoutPageEl(pageElmntIndx) : false"
-        :draggable="pageElmnt[0] == 'new_element' || site.htmlElmnts[pageElmnt[0]].position ? false : true"
+        :draggable="
+          pageElmnt[0] == 'new_element' ||
+          defaults?.htmlElmnts?.[site?.htmlElmnts?.[pageElmnt?.[0]]?.type]?.info?.position !== undefined
+            ? false
+            : true
+        "
         @dragstart="drag($event, pageElmntIndx)"
         @drop.prevent="drop($event, pageElmntIndx)"
         @dragover.prevent
@@ -106,8 +121,22 @@
         <template v-if="pageElmnt[0] == 'new_element'">
           <select @change="addTempPageEl($event.target.value, pageElmntIndx)" style="width: calc(50% - 13px)">
             <option v-if="!copyingElmnt" disabled selected>{{ slctdElmntButton }} element</option>
-            <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(defaults.htmlElmnts).sort()">
+            <template
+              v-if="slctdElmntButton == 'Add'"
+              v-for="[dfltHtmlEl, dfltHtmlElVal] in Object.entries(defaults.htmlElmnts).sort()"
+            >
               <option
+                v-if="
+                  (!pageElTypes.includes(dfltHtmlEl) || !dfltHtmlElVal?.info?.unique?.site) &&
+                  (!pageElTypes.includes(dfltHtmlEl) || !dfltHtmlElVal?.info?.unique?.page) &&
+                  !pageElPositions.includes(dfltHtmlElVal?.info?.position) &&
+                  !dfltHtmlElVal?.info?.required
+                "
+                :value="dfltHtmlEl"
+              >
+                {{ dfltHtmlEl.replaceAll('_', ' ') }}
+              </option>
+              <!-- <option
                 v-if="
                   (!siteElmnts.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
                   (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt)) &&
@@ -116,7 +145,7 @@
                 :value="htmlElmnt"
               >
                 {{ htmlElmnt.replaceAll('_', ' ') }}
-              </option>
+              </option> -->
             </template>
           </select>
           <select
@@ -124,8 +153,16 @@
             @change="addPageEl($event.target.value, pageElmntIndx)"
             style="width: calc(50% - 13px)"
           >
-            <option disabled selected>Choose new</option>
-            <option>new {{ tempPageEls[pageElmntIndx] }}</option>
+            <option disabled selected>Choose {{ tempPageEls[pageElmntIndx].replaceAll('_', ' ') }}</option>
+            <option
+              v-if="
+                !siteElmnts.includes(tempPageEls[pageElmntIndx]) ||
+                !defaults.htmlElmnts[tempPageEls[pageElmntIndx]]?.info?.unique?.site
+              "
+              value="new_element"
+            >
+              new {{ tempPageEls[pageElmntIndx].replaceAll('_', ' ') }}
+            </option>
             <!-- <template v-if="!copyingElmnt" v-for="siteUniqElType in siteUniqElTypes.sort()">
               <option
                 v-if="
@@ -151,31 +188,10 @@
           </select>
         </template>
         <template v-else>
-          <input
-            :ref="'renameInput' + pageElmntIndx"
-            type="text"
-            v-show="pageElmntIndx == renamingPos"
-            style="width: calc(100% - 20px)"
-            :value="pageElmnt[0].replaceAll('_', ' ')"
-            v-on:blur="isHoverRenameSave ? (renamingPos = pageElmntIndx) : (renamingPos = null)"
-          />
-          <i
-            v-if="pageElmntIndx == renamingPos"
-            class="fa-solid fa-floppy-disk"
-            @click="renameEl(pageElmnt, pageElmntIndx)"
-            @mouseover="isHoverRenameSave = true"
-            @mouseout="isHoverRenameSave = false"
-          ></i>
           <i
             v-if="slctdEditMode == 'Add' && renamingPos != pageElmntIndx"
             class="fa-solid fa-square-plus element-order-btn"
             :style="{
-              color:
-                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0]) ? 'black' : 'grey',
-              cursor:
-                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])
-                  ? 'pointer'
-                  : 'default',
               float: 'right',
             }"
             @click="addNewEl(pageElmntIndx)"
@@ -184,15 +200,9 @@
             v-if="slctdEditMode == 'Delete' && renamingPos != pageElmntIndx"
             class="fa-solid fa-square-minus element-order-btn"
             :style="{
-              color:
-                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0]) ? 'black' : 'grey',
-              cursor:
-                individEdit.elmnts === null && !defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])
-                  ? 'pointer'
-                  : 'default',
               float: 'right',
             }"
-            @click="deletePageEl(pageElmntIndx)"
+            @click="deletePageEl(pageElmnt[0], pageElmntIndx)"
           ></i>
           <input
             v-if="slctdEditMode == 'Individual edit mode on'"
@@ -206,7 +216,6 @@
             style="float: right"
             type="checkbox"
             v-if="slctdEditMode == 'Disable' && renamingPos != pageElmntIndx"
-            :disabled="individEdit.elmnts !== null || defaults.htmlReqrdPageElmnts.includes(pageElmnt[0])"
             :checked="pageElmnt[1]"
             @change="toggleElmnt($event.target.checked, pageElmnt[0], pageElmntIndx)"
           />
@@ -214,8 +223,9 @@
             v-if="
               slctdEditMode == 'Order' &&
               pageElmntIndx != site.pages[slctd.type][slctd.page].length - 1 &&
-              !site.htmlElmnts[pageElmnt[0]].position &&
-              !site.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx + 1][0]]?.position &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[pageElmnt?.[0]]?.type]?.info?.position === undefined &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx + 1][0]]?.type]
+                ?.info?.position === undefined &&
               renamingPos != pageElmntIndx
             "
             class="fa-solid fa-square-caret-down"
@@ -229,8 +239,9 @@
             v-if="
               slctdEditMode == 'Order' &&
               pageElmntIndx != 0 &&
-              !site.htmlElmnts[pageElmnt[0]].position &&
-              !site.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx - 1][0]]?.position &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[pageElmnt?.[0]]?.type]?.info?.position === undefined &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx - 1][0]]?.type]
+                ?.info?.position === undefined &&
               renamingPos != pageElmntIndx
             "
             class="fa-solid fa-square-caret-up"
@@ -245,7 +256,7 @@
             type="text"
             :value="pageElmnt[0]"
             style="width: 100%"
-            @change="renameEl2($event.target.value, pageElmntIndx)"
+            @change="renameEl($event, pageElmntIndx)"
           />
           <span
             v-else
@@ -351,7 +362,6 @@ export default {
       addingPage: false,
       copyingElmnt: null,
       renamingPos: null,
-      isHoverRenameSave: false,
       pageSlctd: 'Home',
       typeSlctd: 'loggedout',
       slctdEditMode: 'Add',
@@ -359,6 +369,15 @@ export default {
       tempPageEls: {},
       tempBackground: null,
     };
+  },
+
+  watch: {
+    pageEls() {
+      if (this.pageEls.length === 0) this.pageEls = [['new_element', true]];
+    },
+    'slctd.page'() {
+      this.tempPageEls = {};
+    },
   },
 
   methods: {
@@ -382,10 +401,9 @@ export default {
       this.tempBackground = null;
     },
     modeChng(event) {
-      console.log(event.target.title);
       this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
       this.tempPageEls = {};
-      this.slctdEditMode = event.target.title;
+      this.slctdEditMode = event.target.title; // this.slctdEditMode = event.target.title == this.slctdEditMode ? null : event.target.title;
     },
     changeLogInOut(event) {
       if (event.target.checked) {
@@ -418,7 +436,9 @@ export default {
         this.individEdit.elmnts = null;
       }
       if (
-        this.site.htmlElmnts[this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0]].position === undefined
+        this.defaults?.htmlElmnts?.[
+          this.site?.htmlElmnts?.[this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0]]?.type
+        ]?.info?.position === undefined
       ) {
         const draggedEl = this.site.pages[this.slctd.type][this.slctd.page][event.dataTransfer.getData('text')];
         if (Number(event.dataTransfer.getData('text')) > pageElmntIndx) {
@@ -450,19 +470,20 @@ export default {
     },
 
     toggleElmnt(event, elmnt, indx) {
-      if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
-        // toggles unique element on all pages
-        for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type])) {
-          pageVal.forEach((element, elIndex) => {
-            if (elmnt == element[0]) {
-              this.site.pages[this.slctd.type][pageKey][elIndex][1] = event;
-            }
-          });
-        }
-      } else {
-        // toggles non-unique element only on selected page
-        this.site.pages[this.slctd.type][this.slctd.page][indx][1] = event;
-      }
+      // if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
+      //   // toggles unique element on all pages
+      //   for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type])) {
+      //     pageVal.forEach((element, elIndex) => {
+      //       if (elmnt == element[0]) {
+      //         this.site.pages[this.slctd.type][pageKey][elIndex][1] = event;
+      //       }
+      //     });
+      //   }
+      // } else {
+      // toggles non-unique element only on selected page
+      console.log('toggles non-unique element only on selected page');
+      this.site.pages[this.slctd.type][this.slctd.page][indx][1] = event; // work on this so it does not save it, similar to pageEls
+      // }
     },
 
     toggleLogInOut(newLogStatus, oldLogStatus) {
@@ -497,162 +518,156 @@ export default {
       // }
     },
 
-    addCopyDeleteEl(event) {
-      console.log('===============================');
-      const elmnt = event?.target?.value ? event.target.value : event;
-      if (this.slctdElmntButton == 'Delete') {
-        // still need to properly delete unique elements here!!!!!!!!!!!
-        if (
-          confirm(
-            'Are you sure you would like to permanently delete the "' +
-              elmnt.replaceAll('_', ' ') +
-              '" element from your website?'
-          ) == true
-        ) {
-          let filteredPageEl;
-          let filteredPages = {};
-          Object.entries(this.site.pages[this.slctd.type]).forEach(([page, pageEl]) => {
-            filteredPageEl = pageEl.filter((a) => {
-              return a[0] !== elmnt;
-            });
-            filteredPages[page] = filteredPageEl;
-          });
-          this.site.pages[this.slctd.type] = filteredPages;
-          delete this.site.htmlElmnts[elmnt];
-        }
-      } else {
-        console.log(this.slctdElmntButton + 'ing');
-        console.log(this.copyingElmnt);
-        if (this.slctdElmntButton == 'Copy' && !this.copyingElmnt) {
-          console.log('step1');
-          this.copyingElmnt = elmnt;
-        } else {
-          console.log('step2');
-          const elPosition =
-            this.slctdElmntButton == 'Copy'
-              ? this.site.htmlElmnts[elmnt]?.position
-              : this.defaults.htmlElmnts[elmnt]?.position;
-          let newElPosition;
-          if (0 < elPosition) {
-            console.log('step3');
-            newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
-            newElPosition++;
-          }
-          if (0 > elPosition) {
-            console.log('step4');
-            newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
-            newElPosition =
-              0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
-          }
-          if (elPosition === undefined) {
-            console.log('step5');
-            newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
-            newElPosition =
-              0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
-          }
-          if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
-            console.log('step6');
-            console.log(elmnt);
-            if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
-            Object.keys(this.site.pages).forEach((slctdType) => {
-              for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
-                !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
-                  this.site.pages[slctdType][pageKey].splice(newElPosition, 0, [elmnt, true]);
-              }
-            });
-          } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
-            console.log('step7');
-            const newElName = elmnt + '_' + new Date().getTime();
-            this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[elmnt]));
-            this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [newElName, true]);
-          } else {
-            console.log('step8');
-            this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
-          }
-          this.copyingElmnt = null;
-        }
-      }
-      if (event?.srcElement?.selectedIndex) event.srcElement.selectedIndex = 0;
+    // addCopyDeleteEl(event) {
+    //   console.log('===============================');
+    //   const elmnt = event?.target?.value ? event.target.value : event;
+    //   if (this.slctdElmntButton == 'Delete') {
+    //     // still need to properly delete unique elements here!!!!!!!!!!!
+    //     if (
+    //       confirm(
+    //         'Are you sure you would like to permanently delete the "' +
+    //           elmnt.replaceAll('_', ' ') +
+    //           '" element from your website?'
+    //       ) == true
+    //     ) {
+    //       let filteredPageEl;
+    //       let filteredPages = {};
+    //       Object.entries(this.site.pages[this.slctd.type]).forEach(([page, pageEl]) => {
+    //         filteredPageEl = pageEl.filter((a) => {
+    //           return a[0] !== elmnt;
+    //         });
+    //         filteredPages[page] = filteredPageEl;
+    //       });
+    //       this.site.pages[this.slctd.type] = filteredPages;
+    //       delete this.site.htmlElmnts[elmnt];
+    //     }
+    //   } else {
+    //     console.log(this.slctdElmntButton + 'ing');
+    //     console.log(this.copyingElmnt);
+    //     if (this.slctdElmntButton == 'Copy' && !this.copyingElmnt) {
+    //       console.log('step1');
+    //       this.copyingElmnt = elmnt;
+    //     } else {
+    //       console.log('step2');
+    //       const elPosition =
+    //         this.slctdElmntButton == 'Copy'
+    //           ? this.site.htmlElmnts[elmnt]?.position
+    //           : this.defaults.htmlElmnts[elmnt]?.position;
+    //       let newElPosition;
+    //       if (0 < elPosition) {
+    //         console.log('step3');
+    //         newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
+    //         newElPosition++;
+    //       }
+    //       if (0 > elPosition) {
+    //         console.log('step4');
+    //         newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
+    //         newElPosition =
+    //           0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
+    //       }
+    //       if (elPosition === undefined) {
+    //         console.log('step5');
+    //         newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
+    //         newElPosition =
+    //           0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
+    //       }
+    //       if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
+    //         console.log('step6');
+    //         console.log(elmnt);
+    //         if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
+    //         Object.keys(this.site.pages).forEach((slctdType) => {
+    //           for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
+    //             !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
+    //               this.site.pages[slctdType][pageKey].splice(newElPosition, 0, [elmnt, true]);
+    //           }
+    //         });
+    //       } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
+    //         console.log('step7');
+    //         const newElName = elmnt + '_' + new Date().getTime();
+    //         this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[elmnt]));
+    //         this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [newElName, true]);
+    //       } else {
+    //         console.log('step8');
+    //         this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
+    //       }
+    //       this.copyingElmnt = null;
+    //     }
+    //   }
+    //   if (event?.srcElement?.selectedIndex) event.srcElement.selectedIndex = 0;
+    // },
+    addPg() {
+      let existingPgs = [];
+      Object.keys(this.site.pages[this.slctd.type]).forEach((pgKey) => {
+        if (pgKey.slice(0, 5) == 'Page ' && !pgKey.slice(5).replace(/[0-9]/g, '')) existingPgs.push(pgKey.slice(5));
+      });
+      const newPgName = existingPgs.length > 0 ? 'Page ' + (Math.max(...existingPgs) + 1) : 'Page 1';
+      this.site.pages[this.slctd.type][newPgName] = [];
+      Object.values(this.site.pages[this.slctd.type])[0].forEach((pg) => {
+        if (this.defaults.htmlElmnts[this.site.htmlElmnts[pg[0]].type]?.info?.newPageCopy)
+          this.site.pages[this.slctd.type][newPgName].push([pg[0], true]);
+      });
+      if (this.site.pages[this.slctd.type][newPgName].length === 0)
+        this.site.pages[this.slctd.type][newPgName].push(['new_element', true]);
+      this.pageEls = this.site.pages[this.slctd.type][newPgName];
+      this.slctd.page = newPgName;
     },
-    revealRenameInput(pageElmnt, pageElmntIndx) {
-      if (!this.defaults.htmlUniqSiteElmnts.includes(pageElmnt[0])) {
-        this.renamingPos = pageElmntIndx;
-        setTimeout(() => {
-          this.$refs['renameInput' + pageElmntIndx][0].focus();
-        }, 1);
-      }
-    },
-    renameEl2(event, pageElmntIndx) {
-      const crrntElName = this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0];
-      this.site.htmlElmnts[event] = this.site.htmlElmnts[crrntElName];
-      this.site.pages = JSON.parse(
-        JSON.stringify(this.site.pages).replaceAll('"' + crrntElName + '"', '"' + event + '"')
-      );
-      this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
-      delete this.site.htmlElmnts[crrntElName];
-    },
-    renameEl(pageElmnt, pageElmntIndx) {
-      const newPageElName = this.$refs['renameInput' + pageElmntIndx][0].value
-        .trim()
-        .replaceAll(' ', '_')
-        .split('_')
-        .filter(function (n) {
-          return n;
-        })
-        .join('_');
-
-      const pagesLowerCase = [];
-      Object.keys(this.site.pages[this.slctd.type]).map((key) => pagesLowerCase.push(key.toLowerCase()));
-      const htmlElmntsLowerCase = [];
-      Object.keys(this.site.htmlElmnts).map((key) => htmlElmntsLowerCase.push(key.toLowerCase()));
-      const contentHtmlElmntsLowerCase = [];
-      Object.keys(this.defaults.htmlElmnts).map((key) => contentHtmlElmntsLowerCase.push(key.toLowerCase()));
-
-      if (
-        pagesLowerCase.includes(newPageElName.toLowerCase()) ||
-        htmlElmntsLowerCase.includes(newPageElName.toLowerCase()) ||
-        contentHtmlElmntsLowerCase.includes(newPageElName.toLowerCase())
-      ) {
+    renamePg(event) {
+      if (JSON.stringify(this.site.pages[this.slctd.type]).includes('"' + event.target.value + '"')) {
         this.showMsg('This name already exists!');
-        this.$refs['renameInput' + pageElmntIndx][0].value = pageElmnt[0];
+        event.target.value = this.slctd.page;
       } else {
-        this.site.htmlElmnts[newPageElName] = this.site.htmlElmnts[pageElmnt[0]];
-        let stringifiedPages = JSON.stringify(this.site.pages[this.slctd.type]).replaceAll(
-          '"' + pageElmnt[0] + '"',
-          '"' + newPageElName + '"'
+        this.site.pages[this.slctd.type][event.target.value] = this.site.pages[this.slctd.type][this.slctd.page];
+        this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
+        delete this.site.pages[this.slctd.type][this.slctd.page];
+        this.slctd.page = event.target.value;
+      }
+    },
+    deletePg() {
+      delete this.site.pages[this.slctd.type][this.slctd.page];
+      this.slctd.page = Object.keys(this.site.pages[this.slctd.type])[0];
+    },
+    renameEl(event, pageElmntIndx) {
+      const crrntElName = this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0];
+      if (JSON.stringify(this.site.pages).includes('"' + event.target.value + '"')) {
+        this.showMsg('This name already exists!');
+        event.target.value = crrntElName;
+      } else {
+        this.site.htmlElmnts[event.target.value] = this.site.htmlElmnts[crrntElName];
+        this.site.pages = JSON.parse(
+          JSON.stringify(this.site.pages).replaceAll('"' + crrntElName + '"', '"' + event.target.value + '"')
         );
-        this.site.pages[this.slctd.type] = JSON.parse(stringifiedPages);
-        delete this.site.htmlElmnts[pageElmnt[0]];
-        this.renamingPos = null;
+        this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
+        delete this.site.htmlElmnts[crrntElName];
       }
     },
-    addPage() {
-      if (this.addingPage) {
-        this.site.pages[this.slctd.type][this.$refs.newPageName.value] = [];
-        this.slctd.page = this.$refs.newPageName.value;
-        this.siteElmnts.forEach((elType) => {
-          if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
-            this.slctdElmntButton = 'Copy';
-            this.copyingElmnt = elType;
-            this.addCopyDeleteEl(elType);
-          }
-        });
-        this.slctdElmntButton = 'Add';
-        this.addingPage = !this.addingPage;
-      } else {
-        this.addingPage = !this.addingPage;
-      }
-    },
-    deletePage(slctdPage) {
-      if (!this.defaults.reqrdPages.includes(slctdPage)) {
-        if (this.addingPage) {
-          this.addingPage = !this.addingPage;
-        } else {
-          this.slctd.page = 'Home';
-          delete this.site.pages[this.slctd.type][slctdPage];
-        }
-      }
-    },
+
+    // addPage() {
+    //   if (this.addingPage) {
+    //     this.site.pages[this.slctd.type][this.$refs.newPageName.value] = [];
+    //     this.slctd.page = this.$refs.newPageName.value;
+    //     this.siteElmnts.forEach((elType) => {
+    //       if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
+    //         this.slctdElmntButton = 'Copy';
+    //         this.copyingElmnt = elType;
+    //         this.addCopyDeleteEl(elType);
+    //       }
+    //     });
+    //     this.slctdElmntButton = 'Add';
+    //     this.addingPage = !this.addingPage;
+    //   } else {
+    //     this.addingPage = !this.addingPage;
+    //   }
+    // },
+    // deletePage(slctdPage) {
+    //   if (!this.defaults.reqrdPages.includes(slctdPage)) {
+    //     if (this.addingPage) {
+    //       this.addingPage = !this.addingPage;
+    //     } else {
+    //       this.slctd.page = 'Home';
+    //       delete this.site.pages[this.slctd.type][slctdPage];
+    //     }
+    //   }
+    // },
     addTempPageEl(event, elementIndex) {
       this.tempPageEls[elementIndex] = event;
     },
@@ -662,14 +677,31 @@ export default {
       this.pageEls = tempPageEls;
     },
     addPageEl(event, elementIndex) {
-      this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 0, [event, true]);
+      let newElName = event;
+      let compTp = this?.site?.htmlElmnts?.[event]?.type;
+      if (event === 'new_element') {
+        compTp = this.tempPageEls[elementIndex];
+        const CompNm = compTp + '_';
+        let existingEls = [];
+        Object.entries(this.site.htmlElmnts).forEach(([elKey, elVal], htmlElIndx) => {
+          const existCompNm = elKey.slice(0, CompNm.length);
+          if (elVal.type == compTp && existCompNm == CompNm && !elKey.slice(CompNm.length).replace(/[0-9]/g, ''))
+            existingEls.push(Number(elKey.slice(CompNm.length)));
+        });
+        newElName = existingEls.length > 0 ? compTp + '_' + (Math.max(...existingEls) + 1) : compTp + '_1';
+        this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[compTp]));
+      }
+      const pageElIndx =
+        this?.defaults?.htmlElmnts?.[compTp]?.info?.position !== undefined
+          ? this.defaults.htmlElmnts[compTp].info.position
+          : elementIndex;
+      this.site.pages[this.slctd.type][this.slctd.page].splice(pageElIndx, 0, [newElName, true]);
+      this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
     },
-    deletePageEl(elementIndex) {
-      if (
-        this.individEdit.elmnts === null &&
-        !this.defaults.htmlReqrdPageElmnts.includes(this.site.pages[this.slctd.type][this.slctd.page][elementIndex][0])
-      ) {
+    deletePageEl(pageEl, elementIndex) {
+      if (!this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[pageEl]?.type]?.info?.required) {
         this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
+        if (this.site.pages[this.slctd.type][this.slctd.page].length === 0) this.pageEls = [['new_element', true]]; // might be able to improve this
       }
     },
     moveDown(elementIndex) {
