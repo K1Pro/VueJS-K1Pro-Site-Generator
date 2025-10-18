@@ -23,8 +23,8 @@
     <div class="app-grid-item2" ref="appGridItem2" :style="{ 'background-color': site.body.style.backgroundColor }">
       <template v-for="(pageElmnt, pageIndex) in site.pages[slctd.type][slctd.page]">
         <component
-          :is="site.htmlElmnts[pageElmnt[0]].type"
-          v-if="pageElmnt[1]"
+          :is="site?.htmlElmnts?.[pageElmnt?.[0]]?.type"
+          v-if="(slctd.indEdtIndx === null && pageElmnt[1]) || pageIndex === slctd.indEdtIndx"
           :elKey="pageElmnt[0]"
           :elValue="site.htmlElmnts[pageElmnt[0]]"
           :elIndex="pageIndex"
@@ -57,10 +57,6 @@ export default {
         wdth: document.body.clientWidth * 0.5,
         hght: document.documentElement.clientHeight,
       },
-      individEdit: {
-        elmntIndx: null,
-        elmnts: null,
-      },
       messages: null,
       respWidth: {
         xs: 400,
@@ -73,6 +69,7 @@ export default {
         firstUrlSegment: slctd.first_url_segment,
         href: slctd.href,
         imgURL: null,
+        indEdtIndx: null,
         job: slctd.job,
         page: 'Home',
         txtCntnt: null,
@@ -92,7 +89,6 @@ export default {
       endPts: Vue.computed(() => this.endPts),
       files: Vue.computed(() => this.files),
       grid: Vue.computed(() => this.grid),
-      individEdit: Vue.computed(() => this.individEdit),
       messages: Vue.computed(() => this.messages),
       page: Vue.computed(() => this.page),
       pageElPositions: Vue.computed(() => this.pageElPositions),
@@ -134,24 +130,22 @@ export default {
     pageElPositions() {
       const pageElPositionsArray = [];
       this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
-        if (this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position !== undefined)
+        if (
+          this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position !== undefined &&
+          !pageElPositionsArray.includes(
+            this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position
+          )
+        )
           pageElPositionsArray.push(this.defaults.htmlElmnts[this.site.htmlElmnts[el[0]].type].info.position);
       });
       return pageElPositionsArray;
     },
-    // pageElPositions() {
-    //   const pageElPositionsArray = [];
-    //   this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
-    //     pageElPositionsArray.push(this.defaults.htmlElmnts[this.site.htmlElmnts[el[0]]?.type]?.info?.position);
-    //   });
-    //   return pageElPositionsArray;
-    // },
     pageElTypes() {
       const pageElTypesArray = [];
       this.site.pages?.[this.slctd.type]?.[this.slctd.page]?.forEach((el) => {
-        if (!pageElTypesArray.includes(this.site.htmlElmnts[el[0]].type))
+        if (this.site.htmlElmnts[el[0]]?.type && !pageElTypesArray.includes(this.site.htmlElmnts[el[0]]?.type))
           pageElTypesArray.push(this.site.htmlElmnts[el[0]].type);
-        if (this.site.htmlElmnts[el[0]].components) {
+        if (this.site.htmlElmnts[el[0]]?.components) {
           this.site.htmlElmnts[el[0]].components.forEach((subComponentEl) => {
             if (!pageElTypesArray.includes(this.site.htmlElmnts[subComponentEl].type))
               pageElTypesArray.push(this.site.htmlElmnts[subComponentEl].type);
@@ -164,7 +158,7 @@ export default {
       return Object.keys(this.site.htmlElmnts);
     },
     siteUniqElTypes() {
-      return [...new Set(Object.values(this.site.htmlElmnts).map((htmlElmnt) => htmlElmnt.type))];
+      return [...new Set(Object.values(this.site.htmlElmnts).map((htmlElmnt) => htmlElmnt?.type))];
     },
     style() {
       return {
@@ -207,11 +201,6 @@ export default {
       return r < 192 && r > 64 && g < 192 && g > 64 && b < 192 && b > 64 ? true : false;
     },
     async patchSite() {
-      let siteTemp = JSON.stringify(this.site);
-      if (this.individEdit.elmntIndx !== null) {
-        siteTemp = JSON.parse(siteTemp);
-        siteTemp.pages[this.slctd.type][this.slctd.page] = JSON.parse(this.individEdit.elmnts);
-      }
       try {
         const response = await fetch(app_api_url + this.slctd.job, {
           method: 'PATCH',
@@ -221,7 +210,7 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            params: typeof siteTemp === 'string' ? JSON.parse(siteTemp) : siteTemp,
+            params: this.site,
           }),
         });
         const resJSON = await response.json();
@@ -234,8 +223,6 @@ export default {
       }
     },
     async getSite() {
-      this.individEdit.elmntIndx = null;
-      this.individEdit.elmnts = null;
       try {
         const response = await fetch(app_api_url + this.slctd.job, {
           method: 'GET',
@@ -244,7 +231,6 @@ export default {
         console.log(resJSON);
         if (resJSON.success) {
           this.site = resJSON.data.site; //need to refactor params
-          this.individEdit.elmnts = null;
           // this.applyStyle();
           this.undoRedo++;
           console.log(resJSON.data.site);

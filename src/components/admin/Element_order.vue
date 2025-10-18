@@ -1,51 +1,56 @@
 <template>
   <div class="element-order">
-    <!-- new buttons -->
     <div class="element-order-mode-buttons">
       <button title="Add" @click="modeChng" class="fa-solid fa-plus element-order-mode-button"></button>
       <button title="Delete" @click="modeChng" class="fa-solid fa-minus element-order-mode-button"></button>
       <button title="Order" @click="modeChng" class="fa-solid fa-up-down element-order-mode-button"></button>
       <button title="Disable" @click="modeChng" class="fa-solid fa-pause element-order-mode-button"></button>
       <button
-        title="Individual edit mode on"
+        title="Individual edit mode"
+        v-if="slctd.indEdtIndx === null"
         @click="modeChng"
         class="fa-solid fa-magnifying-glass-plus element-order-mode-button"
       ></button>
+      <button
+        title="Individual edit mode"
+        v-else
+        @click="modeChng"
+        class="fa-solid fa-magnifying-glass-minus element-order-mode-button"
+      ></button>
       <button title="Rename" @click="modeChng" class="fa-solid fa-pen-to-square element-order-mode-button"></button>
       <button
-        title="Default yes"
+        :title="slctd.page + ' is the default page'"
         v-if="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
-        @click="site.defaultPage[slctd.type] = slctd.page.toLowerCase()"
-        class="fa-solid fa-file-circle-check element-order-mode-button"
+        class="fa-solid fa-house-circle-check element-order-mode-button"
       ></button>
       <button
-        title="Default no"
+        :title="'Set ' + slctd.page + ' to default'"
         v-if="slctd.page.toLowerCase() != site.defaultPage[slctd.type]"
-        class="fa-solid fa-file-circle-xmark element-order-mode-button"
+        @click="site.defaultPage[slctd.type] = slctd.page.toLowerCase()"
+        class="fa-solid fa-house fa-regular fa-house element-order-mode-button"
       ></button>
       <button
         title="Logged in"
         v-if="Object.keys(site.pages.loggedin).includes(slctd.page)"
-        class="fa-solid fa-file-circle-plus element-order-mode-button"
+        @click="changeLogInOut(false)"
+        class="fa-solid fa-lock element-order-mode-button"
       ></button>
       <button
         title="Logged out"
         v-if="Object.keys(site.pages.loggedout).includes(slctd.page)"
-        @click="modeChng"
-        class="fa-solid fa-file-circle-minus element-order-mode-button"
+        @click="changeLogInOut(true)"
+        class="fa-solid fa-lock-open element-order-mode-button"
       ></button>
       <button class="fa-solid fa-floppy-disk element-order-mode-button" @click="patchSite"></button>
       <button class="fa-solid fa-rotate-left element-order-mode-button" @click="getSite"></button>
       <button class="fa-solid fa-rotate-right element-order-mode-button"></button>
     </div>
-    <!-- new buttons -->
     <hr />
     <select
-      v-if="!['Rename'].includes(slctdEditMode)"
-      :style="{ width: ['Add', 'Delete'].includes(slctdEditMode) ? 'calc(100% - 30px)' : '100%' }"
+      v-if="!['Rename'].includes(slctdEdtMd)"
+      :style="{ width: ['Add', 'Delete'].includes(slctdEdtMd) ? 'calc(100% - 30px)' : '100%' }"
       style="margin-right: 10px"
-      @change="pageSlctdChange"
-      @focus="pageSlctdFocus"
+      @change="selectPg"
     >
       <template v-for="siteType in Object.keys(site.pages)">
         <option disabled>==={{ siteType }}===</option>
@@ -58,73 +63,39 @@
         </option>
       </template>
     </select>
-    <input v-if="slctdEditMode == 'Rename'" type="text" style="width: 100%" :value="slctd.page" @change="renamePg" />
-    <i v-if="slctdEditMode == 'Add'" class="fa-solid fa-square-plus element-order-btn" @click="addPg"></i>
-    <i v-if="slctdEditMode == 'Delete'" class="fa-solid fa-square-minus element-order-btn" @click="deletePg"></i>
-
-    <!-- <input v-if="addingPage" ref="newPageName" type="text" style="width: calc(100% - 40px)" placeholder="Page name" />
-     <i
-      v-if="!addingPage"
-      class="fa-solid fa-circle-plus"
-      style="padding-left: 2px; color: limegreen"
-      @click="addPage"
-    ></i>
-    <i
-      v-if="addingPage"
-      class="fa-solid fa-floppy-disk"
-      style="padding-left: 2px; padding-right: 2px; color: limegreen"
-      @click="addPage"
-    ></i>
-    <i
-      class="fa-solid fa-circle-minus"
-      :style="{
-        color: (slctd.page == 'Home' && !addingPage) || defaults.reqrdPages.includes(slctd.page) ? 'grey' : '#ff0000',
-        cursor:
-          (slctd.page == 'Home' && !addingPage) || defaults.reqrdPages.includes(slctd.page) ? 'not-allowed' : 'pointer',
-      }"
-      style="padding-left: 2px"
-      @click="deletePage(slctd.page)"
-    ></i> -->
+    <input v-if="slctdEdtMd == 'Rename'" type="text" style="width: 100%" :value="slctd.page" @change="renamePg" />
+    <i v-if="slctdEdtMd == 'Add'" class="fa-solid fa-square-plus element-order-btn" @click="addPg"></i>
+    <i v-if="slctdEdtMd == 'Delete'" class="fa-solid fa-square-minus element-order-btn" @click="deletePg"></i>
     <hr />
-    <!-- <div v-if="!defaults.reqrdPages.includes(slctd.page) && !addingPage">
-      Default:<input
-        type="checkbox"
-        :disabled="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
-        :checked="slctd.page.toLowerCase() == site.defaultPage[slctd.type]"
-        @change="site.defaultPage[slctd.type] = slctd.page.toLowerCase()"
-      />
-      Logged in:<input
-        type="checkbox"
-        :checked="slctd.type == 'loggedin' && Object.keys(site.pages.loggedin).includes(slctd.page)"
-        @change="changeLogInOut"
-      />
-    </div> -->
-
     <div class="element-order-list">
       <div
-        v-for="(pageElmnt, pageElmntIndx) in pageEls"
+        v-for="(el, elIndx) in site.pages[slctd.type][slctd.page]"
         class="element-order-items"
-        :style="{ backgroundColor: pageElmnt[1] ? 'lightgrey' : '#e8e8e8' }"
-        @mouseover="pageElmnt[1] ? mouseoverPageEl(pageElmntIndx) : false"
-        @mouseout="pageElmnt[1] ? mouseoutPageEl(pageElmntIndx) : false"
+        :style="{
+          backgroundColor:
+            (slctd.indEdtIndx === null && el[1]) || elIndx === slctd.indEdtIndx ? 'lightgrey' : '#e8e8e8',
+        }"
+        @mouseover="el[1] ? mouseoverPageEl(elIndx) : false"
+        @mouseout="el[1] ? mouseoutPageEl(elIndx) : false"
         :draggable="
-          pageElmnt[0] == 'new_element' ||
-          defaults?.htmlElmnts?.[site?.htmlElmnts?.[pageElmnt?.[0]]?.type]?.info?.position !== undefined
+          el[0] == 'new_element' ||
+          defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position !== undefined ||
+          slctd.indEdtIndx !== null
             ? false
             : true
         "
-        @dragstart="drag($event, pageElmntIndx)"
-        @drop.prevent="drop($event, pageElmntIndx)"
+        @dragstart="slctd.indEdtIndx === null ? drag($event, elIndx) : false"
+        @drop.prevent="slctd.indEdtIndx === null ? drop($event, elIndx) : false"
         @dragover.prevent
         @dragenter.prevent
       >
-        <template v-if="pageElmnt[0] == 'new_element'">
-          <select @change="addTempPageEl($event.target.value, pageElmntIndx)" style="width: calc(50% - 13px)">
-            <option v-if="!copyingElmnt" disabled selected>{{ slctdElmntButton }} element</option>
-            <template
-              v-if="slctdElmntButton == 'Add'"
-              v-for="[dfltHtmlEl, dfltHtmlElVal] in Object.entries(defaults.htmlElmnts).sort()"
-            >
+        <template v-if="el[0] == 'new_element'">
+          <select
+            @change="tmpEls[elIndx] = $event.target.value"
+            :style="{ width: tmpEls[elIndx] ? 'calc(50% - 13px)' : 'calc(100% - 26px)' }"
+          >
+            <option disabled selected>Add element</option>
+            <template v-for="[dfltHtmlEl, dfltHtmlElVal] in Object.entries(defaults.htmlElmnts).sort()">
               <option
                 v-if="
                   (!pageElTypes.includes(dfltHtmlEl) || !dfltHtmlElVal?.info?.unique?.site) &&
@@ -136,49 +107,20 @@
               >
                 {{ dfltHtmlEl.replaceAll('_', ' ') }}
               </option>
-              <!-- <option
-                v-if="
-                  (!siteElmnts.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
-                  (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt)) &&
-                  !defaults.htmlReqrdPageElmnts.includes(htmlElmnt)
-                "
-                :value="htmlElmnt"
-              >
-                {{ htmlElmnt.replaceAll('_', ' ') }}
-              </option> -->
             </template>
           </select>
-          <select
-            v-if="tempPageEls[pageElmntIndx]"
-            @change="addPageEl($event.target.value, pageElmntIndx)"
-            style="width: calc(50% - 13px)"
-          >
-            <option disabled selected>Choose {{ tempPageEls[pageElmntIndx].replaceAll('_', ' ') }}</option>
+          <select v-if="tmpEls[elIndx]" @change="addEl($event.target.value, elIndx)" style="width: calc(50% - 13px)">
+            <option disabled selected>Choose {{ tmpEls[elIndx].replaceAll('_', ' ') }}</option>
             <option
-              v-if="
-                !siteElmnts.includes(tempPageEls[pageElmntIndx]) ||
-                !defaults.htmlElmnts[tempPageEls[pageElmntIndx]]?.info?.unique?.site
-              "
+              v-if="!siteElmnts.includes(tmpEls[elIndx]) || !defaults.htmlElmnts[tmpEls[elIndx]]?.info?.unique?.site"
               value="new_element"
             >
-              new {{ tempPageEls[pageElmntIndx].replaceAll('_', ' ') }}
+              new {{ tmpEls[elIndx].replaceAll('_', ' ') }}
             </option>
-            <!-- <template v-if="!copyingElmnt" v-for="siteUniqElType in siteUniqElTypes.sort()">
-              <option
-                v-if="
-                  (!siteElmnts.includes(siteUniqElType) || !defaults.htmlUniqSiteElmnts.includes(siteUniqElType)) &&
-                  (!pageElTypes.includes(siteUniqElType) || !defaults.htmlUniqPageElmnts.includes(siteUniqElType)) &&
-                  !defaults.htmlReqrdPageElmnts.includes(siteUniqElType)
-                "
-                :value="siteUniqElType"
-              >
-                {{ siteUniqElType.replaceAll('_', ' ') }}
-              </option>
-            </template> -->
             <option
               v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts)
                 .filter(([elKey, elVal]) => {
-                  return elVal.type == tempPageEls[pageElmntIndx];
+                  return elVal.type == tmpEls[elIndx];
                 })
                 .sort()"
               :value="htmlElmntKey"
@@ -186,153 +128,89 @@
               {{ htmlElmntKey.replaceAll('_', ' ') }}
             </option>
           </select>
+          <i
+            class="fa-solid fa-square-minus element-order-btn"
+            @click="site.pages[slctd.type][slctd.page].splice(elIndx, 1)"
+          ></i>
         </template>
         <template v-else>
           <i
-            v-if="slctdEditMode == 'Add' && renamingPos != pageElmntIndx"
+            v-if="
+              slctdEdtMd == 'Add' &&
+              (defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position === undefined ||
+                (defaults?.htmlElmnts?.[
+                  site?.htmlElmnts?.[site?.pages?.[slctd?.type]?.[slctd?.page]?.[elIndx + 1]?.[0]]?.type
+                ]?.info?.position === undefined &&
+                  site?.pages?.[slctd?.type]?.[slctd.page]?.[elIndx + 1]))
+            "
             class="fa-solid fa-square-plus element-order-btn"
             :style="{
               float: 'right',
             }"
-            @click="addNewEl(pageElmntIndx)"
+            @click="site.pages[slctd.type][slctd.page].splice(elIndx + 1, 0, ['new_element', true])"
           ></i>
           <i
-            v-if="slctdEditMode == 'Delete' && renamingPos != pageElmntIndx"
+            v-if="slctdEdtMd == 'Delete' && !defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.required"
             class="fa-solid fa-square-minus element-order-btn"
             :style="{
               float: 'right',
             }"
-            @click="deletePageEl(pageElmnt[0], pageElmntIndx)"
+            @click="deleteEl(el[0], elIndx)"
           ></i>
           <input
-            v-if="slctdEditMode == 'Individual edit mode on'"
+            v-if="slctdEdtMd == 'Individual edit mode'"
             type="radio"
             style="float: right"
+            :checked="elIndx === slctd.indEdtIndx"
             name="individEdit"
-            :checked="pageElmntIndx === individEdit.elmntIndx"
-            @click="toggleIndivEdit(pageElmntIndx)"
+            @click="slctd.indEdtIndx = elIndx"
           />
           <input
             style="float: right"
             type="checkbox"
-            v-if="slctdEditMode == 'Disable' && renamingPos != pageElmntIndx"
-            :checked="pageElmnt[1]"
-            @change="toggleElmnt($event.target.checked, pageElmnt[0], pageElmntIndx)"
+            v-if="slctdEdtMd == 'Disable'"
+            :checked="el[1]"
+            @change="disableEl($event.target.checked, el[0], elIndx)"
           />
           <i
             v-if="
-              slctdEditMode == 'Order' &&
-              pageElmntIndx != site.pages[slctd.type][slctd.page].length - 1 &&
-              defaults?.htmlElmnts?.[site?.htmlElmnts?.[pageElmnt?.[0]]?.type]?.info?.position === undefined &&
-              defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx + 1][0]]?.type]
-                ?.info?.position === undefined &&
-              renamingPos != pageElmntIndx
+              slctdEdtMd == 'Order' &&
+              elIndx != site.pages[slctd.type][slctd.page].length - 1 &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position === undefined &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][elIndx + 1][0]]?.type]?.info
+                ?.position === undefined
             "
             class="fa-solid fa-square-caret-down"
-            :style="{
-              color: individEdit.elmnts === null ? 'black' : 'grey',
-              cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-            }"
-            @click="moveDown(pageElmntIndx)"
+            @click="orderEl(elIndx, 1)"
           ></i>
           <i
             v-if="
-              slctdEditMode == 'Order' &&
-              pageElmntIndx != 0 &&
-              defaults?.htmlElmnts?.[site?.htmlElmnts?.[pageElmnt?.[0]]?.type]?.info?.position === undefined &&
-              defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][pageElmntIndx - 1][0]]?.type]
-                ?.info?.position === undefined &&
-              renamingPos != pageElmntIndx
+              slctdEdtMd == 'Order' &&
+              elIndx != 0 &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position === undefined &&
+              defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][elIndx - 1][0]]?.type]?.info
+                ?.position === undefined
             "
             class="fa-solid fa-square-caret-up"
-            :style="{
-              color: individEdit.elmnts === null ? 'black' : 'grey',
-              cursor: individEdit.elmnts === null ? 'pointer' : 'default',
-            }"
-            @click.prevent="moveUp(pageElmntIndx)"
+            @click.prevent="orderEl(elIndx, -1)"
           ></i>
           <input
-            v-if="slctdEditMode == 'Rename'"
+            v-if="slctdEdtMd == 'Rename'"
             type="text"
-            :value="pageElmnt[0]"
+            :value="el[0]"
             style="width: 100%"
-            @change="renameEl($event, pageElmntIndx)"
+            @change="renameEl($event, elIndx)"
           />
           <span
             v-else
-            v-on:dblclick="highlightPageEl(pageElmntIndx)"
-            :style="{ color: pageElmnt[1] ? 'black' : 'grey' }"
-            :title="site.htmlElmnts[pageElmnt[0]].type ? site.htmlElmnts[pageElmnt[0]].type : false"
-            >{{ pageElmntIndx != renamingPos ? pageElmnt[0].replaceAll('_', ' ') : '' }}</span
+            v-on:dblclick="highlightPageEl(elIndx)"
+            :style="{ color: (slctd.indEdtIndx === null && el[1]) || elIndx === slctd.indEdtIndx ? 'black' : 'grey' }"
+            :title="site.htmlElmnts[el[0]].type ? site.htmlElmnts[el[0]].type : false"
+            >{{ el[0].replaceAll('_', ' ') }}</span
           >
         </template>
       </div>
     </div>
-
-    <!-- <hr />
-    <button
-      v-for="[elmntButtonKey, elmntButtonVal] in Object.entries(elmntButtons)"
-      :style="{
-        backgroundColor: elmntButtonKey == slctdElmntButton ? 'darkgrey' : '#eee',
-      }"
-      @click="
-        slctdElmntButton = elmntButtonKey;
-        copyingElmnt = null;
-      "
-    >
-      <i :class="elmntButtonVal"></i>
-    </button>
-    <select style="width: calc(100% - 75px)" @change="addCopyDeleteEl($event)" @focusout="copyingElmnt = null">
-      <option v-if="!copyingElmnt" disabled selected>{{ slctdElmntButton }} element</option>
-      <template v-if="slctdElmntButton == 'Add'" v-for="htmlElmnt in Object.keys(defaults.htmlElmnts).sort()">
-        <option
-          v-if="
-            (!siteElmnts.includes(htmlElmnt) || !defaults.htmlUniqSiteElmnts.includes(htmlElmnt)) &&
-            (!pageElTypes.includes(htmlElmnt) || !defaults.htmlUniqPageElmnts.includes(htmlElmnt)) &&
-            !defaults.htmlReqrdPageElmnts.includes(htmlElmnt)
-          "
-          :value="htmlElmnt"
-        >
-          {{ htmlElmnt.replaceAll('_', ' ') }}
-        </option>
-      </template>
-      <template v-if="slctdElmntButton == 'Copy' && Object.keys(site.htmlElmnts).length > 0">
-        <option v-if="copyingElmnt" disabled selected>Choose to copy this element</option>
-        <template v-if="!copyingElmnt" v-for="siteUniqElType in siteUniqElTypes.sort()">
-          <option
-            v-if="
-              (!siteElmnts.includes(siteUniqElType) || !defaults.htmlUniqSiteElmnts.includes(siteUniqElType)) &&
-              (!pageElTypes.includes(siteUniqElType) || !defaults.htmlUniqPageElmnts.includes(siteUniqElType)) &&
-              !defaults.htmlReqrdPageElmnts.includes(siteUniqElType)
-            "
-            :value="siteUniqElType"
-          >
-            {{ siteUniqElType.replaceAll('_', ' ') }}
-          </option>
-        </template>
-        <template v-else v-for="[htmlElmntKey, htmlElmntVal] in Object.entries(site.htmlElmnts).sort()">
-          <option
-            v-if="
-              htmlElmntVal.type == copyingElmnt &&
-              (!siteElmnts.includes(htmlElmntVal.type) || !defaults.htmlUniqSiteElmnts.includes(htmlElmntVal.type)) &&
-              (!pageElTypes.includes(htmlElmntVal.type) || !defaults.htmlUniqPageElmnts.includes(htmlElmntVal.type)) &&
-              !defaults.htmlReqrdPageElmnts.includes(htmlElmntKey)
-            "
-            :value="htmlElmntKey"
-          >
-            {{ htmlElmntKey.replaceAll('_', ' ') }}
-          </option>
-        </template>
-      </template>
-
-      <template v-if="slctdElmntButton == 'Delete' && Object.keys(site.htmlElmnts).length > 0">
-        <template v-for="htmlElmnt in Object.keys(site.htmlElmnts).sort()">
-          <option v-if="!defaults.htmlReqrdPageElmnts.includes(htmlElmnt)" :value="htmlElmnt">
-            {{ htmlElmnt.replaceAll('_', ' ') }}
-          </option>
-        </template>
-      </template>
-    </select> -->
   </div>
 </template>
 
@@ -342,71 +220,38 @@ export default {
 
   inject: [
     'defaults',
-    'endPts',
     'getSite',
-    'individEdit',
     'pageElPositions',
     'pageElTypes',
     'patchSite',
     'showMsg',
     'site',
     'siteElmnts',
-    'siteUniqElTypes',
     'slctd',
   ],
 
   data() {
     return {
-      elmntButtons: { Add: 'fa-solid fa-plus', Copy: 'fa-regular fa-copy', Delete: 'fa-solid fa-trash' },
-      slctdElmntButton: 'Add',
-      addingPage: false,
-      copyingElmnt: null,
-      renamingPos: null,
-      pageSlctd: 'Home',
-      typeSlctd: 'loggedout',
-      slctdEditMode: 'Add',
-      pageEls: this.site.pages[this.slctd.type][this.slctd.page],
-      tempPageEls: {},
-      tempBackground: null,
+      slctdEdtMd: 'Add',
+      tmpEls: {},
+      tmpBckgrnd: null,
     };
   },
 
   watch: {
-    pageEls() {
-      if (this.pageEls.length === 0) this.pageEls = [['new_element', true]];
-    },
     'slctd.page'() {
-      this.tempPageEls = {};
+      this.tmpEls = {};
     },
   },
 
   methods: {
-    mouseoverPageEl(pageElmntIndx) {
-      if (document.getElementById('site_page_el_' + pageElmntIndx)) {
-        if (document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor)
-          this.tempBackground = document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor;
-      }
-    },
-    highlightPageEl(pageElmntIndx) {
-      if (document.getElementById('site_page_el_' + pageElmntIndx)) {
-        document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor = '#87CEFA50';
-        document.getElementById('site_page_el_' + pageElmntIndx).scrollIntoView();
-      }
-    },
-    mouseoutPageEl(pageElmntIndx) {
-      if (document.getElementById('site_page_el_' + pageElmntIndx))
-        document.getElementById('site_page_el_' + pageElmntIndx).style.backgroundColor = this.tempBackground
-          ? this.tempBackground
-          : '#87CEFA00';
-      this.tempBackground = null;
-    },
     modeChng(event) {
-      this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
-      this.tempPageEls = {};
-      this.slctdEditMode = event.target.title; // this.slctdEditMode = event.target.title == this.slctdEditMode ? null : event.target.title;
+      this.tmpEls = {};
+      this.slctd.indEdtIndx = null;
+      this.slctdEdtMd = event.target.title;
     },
     changeLogInOut(event) {
-      if (event.target.checked) {
+      if (event) {
         if (
           !this.site.pages['loggedin'][this.slctd.page] ||
           confirm('A loggedin page with the same name already exists. Replace?') === true
@@ -418,7 +263,7 @@ export default {
       } else {
         if (
           !this.site.pages['loggedout'][this.slctd.page] ||
-          confirm('A loggedin page with the same name already exists. Replace?') === true
+          confirm('A loggedout page with the same name already exists. Replace?') === true
         ) {
           this.site.pages['loggedout'][this.slctd.page] = this.site.pages['loggedin'][this.slctd.page];
           this.slctd.type = 'loggedout';
@@ -426,175 +271,49 @@ export default {
         }
       }
     },
-    drag(event, pageElmntIndx) {
-      event.dataTransfer.setData('text', pageElmntIndx);
-    },
-    drop(event, pageElmntIndx) {
-      if (this.individEdit.elmntIndx) {
-        this.site.pages[this.slctd.type][this.slctd.page] = JSON.parse(this.individEdit.elmnts);
-        this.individEdit.elmntIndx = null;
-        this.individEdit.elmnts = null;
+    mouseoverPageEl(elIndx) {
+      if (document.getElementById('site_page_el_' + elIndx)) {
+        if (document.getElementById('site_page_el_' + elIndx).style.backgroundColor)
+          this.tmpBckgrnd = document.getElementById('site_page_el_' + elIndx).style.backgroundColor;
       }
+    },
+    highlightPageEl(elIndx) {
+      if (document.getElementById('site_page_el_' + elIndx)) {
+        document.getElementById('site_page_el_' + elIndx).style.backgroundColor = '#87CEFA50';
+        document.getElementById('site_page_el_' + elIndx).scrollIntoView();
+      }
+    },
+    mouseoutPageEl(elIndx) {
+      if (document.getElementById('site_page_el_' + elIndx))
+        document.getElementById('site_page_el_' + elIndx).style.backgroundColor = this.tmpBckgrnd
+          ? this.tmpBckgrnd
+          : '#87CEFA00';
+      this.tmpBckgrnd = null;
+    },
+    drag(event, elIndx) {
+      event.dataTransfer.setData('text', elIndx);
+    },
+    drop(event, elIndx) {
       if (
         this.defaults?.htmlElmnts?.[
-          this.site?.htmlElmnts?.[this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0]]?.type
+          this.site?.htmlElmnts?.[this.site.pages[this.slctd.type][this.slctd.page][elIndx][0]]?.type
         ]?.info?.position === undefined
       ) {
         const draggedEl = this.site.pages[this.slctd.type][this.slctd.page][event.dataTransfer.getData('text')];
-        if (Number(event.dataTransfer.getData('text')) > pageElmntIndx) {
-          this.site.pages[this.slctd.type][this.slctd.page].splice(pageElmntIndx, 0, draggedEl);
+        if (Number(event.dataTransfer.getData('text')) > elIndx) {
+          this.site.pages[this.slctd.type][this.slctd.page].splice(elIndx, 0, draggedEl);
           this.site.pages[this.slctd.type][this.slctd.page].splice(Number(event.dataTransfer.getData('text')) + 1, 1);
         } else {
-          this.site.pages[this.slctd.type][this.slctd.page].splice(pageElmntIndx + 1, 0, draggedEl);
+          this.site.pages[this.slctd.type][this.slctd.page].splice(elIndx + 1, 0, draggedEl);
           this.site.pages[this.slctd.type][this.slctd.page].splice(Number(event.dataTransfer.getData('text')), 1);
         }
       }
     },
-    toggleIndivEdit(indx) {
-      if (this.individEdit.elmntIndx == indx) {
-        this.site.pages[this.slctd.type][this.slctd.page] = JSON.parse(this.individEdit.elmnts);
-        this.individEdit.elmntIndx = null;
-        this.individEdit.elmnts = null;
-      } else if (this.individEdit.elmntIndx === null) {
-        this.individEdit.elmntIndx = indx;
-        this.individEdit.elmnts = JSON.stringify(this.site.pages[this.slctd.type][this.slctd.page]);
-        this.site.pages[this.slctd.type][this.slctd.page].forEach((page, pageIndex) => {
-          page[1] = indx !== pageIndex ? false : true;
-        });
-      } else {
-        this.individEdit.elmntIndx = indx;
-        this.site.pages[this.slctd.type][this.slctd.page].forEach((page, pageIndex) => {
-          page[1] = indx !== pageIndex ? false : true;
-        });
-      }
-    },
-
-    toggleElmnt(event, elmnt, indx) {
-      // if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
-      //   // toggles unique element on all pages
-      //   for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type])) {
-      //     pageVal.forEach((element, elIndex) => {
-      //       if (elmnt == element[0]) {
-      //         this.site.pages[this.slctd.type][pageKey][elIndex][1] = event;
-      //       }
-      //     });
-      //   }
-      // } else {
-      // toggles non-unique element only on selected page
-      console.log('toggles non-unique element only on selected page');
-      this.site.pages[this.slctd.type][this.slctd.page][indx][1] = event; // work on this so it does not save it, similar to pageEls
-      // }
-    },
-
-    toggleLogInOut(newLogStatus, oldLogStatus) {
-      !this.site.pages[this.slctd.type][newLogStatus]
-        ? (this.site.pages[this.slctd.type][newLogStatus] = {
-            [this.slctd.page]: this.site.pages[this.slctd.type][oldLogStatus][this.slctd.page],
-          })
-        : (this.site.pages[this.slctd.type][newLogStatus][this.slctd.page] =
-            this.site.pages[this.slctd.type][oldLogStatus][this.slctd.page]);
-      this.slctd.type = newLogStatus;
-      delete this.site.pages[this.slctd.type][oldLogStatus][this.slctd.page];
-    },
-    pageSlctdFocus(event) {
-      this.typeSlctd = event.target.value.split(',')[0];
-      this.pageSlctd = event.target.value.split(',')[1];
-    },
-    pageSlctdChange(event) {
-      this.pageEls = this.site.pages[event.target.value.split(',')[0]][event.target.value.split(',')[1]];
+    selectPg(event) {
+      this.slctd.indEdtIndx = null;
       this.slctd.type = event.target.value.split(',')[0];
       this.slctd.page = event.target.value.split(',')[1];
-
-      // We might be able to get rid of the below since we are not using v-model anymore
-      // if (this.individEdit.elmnts !== null) {
-      //   this.site.pages[this.typeSlctd][this.pageSlctd] = JSON.parse(this.individEdit.elmnts);
-      //   this.individEdit.elmntIndx = null;
-      //   this.individEdit.elmnts = null;
-      //   this.typeSlctd = this.slctd.type;
-      //   this.pageSlctd = this.slctd.page;
-      // } else {
-      //   this.typeSlctd = this.slctd.type;
-      //   this.pageSlctd = this.slctd.page;
-      // }
     },
-
-    // addCopyDeleteEl(event) {
-    //   console.log('===============================');
-    //   const elmnt = event?.target?.value ? event.target.value : event;
-    //   if (this.slctdElmntButton == 'Delete') {
-    //     // still need to properly delete unique elements here!!!!!!!!!!!
-    //     if (
-    //       confirm(
-    //         'Are you sure you would like to permanently delete the "' +
-    //           elmnt.replaceAll('_', ' ') +
-    //           '" element from your website?'
-    //       ) == true
-    //     ) {
-    //       let filteredPageEl;
-    //       let filteredPages = {};
-    //       Object.entries(this.site.pages[this.slctd.type]).forEach(([page, pageEl]) => {
-    //         filteredPageEl = pageEl.filter((a) => {
-    //           return a[0] !== elmnt;
-    //         });
-    //         filteredPages[page] = filteredPageEl;
-    //       });
-    //       this.site.pages[this.slctd.type] = filteredPages;
-    //       delete this.site.htmlElmnts[elmnt];
-    //     }
-    //   } else {
-    //     console.log(this.slctdElmntButton + 'ing');
-    //     console.log(this.copyingElmnt);
-    //     if (this.slctdElmntButton == 'Copy' && !this.copyingElmnt) {
-    //       console.log('step1');
-    //       this.copyingElmnt = elmnt;
-    //     } else {
-    //       console.log('step2');
-    //       const elPosition =
-    //         this.slctdElmntButton == 'Copy'
-    //           ? this.site.htmlElmnts[elmnt]?.position
-    //           : this.defaults.htmlElmnts[elmnt]?.position;
-    //       let newElPosition;
-    //       if (0 < elPosition) {
-    //         console.log('step3');
-    //         newElPosition = this.pageElPositions.findLastIndex((el) => 0 < el && el < elPosition);
-    //         newElPosition++;
-    //       }
-    //       if (0 > elPosition) {
-    //         console.log('step4');
-    //         newElPosition = this.pageElPositions.findIndex((el) => 0 > el && el > elPosition);
-    //         newElPosition =
-    //           0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
-    //       }
-    //       if (elPosition === undefined) {
-    //         console.log('step5');
-    //         newElPosition = this.pageElPositions.findIndex((el) => 0 > el);
-    //         newElPosition =
-    //           0 > newElPosition ? this.site.pages[this.slctd.type][this.slctd.page].length : newElPosition;
-    //       }
-    //       if (this.defaults.htmlUniqSiteElmnts.includes(elmnt)) {
-    //         console.log('step6');
-    //         console.log(elmnt);
-    //         if (!this.site.htmlElmnts[elmnt]) this.site.htmlElmnts[elmnt] = this.defaults.htmlElmnts[elmnt];
-    //         Object.keys(this.site.pages).forEach((slctdType) => {
-    //           for (const [pageKey, pageVal] of Object.entries(this.site.pages[slctdType])) {
-    //             !JSON.stringify(pageVal).includes('["' + elmnt + '",') &&
-    //               this.site.pages[slctdType][pageKey].splice(newElPosition, 0, [elmnt, true]);
-    //           }
-    //         });
-    //       } else if (this.defaults.htmlAllElmnts.includes(elmnt)) {
-    //         console.log('step7');
-    //         const newElName = elmnt + '_' + new Date().getTime();
-    //         this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[elmnt]));
-    //         this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [newElName, true]);
-    //       } else {
-    //         console.log('step8');
-    //         this.site.pages[this.slctd.type][this.slctd.page].splice(newElPosition, 0, [elmnt, true]);
-    //       }
-    //       this.copyingElmnt = null;
-    //     }
-    //   }
-    //   if (event?.srcElement?.selectedIndex) event.srcElement.selectedIndex = 0;
-    // },
     addPg() {
       let existingPgs = [];
       Object.keys(this.site.pages[this.slctd.type]).forEach((pgKey) => {
@@ -608,8 +327,11 @@ export default {
       });
       if (this.site.pages[this.slctd.type][newPgName].length === 0)
         this.site.pages[this.slctd.type][newPgName].push(['new_element', true]);
-      this.pageEls = this.site.pages[this.slctd.type][newPgName];
       this.slctd.page = newPgName;
+    },
+    deletePg() {
+      delete this.site.pages[this.slctd.type][this.slctd.page];
+      this.slctd.page = Object.keys(this.site.pages[this.slctd.type])[0];
     },
     renamePg(event) {
       if (JSON.stringify(this.site.pages[this.slctd.type]).includes('"' + event.target.value + '"')) {
@@ -617,70 +339,15 @@ export default {
         event.target.value = this.slctd.page;
       } else {
         this.site.pages[this.slctd.type][event.target.value] = this.site.pages[this.slctd.type][this.slctd.page];
-        this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
         delete this.site.pages[this.slctd.type][this.slctd.page];
         this.slctd.page = event.target.value;
       }
     },
-    deletePg() {
-      delete this.site.pages[this.slctd.type][this.slctd.page];
-      this.slctd.page = Object.keys(this.site.pages[this.slctd.type])[0];
-    },
-    renameEl(event, pageElmntIndx) {
-      const crrntElName = this.site.pages[this.slctd.type][this.slctd.page][pageElmntIndx][0];
-      if (JSON.stringify(this.site.pages).includes('"' + event.target.value + '"')) {
-        this.showMsg('This name already exists!');
-        event.target.value = crrntElName;
-      } else {
-        this.site.htmlElmnts[event.target.value] = this.site.htmlElmnts[crrntElName];
-        this.site.pages = JSON.parse(
-          JSON.stringify(this.site.pages).replaceAll('"' + crrntElName + '"', '"' + event.target.value + '"')
-        );
-        this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
-        delete this.site.htmlElmnts[crrntElName];
-      }
-    },
-
-    // addPage() {
-    //   if (this.addingPage) {
-    //     this.site.pages[this.slctd.type][this.$refs.newPageName.value] = [];
-    //     this.slctd.page = this.$refs.newPageName.value;
-    //     this.siteElmnts.forEach((elType) => {
-    //       if (this.defaults.htmlUniqSiteElmnts.includes(elType)) {
-    //         this.slctdElmntButton = 'Copy';
-    //         this.copyingElmnt = elType;
-    //         this.addCopyDeleteEl(elType);
-    //       }
-    //     });
-    //     this.slctdElmntButton = 'Add';
-    //     this.addingPage = !this.addingPage;
-    //   } else {
-    //     this.addingPage = !this.addingPage;
-    //   }
-    // },
-    // deletePage(slctdPage) {
-    //   if (!this.defaults.reqrdPages.includes(slctdPage)) {
-    //     if (this.addingPage) {
-    //       this.addingPage = !this.addingPage;
-    //     } else {
-    //       this.slctd.page = 'Home';
-    //       delete this.site.pages[this.slctd.type][slctdPage];
-    //     }
-    //   }
-    // },
-    addTempPageEl(event, elementIndex) {
-      this.tempPageEls[elementIndex] = event;
-    },
-    addNewEl(elementIndex) {
-      let tempPageEls = JSON.parse(JSON.stringify(this.pageEls));
-      tempPageEls.splice(elementIndex + 1, 0, ['new_element', true]);
-      this.pageEls = tempPageEls;
-    },
-    addPageEl(event, elementIndex) {
+    addEl(event, elementIndex) {
       let newElName = event;
       let compTp = this?.site?.htmlElmnts?.[event]?.type;
       if (event === 'new_element') {
-        compTp = this.tempPageEls[elementIndex];
+        compTp = this.tmpEls[elementIndex];
         const CompNm = compTp + '_';
         let existingEls = [];
         Object.entries(this.site.htmlElmnts).forEach(([elKey, elVal], htmlElIndx) => {
@@ -695,29 +362,44 @@ export default {
         this?.defaults?.htmlElmnts?.[compTp]?.info?.position !== undefined
           ? this.defaults.htmlElmnts[compTp].info.position
           : elementIndex;
-      this.site.pages[this.slctd.type][this.slctd.page].splice(pageElIndx, 0, [newElName, true]);
-      this.pageEls = this.site.pages[this.slctd.type][this.slctd.page];
+      this.site.pages[this.slctd.type][this.slctd.page].splice(pageElIndx, 1, [newElName, true]);
     },
-    deletePageEl(pageEl, elementIndex) {
+    deleteEl(pageEl, elementIndex) {
       if (!this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[pageEl]?.type]?.info?.required) {
         this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
-        if (this.site.pages[this.slctd.type][this.slctd.page].length === 0) this.pageEls = [['new_element', true]]; // might be able to improve this
+        if (this.site.pages[this.slctd.type][this.slctd.page].length === 0)
+          this.site.pages[this.slctd.type][this.slctd.page] = [['new_element', true]]; // might be able to improve this
       }
     },
-    moveDown(elementIndex) {
-      console.log('moveDown');
-      if (this.individEdit.elmnts === null) {
-        const chosenElement = this.site.pages[this.slctd.type][this.slctd.page][elementIndex];
-        this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
-        this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex + 1, 0, chosenElement);
+    orderEl(elementIndex, newIndex) {
+      const chosenElement = this.site.pages[this.slctd.type][this.slctd.page][elementIndex];
+      this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
+      this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex + newIndex, 0, chosenElement);
+    },
+    disableEl(event, elmnt, indx) {
+      if (this.defaults.htmlElmnts[this.site.htmlElmnts[elmnt].type]?.info?.newPageCopy) {
+        // disables unique element on all pages
+        for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type])) {
+          pageVal.forEach((element, elIndex) => {
+            if (elmnt == element[0]) this.site.pages[this.slctd.type][pageKey][elIndex][1] = event;
+          });
+        }
+      } else {
+        // disables non-unique element only on selected page
+        this.site.pages[this.slctd.type][this.slctd.page][indx][1] = event;
       }
     },
-    moveUp(elementIndex) {
-      console.log('moveUp');
-      if (this.individEdit.elmnts === null) {
-        const chosenElement = this.site.pages[this.slctd.type][this.slctd.page][elementIndex];
-        this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
-        this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex - 1, 0, chosenElement);
+    renameEl(event, elIndx) {
+      const crrntElName = this.site.pages[this.slctd.type][this.slctd.page][elIndx][0];
+      if (JSON.stringify(this.site.pages).includes('"' + event.target.value + '"')) {
+        this.showMsg('This name already exists!');
+        event.target.value = crrntElName;
+      } else {
+        this.site.htmlElmnts[event.target.value] = this.site.htmlElmnts[crrntElName];
+        this.site.pages = JSON.parse(
+          JSON.stringify(this.site.pages).replaceAll('"' + crrntElName + '"', '"' + event.target.value + '"')
+        );
+        delete this.site.htmlElmnts[crrntElName];
       }
     },
   },
@@ -734,50 +416,39 @@ export default {
   overflow: hidden;
   height: 26px;
 }
-
-/* .element-order select {
-  height: 25px;
-} */
-/* .element-order button {
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
-  height: 100%;
-  width: 20px;
-  font-size: 12px;
-} */
 .element-order-btn {
   font-size: 18px;
 }
-
 .element-order-list {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
-
 .element-order-items i {
   padding-left: 2px;
   float: right;
 }
 .element-order-mode-buttons {
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
-  height: 30px;
+  height: 25px;
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
   flex-wrap: wrap;
   column-gap: 0px;
   overflow: hidden;
 }
 .element-order-mode-button {
-  border-width: 0px 1px 0px 0px;
+  border-width: 1px 0.5px;
   border-color: darkgrey;
   border-style: solid;
   height: 100%;
-  width: 30px;
-  font-size: 20px;
+  width: 25px;
+  font-size: 15px;
+  background-color: #f0f0f0;
+}
+.element-order-mode-button:hover {
+  background-color: lightblue;
+}
+.element-order-mode-button:focus {
+  background-color: lightgrey;
 }
 .element-order span {
   -webkit-user-select: none; /* Safari */

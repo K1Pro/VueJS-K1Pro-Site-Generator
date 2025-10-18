@@ -92,6 +92,7 @@ const defaultsMixin = {
             type: 'legal_links',
             position: -1,
             info: {
+              newPageCopy: true,
               position: -1,
               unique: { site: true },
             },
@@ -119,6 +120,12 @@ const defaultsMixin = {
             lng: -87.6298,
             lat: 41.87811,
             zoom: 9,
+          },
+          new_element: {
+            type: 'new_element',
+            info: {
+              required: true,
+            },
           },
           photo_gallery: {
             type: 'photo_gallery',
