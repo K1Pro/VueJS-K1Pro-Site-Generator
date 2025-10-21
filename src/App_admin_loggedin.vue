@@ -210,7 +210,9 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            params: this.site,
+            params: JSON.parse(
+              JSON.stringify(this.site).replaceAll('["new_element",true],', '').replaceAll('["new_element",true]', '')
+            ),
           }),
         });
         const resJSON = await response.json();
