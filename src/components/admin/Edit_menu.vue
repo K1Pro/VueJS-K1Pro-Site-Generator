@@ -224,6 +224,13 @@ export default {
       }
     },
   },
+
+  watch: {
+    option() {
+      console.log(this.option);
+      this.$emit('slctdOpt', this.option);
+    },
+  },
 };
 </script>
 

@@ -5,6 +5,7 @@
     :style="[style.primaryColor.backgroundColor, style.outline.borderColor]"
   >
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['padding']"></edit_menu>
+    <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="footer-cntnr" :style="[style.respPadding]">
       <template v-for="(component, componentIndex) in tempComponents">
         <div class="footer-item" :style="[style.outline.borderColor, divStyle]">
@@ -76,7 +77,7 @@
 export default {
   name: 'Footer',
 
-  inject: ['defaults', 'site', 'style'],
+  inject: ['defaults', 'grid', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

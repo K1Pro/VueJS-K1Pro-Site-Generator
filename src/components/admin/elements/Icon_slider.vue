@@ -23,6 +23,7 @@
         'width',
         'paste',
       ]"
+      @slctd-opt="slctdOpt = $event"
     ></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ iconSliderHght }}px x {{ iconSliderWdth }}px</span>
 
@@ -118,6 +119,7 @@
               </select>
             </div> -->
             <links
+              v-if="slctdOpt == 'links'"
               :elKey="elKey"
               :elValue="elValue"
               :elIndex="elIndex"
@@ -165,6 +167,7 @@ export default {
       iconSliderWdth: 0,
       slctdIconIndx: null,
       slctdIcon: '',
+      slctdOpt: null,
     };
   },
 

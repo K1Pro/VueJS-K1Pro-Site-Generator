@@ -403,6 +403,31 @@ export default {
     this.getImages();
     this.getVideos();
     // this.applyStyle();
+    let db;
+    const openOrCreateDB = window.indexedDB.open('site_gt_db', 1);
+    openOrCreateDB.addEventListener('error', () => console.error('Error opening DB'));
+    openOrCreateDB.addEventListener('success', () => {
+      console.log('Successfully opened IndexedDB');
+    });
+    //   db = openOrCreateDB.result;
+    //   this.xDB_galleryOnLoad = db;
+    //   const transaction = db.transaction(['galleryOnLoad_tb'], 'readwrite');
+    //   const objectStore = transaction.objectStore('galleryOnLoad_tb');
+    //   objectStore.get(this.imageSearchInput.replaceAll(' ', '_').toLowerCase()).onsuccess = (event) => {
+    //     this.imgSrchArr = event.target.result;
+    //   };
+    //   objectStore.getAllKeys().onsuccess = (event) => {
+    //     this.imageSearchInputs = event.srcElement.result;
+    //   };
+    // });
+    // openOrCreateDB.addEventListener('upgradeneeded', (init) => {
+    //   db = init.target.result;
+    //   db.onerror = () => {
+    //     console.error('Error loading database.');
+    //   };
+    //   db.createObjectStore('galleryOnLoad_tb', { autoIncrement: false });
+    //   db.createObjectStore('generatedText_tb', { autoIncrement: false });
+    // });
   },
   updated() {
     if (this.$refs?.appGridItem2) this.grid.wdth = this.$refs.appGridItem2.clientWidth;
