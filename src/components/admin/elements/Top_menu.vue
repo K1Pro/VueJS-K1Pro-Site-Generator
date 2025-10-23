@@ -114,9 +114,7 @@ export default {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
+  overflow: hidden;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
