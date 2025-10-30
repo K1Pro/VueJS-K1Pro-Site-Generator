@@ -1,48 +1,34 @@
 <template>
-  <div
-    class="top-menu"
-    ref="topMenu"
-    :style="[
-      style.primaryColor,
-      {
-        marginBottom: mblMenu ? '-' + mblMenuHght + 'px' : '0px',
-        borderBottom: '1px solid ' + site.body.style.textColor,
-      },
-    ]"
-  >
+  <div class="nav-bar" ref="navBar" :style="[style.primaryColor, elDiv]">
     <div :class="{ 'resp-padding': wndw.wdth > respWidth.md }">
-      <div v-if="elValue.logo" class="top-menu-logo" :style="elImg">
+      <div v-if="elValue.logo" class="nav-bar-logo" :style="elImg">
         <img :src="endPts.imagesURL + 'nav_bar/logo.png'" alt="logo" />
       </div>
-      <ul class="top-menu-cntnr" :style="[style.primaryColor, elUl]">
+      <ul class="nav-bar-cntnr" :style="[style.primaryColor, elUl]">
         <template v-if="wndw.wdth > respWidth.md || !elValue.mobile || (wndw.wdth < respWidth.md && mblMenu)">
-          <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type]">
-            <li
-              :style="[elLi]"
-              @mouseover="highlightMenuItem($event, true)"
-              @mouseout="highlightMenuItem($event, false)"
-            >
+          <template v-for="link in elValue[slctd.type]">
+            <li :style="[elLi]" @mouseover="hoverLink($event, true)" @mouseout="hoverLink($event, false)">
               <a
-                v-if="menuLink.page"
-                :ref="menuLink.title.toLowerCase()"
+                v-if="link.page"
+                :ref="link.title.toLowerCase()"
                 :style="[elA]"
-                :href="slctd.href + '/' + menuLink.page.toLowerCase()"
-                >{{ menuLink.title }}</a
+                :href="slctd.href + '/' + link.page.toLowerCase()"
+                >{{ link.title }}</a
               >
               <a
-                v-else-if="menuLink.anchor"
-                :ref="menuLink.title.toLowerCase()"
+                v-else-if="link.anchor"
+                :ref="link.title.toLowerCase()"
                 :style="[elA]"
-                :href="slctd.href + '/' + menuLink.anchor.toLowerCase()"
-                >{{ menuLink.title }}</a
+                :href="slctd.href + '/' + link.anchor.toLowerCase()"
+                >{{ link.title }}</a
               >
               <a
-                v-else-if="menuLink.link"
-                :ref="menuLink.title.toLowerCase()"
+                v-else-if="link.link"
+                :ref="link.title.toLowerCase()"
                 target="_blank"
                 :style="[elA]"
-                :href="menuLink.link.toLowerCase()"
-                >{{ menuLink.title }}</a
+                :href="link.link.toLowerCase()"
+                >{{ link.title }}</a
               >
             </li>
           </template>
@@ -51,7 +37,7 @@
     </div>
     <a
       v-if="wndw.wdth < respWidth.md && elValue.mobile"
-      class="top-menu-mbl-icon"
+      class="nav-bar-mbl-icon"
       :style="[elMblA]"
       @click="toggleMblMenu"
     >
@@ -62,7 +48,7 @@
 
 <script>
 export default {
-  name: 'Top Menu',
+  name: 'Nav bar',
 
   inject: ['endPts', 'respWidth', 'site', 'slctd', 'style', 'wndw'],
 
@@ -74,7 +60,7 @@ export default {
       mblMenu: false,
       mblMenuHght: 0,
       protocol: protocol,
-      topMenuMount: 0,
+      navBarMount: 0,
     };
   },
   computed: {
@@ -102,6 +88,12 @@ export default {
         height: this.elValue.style.height,
       };
     },
+    elDiv() {
+      return {
+        marginBottom: this.mblMenu ? '-' + this.mblMenuHght + 'px' : '0px',
+        borderBottom: '1px solid ' + this.site.body.style.textColor,
+      };
+    },
     elMblA() {
       return {
         color: this.site.body.style.textColor,
@@ -112,12 +104,12 @@ export default {
   methods: {
     toggleMblMenu() {
       if (!this.mblMenu) this.mblMenu = true;
-      const mblMenuHght = this.$refs.topMenu.offsetHeight;
+      const mblMenuHght = this.$refs.navBar.offsetHeight;
       setTimeout(() => {
-        this.mblMenuHght = this.$refs.topMenu.offsetHeight - mblMenuHght;
+        this.mblMenuHght = this.$refs.navBar.offsetHeight - mblMenuHght;
       }, 1);
     },
-    highlightMenuItem(event, isHovering) {
+    hoverLink(event, isHovering) {
       if (event.target.nodeName == 'A') {
         if (isHovering) {
           event.target.style.backgroundColor = event.target.parentElement.parentElement.style.backgroundColor;
@@ -152,13 +144,13 @@ export default {
     window.addEventListener('click', this.handleClick);
   },
   updated() {
-    if (this.topMenuMount === 0) {
+    if (this.navBarMount === 0) {
       if (Object.keys(this.$refs).includes(this.slctd.first_url_segment)) {
         this.$refs[this.slctd.first_url_segment][0].style.backgroundColor =
           this.$refs[this.slctd.first_url_segment][0].parentElement.parentElement.style.backgroundColor;
         this.$refs[this.slctd.first_url_segment][0].style.filter = 'brightness(95%)';
       }
-      this.topMenuMount++;
+      this.navBarMount++;
     }
   },
   watch: {
@@ -176,19 +168,19 @@ export default {
 </script>
 
 <style>
-.top-menu {
+.nav-bar {
   position: relative;
   width: 100%;
   z-index: 4;
 }
-.top-menu img {
+.nav-bar img {
   height: 100%;
 }
-.top-menu-logo img {
+.nav-bar-logo img {
   padding: 10px;
   height: 100%;
 }
-.top-menu-cntnr {
+.nav-bar-cntnr {
   display: flex;
   flex-wrap: wrap;
   column-gap: 0px;
@@ -197,7 +189,7 @@ export default {
   margin: 0;
   padding: 0;
 }
-.top-menu-cntnr a {
+.nav-bar-cntnr a {
   text-decoration: none;
   user-select: none;
   width: 100%;
@@ -205,10 +197,10 @@ export default {
   align-items: center;
   padding: 10px;
 }
-.top-menu i {
+.nav-bar i {
   width: 16px;
 }
-.top-menu-mbl-icon {
+.nav-bar-mbl-icon {
   position: absolute;
   right: 0;
   top: 0;
