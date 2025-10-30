@@ -66,6 +66,7 @@ export default {
         xl: 1140,
       },
       slctd: {
+        edtMd: 'Add',
         firstUrlSegment: slctd.first_url_segment,
         href: slctd.href,
         imgURL: null,

@@ -1,35 +1,38 @@
 <template>
-  <div class="top-menu" :style="[style.primaryColor, { borderBottom: '1px solid ' + site.body.style.textColor }]">
+  <div
+    class="top-menu"
+    ref="topMenu"
+    :style="[
+      style.primaryColor,
+      {
+        marginBottom: mblMenu ? '-' + mblMenuHght + 'px' : '0px',
+        borderBottom: '1px solid ' + site.body.style.textColor,
+      },
+    ]"
+  >
     <div :class="{ 'resp-padding': wndw.wdth > respWidth.md }">
+      <div v-if="elValue.logo" class="top-menu-logo" :style="elImg">
+        <img :src="endPts.imagesURL + 'top_menu/logo.png'" alt="logo" />
+      </div>
       <ul class="top-menu-cntnr" :style="[style.primaryColor, elUl]">
-        <li :style="logoLi">
-          <img
-            :src="
-              elValue.logo.includes('http://') || elValue.logo.includes('https://')
-                ? elValue.logo
-                : endPts.imagesURL + elValue.logo
-            "
-            alt="logo"
-          />
-        </li>
-        <template v-if="wndw.wdth > respWidth.md || (wndw.wdth < respWidth.md && responsive)">
+        <template v-if="wndw.wdth > respWidth.md || !elValue.mobile || (wndw.wdth < respWidth.md && mblMenu)">
           <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type]">
             <li
-              :class="{ 'top-menu-push': menuLinkIndex === 0 && wndw.wdth >= respWidth.md }"
+              :style="[elLi]"
               @mouseover="highlightMenuItem($event, true)"
               @mouseout="highlightMenuItem($event, false)"
             >
               <a
                 v-if="menuLink.page"
                 :ref="menuLink.title.toLowerCase()"
-                :style="[linksA]"
+                :style="[elA]"
                 :href="slctd.href + '/' + menuLink.page.toLowerCase()"
                 >{{ menuLink.title }}</a
               >
               <a
                 v-else-if="menuLink.anchor"
                 :ref="menuLink.title.toLowerCase()"
-                :style="[linksA]"
+                :style="[elA]"
                 :href="slctd.href + '/' + menuLink.anchor.toLowerCase()"
                 >{{ menuLink.title }}</a
               >
@@ -37,7 +40,7 @@
                 v-else-if="menuLink.link"
                 :ref="menuLink.title.toLowerCase()"
                 target="_blank"
-                :style="[linksA]"
+                :style="[elA]"
                 :href="menuLink.link.toLowerCase()"
                 >{{ menuLink.title }}</a
               >
@@ -46,11 +49,16 @@
         </template>
       </ul>
     </div>
-    <a v-if="wndw.wdth < respWidth.md" class="top-menu-icon" :style="logoA" @click="toggleRespMenu">
-      <i :class="responsive ? 'fa fa-xmark' : 'fa fa-bars'"></i>
+    <a
+      v-if="wndw.wdth < respWidth.md && elValue.mobile"
+      class="top-menu-mbl-icon"
+      :style="[elMblA]"
+      @click="toggleMblMenu"
+    >
+      <i :class="mblMenu ? 'fa fa-xmark' : 'fa fa-bars'"></i>
     </a>
   </div>
-  <div :style="{ height: elValue.style.height }"></div>
+  <!-- <div :style="[elMblA]"></div> -->
 </template>
 
 <script>
@@ -64,40 +72,51 @@ export default {
   data() {
     return {
       pageClick: false,
-      responsive: false,
+      mblMenu: false,
+      mblMenuHght: 0,
       protocol: protocol,
       topMenuMount: 0,
     };
   },
-
   computed: {
     elUl() {
       return {
-        height: this.wndw.wdth < this.respWidth.md ? 'auto' : this.elValue.style.height,
+        flexDirection:
+          this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 'column' : this.elValue.style['flex-direction'],
+        height: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 'auto' : this.elValue.style.height,
+        justifyContent: this.elValue.style['justify-content'],
       };
     },
-    logoLi() {
+    elLi() {
+      return { width: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? '100%' : this.elValue.style.width };
+    },
+    elA() {
       return {
+        color: this.site.body.style.textColor,
+        height: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 16 + 30 + 'px' : this.elValue.style.height,
+        justifyContent: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 'flex-start' : 'center',
+      };
+    },
+    elImg() {
+      return {
+        float: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 'none' : 'left',
         height: this.elValue.style.height,
       };
     },
-    logoA() {
+    elMblA() {
       return {
         color: this.site.body.style.textColor,
-        height: this.elValue.style.height,
-      };
-    },
-    linksA() {
-      return {
-        color: this.site.body.style.textColor,
-        height: this.wndw.wdth < this.respWidth.md ? 16 + 30 + 'px' : this.elValue.style.height,
+        height: this.wndw.wdth < this.respWidth.md && !this.elValue.logo ? 16 + 30 + 'px' : this.elValue.style.height,
       };
     },
   },
-
   methods: {
-    toggleRespMenu() {
-      if (!this.responsive) this.responsive = true;
+    toggleMblMenu() {
+      if (!this.mblMenu) this.mblMenu = true;
+      const mblMenuHght = this.$refs.topMenu.offsetHeight;
+      setTimeout(() => {
+        this.mblMenuHght = this.$refs.topMenu.offsetHeight - mblMenuHght;
+      }, 1);
     },
     highlightMenuItem(event, isHovering) {
       if (event.target.nodeName == 'A') {
@@ -115,13 +134,13 @@ export default {
       }
     },
     handleScroll() {
-      this.responsive = false;
+      this.mblMenu = false;
       this.pageClick = false;
     },
     handleClick() {
-      if (this.responsive === true) {
+      if (this.mblMenu === true) {
         if (this.pageClick === true) {
-          this.responsive = false;
+          this.mblMenu = false;
           this.pageClick = false;
         } else {
           this.pageClick = true;
@@ -133,7 +152,6 @@ export default {
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('click', this.handleClick);
   },
-
   updated() {
     if (this.topMenuMount === 0) {
       if (Object.keys(this.$refs).includes(this.slctd.first_url_segment)) {
@@ -144,14 +162,13 @@ export default {
       this.topMenuMount++;
     }
   },
-
   watch: {
     'wndw.wdth'(newWindowWidth, oldWindowWidth) {
       if (
         (newWindowWidth > this.respWidth.md && oldWindowWidth < this.respWidth.md) ||
         (newWindowWidth < this.respWidth.md && oldWindowWidth > this.respWidth.md)
       ) {
-        this.responsive = false;
+        this.mblMenu = false;
         this.pageClick = false;
       }
     },
@@ -161,19 +178,25 @@ export default {
 
 <style>
 .top-menu {
+  position: relative;
   width: 100%;
-  position: fixed;
   z-index: 4;
 }
+.top-menu img {
+  height: 100%;
+}
+.top-menu-logo img {
+  padding: 10px;
+  height: 100%;
+}
 .top-menu-cntnr {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
   column-gap: 0px;
   overflow: hidden;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 .top-menu-cntnr a {
   text-decoration: none;
@@ -186,12 +209,7 @@ export default {
 .top-menu i {
   width: 16px;
 }
-.top-menu-cntnr img {
-  /* cursor: pointer; */
-  padding: 10px;
-  height: 100%;
-}
-.top-menu-icon {
+.top-menu-mbl-icon {
   position: absolute;
   right: 0;
   top: 0;
@@ -199,13 +217,5 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
-}
-.top-menu-push {
-  margin-left: auto;
-}
-@media only screen and (min-width: 650px) {
-  .top-menu-cntnr {
-    flex-direction: row;
-  }
 }
 </style>

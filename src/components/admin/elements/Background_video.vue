@@ -4,7 +4,12 @@
     class="background-video"
     :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }"
   >
-    <!-- <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu> -->
+    <edit_menu
+      v-if="slctd.edtMd == 'Individual edit mode'"
+      :elKey="elKey"
+      :elIndex="elIndex"
+      :options="['height']"
+    ></edit_menu>
     <video
       :style="{ height: elValue.style.height }"
       :width="grid.wdth + 'px'"
@@ -28,7 +33,7 @@
 export default {
   name: 'Background video',
 
-  inject: ['endPts', 'grid', 'mediaReq', 'site', 'videosReq'],
+  inject: ['endPts', 'grid', 'mediaReq', 'site', 'slctd', 'videosReq'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

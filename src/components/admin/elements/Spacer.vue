@@ -15,7 +15,7 @@
 export default {
   name: 'Spacer',
 
-  inject: ['site', 'style'],
+  inject: ['defaults', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

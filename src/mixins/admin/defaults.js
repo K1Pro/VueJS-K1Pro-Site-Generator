@@ -15,7 +15,6 @@ const defaultsMixin = {
               position: 0,
               unique: { page: true },
             },
-            position: 1,
             src: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
             style: { height: 75 },
           },
@@ -25,7 +24,6 @@ const defaultsMixin = {
               position: 0,
               unique: { page: true },
             },
-            position: 1,
             src: 'https://videos.pexels.com/video-files/1918465/1918465-uhd_3840_2160_24fps.mp4',
             style: { height: 75 },
           },
@@ -37,7 +35,6 @@ const defaultsMixin = {
               unique: { site: true },
               components: ['image_banner', 'map', 'text_box'],
             },
-            position: -2,
             items: [],
             style: {
               align: 'right',
@@ -90,7 +87,6 @@ const defaultsMixin = {
           },
           legal_links: {
             type: 'legal_links',
-            position: -1,
             info: {
               newPageCopy: true,
               position: -1,
@@ -165,7 +161,7 @@ const defaultsMixin = {
               titleFontSize: 2.3,
             },
           },
-          spacer: { type: 'spacer', style: { height: 50 } },
+          spacer: { type: 'spacer', style: { height: '50px' } },
           terms_of_use: {
             type: 'terms_of_use',
             info: {
@@ -180,12 +176,8 @@ const defaultsMixin = {
           },
           top_menu: {
             type: 'top_menu',
-            position: 2,
-            info: {
-              newPageCopy: true,
-              position: 1,
-              unique: { site: true },
-            },
+            mobile: true,
+            logo: true,
             loggedin: [
               { title: 'Menu Item 1', link: 'https://example.com' },
               { title: 'Menu Item 2', link: 'https://example.com' },
@@ -196,7 +188,10 @@ const defaultsMixin = {
             ],
             style: {
               align: 'right',
-              height: 14,
+              'flex-direction': 'row',
+              height: '50px',
+              'justify-content': 'flex-start',
+              width: '50px',
             },
           },
           video_gallery: {

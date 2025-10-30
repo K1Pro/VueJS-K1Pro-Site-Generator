@@ -2,25 +2,36 @@
   <div
     :id="'site_page_el_' + elIndex"
     class="top-menu"
-    :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elUl]"
+    :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elDiv]"
   >
-    <edit_menu :elKey="elKey" :options="['height', 'align', 'links']" @slctd-opt="slctdOpt = $event"></edit_menu>
+    <edit_menu
+      :elKey="elKey"
+      :options="['flex-direction', 'height', 'justify-content', 'links', 'logo', 'mobile', 'width']"
+      @slctd-opt="slctdOpt = $event"
+    ></edit_menu>
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div :style="style.respPadding">
-      <div class="top-menu-logo" :style="logoImg">
-        <img
-          :src="
-            elValue.logo.includes('http://') || elValue.logo.includes('https://')
-              ? elValue.logo
-              : endPts.imagesURL + elValue.logo
-          "
-          alt="logo"
-        />
+      <div v-if="elValue.logo" class="top-menu-logo" :style="elImg">
+        <img :src="endPts.imagesURL + 'top_menu/logo.png'" alt="logo" />
       </div>
 
-      <div class="top-menu-cntnr" :style="[style.primaryColor.outline.borderColor]">
+      <div class="top-menu-cntnr" :style="[style.primaryColor.outline.borderColor, elUl]">
         <template v-for="(menuLink, menuLinkIndex) in elValue[slctd.type]">
-          <div class="top-menu-links" :style="[style.primaryColor.outline.borderColor, elLi]">
+          <div
+            class="top-menu-links"
+            :style="[
+              style.primaryColor.outline.borderColor,
+              elLi,
+              {
+                borderWidth:
+                  menuLinkIndex + 1 === elValue[slctd.type].length && elValue.style['flex-direction'] == 'row'
+                    ? '0px 3px 0px 3px'
+                    : menuLinkIndex === 0 && elValue.style['flex-direction'] == 'row-reverse'
+                    ? '0px 3px 0px 3px'
+                    : '0px 0px 0px 3px',
+              },
+            ]"
+          >
             <button
               class="top-menu-add-rem"
               :style="{ right: elValue[slctd.type].length > 1 ? '15px' : '0px' }"
@@ -45,12 +56,8 @@
               :itemVal="menuLink"
               :itemIndx="menuLinkIndex"
             ></links>
-            <span
-              contenteditable="plaintext-only"
-              v-on:blur="menuLink.title = $event.target.innerHTML"
-              style="padding: 10px"
-              >{{ menuLink.title }}</span
-            >
+
+            <input type="text" v-model="menuLink.title" class="top-menu-text" />
           </div>
         </template>
       </div>
@@ -62,12 +69,24 @@
 export default {
   name: 'Top Menu',
 
-  inject: ['endPts', 'grid', 'site', 'slctd', 'style'],
+  inject: ['defaults', 'endPts', 'grid', 'site', 'slctd', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
   data() {
-    return { inputType: 'page', inputIndex: null, newLink: { title: '', link: '' }, slctdOpt: null };
+    return { slctdOpt: null };
+  },
+  updated() {
+    Object.entries(this.defaults.htmlElmnts[this.elValue.type]).forEach(([optKey, optVal]) => {
+      if (optKey == 'style') {
+        Object.entries(optVal).forEach(([styleKey, styleVal]) => {
+          if (this.elValue?.style?.[styleKey] === undefined)
+            this.site.htmlElmnts[this.elKey].style[styleKey] = styleVal;
+        });
+      } else if (this.elValue[optKey] === undefined) {
+        this.site.htmlElmnts[this.elKey][optKey] = optVal;
+      }
+    });
   },
   mounted() {
     if (!this.elValue.mod) this.elValue.mod = 'titles';
@@ -76,18 +95,23 @@ export default {
   computed: {
     elUl() {
       return {
-        height: this.elValue.style.height,
+        flexDirection: this.elValue.style['flex-direction'],
+        justifyContent: this.elValue.style['justify-content'],
       };
     },
     elLi() {
       return {
         height: this.elValue.style.height,
-        // textAlign: this.elValue.style?.align
+        width: this.elValue.style.width,
       };
     },
-    logoImg() {
+    elImg() {
       return {
-        padding: '10px',
+        height: this.elValue.style.height,
+      };
+    },
+    elDiv() {
+      return {
         height: this.elValue.style.height,
       };
     },
@@ -108,10 +132,10 @@ export default {
 
 <style>
 .top-menu {
-  width: 100%;
   position: relative;
+  width: 100%;
   z-index: 4;
-  list-style-type: none;
+  min-height: 35px;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -119,29 +143,31 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
 }
-.top-menu-cntnr {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  column-gap: 0px;
-  overflow: hidden;
-  justify-content: flex-end;
-  border-style: dashed;
-  border-width: 0px 3px 0px 0px;
-}
 .top-menu-logo {
   float: left;
 }
 .top-menu-logo img {
+  padding: 10px;
   height: 100%;
+}
+.top-menu-cntnr {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0px;
+  overflow: hidden;
 }
 .top-menu-links {
   position: relative;
   display: flex;
   align-items: center;
-  text-align: center;
   border-style: dashed;
-  border-width: 0px 0px 0px 3px;
+}
+.top-menu-text {
+  padding: 5px;
+  border-style: none;
+  background: transparent;
+  width: 100%;
+  text-align: center;
 }
 .top-menu-add-rem {
   position: absolute;

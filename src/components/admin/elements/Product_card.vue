@@ -71,7 +71,7 @@
                 }"
               />
 
-              <input type="text" placeholder="Title" :style="testStyle" v-model="card.title" />
+              <input type="text" placeholder="Title" :style="textStyle" v-model="card.title" />
               <textarea placeholder="Description" :style="textareaStyle" v-model="card.txt"></textarea>
               <input class="product-card-read-more-check" type="checkbox" :checked="card.readMore" />
               <input type="text" class="product-card-read-more-text" placeholder="Read more" v-model="card.readMore" />
@@ -141,7 +141,7 @@ export default {
             : '50px',
       };
     },
-    testStyle() {
+    textStyle() {
       return {
         color: this.elValue.style.color ? this.elValue.style.color : 'black',
         fontSize: this.elValue.style['title-font-size'] ? this.elValue.style['title-font-size'] : '18px',

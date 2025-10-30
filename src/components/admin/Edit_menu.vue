@@ -20,10 +20,25 @@
       ></i>
     </button>
     <!-- justify-content -->
-    <select v-if="option == 'justify-content'" v-model="site.htmlElmnts[elKey].style['justify-content']">
+    <select
+      v-if="option == 'justify-content'"
+      title="justify-content"
+      v-model="site.htmlElmnts[elKey].style['justify-content']"
+    >
+      <option>flex-start</option>
+      <option>center</option>
+      <option>flex-end</option>
       <option>space-between</option>
       <option>space-around</option>
       <option>space-evenly</option>
+    </select>
+    <select
+      v-if="option == 'flex-direction'"
+      title="flex-direction"
+      v-model="site.htmlElmnts[elKey].style['flex-direction']"
+    >
+      <option>row</option>
+      <option>row-reverse</option>
     </select>
     <!-- object-fit -->
     <select v-if="option == 'object-fit'" v-model="site.htmlElmnts[elKey].style['object-fit']">
@@ -55,7 +70,11 @@
       type="checkbox"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
-    <input v-if="['titles'].includes(option)" type="checkbox" v-model="site.htmlElmnts[elKey][option]" />
+    <input
+      v-if="['logo', 'mobile', 'titles'].includes(option)"
+      type="checkbox"
+      v-model="site.htmlElmnts[elKey][option]"
+    />
     <input
       v-if="['caption'].includes(option)"
       type="checkbox"
@@ -85,7 +104,7 @@
     <input v-if="option == 'text-editor'" type="checkbox" v-model="site.htmlElmnts[elKey].textEditor" />
     <!-- number [unitInputs] -->
     <input
-      v-if="unitInputs.includes(option)"
+      v-if="unitInputs.includes(option) && site.htmlElmnts[elKey].style[option]"
       class="edit-menu-inputs"
       type="number"
       step="0.01"
@@ -94,7 +113,7 @@
       @input="site.htmlElmnts[elKey].style[option] = $event.target.value + noInput.unit"
     />
     <select
-      v-if="unitInputs.includes(option)"
+      v-if="unitInputs.includes(option) && site.htmlElmnts[elKey].style[option]"
       style="width: 45px"
       :value="noInput.unit"
       @input="site.htmlElmnts[elKey].style[option] = noInput.no + $event.target.value"
@@ -104,14 +123,18 @@
       <option>vw</option>
       <option>%</option>
     </select>
+    <!-- checkbox[] -->
+    <!-- v-if=" ![ 'background', 'flex-direction', 'justify-content', 'links', 'responsive', 'text-editor', 'vertical-align',
+    ].includes(option) " -->
     <input
       v-if="
-        site.htmlElmnts[elKey].style[option] &&
-        !['background', 'responsive', 'text-editor', 'vertical-align'].includes(option)
+        !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]).includes(option) &&
+        !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]?.style).includes(option) &&
+        option != 'links'
       "
       type="checkbox"
-      :checked="site.htmlElmnts[elKey].style[option]"
-      @change="deleteStyle($event.target.checked, option)"
+      :checked="site.htmlElmnts[elKey][option] || site.htmlElmnts[elKey].style[option]"
+      @change="deleteOpt($event.target.checked, option)"
     />
     <select v-if="option.includes('paste')" @change="pasteTemplate">
       <option selected disabled>{{ site.htmlElmnts[elKey]?.type.replaceAll('_', ' ') }} style</option>
@@ -128,9 +151,11 @@
 export default {
   name: 'Edit menu',
 
-  inject: ['site', 'slctd'],
+  inject: ['defaults', 'site', 'slctd'],
 
   props: ['elKey', 'elIndex', 'options'],
+
+  emits: ['slctdOpt'],
 
   data() {
     return {
@@ -187,8 +212,12 @@ export default {
   },
 
   methods: {
-    deleteStyle(event, option) {
-      if (!event) delete this.site.htmlElmnts[this.elKey].style[option];
+    deleteOpt(event, option) {
+      this.defaults.htmlElmnts[this.site.htmlElmnts[this.elKey].type]?.[option]
+        ? (this.site.htmlElmnts[this.elKey][option] = event)
+        : event
+        ? (this.site.htmlElmnts[this.elKey].style[option] = true)
+        : delete this.site.htmlElmnts[this.elKey].style[option];
     },
     changeCaption(event, option) {
       if (event) {
@@ -227,7 +256,7 @@ export default {
 
   watch: {
     option() {
-      console.log(this.option);
+      // console.log(this.option);
       this.$emit('slctdOpt', this.option);
     },
   },

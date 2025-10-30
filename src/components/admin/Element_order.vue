@@ -47,8 +47,8 @@
     </div>
     <hr />
     <select
-      v-if="!['Rename'].includes(slctdEdtMd)"
-      :style="{ width: ['Add', 'Delete'].includes(slctdEdtMd) ? 'calc(100% - 30px)' : '100%' }"
+      v-if="!['Rename'].includes(slctd.edtMd)"
+      :style="{ width: ['Add', 'Delete'].includes(slctd.edtMd) ? 'calc(100% - 30px)' : '100%' }"
       style="margin-right: 10px"
       @change="selectPg"
     >
@@ -63,9 +63,9 @@
         </option>
       </template>
     </select>
-    <input v-if="slctdEdtMd == 'Rename'" type="text" style="width: 100%" :value="slctd.page" @change="renamePg" />
-    <i v-if="slctdEdtMd == 'Add'" class="fa-solid fa-square-plus element-order-btn" @click="addPg"></i>
-    <i v-if="slctdEdtMd == 'Delete'" class="fa-solid fa-square-minus element-order-btn" @click="deletePg"></i>
+    <input v-if="slctd.edtMd == 'Rename'" type="text" style="width: 100%" :value="slctd.page" @change="renamePg" />
+    <i v-if="slctd.edtMd == 'Add'" class="fa-solid fa-square-plus element-order-btn" @click="addPg"></i>
+    <i v-if="slctd.edtMd == 'Delete'" class="fa-solid fa-square-minus element-order-btn" @click="deletePg"></i>
     <hr />
     <div class="element-order-list">
       <div
@@ -75,8 +75,8 @@
           backgroundColor:
             (slctd.indEdtIndx === null && el[1]) || elIndx === slctd.indEdtIndx ? 'lightgrey' : '#e8e8e8',
         }"
-        @mouseover="el[1] ? mouseoverPageEl(elIndx) : false"
-        @mouseout="el[1] ? mouseoutPageEl(elIndx) : false"
+        @mouseover="el[1] && slctd.edtMd !== 'Order' ? mouseoverPageEl(elIndx) : false"
+        @mouseout="el[1] && slctd.edtMd !== 'Order' ? mouseoutPageEl(elIndx) : false"
         :draggable="
           el[0] == 'new_element' ||
           defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position !== undefined ||
@@ -136,7 +136,7 @@
         <template v-else>
           <i
             v-if="
-              slctdEdtMd == 'Add' &&
+              slctd.edtMd == 'Add' &&
               (defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position === undefined ||
                 (defaults?.htmlElmnts?.[
                   site?.htmlElmnts?.[site?.pages?.[slctd?.type]?.[slctd?.page]?.[elIndx + 1]?.[0]]?.type
@@ -150,7 +150,7 @@
             @click="site.pages[slctd.type][slctd.page].splice(elIndx + 1, 0, ['new_element', true])"
           ></i>
           <i
-            v-if="slctdEdtMd == 'Delete' && !defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.required"
+            v-if="slctd.edtMd == 'Delete' && !defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.required"
             class="fa-solid fa-square-minus element-order-btn"
             :style="{
               float: 'right',
@@ -158,7 +158,7 @@
             @click="deleteEl(el[0], elIndx)"
           ></i>
           <input
-            v-if="slctdEdtMd == 'Individual edit mode'"
+            v-if="slctd.edtMd == 'Individual edit mode'"
             type="radio"
             style="float: right"
             :checked="elIndx === slctd.indEdtIndx"
@@ -168,13 +168,13 @@
           <input
             style="float: right"
             type="checkbox"
-            v-if="slctdEdtMd == 'Disable'"
+            v-if="slctd.edtMd == 'Disable'"
             :checked="el[1]"
             @change="disableEl($event.target.checked, el[0], elIndx)"
           />
           <i
             v-if="
-              slctdEdtMd == 'Order' &&
+              slctd.edtMd == 'Order' &&
               elIndx != site.pages[slctd.type][slctd.page].length - 1 &&
               defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position === undefined &&
               defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][elIndx + 1][0]]?.type]?.info
@@ -185,7 +185,7 @@
           ></i>
           <i
             v-if="
-              slctdEdtMd == 'Order' &&
+              slctd.edtMd == 'Order' &&
               elIndx != 0 &&
               defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position === undefined &&
               defaults?.htmlElmnts?.[site?.htmlElmnts?.[site.pages[slctd.type][slctd.page][elIndx - 1][0]]?.type]?.info
@@ -195,7 +195,7 @@
             @click.prevent="orderEl(elIndx, -1)"
           ></i>
           <input
-            v-if="slctdEdtMd == 'Rename'"
+            v-if="slctd.edtMd == 'Rename'"
             type="text"
             :value="el[0]"
             style="width: 100%"
@@ -232,7 +232,6 @@ export default {
 
   data() {
     return {
-      slctdEdtMd: 'Add',
       tmpEls: {},
       tmpBckgrnd: null,
     };
@@ -246,9 +245,10 @@ export default {
 
   methods: {
     modeChng(event) {
+      console.log(event.target.title);
       this.tmpEls = {};
       this.slctd.indEdtIndx = null;
-      this.slctdEdtMd = event.target.title;
+      this.slctd.edtMd = event.target.title;
     },
     changeLogInOut(event) {
       if (event) {
