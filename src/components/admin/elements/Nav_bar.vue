@@ -12,7 +12,7 @@
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div :style="style.respPadding">
       <div v-if="elValue.logo" class="top-menu-logo" :style="elImg">
-        <img :src="endPts.imagesURL + 'top_menu/logo.png'" alt="logo" />
+        <img :src="endPts.imagesURL + 'nav_bar/logo.png'" alt="logo" />
       </div>
 
       <div class="top-menu-cntnr" :style="[style.primaryColor.outline.borderColor, elUl]">

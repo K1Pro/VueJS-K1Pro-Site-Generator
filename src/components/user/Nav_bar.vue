@@ -12,7 +12,7 @@
   >
     <div :class="{ 'resp-padding': wndw.wdth > respWidth.md }">
       <div v-if="elValue.logo" class="top-menu-logo" :style="elImg">
-        <img :src="endPts.imagesURL + 'top_menu/logo.png'" alt="logo" />
+        <img :src="endPts.imagesURL + 'nav_bar/logo.png'" alt="logo" />
       </div>
       <ul class="top-menu-cntnr" :style="[style.primaryColor, elUl]">
         <template v-if="wndw.wdth > respWidth.md || !elValue.mobile || (wndw.wdth < respWidth.md && mblMenu)">
@@ -58,7 +58,6 @@
       <i :class="mblMenu ? 'fa fa-xmark' : 'fa fa-bars'"></i>
     </a>
   </div>
-  <!-- <div :style="[elMblA]"></div> -->
 </template>
 
 <script>

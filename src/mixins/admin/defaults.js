@@ -117,6 +117,25 @@ const defaultsMixin = {
             lat: 41.87811,
             zoom: 9,
           },
+          nav_bar: {
+            type: 'nav_bar',
+            mobile: true,
+            logo: true,
+            loggedin: [
+              { title: 'Link 1', link: 'https://example.com' },
+              { title: 'Link 2', link: 'https://example.com' },
+            ],
+            loggedout: [
+              { title: 'Link 1', link: 'https://example.com' },
+              { title: 'Link 2', link: 'https://example.com' },
+            ],
+            style: {
+              'flex-direction': 'row',
+              height: '100px',
+              'justify-content': 'flex-start',
+              width: '75px',
+            },
+          },
           new_element: {
             type: 'new_element',
             info: {
@@ -174,26 +193,7 @@ const defaultsMixin = {
             style: { color: 'black', 'font-size': '12px', 'text-align': 'left' },
             text: '',
           },
-          top_menu: {
-            type: 'top_menu',
-            mobile: true,
-            logo: true,
-            loggedin: [
-              { title: 'Menu Item 1', link: 'https://example.com' },
-              { title: 'Menu Item 2', link: 'https://example.com' },
-            ],
-            loggedout: [
-              { title: 'Menu Item 1', link: 'https://example.com' },
-              { title: 'Menu Item 2', link: 'https://example.com' },
-            ],
-            style: {
-              align: 'right',
-              'flex-direction': 'row',
-              height: '50px',
-              'justify-content': 'flex-start',
-              width: '50px',
-            },
-          },
+
           video_gallery: {
             type: 'video_gallery',
             info: {
