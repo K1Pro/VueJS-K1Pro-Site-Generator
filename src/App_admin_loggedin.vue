@@ -489,6 +489,14 @@ export default {
   width: 100%;
   font-size: 12px;
 }
+.el-hover {
+  position: absolute;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  background-color: #87cefa;
+  filter: opacity(35%);
+}
 @media only screen and (max-width: 767px) {
   .app-grid-container {
     grid-template-columns: 100%;

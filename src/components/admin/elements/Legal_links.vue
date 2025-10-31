@@ -1,12 +1,11 @@
 <template>
-  <div
-    :id="'site_page_el_' + elIndex"
-    class="legal-links"
-    :style="[style.outline.borderColor, style.primaryColor.backgroundColor]"
-  >
-    <template v-for="linkKey in Object.keys(site.htmlElmnts[elKey].links)">
-      <input type="checkbox" v-model="site.htmlElmnts.legal_links.links[linkKey]" />{{ linkKey.replaceAll('_', ' ') }}
-    </template>
+  <div class="legal-links" :style="[style.outline.borderColor, style.primaryColor.backgroundColor]">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
+    <div class="legal-links-cntnr">
+      <template v-for="linkKey in Object.keys(site.htmlElmnts[elKey].links)">
+        <input type="checkbox" v-model="site.htmlElmnts.legal_links.links[linkKey]" />{{ linkKey.replaceAll('_', ' ') }}
+      </template>
+    </div>
   </div>
 </template>
 
@@ -26,10 +25,14 @@ export default {
 
 <style>
 .legal-links {
+  position: relative;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
-  padding: 10px;
+
   text-align: center;
+}
+.legal-links-cntnr {
+  padding: 10px;
 }
 </style>

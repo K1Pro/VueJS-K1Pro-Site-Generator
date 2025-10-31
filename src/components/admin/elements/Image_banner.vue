@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="image-banner" :style="[style.outline.borderColor, divStyle]">
+  <div class="image-banner" :style="[style.outline.borderColor, divStyle]">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"

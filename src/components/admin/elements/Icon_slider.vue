@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="icon-slider" :style="[style.outline.borderColor]" ref="iconSlider">
+  <div class="icon-slider" :style="[style.outline.borderColor]" ref="iconSlider">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"

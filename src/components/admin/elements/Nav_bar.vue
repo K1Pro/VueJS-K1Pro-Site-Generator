@@ -1,9 +1,6 @@
 <template>
-  <div
-    :id="'site_page_el_' + elIndex"
-    class="nav-bar"
-    :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elDiv]"
-  >
+  <div class="nav-bar" :style="[style.primaryColor.backgroundColor, style.outline.borderColor, elDiv]">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
       :options="['flex-direction', 'height', 'justify-content', 'links', 'logo', 'mobile', 'width']"
@@ -133,15 +130,16 @@ export default {
 <style>
 .nav-bar {
   position: relative;
-  width: 100%;
-  z-index: 4;
   min-height: 35px;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+  border: none;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 .nav-bar-logo {
   float: left;

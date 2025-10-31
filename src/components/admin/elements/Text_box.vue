@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="text-box" :style="[style.outline.borderColor, divStyle]">
+  <div class="text-box" :style="[style.outline.borderColor, divStyle]">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
@@ -248,7 +249,7 @@ export default {
   position: relative;
   min-height: 35px;
   border: none;
-
+  outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
 }

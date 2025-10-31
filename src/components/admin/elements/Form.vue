@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="forms" :style="[style.outline.borderColor]">
+  <div class="forms" :style="[style.outline.borderColor]">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['responsive']"></edit_menu>
     <template v-for="(input, inputIndx) in elValue.form" :key="'row_' + inputIndx">
       <div
@@ -557,10 +558,13 @@ export default {
 <style>
 .forms {
   position: relative;
+  min-height: 35px;
+  border: none;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
   padding: 0px 10px;
+  /* might need to get rid of padding above */
 }
 .forms-captcha-container {
   width: 100%;

@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="headline" ref="headline">
+  <div class="headline" ref="headline">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"

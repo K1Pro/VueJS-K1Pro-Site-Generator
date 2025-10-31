@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="login-container">
+  <div class="login-container">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <div class="login">
       <div class="login-body">
         <div class="login-username">
@@ -47,6 +48,13 @@ export default {
 .login-container {
   display: flex;
   justify-content: center;
+
+  position: relative;
+  min-height: 35px;
+  border: none;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .login {
   width: 290px;

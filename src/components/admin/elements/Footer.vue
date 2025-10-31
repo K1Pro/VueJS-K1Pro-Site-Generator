@@ -1,9 +1,6 @@
 <template>
-  <div
-    :id="'site_page_el_' + elIndex"
-    class="footer"
-    :style="[style.primaryColor.backgroundColor, style.outline.borderColor]"
-  >
+  <div class="footer" :style="[style.primaryColor.backgroundColor, style.outline.borderColor]">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['padding']"></edit_menu>
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
     <div class="footer-cntnr" :style="[style.respPadding]">

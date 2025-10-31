@@ -75,8 +75,8 @@
           backgroundColor:
             (slctd.indEdtIndx === null && el[1]) || elIndx === slctd.indEdtIndx ? 'lightgrey' : '#e8e8e8',
         }"
-        @mouseover="el[1] && slctd.edtMd !== 'Order' ? mouseoverPageEl(elIndx) : false"
-        @mouseout="el[1] && slctd.edtMd !== 'Order' ? mouseoutPageEl(elIndx) : false"
+        @mouseover="el[1] ? mouseoverPageEl(elIndx) : false"
+        @mouseout="el[1] ? mouseoutPageEl(elIndx) : false"
         :draggable="
           el[0] == 'new_element' ||
           defaults?.htmlElmnts?.[site?.htmlElmnts?.[el?.[0]]?.type]?.info?.position !== undefined ||
@@ -233,7 +233,6 @@ export default {
   data() {
     return {
       tmpEls: {},
-      tmpBckgrnd: null,
     };
   },
 
@@ -272,23 +271,18 @@ export default {
       }
     },
     mouseoverPageEl(elIndx) {
-      if (document.getElementById('site_page_el_' + elIndx)) {
-        if (document.getElementById('site_page_el_' + elIndx).style.backgroundColor)
-          this.tmpBckgrnd = document.getElementById('site_page_el_' + elIndx).style.backgroundColor;
-      }
+      if (document.getElementById('site_page_el_' + elIndx))
+        document.getElementById('site_page_el_' + elIndx).style.zIndex = '10';
     },
     highlightPageEl(elIndx) {
       if (document.getElementById('site_page_el_' + elIndx)) {
-        document.getElementById('site_page_el_' + elIndx).style.backgroundColor = '#87CEFA50';
+        document.getElementById('site_page_el_' + elIndx).style.zIndex = '10';
         document.getElementById('site_page_el_' + elIndx).scrollIntoView();
       }
     },
     mouseoutPageEl(elIndx) {
       if (document.getElementById('site_page_el_' + elIndx))
-        document.getElementById('site_page_el_' + elIndx).style.backgroundColor = this.tmpBckgrnd
-          ? this.tmpBckgrnd
-          : '#87CEFA00';
-      this.tmpBckgrnd = null;
+        document.getElementById('site_page_el_' + elIndx).style.zIndex = '-1';
     },
     drag(event, elIndx) {
       event.dataTransfer.setData('text', elIndx);

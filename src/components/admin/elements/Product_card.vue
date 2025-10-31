@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="product-card" :style="[style.outline.borderColor]" ref="productCard">
+  <div class="product-card" :style="[style.outline.borderColor]" ref="productCard">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"

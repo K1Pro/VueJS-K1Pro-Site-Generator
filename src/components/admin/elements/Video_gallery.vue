@@ -1,5 +1,6 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="video-gallery">
+  <div class="video-gallery">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <div
       class="video-gallery-container"
       :style="{
@@ -175,6 +176,12 @@ export default {
 
 <style>
 .video-gallery {
+  position: relative;
+  min-height: 35px;
+  border: none;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .video-gallery-container {
   display: grid;

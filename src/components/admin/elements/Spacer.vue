@@ -1,10 +1,6 @@
 <template>
-  <div
-    :id="'site_page_el_' + elIndex"
-    :class="'spacer spacer_' + elKey"
-    :style="[style.outline.borderColor]"
-    ref="spacer"
-  >
+  <div :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]" ref="spacer">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ spacerHght }}px x {{ spacerWdth }}px</span>
     <p :style="[pStyle]"></p>
@@ -50,6 +46,7 @@ export default {
 .spacer {
   position: relative;
   min-height: 35px;
+  border: none;
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;

@@ -1,13 +1,16 @@
 <template>
-  <div :id="'site_page_el_' + elIndex" class="terms-of-use" v-for="legalElmnt in legalElmnts">
-    <div
-      v-html="
-        legalElmnt
-          .replaceAll('__href__', slctd.job.replaceAll('_', '.'))
-          .replaceAll('__name__', name)
-          .replaceAll('__email__', site.email.toLowerCase())
-      "
-    ></div>
+  <div class="terms-of-use" v-for="legalElmnt in legalElmnts">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
+    <div class="terms-of-use-cntnr">
+      <div
+        v-html="
+          legalElmnt
+            .replaceAll('__href__', slctd.job.replaceAll('_', '.'))
+            .replaceAll('__name__', name)
+            .replaceAll('__email__', site.email.toLowerCase())
+        "
+      ></div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +134,14 @@ export default {
 
 <style>
 .terms-of-use {
+  position: relative;
+  min-height: 35px;
+  border: none;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
+}
+.terms-of-use-cntnr {
   padding: 0px 10%;
 }
 </style>

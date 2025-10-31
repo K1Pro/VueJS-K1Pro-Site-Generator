@@ -1,9 +1,6 @@
 <template>
-  <div
-    :id="'site_page_el_' + elIndex"
-    class="background-image"
-    :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }"
-  >
+  <div class="background-image" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
+    <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
     <img
       :style="{ height: elValue.style.height }"
@@ -68,6 +65,11 @@ export default {
 <style>
 .background-image {
   position: relative;
+  min-height: 35px;
+  border: none;
+  outline-style: dashed;
+  outline-width: 2px;
+  outline-offset: -2px;
 }
 .background-image img {
   object-fit: cover;
