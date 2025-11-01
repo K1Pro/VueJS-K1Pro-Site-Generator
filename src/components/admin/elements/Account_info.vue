@@ -5,6 +5,7 @@
 <script>
 export default {
   name: 'Account info',
+
   inject: ['site'],
 
   props: ['elKey', 'elValue', 'elIndex'],

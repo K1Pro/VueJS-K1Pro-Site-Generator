@@ -1,17 +1,16 @@
 <template>
   <div class="resp-padding"><div style="height: 0.001px" ref="cntnr"></div></div>
 
-  <div :class="{ 'resp-padding': elValue.style.responsive || cntnrWdth > respWidth.xs }">
+  <div :class="{ 'resp-padding': elValue.responsive || cntnrWdth > respWidth.xs }">
     <div class="product-card">
       <div
         :style="{
-          display: elValue.style.responsive || cntnrWdth > respWidth.xs ? 'grid' : 'block',
-          gridTemplateColumns:
-            elValue.style.responsive || cntnrWdth > respWidth.xs ? '30px calc(100% - 60px) 30px' : 'none',
+          display: elValue.responsive || cntnrWdth > respWidth.xs ? 'grid' : 'block',
+          gridTemplateColumns: elValue.responsive || cntnrWdth > respWidth.xs ? '30px calc(100% - 60px) 30px' : 'none',
         }"
       >
         <button
-          v-if="elValue.style.responsive || cntnrWdth > respWidth.xs"
+          v-if="elValue.responsive || cntnrWdth > respWidth.xs"
           class="scroller"
           :disabled="itemStart === 0"
           @click="itemStart--"
@@ -22,9 +21,9 @@
         <div
           class="product-card-cntnr"
           :style="{
-            display: elValue.style.responsive || cntnrWdth > respWidth.xs ? 'flex' : 'block',
+            display: elValue.responsive || cntnrWdth > respWidth.xs ? 'flex' : 'block',
             justifyContent:
-              cntnrWdth <= respWidth.xs && !elValue.style.responsive
+              cntnrWdth <= respWidth.xs && !elValue.responsive
                 ? 'initial'
                 : elValue.style['justify-content']
                 ? elValue.style['justify-content']
@@ -56,7 +55,7 @@
           </template>
         </div>
         <button
-          v-if="elValue.style.responsive || cntnrWdth > respWidth.xs"
+          v-if="elValue.responsive || cntnrWdth > respWidth.xs"
           class="scroller"
           :disabled="respvItemAmnt + itemStart >= elValue.cards.length"
           @click="itemStart++"
@@ -108,11 +107,11 @@ export default {
             : this.elValue.style.background && this.site.body.style.backgroundColor
             ? this.site.body.style.backgroundColor
             : '#FFFFFF00',
-        marginBottom: this.cntnrWdth <= this.respWidth.xs && !this.elValue.style.responsive ? '10px' : '0px',
+        marginBottom: this.cntnrWdth <= this.respWidth.xs && !this.elValue.responsive ? '10px' : '0px',
         width:
-          this.cntnrWdth <= this.respWidth.xs && !this.elValue.style.responsive
+          this.cntnrWdth <= this.respWidth.xs && !this.elValue.responsive
             ? '100%'
-            : this.cntnrWdth <= this.respWidth.xs && this.elValue.style.responsive
+            : this.cntnrWdth <= this.respWidth.xs && this.elValue.responsive
             ? 'calc(33.33% - 10px)'
             : this.elValue.style.width && this.elValue.style.width.charAt(0) != '0'
             ? this.elValue.style.width
@@ -136,7 +135,7 @@ export default {
         color: this.elValue.style.color ? this.elValue.style.color : 'black',
         fontSize: this.elValue.style['font-size'] ? this.elValue.style['font-size'] : '12px',
         height:
-          this.cntnrWdth <= this.respWidth.xs && !this.elValue.style.responsive && this.elValue.style.height
+          this.cntnrWdth <= this.respWidth.xs && !this.elValue.responsive && this.elValue.style.height
             ? 'auto'
             : this.elValue.style.height
             ? this.elValue.style.height

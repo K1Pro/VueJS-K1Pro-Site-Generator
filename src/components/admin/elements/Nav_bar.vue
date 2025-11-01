@@ -3,7 +3,7 @@
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
-      :options="['flex-direction', 'height', 'justify-content', 'links', 'logo', 'mobile', 'width']"
+      :options="['flex-direction', 'font-size', 'height', 'justify-content', 'links', 'logo', 'mobile', 'width']"
       @slctd-opt="slctdOpt = $event"
     ></edit_menu>
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
@@ -53,8 +53,14 @@
               :itemVal="link"
               :itemIndx="linkIndx"
             ></links>
-
-            <input type="text" v-model="link.title" class="nav-bar-text" />
+            <span
+              v-if="!elValue.style.width"
+              class="nav-bar-text"
+              contenteditable="plaintext-only"
+              v-on:blur="link.title = $event.target.innerHTML"
+              >{{ link.title ? link.title : 'Title' }}</span
+            >
+            <input v-else type="text" v-model="link.title" class="nav-bar-text" :style="[elTxt]" />
           </div>
         </template>
       </div>
@@ -112,6 +118,11 @@ export default {
         height: this.elValue.style.height,
       };
     },
+    elTxt() {
+      return {
+        fontSize: this.elValue.style['font-size'],
+      };
+    },
   },
   methods: {
     addItem(linkIndx) {
@@ -135,7 +146,6 @@ export default {
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
-
   width: 100%;
   margin: 0;
   padding: 0;

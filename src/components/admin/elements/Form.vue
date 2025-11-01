@@ -229,7 +229,7 @@
       class="forms-submit"
       contenteditable="plaintext-only"
       v-on:blur="site.htmlElmnts[elKey].button = $event.target.innerHTML"
-      >{{ site.htmlElmnts[elKey].button }}</span
+      >{{ site.htmlElmnts[elKey].button ? site.htmlElmnts[elKey].button : 'Submit' }}</span
     >
   </div>
 </template>

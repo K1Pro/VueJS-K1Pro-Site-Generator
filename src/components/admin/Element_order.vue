@@ -422,18 +422,18 @@ export default {
   float: right;
 }
 .element-order-mode-buttons {
-  height: 25px;
+  /* height: 25px; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   column-gap: 0px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .element-order-mode-button {
   border-width: 1px 0.5px;
   border-color: darkgrey;
   border-style: solid;
-  height: 100%;
+  height: 25px;
   width: 25px;
   font-size: 15px;
   background-color: #f0f0f0;

@@ -64,14 +64,15 @@
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style.url"
     />
-    <!-- checkbox [backgound, responsive, text-box-image, titles, vertical-align]-->
+    <!-- checkbox [backgound, vertical-align]-->
     <input
-      v-if="['background', 'responsive', 'vertical-align'].includes(option)"
+      v-if="['background', 'vertical-align'].includes(option)"
       type="checkbox"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
+    <!-- checkbox [logo, mobile, responsive, titles]-->
     <input
-      v-if="['logo', 'mobile', 'titles'].includes(option)"
+      v-if="['logo', 'mobile', 'responsive', 'titles'].includes(option)"
       type="checkbox"
       v-model="site.htmlElmnts[elKey][option]"
     />
@@ -96,7 +97,7 @@
     />
     <!-- mod menu -->
     <select v-if="option == 'links'" v-model="site.htmlElmnts[elKey].mod">
-      <option>disable</option>
+      <option>disabled</option>
       <option>pages</option>
       <option>anchors</option>
       <option>links</option>
@@ -116,16 +117,18 @@
       v-if="unitInputs.includes(option) && site.htmlElmnts[elKey].style[option]"
       style="width: 45px"
       :value="noInput.unit"
-      @input="site.htmlElmnts[elKey].style[option] = noInput.no + $event.target.value"
+      @input="
+        site.htmlElmnts[elKey].style[option] =
+          $event.target.value == 'auto' ? $event.target.value : noInput.no + $event.target.value
+      "
     >
+      <option>auto</option>
       <option>px</option>
       <option>vh</option>
       <option>vw</option>
       <option>%</option>
     </select>
-    <!-- checkbox[] -->
-    <!-- v-if=" ![ 'background', 'flex-direction', 'justify-content', 'links', 'responsive', 'text-editor', 'vertical-align',
-    ].includes(option) " -->
+    <!-- This input will appear if not found in defaults -->
     <input
       v-if="
         !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]).includes(option) &&

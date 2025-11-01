@@ -8,6 +8,8 @@
 <script>
 export default {
   name: 'Photo gallery',
+
+  props: ['elKey', 'elValue', 'elIndex'],
 };
 </script>
 

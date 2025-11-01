@@ -1,10 +1,6 @@
 <template>
   <div class="admin-links">
-    <select
-      v-if="elValue.mod == 'pages'"
-      v-model="site.htmlElmnts[elKey][itemKey][itemIndx].page"
-      @change="linkKeysDlt(itemIndx, elValue.mod)"
-    >
+    <select v-if="elValue.mod == 'pages'" @change="linkKeysDlt($event, itemIndx, elValue.mod)">
       <option disabled selected>Pages</option>
       <option
         v-for="sitePage in Object.keys(site.pages[slctd.type])"
@@ -13,16 +9,16 @@
         {{ sitePage }}
       </option>
     </select>
-    <select
-      v-else-if="elValue.mod == 'anchors'"
-      v-model="site.htmlElmnts[elKey][itemKey][itemIndx].anchor"
-      @change="linkKeysDlt(itemIndx, elValue.mod)"
-    >
+    <select v-else-if="elValue.mod == 'anchors'" @change="linkKeysDlt($event, itemIndx, elValue.mod)">
       <option disabled selected>Anchors</option>
       <template v-for="[sitePage, sitePageEls] in Object.entries(site.pages[slctd.type])">
         <template v-for="sitePageEl in sitePageEls">
           <option
             v-if="sitePageEl[1] && sitePageEl[2] && sitePageEl[2] != ''"
+            :selected="
+              site.htmlElmnts[elKey][itemKey][itemIndx].anchor ==
+              sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()
+            "
             :value="sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()"
           >
             {{ sitePageEl[2] }} ({{ sitePage }})
@@ -30,17 +26,16 @@
         </template>
       </template>
     </select>
-    <select v-else-if="elValue.mod == 'disable'">
-      <option disabled selected>Disabled</option>
-      <option>true</option>
-      <option>false</option>
+    <select v-else-if="elValue.mod == 'disabled'" @change="linkKeysDlt($event, itemIndx, elValue.mod)">
+      <option v-if="!site.htmlElmnts[elKey][itemKey][itemIndx].disable" disabled selected>Enabled</option>
+      <option value="true" :selected="site.htmlElmnts[elKey][itemKey][itemIndx].disable">Disabled</option>
     </select>
     <input
       v-else
       type="text"
       placeholder="Link"
-      v-model="site.htmlElmnts[elKey][itemKey][itemIndx].link"
-      @change="linkKeysDlt(itemIndx, elValue.mod)"
+      :value="site.htmlElmnts[elKey][itemKey][itemIndx].link"
+      @change="linkKeysDlt($event, itemIndx, elValue.mod)"
     />
   </div>
 </template>
@@ -54,8 +49,9 @@ export default {
   props: ['elKey', 'elValue', 'elIndex', 'itemKey', 'itemVal', 'itemIndx'],
 
   methods: {
-    linkKeysDlt(itemIndx, linkTp) {
-      let slctdLinkTps = ['link', 'page', 'anchor'].filter((linkType) => linkType != linkTp?.slice(0, -1));
+    linkKeysDlt(event, itemIndx, linkTp) {
+      this.site.htmlElmnts[this.elKey][this.itemKey][itemIndx][linkTp?.slice(0, -1)] = event.target.value;
+      let slctdLinkTps = ['disable', 'link', 'page', 'anchor'].filter((linkType) => linkType != linkTp?.slice(0, -1));
       slctdLinkTps.forEach((linkType) => {
         if (this.site.htmlElmnts?.[this.elKey]?.[this.itemKey]?.[itemIndx]?.[linkType])
           delete this.site.htmlElmnts[this.elKey][this.itemKey][itemIndx][linkType];

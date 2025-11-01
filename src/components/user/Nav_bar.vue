@@ -30,6 +30,7 @@
                 :href="link.link.toLowerCase()"
                 >{{ link.title }}</a
               >
+              <div v-else-if="link.disable" :style="[elA]">{{ link.title }}</div>
             </li>
           </template>
         </template>
@@ -78,6 +79,7 @@ export default {
     elA() {
       return {
         color: this.site.body.style.textColor,
+        fontSize: this.elValue.style['font-size'],
         height: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 16 + 30 + 'px' : this.elValue.style.height,
         justifyContent: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 'flex-start' : 'center',
       };
@@ -171,7 +173,6 @@ export default {
 .nav-bar {
   position: relative;
   width: 100%;
-  /* z-index: 4; */
 }
 .nav-bar img {
   height: 100%;
@@ -189,13 +190,18 @@ export default {
   margin: 0;
   padding: 0;
 }
-.nav-bar-cntnr a {
+.nav-bar-cntnr li {
+}
+.nav-bar-cntnr a,
+.nav-bar-cntnr div {
   text-decoration: none;
   user-select: none;
   width: 100%;
   display: flex;
   align-items: center;
   padding: 10px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .nav-bar i {
   width: 16px;

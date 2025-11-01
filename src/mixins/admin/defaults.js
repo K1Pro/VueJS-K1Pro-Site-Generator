@@ -30,9 +30,6 @@ const defaultsMixin = {
           footer: {
             type: 'footer',
             info: {
-              position: -2,
-              newPageCopy: true,
-              unique: { site: true },
               components: ['image_banner', 'map', 'text_box'],
             },
             items: [],
@@ -48,6 +45,8 @@ const defaultsMixin = {
             info: {
               unique: { page: true },
             },
+            responsive: true,
+            style: {},
           },
           headline: {
             type: 'headline',
@@ -120,7 +119,7 @@ const defaultsMixin = {
           nav_bar: {
             type: 'nav_bar',
             mobile: true,
-            logo: true,
+            logo: false,
             loggedin: [
               { title: 'Link 1', link: 'https://example.com' },
               { title: 'Link 2', link: 'https://example.com' },
@@ -131,9 +130,9 @@ const defaultsMixin = {
             ],
             style: {
               'flex-direction': 'row',
+              'font-size': '12px',
               height: '100px',
               'justify-content': 'flex-start',
-              width: '75px',
             },
           },
           new_element: {
