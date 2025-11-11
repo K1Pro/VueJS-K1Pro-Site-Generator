@@ -1,29 +1,7 @@
 <template>
   <div class="product-card" :style="[style.outline.borderColor]" ref="productCard">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu
-      :elKey="elKey"
-      :elIndex="elIndex"
-      :options="[
-        'anchor',
-        'background',
-        'background-color',
-        'border-color',
-        'border-radius',
-        'border-width',
-        'color',
-        'font-size',
-        'height',
-        'image-height',
-        'justify-content',
-        'margin',
-        'padding',
-        'responsive',
-        'text-align',
-        'title-font-size',
-        'width',
-      ]"
-    ></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ productCardHght }}px x {{ productCardWdth }}px</span>
 
     <div :style="style.respPadding" style="display: grid; grid-template-columns: 30px auto 30px">
@@ -91,7 +69,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['endPts', 'grid', 'imagesReq', 'respWidth', 'mediaReq', 'slctd', 'site', 'style'],
+  inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'respWidth', 'mediaReq', 'slctd', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

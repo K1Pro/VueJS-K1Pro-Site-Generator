@@ -4,26 +4,7 @@
     <edit_menu
       :elKey="elKey"
       :elIndex="elIndex"
-      :options="[
-        'anchor',
-        'background',
-        'background-color',
-        'border-color',
-        'border-radius',
-        'border-width',
-        'color',
-        'font-size',
-        'height',
-        'icon-size',
-        'justify-content',
-        'links',
-        'margin',
-        'padding',
-        'text-align',
-        'titles',
-        'width',
-        'paste',
-      ]"
+      :options="defaults.htmlElmnts[elValue.type].info.opts"
       @slctd-opt="slctdOpt = $event"
     ></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ iconSliderHght }}px x {{ iconSliderWdth }}px</span>
@@ -114,7 +95,7 @@
 export default {
   name: 'Icon Slider',
 
-  inject: ['grid', 'respWidth', 'site', 'style', 'endPts', 'undoRedo'],
+  inject: ['defaults', 'grid', 'respWidth', 'site', 'style', 'endPts', 'undoRedo'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

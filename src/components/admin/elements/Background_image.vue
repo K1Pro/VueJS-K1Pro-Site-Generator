@@ -1,7 +1,7 @@
 <template>
   <div class="background-image" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['height']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <img
       :style="{ height: elValue.style.height }"
       :width="grid.wdth + 'px'"
@@ -21,7 +21,7 @@
 export default {
   name: 'Background Image',
 
-  inject: ['endPts', 'grid', 'imagesReq', 'mediaReq', 'site'],
+  inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'mediaReq', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -54,11 +54,6 @@ export default {
       }
     },
   },
-
-  created() {
-    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: '75vh' };
-    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = '75vh';
-  },
 };
 </script>
 
@@ -67,9 +62,9 @@ export default {
   position: relative;
   min-height: 35px;
   border: none;
-  outline-style: dashed;
+  /* outline-style: dashed;
   outline-width: 2px;
-  outline-offset: -2px;
+  outline-offset: -2px; */
 }
 .background-image img {
   object-fit: cover;

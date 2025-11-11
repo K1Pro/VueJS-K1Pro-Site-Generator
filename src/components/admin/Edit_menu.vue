@@ -40,6 +40,11 @@
       <option>row</option>
       <option>row-reverse</option>
     </select>
+    <select v-if="option == 'hover'" title="hover" v-model="site.htmlElmnts[elKey].style.hover">
+      <option>background-color</option>
+      <option>font-color</option>
+      <option>underline</option>
+    </select>
     <!-- object-fit -->
     <select v-if="option == 'object-fit'" v-model="site.htmlElmnts[elKey].style['object-fit']">
       <option>contain</option>
@@ -49,7 +54,7 @@
       <option>scale-down</option>
     </select>
     <!-- text [anchor, url] -->
-    <!-- need to handle elIndex for footer items so anchor is not used -->
+    <!-- need to handle elIndex for container items so anchor is not used -->
     <input
       v-if="option == 'anchor'"
       type="text"
@@ -66,13 +71,16 @@
     />
     <!-- checkbox [backgound, vertical-align]-->
     <input
-      v-if="['background', 'vertical-align'].includes(option)"
+      v-if="
+        ['background', 'vertical-align'].includes(option) &&
+        Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]?.style).includes(option)
+      "
       type="checkbox"
       v-model="site.htmlElmnts[elKey].style[option]"
     />
-    <!-- checkbox [logo, mobile, responsive, titles]-->
+    <!-- checkbox [logo, mobile, titles]-->
     <input
-      v-if="['logo', 'mobile', 'responsive', 'titles'].includes(option)"
+      v-if="['logo', 'mobile', 'titles'].includes(option)"
       type="checkbox"
       v-model="site.htmlElmnts[elKey][option]"
     />
@@ -90,7 +98,7 @@
     />
     <!-- color [color] -->
     <input
-      v-if="option.includes('color')"
+      v-if="['color', 'border-top', 'border-bottom'].includes(option)"
       type="color"
       class="edit-menu-inputs"
       v-model="site.htmlElmnts[elKey].style[option]"
@@ -122,7 +130,6 @@
           $event.target.value == 'auto' ? $event.target.value : noInput.no + $event.target.value
       "
     >
-      <option>auto</option>
       <option>px</option>
       <option>vh</option>
       <option>vw</option>
@@ -133,7 +140,7 @@
       v-if="
         !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]).includes(option) &&
         !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]?.style).includes(option) &&
-        option != 'links'
+        ['links', 'paste'].includes(option)
       "
       type="checkbox"
       :checked="site.htmlElmnts[elKey][option] || site.htmlElmnts[elKey].style[option]"

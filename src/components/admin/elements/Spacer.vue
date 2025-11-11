@@ -1,7 +1,7 @@
 <template>
   <div :class="'spacer spacer_' + elKey" :style="[style.outline.borderColor]" ref="spacer">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu :elKey="elKey" :options="['height']"></edit_menu>
+    <edit_menu :elKey="elKey" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ spacerHght }}px x {{ spacerWdth }}px</span>
     <p :style="[pStyle]"></p>
   </div>

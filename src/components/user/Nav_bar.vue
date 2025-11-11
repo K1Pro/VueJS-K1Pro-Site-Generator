@@ -7,7 +7,7 @@
       <ul class="nav-bar-cntnr" :style="[style.primaryColor, elUl]">
         <template v-if="wndw.wdth > respWidth.md || !elValue.mobile || (wndw.wdth < respWidth.md && mblMenu)">
           <template v-for="link in elValue[slctd.type]">
-            <li :style="[elLi]" @mouseover="hoverLink($event, true)" @mouseout="hoverLink($event, false)">
+            <li :style="[elLi]" @mouseover="hoverLink($event, true, link)" @mouseout="hoverLink($event, false, link)">
               <a
                 v-if="link.page"
                 :ref="link.title.toLowerCase()"
@@ -93,7 +93,14 @@ export default {
     elDiv() {
       return {
         marginBottom: this.mblMenu ? '-' + this.mblMenuHght + 'px' : '0px',
-        borderBottom: '1px solid ' + this.site.body.style.textColor,
+        borderTop:
+          this.elValue.style['border-width'] && this.elValue.style['border-top']
+            ? this.elValue.style['border-width'] + ' solid ' + this.elValue.style['border-top']
+            : 'none',
+        borderBottom:
+          this.elValue.style['border-width'] && this.elValue.style['border-bottom']
+            ? this.elValue.style['border-width'] + ' solid ' + this.elValue.style['border-bottom']
+            : 'none',
       };
     },
     elMblA() {
@@ -111,18 +118,32 @@ export default {
         this.mblMenuHght = this.$refs.navBar.offsetHeight - mblMenuHght;
       }, 1);
     },
-    hoverLink(event, isHovering) {
-      if (event.target.nodeName == 'A') {
-        if (isHovering) {
-          event.target.style.backgroundColor = event.target.parentElement.parentElement.style.backgroundColor;
-          event.target.style.filter = 'brightness(90%)';
-        } else {
-          event.target.style.backgroundColor =
-            event.target.textContent.toLowerCase() == this.slctd.first_url_segment
-              ? event.target.parentElement.parentElement.style.backgroundColor
-              : '';
-          event.target.style.filter =
-            event.target.textContent.toLowerCase() == this.slctd.first_url_segment ? 'brightness(95%)' : 'none';
+    hoverLink(event, isHovering, link) {
+      if (!link.disable) {
+        if (this.elValue.style.hover == 'background-color') {
+          if (isHovering) {
+            event.target.style.backgroundColor = event.target.parentElement.parentElement.style.backgroundColor;
+            event.target.style.filter = 'brightness(90%)';
+          } else {
+            event.target.style.backgroundColor =
+              event.target.textContent.toLowerCase() == this.slctd.first_url_segment
+                ? event.target.parentElement.parentElement.style.backgroundColor
+                : '';
+            event.target.style.filter =
+              event.target.textContent.toLowerCase() == this.slctd.first_url_segment ? 'brightness(95%)' : 'none';
+          }
+        } else if (this.elValue.style.hover == 'font-color') {
+          if (isHovering) {
+            event.target.style.color = this.elValue.style.color + '90';
+          } else {
+            event.target.style.color = this.elValue.style.color;
+          }
+        } else if (this.elValue.style.hover == 'underline') {
+          if (isHovering) {
+            event.target.style.textDecoration = 'underline';
+          } else {
+            event.target.style.textDecoration = 'none';
+          }
         }
       }
     },

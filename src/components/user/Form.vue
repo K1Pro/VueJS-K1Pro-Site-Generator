@@ -6,21 +6,21 @@
         :style="{
           gridTemplateColumns:
             'repeat(' +
-            (site.htmlElmnts[elKey].responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+            (site.htmlElmnts[elKey].mobile && input.length > 1 && wndw.wdth <= respWidth.xs
               ? input.filter((el) => el.type != 'break').length
               : input.length) +
             ', calc(' +
             100 /
-              (site.htmlElmnts[elKey].responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+              (site.htmlElmnts[elKey].mobile && input.length > 1 && wndw.wdth <= respWidth.xs
                 ? input.filter((el) => el.type != 'break').length
                 : input.length) +
             '% - ' +
             (5 *
-              ((site.htmlElmnts[elKey].responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+              ((site.htmlElmnts[elKey].mobile && input.length > 1 && wndw.wdth <= respWidth.xs
                 ? input.filter((el) => el.type != 'break').length
                 : input.length) -
                 1)) /
-              (site.htmlElmnts[elKey].responsive && input.length > 1 && wndw.wdth <= respWidth.xs
+              (site.htmlElmnts[elKey].mobile && input.length > 1 && wndw.wdth <= respWidth.xs
                 ? input.filter((el) => el.type != 'break').length
                 : input.length) +
             'px))',
@@ -39,7 +39,7 @@
               wndw.wdth > respWidth.xs ||
               subInput.type != 'break' ||
               input.length === 1 ||
-              (subInput.type == 'break' && wndw.wdth <= respWidth.xs && !site.htmlElmnts[elKey].responsive)
+              (subInput.type == 'break' && wndw.wdth <= respWidth.xs && !site.htmlElmnts[elKey].mobile)
             "
           >
             <span

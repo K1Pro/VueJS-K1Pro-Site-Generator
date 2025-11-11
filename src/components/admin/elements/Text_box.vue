@@ -1,11 +1,7 @@
 <template>
   <div class="text-box" :style="[style.outline.borderColor, divStyle]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu
-      :elKey="elKey"
-      :elIndex="elIndex"
-      :options="['text-editor', 'color', 'font-size', 'text-align', 'paste']"
-    ></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
 
     <div v-if="site.htmlElmnts[elKey].textEditor" class="text-box-editor">
       <button @click="editDsbld ? false : styleChng('span', 'font-weight', 'bold')" :disabled="mod == 'source-code'">
@@ -72,7 +68,7 @@
 export default {
   name: 'Text box',
 
-  inject: ['grid', 'respWidth', 'site', 'style'],
+  inject: ['defaults', 'grid', 'respWidth', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

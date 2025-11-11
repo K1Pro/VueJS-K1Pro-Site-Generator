@@ -12,54 +12,97 @@ const defaultsMixin = {
           background_image: {
             type: 'background_image',
             info: {
+              opts: ['height'],
               position: 0,
               unique: { page: true },
             },
             src: 'https://images.pexels.com/photos/2340254/pexels-photo-2340254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-            style: { height: 75 },
+            style: { height: '100vh' },
           },
           background_video: {
             type: 'background_video',
             info: {
+              opts: ['height'],
               position: 0,
               unique: { page: true },
             },
             src: 'https://videos.pexels.com/video-files/1918465/1918465-uhd_3840_2160_24fps.mp4',
-            style: { height: 75 },
+            style: { height: '100vh' },
           },
-          footer: {
-            type: 'footer',
+          container: {
+            type: 'container',
             info: {
               components: ['image_banner', 'map', 'text_box'],
+              opts: ['padding', 'mobile'],
             },
-            items: [],
             style: {
               align: 'right',
               'background-color': '#FFFFFF',
               'border-color': '#FFFFFF',
               color: '#000000',
+              mobile: true,
             },
           },
           form: {
             type: 'form',
             info: {
+              opts: ['mobile'],
               unique: { page: true },
             },
-            responsive: true,
+            mobile: true,
             style: {},
           },
           headline: {
             type: 'headline',
             text: 'Headline',
+            info: {
+              opts: [
+                'align-content',
+                'anchor',
+                'background',
+                'background-color',
+                'color',
+                'font-size',
+                'height',
+                'margin',
+                'padding',
+                'text-align',
+                'url',
+                'width',
+                'paste',
+              ],
+            },
             style: {
-              'font-size': '12px',
               'align-content': 'center',
+              'font-size': '12px',
               margin: '12px',
               'text-align': 'center',
             },
           },
           icon_slider: {
             type: 'icon_slider',
+            info: {
+              opts: [
+                'anchor',
+                'background',
+                'background-color',
+                'border-color',
+                'border-radius',
+                'border-width',
+                'color',
+                'font-size',
+                'height',
+                'icon-size',
+                'justify-content',
+                'links',
+                'margin',
+                'padding',
+                'text-align',
+                'titles',
+                'width',
+                'paste',
+              ],
+            },
             icons: [
               { title: '', icon: 'fa-solid fa-question' },
               { title: '', icon: 'fa-solid fa-question' },
@@ -82,23 +125,8 @@ const defaultsMixin = {
           image_banner: {
             type: 'image_banner',
             src: null,
+            info: { opts: ['caption', 'color', 'font-size', 'height', 'object-fit', 'text-align', 'width', 'paste'] },
             style: {},
-          },
-          legal_links: {
-            type: 'legal_links',
-            info: {
-              newPageCopy: true,
-              position: -1,
-              unique: { site: true },
-            },
-            links: {
-              Copyright: false,
-              'Terms-of-Use': false,
-              'Privacy-Policy': false,
-              Cookies: false,
-              Accessibility: false,
-              Parental: false,
-            },
           },
           login: {
             type: 'login',
@@ -118,6 +146,23 @@ const defaultsMixin = {
           },
           nav_bar: {
             type: 'nav_bar',
+            info: {
+              opts: [
+                'border-top',
+                'border-bottom',
+                'border-width',
+                'color',
+                'flex-direction',
+                'font-size',
+                'height',
+                'hover',
+                'justify-content',
+                'links',
+                'logo',
+                'mobile',
+                'width',
+              ],
+            },
             mobile: true,
             logo: false,
             loggedin: [
@@ -129,9 +174,11 @@ const defaultsMixin = {
               { title: 'Link 2', link: 'https://example.com' },
             ],
             style: {
+              color: '#000000',
               'flex-direction': 'row',
               'font-size': '12px',
               height: '100px',
+              hover: 'background-color',
               'justify-content': 'flex-start',
             },
           },
@@ -139,12 +186,6 @@ const defaultsMixin = {
             type: 'new_element',
             info: {
               required: true,
-            },
-          },
-          photo_gallery: {
-            type: 'photo_gallery',
-            info: {
-              unique: { page: true },
             },
           },
           privacy_policy: {
@@ -156,6 +197,28 @@ const defaultsMixin = {
           },
           product_card: {
             type: 'product_card',
+            info: {
+              opts: [
+                'anchor',
+                'background',
+                'background-color',
+                'border-color',
+                'border-radius',
+                'border-width',
+                'color',
+                'font-size',
+                'height',
+                'image-height',
+                'justify-content',
+                'margin',
+                'padding',
+                'mobile',
+                'text-align',
+                'title-font-size',
+                'width',
+              ],
+            },
+            mobile: true,
             cards: [
               {
                 img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
@@ -174,12 +237,11 @@ const defaultsMixin = {
               },
             ],
             style: {
-              borderRadius: '10',
-              fontSize: 2,
-              titleFontSize: 2.3,
+              'font-size': '12px',
+              'title-font-size': '18px',
             },
           },
-          spacer: { type: 'spacer', style: { height: '50px' } },
+          spacer: { type: 'spacer', info: { opts: ['height'] }, style: { height: '50px' } },
           terms_of_use: {
             type: 'terms_of_use',
             info: {
@@ -189,10 +251,10 @@ const defaultsMixin = {
           },
           text_box: {
             type: 'text_box',
+            info: { opts: ['text-editor', 'color', 'font-size', 'text-align', 'paste'] },
             style: { color: 'black', 'font-size': '12px', 'text-align': 'left' },
             text: '',
           },
-
           video_gallery: {
             type: 'video_gallery',
             info: {

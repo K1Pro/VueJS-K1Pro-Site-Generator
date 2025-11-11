@@ -1,15 +1,7 @@
 <template>
   <div class="image-banner" :style="[style.outline.borderColor, divStyle]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu
-      :elKey="elKey"
-      :elIndex="elIndex"
-      :options="
-        elValue.caption
-          ? ['caption', 'color', 'font-size', 'height', 'object-fit', 'text-align', 'width', 'paste']
-          : ['caption', 'height', 'object-fit', 'width', 'paste']
-      "
-    ></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <img
       :src="endPts.imagesURL + elValue.src"
       alt="image"
@@ -32,7 +24,7 @@
 export default {
   name: 'Image banner',
 
-  inject: ['endPts', 'grid', 'imagesReq', 'pexelsReq', 'respWidth', 'mediaReq', 'site', 'sttngs', 'style'],
+  inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'pexelsReq', 'respWidth', 'mediaReq', 'site', 'sttngs', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

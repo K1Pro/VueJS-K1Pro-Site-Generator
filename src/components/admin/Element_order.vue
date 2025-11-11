@@ -41,6 +41,11 @@
         @click="changeLogInOut(true)"
         class="fa-solid fa-lock-open element-order-mode-button"
       ></button>
+      <button
+        title="Default page element"
+        class="fa-solid fa-star element-order-mode-button"
+        @click="modeChng"
+      ></button>
       <button class="fa-solid fa-floppy-disk element-order-mode-button" @click="patchSite"></button>
       <button class="fa-solid fa-rotate-left element-order-mode-button" @click="getSite"></button>
       <button class="fa-solid fa-rotate-right element-order-mode-button"></button>
@@ -165,12 +170,14 @@
             name="individEdit"
             @click="slctd.indEdtIndx = elIndx"
           />
+          <input style="float: right" type="checkbox" v-if="slctd.edtMd == 'Disable'" v-model="el[1]" />
           <input
-            style="float: right"
-            type="checkbox"
-            v-if="slctd.edtMd == 'Disable'"
-            :checked="el[1]"
-            @change="disableEl($event.target.checked, el[0], elIndx)"
+            style="float: right; width: 40px"
+            placeholder="#"
+            type="number"
+            step="1"
+            v-if="slctd.edtMd == 'Default page element'"
+            v-model="site.htmlElmnts[el[0]].default"
           />
           <i
             v-if="
@@ -315,10 +322,15 @@ export default {
       });
       const newPgName = existingPgs.length > 0 ? 'Page ' + (Math.max(...existingPgs) + 1) : 'Page 1';
       this.site.pages[this.slctd.type][newPgName] = [];
-      Object.values(this.site.pages[this.slctd.type])[0].forEach((pg) => {
-        if (this.defaults.htmlElmnts[this.site.htmlElmnts[pg[0]].type]?.info?.newPageCopy)
-          this.site.pages[this.slctd.type][newPgName].push([pg[0], true]);
-      });
+      const defaultPgEls = Object.entries(this.site.htmlElmnts)
+        ?.filter(([elKey, elVal]) => {
+          return elVal.default;
+        })
+        ?.sort((a, b) => a[1].default - b[1].default)
+        ?.forEach(([elKey, elVal]) => {
+          this.site.pages[this.slctd.type][newPgName].push([elKey, true]);
+        });
+
       if (this.site.pages[this.slctd.type][newPgName].length === 0)
         this.site.pages[this.slctd.type][newPgName].push(['new_element', true]);
       this.slctd.page = newPgName;
@@ -352,11 +364,16 @@ export default {
         newElName = existingEls.length > 0 ? compTp + '_' + (Math.max(...existingEls) + 1) : compTp + '_1';
         this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[compTp]));
       }
-      const pageElIndx =
-        this?.defaults?.htmlElmnts?.[compTp]?.info?.position !== undefined
-          ? this.defaults.htmlElmnts[compTp].info.position
-          : elementIndex;
-      this.site.pages[this.slctd.type][this.slctd.page].splice(pageElIndx, 1, [newElName, true]);
+
+      if (this?.defaults?.htmlElmnts?.[compTp]?.info?.position !== undefined) {
+        this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
+        this.site.pages[this.slctd.type][this.slctd.page].splice(this.defaults.htmlElmnts[compTp].info.position, 0, [
+          newElName,
+          true,
+        ]);
+      } else {
+        this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1, [newElName, true]);
+      }
     },
     deleteEl(pageEl, elementIndex) {
       if (!this?.defaults?.htmlElmnts?.[this?.site?.htmlElmnts?.[pageEl]?.type]?.info?.required) {
@@ -369,19 +386,6 @@ export default {
       const chosenElement = this.site.pages[this.slctd.type][this.slctd.page][elementIndex];
       this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex, 1);
       this.site.pages[this.slctd.type][this.slctd.page].splice(elementIndex + newIndex, 0, chosenElement);
-    },
-    disableEl(event, elmnt, indx) {
-      if (this.defaults.htmlElmnts[this.site.htmlElmnts[elmnt].type]?.info?.newPageCopy) {
-        // disables unique element on all pages
-        for (const [pageKey, pageVal] of Object.entries(this.site.pages[this.slctd.type])) {
-          pageVal.forEach((element, elIndex) => {
-            if (elmnt == element[0]) this.site.pages[this.slctd.type][pageKey][elIndex][1] = event;
-          });
-        }
-      } else {
-        // disables non-unique element only on selected page
-        this.site.pages[this.slctd.type][this.slctd.page][indx][1] = event;
-      }
     },
     renameEl(event, elIndx) {
       const crrntElName = this.site.pages[this.slctd.type][this.slctd.page][elIndx][0];

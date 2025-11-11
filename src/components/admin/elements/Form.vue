@@ -1,7 +1,7 @@
 <template>
   <div class="forms" :style="[style.outline.borderColor]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['responsive']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <template v-for="(input, inputIndx) in elValue.form" :key="'row_' + inputIndx">
       <div
         style="display: grid; grid-gap: 5px"
@@ -238,7 +238,7 @@
 export default {
   name: 'Form',
 
-  inject: ['grid', 'endPts', 'showMsg', 'site', 'style'],
+  inject: ['defaults', 'grid', 'endPts', 'showMsg', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 

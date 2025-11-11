@@ -1,24 +1,7 @@
 <template>
   <div class="headline" ref="headline">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu
-      :elKey="elKey"
-      :elIndex="elIndex"
-      :options="[
-        'font-size',
-        'align-content',
-        'anchor',
-        'background',
-        'background-color',
-        'color',
-        'height',
-        'margin',
-        'padding',
-        'text-align',
-        'url',
-        'width',
-      ]"
-    ></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ headlineHght }}px x {{ headlineWdth }}px</span>
     <div class="headline-input" :style="[style.outline.borderColor, divStyle]">
       <input type="text" :style="inputStyle" v-model="site.htmlElmnts[elKey].text" />
@@ -30,7 +13,7 @@
 export default {
   name: 'Headline',
 
-  inject: ['grid', 'respWidth', 'site', 'style', 'wndw'],
+  inject: ['defaults', 'grid', 'respWidth', 'site', 'style', 'wndw'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -74,7 +57,7 @@ export default {
             ? '12px'
             : !this.elValue.style['font-size'] && this.site.body.style['font-size']
             ? this.site.body.style['font-size']
-            : this.elValue.style['font-size'].includes('vw')
+            : String(this.elValue.style['font-size']).includes('vw')
             ? this.grid.wdth * (this.elValue.style['font-size']?.replace(/\D/g, '') / 100) + 'px'
             : this.elValue.style['font-size'],
         height: this.elValue.style.height ? this.elValue.style.height : 'initial',

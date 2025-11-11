@@ -3,7 +3,7 @@
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
-      :options="['flex-direction', 'font-size', 'height', 'justify-content', 'links', 'logo', 'mobile', 'width']"
+      :options="defaults.htmlElmnts[elValue.type].info.opts"
       @slctd-opt="slctdOpt = $event"
     ></edit_menu>
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>

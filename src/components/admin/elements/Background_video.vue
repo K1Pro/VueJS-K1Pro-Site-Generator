@@ -5,7 +5,7 @@
       v-if="slctd.edtMd == 'Individual edit mode'"
       :elKey="elKey"
       :elIndex="elIndex"
-      :options="['height']"
+      :options="defaults.htmlElmnts[elValue.type].info.opts"
     ></edit_menu>
     <video
       :style="{ height: elValue.style.height }"
@@ -30,7 +30,7 @@
 export default {
   name: 'Background video',
 
-  inject: ['endPts', 'grid', 'mediaReq', 'site', 'slctd', 'videosReq'],
+  inject: ['defaults', 'endPts', 'grid', 'mediaReq', 'site', 'slctd', 'videosReq'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -63,11 +63,6 @@ export default {
       }
     },
   },
-
-  created() {
-    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: '75px' };
-    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = '75px';
-  },
 };
 </script>
 
@@ -76,9 +71,9 @@ export default {
   position: relative;
   min-height: 35px;
   border: none;
-  outline-style: dashed;
+  /* outline-style: dashed;
   outline-width: 2px;
-  outline-offset: -2px;
+  outline-offset: -2px; */
 }
 .background-video video {
   object-fit: cover;

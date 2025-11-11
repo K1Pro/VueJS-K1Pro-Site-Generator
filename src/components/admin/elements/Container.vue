@@ -1,29 +1,32 @@
 <template>
-  <div class="footer" :style="[style.primaryColor.backgroundColor, style.outline.borderColor]">
+  <div class="container" :style="[style.primaryColor.backgroundColor, style.outline.borderColor]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="['padding']"></edit_menu>
+    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
-    <div class="footer-cntnr" :style="[style.respPadding]">
+    <div class="container-cntnr" :style="[style.respPadding, div1Style]">
       <template v-for="(component, componentIndex) in tempComponents">
-        <div class="footer-item" :style="[style.outline.borderColor, divStyle]">
-          <button class="footer-add-rem" style="right: 0px; z-index: 0">
+        <div class="container-item" :style="[style.outline.borderColor, div2Style]">
+          <button class="container-add-rem" style="right: 0px; z-index: 0">
             <i class="fa-solid fa-chevron-down"></i>
           </button>
           <select
             v-if="slctdTmpComponentType[componentIndex] === null"
-            class="footer-select"
+            class="container-select"
             :value="slctdComponentIndex === componentIndex ? slctdComponent : ''"
             :style="{ height: slctdComponentIndex === componentIndex ? '1px' : '15px' }"
             @change="slctComponentType($event.target.value, componentIndex)"
           >
             <option disabled selected>Add element</option>
-            <option v-for="footerComponent in defaults.htmlElmnts[elKey].info.components" :value="footerComponent">
-              {{ footerComponent.replaceAll('_', ' ') }}
+            <option
+              v-for="containerComponent in defaults.htmlElmnts[elValue.type].info.components"
+              :value="containerComponent"
+            >
+              {{ containerComponent.replaceAll('_', ' ') }}
             </option>
           </select>
           <select
             v-else
-            class="footer-select"
+            class="container-select"
             :value="slctdComponentIndex === componentIndex ? slctdComponent : ''"
             :style="{ height: slctdComponentIndex === componentIndex ? '1px' : '15px' }"
             @change="changeComponent($event, componentIndex)"
@@ -42,21 +45,25 @@
             </option>
           </select>
           <button
-            class="footer-add-rem"
+            class="container-add-rem"
             :style="{ right: elValue.components.length > 1 ? '30px' : '15px' }"
             @click="addItem(componentIndex)"
           >
             <i class="fa-solid fa-plus"></i>
           </button>
           <button
-            class="footer-add-rem"
+            class="container-add-rem"
             v-if="elValue.components.length > 1"
             style="right: 15px"
             @click="removeItem(componentIndex)"
           >
             <i class="fa-solid fa-minus"></i>
           </button>
-          <div class="footer-new-element" v-if="component == 'new_element'" :style="[style.outline.borderColor]"></div>
+          <div
+            class="container-new-element"
+            v-if="component == 'new_element'"
+            :style="[style.outline.borderColor]"
+          ></div>
           <component
             v-else
             :is="site.htmlElmnts[component].type"
@@ -72,9 +79,9 @@
 
 <script>
 export default {
-  name: 'Footer',
+  name: 'Container',
 
-  inject: ['defaults', 'grid', 'site', 'style'],
+  inject: ['defaults', 'grid', 'respWidth', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -88,10 +95,16 @@ export default {
   },
 
   computed: {
-    divStyle() {
+    div1Style() {
+      return { flexDirection: this.grid.wdth < this.respWidth.md && this.elValue.mobile ? 'column' : 'row' };
+    },
+    div2Style() {
       return {
         padding: this.elValue.style.padding ? this.elValue.style.padding : '0px',
-        width: 100 / this.elValue.components.length + '%',
+        width:
+          this.grid.wdth < this.respWidth.md && this.elValue.mobile
+            ? '100%'
+            : 100 / this.elValue.components.length + '%',
       };
     },
   },
@@ -141,7 +154,7 @@ export default {
 </script>
 
 <style>
-.footer {
+.container {
   position: relative;
   min-height: 35px;
   border: none;
@@ -149,14 +162,14 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
 }
-.footer-new-element {
+.container-new-element {
   height: 100%;
 }
-.footer-cntnr {
+.container-cntnr {
   display: flex;
   justify-content: space-evenly;
 }
-.footer-item {
+.container-item {
   position: relative;
   overflow: hidden;
   border: none;
@@ -164,20 +177,20 @@ export default {
   outline-width: 2px;
   outline-offset: -2px;
 }
-.footer-add-rem {
+.container-add-rem {
   position: absolute;
   z-index: 8;
   top: 0;
   width: 15px;
   height: 15px;
 }
-.footer-add-rem i {
+.container-add-rem i {
   position: absolute;
   top: 2px;
   left: 3px;
   font-size: 8px;
 }
-.footer-select {
+.container-select {
   position: absolute;
   z-index: 7;
   top: 0;
@@ -187,7 +200,7 @@ export default {
   border-style: none;
   background: transparent;
 }
-.footer-select:focus {
+.container-select:focus {
   outline: none;
 }
 </style>

@@ -429,6 +429,46 @@ export default {
     //   db.createObjectStore('galleryOnLoad_tb', { autoIncrement: false });
     //   db.createObjectStore('generatedText_tb', { autoIncrement: false });
     // });
+
+    // Attribute control
+    Object.entries(this.site.htmlElmnts).forEach(([elKey, elVal]) => {
+      const dfltElAttrs = Object.keys(this.defaults.htmlElmnts[elVal.type]);
+      const dfltElStyleAttrsArr =
+        this.defaults.htmlElmnts[elVal.type].style && Object.keys(this.defaults.htmlElmnts[elVal.type].style).length > 0
+          ? Object.keys(this.defaults.htmlElmnts[elVal.type].style)
+          : null;
+
+      Object.keys(elVal).forEach((elAttr) => {
+        if (
+          !['button', 'components', 'default', 'form', 'mod', 'textEditor'].includes(elAttr) &&
+          !dfltElAttrs.includes(elAttr)
+        )
+          console.log(elKey + ': no ' + elAttr + ' attr');
+      });
+
+      Object.keys(this.defaults.htmlElmnts[elVal.type]).forEach((elAttr) => {
+        if (!['info'].includes(elAttr) && !Object.keys(elVal).includes(elAttr))
+          console.log(elKey + ': no ' + elAttr + ' attr');
+      });
+
+      if (dfltElStyleAttrsArr && elVal.style && Object.keys(elVal.style).length > 0) {
+        Object.keys(elVal.style).forEach((elStyle) => {
+          if (this.defaults.htmlElmnts[elVal.type]?.info?.opts) {
+            if (
+              !this.defaults.htmlElmnts[elVal.type].info.opts.includes(elStyle) &&
+              !dfltElStyleAttrsArr.includes(elStyle)
+            )
+              console.log(elKey + ': no ' + elStyle + ' style');
+          } else {
+            if (!dfltElStyleAttrsArr.includes(elStyle)) console.log(elKey + ': no ' + elStyle + ' style');
+          }
+        });
+
+        Object.keys(this.defaults.htmlElmnts[elVal.type].style).forEach((elAttr) => {
+          if (!Object.keys(elVal.style).includes(elAttr)) console.log(elKey + ': no ' + elAttr + ' attr');
+        });
+      }
+    });
   },
   updated() {
     if (this.$refs?.appGridItem2) this.grid.wdth = this.$refs.appGridItem2.clientWidth;
