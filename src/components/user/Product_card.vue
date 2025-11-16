@@ -30,11 +30,22 @@
                 : 'space-evenly',
           }"
         >
-          <template v-for="(card, cardIndx) in elValue.cards">
-            <div
+          <template v-for="(card, cardIndx) in elValue.items">
+            <component
               v-if="itemStart <= cardIndx && cardIndx < respvItemAmnt + itemStart"
+              :is="card.anchor || card.link || card.page ? 'a' : 'div'"
               class="product-card-item"
               :style="divStyle"
+              :href="
+                card.page
+                  ? slctd.href + '/' + card.page.toLowerCase()
+                  : card.anchor
+                  ? slctd.href + '/' + card.anchor.toLowerCase()
+                  : card.link
+                  ? card.link
+                  : false
+              "
+              :target="card.link ? '_blank' : '_self'"
             >
               <div class="product-card-group">
                 <img
@@ -51,13 +62,13 @@
                 <div :style="testStyle">{{ card.title }}</div>
                 <div :style="textareaStyle">{{ card.txt }}</div>
               </div>
-            </div>
+            </component>
           </template>
         </div>
         <button
           v-if="elValue.mobile || cntnrWdth > respWidth.xs"
           class="scroller"
-          :disabled="respvItemAmnt + itemStart >= elValue.cards.length"
+          :disabled="respvItemAmnt + itemStart >= elValue.items.length"
           @click="itemStart++"
         >
           <i class="fa-solid fa-chevron-right"></i>
@@ -71,7 +82,7 @@
 export default {
   name: 'Product Card',
 
-  inject: ['endPts', 'respWidth', 'site'],
+  inject: ['endPts', 'respWidth', 'slctd', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -155,11 +166,11 @@ export default {
       );
     },
     respvItemAmnt() {
-      return this.elValue.cards.length > this.wndwWdthRoundDown && this.cntnrWdth > this.respWidth.xs
+      return this.elValue.items.length > this.wndwWdthRoundDown && this.cntnrWdth > this.respWidth.xs
         ? this.wndwWdthRoundDown
-        : this.elValue.cards.length > this.wndwWdthRoundDown && this.cntnrWdth <= this.respWidth.xs
+        : this.elValue.items.length > this.wndwWdthRoundDown && this.cntnrWdth <= this.respWidth.xs
         ? 3
-        : this.elValue.cards.length;
+        : this.elValue.items.length;
     },
   },
 };
@@ -171,6 +182,9 @@ export default {
 }
 .product-card-cntnr {
   gap: 10px;
+}
+.product-card-item {
+  text-decoration: none;
 }
 .product-card-group img {
   width: 100%;

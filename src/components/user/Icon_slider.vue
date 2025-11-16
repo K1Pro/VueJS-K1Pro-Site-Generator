@@ -13,7 +13,7 @@
             justifyContent: elValue.style['justify-content'] ? elValue.style['justify-content'] : 'space-evenly',
           }"
         >
-          <template v-for="(icon, iconIndx) in elValue.icons">
+          <template v-for="(icon, iconIndx) in elValue.items">
             <component
               v-if="iconIndx < respvItemAmnt + itemStart && iconIndx >= itemStart"
               :is="icon.page || icon.link || icon.anchor ? 'a' : 'div'"
@@ -42,7 +42,7 @@
           </template>
         </div>
 
-        <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.icons.length" @click="itemStart++">
+        <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.items.length" @click="itemStart++">
           <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
@@ -118,11 +118,11 @@ export default {
       );
     },
     respvItemAmnt() {
-      return this.elValue.icons.length > this.wndwWdthRoundDown && this.cntnrWdth > this.respWidth.xs
+      return this.elValue.items.length > this.wndwWdthRoundDown && this.cntnrWdth > this.respWidth.xs
         ? this.wndwWdthRoundDown
-        : this.elValue.icons.length > this.wndwWdthRoundDown && this.cntnrWdth <= this.respWidth.xs
+        : this.elValue.items.length > this.wndwWdthRoundDown && this.cntnrWdth <= this.respWidth.xs
         ? 3
-        : this.elValue.icons.length;
+        : this.elValue.items.length;
     },
   },
 

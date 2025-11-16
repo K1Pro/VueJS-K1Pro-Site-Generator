@@ -103,7 +103,7 @@ const defaultsMixin = {
                 'paste',
               ],
             },
-            icons: [
+            items: [
               { title: '', icon: 'fa-solid fa-question' },
               { title: '', icon: 'fa-solid fa-question' },
               { title: '', icon: 'fa-solid fa-question' },
@@ -160,16 +160,14 @@ const defaultsMixin = {
                 'links',
                 'logo',
                 'mobile',
+                'paste',
                 'width',
               ],
             },
             mobile: true,
             logo: false,
-            loggedin: [
-              { title: 'Link 1', link: 'https://example.com' },
-              { title: 'Link 2', link: 'https://example.com' },
-            ],
-            loggedout: [
+            mod: 'pages',
+            items: [
               { title: 'Link 1', link: 'https://example.com' },
               { title: 'Link 2', link: 'https://example.com' },
             ],
@@ -210,6 +208,7 @@ const defaultsMixin = {
                 'height',
                 'image-height',
                 'justify-content',
+                'links',
                 'margin',
                 'padding',
                 'mobile',
@@ -219,7 +218,7 @@ const defaultsMixin = {
               ],
             },
             mobile: true,
-            cards: [
+            items: [
               {
                 img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
                 title: 'Products',

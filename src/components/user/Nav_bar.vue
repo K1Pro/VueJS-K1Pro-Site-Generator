@@ -6,7 +6,7 @@
       </div>
       <ul class="nav-bar-cntnr" :style="[style.primaryColor, elUl]">
         <template v-if="wndw.wdth > respWidth.md || !elValue.mobile || (wndw.wdth < respWidth.md && mblMenu)">
-          <template v-for="link in elValue[slctd.type]">
+          <template v-for="link in elValue.items">
             <li :style="[elLi]" @mouseover="hoverLink($event, true, link)" @mouseout="hoverLink($event, false, link)">
               <a
                 v-if="link.page"

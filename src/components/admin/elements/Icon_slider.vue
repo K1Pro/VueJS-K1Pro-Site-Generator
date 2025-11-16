@@ -20,7 +20,7 @@
           justifyContent: elValue.style['justify-content'] ? elValue.style['justify-content'] : 'space-evenly',
         }"
       >
-        <template v-for="(icon, iconIndx) in elValue.icons">
+        <template v-for="(icon, iconIndx) in elValue.items">
           <div
             v-if="iconIndx < respvItemAmnt + itemStart && iconIndx >= itemStart"
             class="icon-slider-item"
@@ -44,14 +44,14 @@
             </select>
             <button
               class="icon-slider-add-rem"
-              :style="{ right: elValue.icons.length > 1 ? '30px' : '15px' }"
+              :style="{ right: elValue.items.length > 1 ? '30px' : '15px' }"
               @click="addItem(iconIndx)"
             >
               <i class="fa-solid fa-plus"></i>
             </button>
             <button
               class="icon-slider-add-rem"
-              v-if="elValue.icons.length > 1"
+              v-if="elValue.items.length > 1"
               style="right: 15px"
               @click="removeItem(iconIndx)"
             >
@@ -62,7 +62,6 @@
               :elKey="elKey"
               :elValue="elValue"
               :elIndex="elIndex"
-              itemKey="icons"
               :itemVal="icon"
               :itemIndx="iconIndx"
             ></links>
@@ -84,7 +83,7 @@
         </template>
       </div>
 
-      <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.icons.length" @click="itemStart++">
+      <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.items.length" @click="itemStart++">
         <i class="fa-solid fa-chevron-right"></i>
       </button>
     </div>
@@ -179,11 +178,11 @@ export default {
       );
     },
     respvItemAmnt() {
-      return this.elValue.icons.length > this.wndwWdthRoundDown && this.grid.wdth >= this.respWidth.xs
+      return this.elValue.items.length > this.wndwWdthRoundDown && this.grid.wdth >= this.respWidth.xs
         ? this.wndwWdthRoundDown
-        : this.elValue.icons.length > this.wndwWdthRoundDown && this.grid.wdth < this.respWidth.xs
+        : this.elValue.items.length > this.wndwWdthRoundDown && this.grid.wdth < this.respWidth.xs
         ? 3
-        : this.elValue.icons.length;
+        : this.elValue.items.length;
     },
   },
 

@@ -140,7 +140,7 @@
       v-if="
         !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]).includes(option) &&
         !Object.keys(defaults.htmlElmnts[site.htmlElmnts[elKey].type]?.style).includes(option) &&
-        ['links', 'paste'].includes(option)
+        !['links', 'paste'].includes(option)
       "
       type="checkbox"
       :checked="site.htmlElmnts[elKey][option] || site.htmlElmnts[elKey].style[option]"

@@ -2,10 +2,7 @@
   <div class="admin-links">
     <select v-if="elValue.mod == 'pages'" @change="linkKeysDlt($event, itemIndx, elValue.mod)">
       <option disabled selected>Pages</option>
-      <option
-        v-for="sitePage in Object.keys(site.pages[slctd.type])"
-        :selected="site.htmlElmnts[elKey][itemKey][itemIndx].page == sitePage"
-      >
+      <option v-for="sitePage in Object.keys(site.pages[slctd.type])" :selected="itemVal.page == sitePage">
         {{ sitePage }}
       </option>
     </select>
@@ -15,10 +12,7 @@
         <template v-for="sitePageEl in sitePageEls">
           <option
             v-if="sitePageEl[1] && sitePageEl[2] && sitePageEl[2] != ''"
-            :selected="
-              site.htmlElmnts[elKey][itemKey][itemIndx].anchor ==
-              sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()
-            "
+            :selected="itemVal.anchor == sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()"
             :value="sitePage.toLowerCase() + '#' + sitePageEl[2].toLowerCase()"
           >
             {{ sitePageEl[2] }} ({{ sitePage }})
@@ -27,14 +21,14 @@
       </template>
     </select>
     <select v-else-if="elValue.mod == 'disabled'" @change="linkKeysDlt($event, itemIndx, elValue.mod)">
-      <option v-if="!site.htmlElmnts[elKey][itemKey][itemIndx].disable" disabled selected>Enabled</option>
-      <option value="true" :selected="site.htmlElmnts[elKey][itemKey][itemIndx].disable">Disabled</option>
+      <option v-if="!itemVal.disable" disabled selected>Enabled</option>
+      <option value="true" :selected="itemVal.disable">Disabled</option>
     </select>
     <input
       v-else
       type="text"
       placeholder="Link"
-      :value="site.htmlElmnts[elKey][itemKey][itemIndx].link"
+      :value="itemVal.link"
       @change="linkKeysDlt($event, itemIndx, elValue.mod)"
     />
   </div>
@@ -46,15 +40,15 @@ export default {
 
   inject: ['slctd', 'site'],
 
-  props: ['elKey', 'elValue', 'elIndex', 'itemKey', 'itemVal', 'itemIndx'],
+  props: ['elKey', 'elValue', 'elIndex', 'itemVal', 'itemIndx'],
 
   methods: {
     linkKeysDlt(event, itemIndx, linkTp) {
-      this.site.htmlElmnts[this.elKey][this.itemKey][itemIndx][linkTp?.slice(0, -1)] = event.target.value;
+      this.site.htmlElmnts[this.elKey].items[itemIndx][linkTp?.slice(0, -1)] = event.target.value;
       let slctdLinkTps = ['disable', 'link', 'page', 'anchor'].filter((linkType) => linkType != linkTp?.slice(0, -1));
       slctdLinkTps.forEach((linkType) => {
-        if (this.site.htmlElmnts?.[this.elKey]?.[this.itemKey]?.[itemIndx]?.[linkType])
-          delete this.site.htmlElmnts[this.elKey][this.itemKey][itemIndx][linkType];
+        if (this.site.htmlElmnts?.[this.elKey]?.items?.[itemIndx]?.[linkType])
+          delete this.site.htmlElmnts[this.elKey].items[itemIndx][linkType];
       });
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="headline" ref="headline">
+  <div class="headline" :style="[style.outline.borderColor]" ref="headline">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ headlineHght }}px x {{ headlineWdth }}px</span>

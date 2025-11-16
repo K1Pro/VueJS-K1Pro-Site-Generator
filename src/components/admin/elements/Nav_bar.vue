@@ -13,7 +13,7 @@
       </div>
 
       <div class="nav-bar-cntnr" :style="[style.primaryColor.outline.borderColor, elUl]">
-        <template v-for="(link, linkIndx) in elValue[slctd.type]">
+        <template v-for="(link, linkIndx) in elValue.items">
           <div
             class="nav-bar-links"
             :style="[
@@ -21,7 +21,7 @@
               elLi,
               {
                 borderWidth:
-                  linkIndx + 1 === elValue[slctd.type].length && elValue.style['flex-direction'] == 'row'
+                  linkIndx + 1 === elValue.items.length && elValue.style['flex-direction'] == 'row'
                     ? '0px 3px 0px 3px'
                     : linkIndx === 0 && elValue.style['flex-direction'] == 'row-reverse'
                     ? '0px 3px 0px 3px'
@@ -31,14 +31,14 @@
           >
             <button
               class="nav-bar-add-rem"
-              :style="{ right: elValue[slctd.type].length > 1 ? '15px' : '0px' }"
+              :style="{ right: elValue.items.length > 1 ? '15px' : '0px' }"
               @click="addItem(linkIndx)"
             >
               <i class="fa-solid fa-plus"></i>
             </button>
             <button
               class="nav-bar-add-rem"
-              v-if="elValue[slctd.type].length > 1"
+              v-if="elValue.items.length > 1"
               style="right: 0px"
               @click="removeItem(linkIndx)"
             >
@@ -49,7 +49,6 @@
               :elKey="elKey"
               :elValue="elValue"
               :elIndex="elIndex"
-              :itemKey="slctd.type"
               :itemVal="link"
               :itemIndx="linkIndx"
             ></links>
@@ -79,21 +78,21 @@ export default {
   data() {
     return { slctdOpt: null };
   },
-  updated() {
-    Object.entries(this.defaults.htmlElmnts[this.elValue.type]).forEach(([optKey, optVal]) => {
-      if (optKey == 'style') {
-        Object.entries(optVal).forEach(([styleKey, styleVal]) => {
-          if (this.elValue?.style?.[styleKey] === undefined)
-            this.site.htmlElmnts[this.elKey].style[styleKey] = styleVal;
-        });
-      } else if (this.elValue[optKey] === undefined) {
-        this.site.htmlElmnts[this.elKey][optKey] = optVal;
-      }
-    });
-  },
-  mounted() {
-    if (!this.elValue.mod) this.elValue.mod = 'titles';
-  },
+  // updated() {
+  //   Object.entries(this.defaults.htmlElmnts[this.elValue.type]).forEach(([optKey, optVal]) => {
+  //     if (optKey == 'style') {
+  //       Object.entries(optVal).forEach(([styleKey, styleVal]) => {
+  //         if (this.elValue?.style?.[styleKey] === undefined)
+  //           this.site.htmlElmnts[this.elKey].style[styleKey] = styleVal;
+  //       });
+  //     } else if (this.elValue[optKey] === undefined) {
+  //       this.site.htmlElmnts[this.elKey][optKey] = optVal;
+  //     }
+  //   });
+  // },
+  // mounted() {
+  //   if (!this.elValue.mod) this.elValue.mod = 'titles';
+  // },
 
   computed: {
     elUl() {
@@ -126,13 +125,13 @@ export default {
   },
   methods: {
     addItem(linkIndx) {
-      this.site.htmlElmnts[this.elKey][this.slctd.type].splice(linkIndx + 1, 0, {
+      this.site.htmlElmnts[this.elKey].items.splice(linkIndx + 1, 0, {
         title: 'Example',
         link: 'https://example.com',
       });
     },
     removeItem(linkIndx) {
-      this.site.htmlElmnts[this.elKey][this.slctd.type].splice(linkIndx, 1);
+      this.site.htmlElmnts[this.elKey].items.splice(linkIndx, 1);
     },
   },
 };

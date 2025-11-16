@@ -1,7 +1,12 @@
 <template>
   <div class="product-card" :style="[style.outline.borderColor]" ref="productCard">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
+    <edit_menu
+      :elKey="elKey"
+      :elIndex="elIndex"
+      :options="defaults.htmlElmnts[elValue.type].info.opts"
+      @slctd-opt="slctdOpt = $event"
+    ></edit_menu>
     <span :style="[style.outline.color]" class="dim">{{ productCardHght }}px x {{ productCardWdth }}px</span>
 
     <div :style="style.respPadding" style="display: grid; grid-template-columns: 30px auto 30px">
@@ -14,7 +19,7 @@
           justifyContent: elValue.style['justify-content'] ? elValue.style['justify-content'] : 'space-evenly',
         }"
       >
-        <template v-for="(card, cardIndx) in elValue.cards">
+        <template v-for="(card, cardIndx) in elValue.items">
           <div
             v-if="cardIndx < respvItemAmnt + itemStart && cardIndx >= itemStart"
             class="product-card-item"
@@ -22,19 +27,27 @@
           >
             <button
               class="product-card-add-rem"
-              :style="{ right: elValue.cards.length > 1 ? '15px' : '0px' }"
+              :style="{ right: elValue.items.length > 1 ? '15px' : '0px' }"
               @click="addItem(cardIndx)"
             >
               <i class="fa-solid fa-plus"></i>
             </button>
             <button
               class="product-card-add-rem"
-              v-if="elValue.cards.length > 1"
+              v-if="elValue.items.length > 1"
               style="right: 0px"
               @click="removeItem(cardIndx)"
             >
               <i class="fa-solid fa-minus"></i>
             </button>
+            <links
+              v-if="slctdOpt == 'links'"
+              :elKey="elKey"
+              :elValue="elValue"
+              :elIndex="elIndex"
+              :itemVal="card"
+              :itemIndx="cardIndx"
+            ></links>
 
             <div class="product-card-group">
               <img
@@ -52,13 +65,11 @@
 
               <input type="text" placeholder="Title" :style="textStyle" v-model="card.title" />
               <textarea placeholder="Description" :style="textareaStyle" v-model="card.txt"></textarea>
-              <input class="product-card-read-more-check" type="checkbox" :checked="card.readMore" />
-              <input type="text" class="product-card-read-more-text" placeholder="Read more" v-model="card.readMore" />
             </div>
           </div>
         </template>
       </div>
-      <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.cards.length" @click="itemStart++">
+      <button class="scroller" :disabled="respvItemAmnt + itemStart >= elValue.items.length" @click="itemStart++">
         <i class="fa-solid fa-chevron-right"></i>
       </button>
     </div>
@@ -78,6 +89,7 @@ export default {
       itemStart: 0,
       productCardHght: 0,
       productCardWdth: 0,
+      slctdOpt: null,
     };
   },
 
@@ -161,11 +173,11 @@ export default {
       );
     },
     respvItemAmnt() {
-      return this.elValue.cards.length > this.wndwWdthRoundDown && this.grid.wdth >= this.respWidth.xs
+      return this.elValue.items.length > this.wndwWdthRoundDown && this.grid.wdth >= this.respWidth.xs
         ? this.wndwWdthRoundDown
-        : this.elValue.cards.length > this.wndwWdthRoundDown && this.grid.wdth < this.respWidth.xs
+        : this.elValue.items.length > this.wndwWdthRoundDown && this.grid.wdth < this.respWidth.xs
         ? 3
-        : this.elValue.cards.length;
+        : this.elValue.items.length;
     },
   },
 
@@ -251,10 +263,8 @@ export default {
   object-fit: cover;
   margin-bottom: 0px;
 }
-.product-card-group input:not(.product-card-read-more-text, [type='checkbox']) {
+.product-card-group input {
   width: 100%;
-}
-.product-card-group input:not([type='checkbox']) {
   border: 0px;
   background: transparent;
   font-family: Arial, Helvetica, sans-serif;
@@ -268,12 +278,5 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0%;
   border: none;
-}
-.product-card-read-more-check {
-  width: 13px;
-  margin: 0px;
-}
-.product-card-read-more-text {
-  width: calc(100% - 13px);
 }
 </style>
