@@ -35,12 +35,12 @@ const defaultsMixin = {
               components: ['image_banner', 'map', 'text_box'],
               opts: ['padding', 'mobile'],
             },
+            mobile: true,
             style: {
               align: 'right',
               'background-color': '#FFFFFF',
               'border-color': '#FFFFFF',
               color: '#000000',
-              mobile: true,
             },
           },
           form: {
@@ -49,6 +49,7 @@ const defaultsMixin = {
               opts: ['mobile'],
               unique: { page: true },
             },
+            button: 'Request a quote',
             mobile: true,
             style: {},
           },

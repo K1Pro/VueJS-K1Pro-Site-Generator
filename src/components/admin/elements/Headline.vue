@@ -41,7 +41,7 @@ export default {
         paddingBottom: this.elValue.style.margin ? this.elValue.style.margin : '0px',
         paddingLeft: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
         paddingRight: this.grid.wdth > this.respWidth.md ? '10%' : '5px',
-        justifyContent: this.elValue.style['align-content'] ? this.elValue.style['align-content'] : 'initial',
+        justifyContent: this.elValue.style['align-content'],
       };
     },
     inputStyle() {

@@ -430,6 +430,9 @@ export default {
     //   db.createObjectStore('generatedText_tb', { autoIncrement: false });
     // });
 
+    const unitsRqrd = ['radius', 'width', 'column-gap', 'size', 'height', 'margin', 'padding'];
+    const units = ['px', 'vh', 'vw', '%'];
+
     // Attribute control
     Object.entries(this.site.htmlElmnts).forEach(([elKey, elVal]) => {
       const dfltElAttrs = Object.keys(this.defaults.htmlElmnts[elVal.type]);
@@ -438,34 +441,61 @@ export default {
           ? Object.keys(this.defaults.htmlElmnts[elVal.type].style)
           : null;
 
+      // checks if all site elements have the default attributes
       Object.keys(elVal).forEach((elAttr) => {
         if (
-          !['button', 'components', 'default', 'form', 'mod', 'textEditor'].includes(elAttr) &&
+          !['button', 'components', 'default', 'form', 'mod', 'text-editor'].includes(elAttr) &&
           !dfltElAttrs.includes(elAttr)
-        )
-          console.log(elKey + ': no ' + elAttr + ' attr');
+        ) {
+          // console.log(elKey + ': no ' + elAttr + ' attr1');
+          this.site.htmlElmnts[elKey][elAttr] = this.defaults.htmlElmnts[elVal.type][elAttr];
+        }
       });
 
+      // checks if all site elements have the default attributes
       Object.keys(this.defaults.htmlElmnts[elVal.type]).forEach((elAttr) => {
-        if (!['info'].includes(elAttr) && !Object.keys(elVal).includes(elAttr))
-          console.log(elKey + ': no ' + elAttr + ' attr');
+        if (!['info'].includes(elAttr) && !Object.keys(elVal).includes(elAttr)) {
+          // console.log(elKey + ': no ' + elAttr + ' attr2');
+          this.site.htmlElmnts[elKey][elAttr] = this.defaults.htmlElmnts[elVal.type][elAttr];
+        }
       });
 
+      // checks if all site element styles have proper formatting and keys
       if (dfltElStyleAttrsArr && elVal.style && Object.keys(elVal.style).length > 0) {
         Object.keys(elVal.style).forEach((elStyle) => {
           if (this.defaults.htmlElmnts[elVal.type]?.info?.opts) {
             if (
               !this.defaults.htmlElmnts[elVal.type].info.opts.includes(elStyle) &&
               !dfltElStyleAttrsArr.includes(elStyle)
-            )
+            ) {
               console.log(elKey + ': no ' + elStyle + ' style');
+            } else {
+              unitsRqrd.forEach((unit) => {
+                if (elStyle.includes(unit)) {
+                  if (!units.includes(String(elVal.style[elStyle])?.replace(/[0-9.]/g, ''))) {
+                    // console.log(elKey + ': ' + elStyle + ' error: ' + elVal.style[elStyle]);
+                    if (this.defaults.htmlElmnts[elVal.type]?.style?.[elStyle]) {
+                      // if style is found in defaults but is invalid, replace the invalid style with the default
+                      this.site.htmlElmnts[elKey].style[elStyle] = this.defaults.htmlElmnts[elVal.type].style[elStyle];
+                    } else {
+                      // if style is not found in defaults and is invalid, simply delete it
+                      delete this.site.htmlElmnts[elKey].style[elStyle];
+                    }
+                  }
+                }
+              });
+            }
           } else {
             if (!dfltElStyleAttrsArr.includes(elStyle)) console.log(elKey + ': no ' + elStyle + ' style');
           }
         });
 
+        // checks if all site elements have the default styles
         Object.keys(this.defaults.htmlElmnts[elVal.type].style).forEach((elAttr) => {
-          if (!Object.keys(elVal.style).includes(elAttr)) console.log(elKey + ': no ' + elAttr + ' attr');
+          if (!Object.keys(elVal.style).includes(elAttr)) {
+            // console.log(elKey + ': no ' + elAttr + ' attr3');
+            this.site.htmlElmnts[elKey].style[elAttr] = this.defaults.htmlElmnts[elVal.type].style[elAttr];
+          }
         });
       }
     });

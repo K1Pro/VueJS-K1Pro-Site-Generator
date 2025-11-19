@@ -354,14 +354,19 @@ export default {
       let compTp = this?.site?.htmlElmnts?.[event]?.type;
       if (event === 'new_element') {
         compTp = this.tmpEls[elementIndex];
-        const CompNm = compTp + '_';
         let existingEls = [];
         Object.entries(this.site.htmlElmnts).forEach(([elKey, elVal], htmlElIndx) => {
-          const existCompNm = elKey.slice(0, CompNm.length);
-          if (elVal.type == compTp && existCompNm == CompNm && !elKey.slice(CompNm.length).replace(/[0-9]/g, ''))
-            existingEls.push(Number(elKey.slice(CompNm.length)));
+          if (
+            elVal.type == compTp &&
+            elKey.replaceAll('_', '').replaceAll(' ', '').replace(/[0-9]/g, '') == compTp.replaceAll('_', '') &&
+            elKey.replace(/[^0-9.]/g, '')
+          )
+            existingEls.push(Number(elKey.replace(/[^0-9.]/g, '')));
         });
-        newElName = existingEls.length > 0 ? compTp + '_' + (Math.max(...existingEls) + 1) : compTp + '_1';
+        newElName =
+          existingEls.length > 0
+            ? compTp.replaceAll('_', ' ') + ' ' + (Math.max(...existingEls) + 1)
+            : compTp.replaceAll('_', ' ') + ' 1';
         this.site.htmlElmnts[newElName] = JSON.parse(JSON.stringify(this.defaults.htmlElmnts[compTp]));
       }
 

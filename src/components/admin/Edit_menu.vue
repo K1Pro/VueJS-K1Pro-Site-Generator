@@ -110,7 +110,7 @@
       <option>anchors</option>
       <option>links</option>
     </select>
-    <input v-if="option == 'text-editor'" type="checkbox" v-model="site.htmlElmnts[elKey].textEditor" />
+    <input v-if="option == 'text-editor'" type="checkbox" v-model="site.htmlElmnts[elKey]['text-editor']" />
     <!-- number [unitInputs] -->
     <input
       v-if="unitInputs.includes(option) && site.htmlElmnts[elKey].style[option]"
