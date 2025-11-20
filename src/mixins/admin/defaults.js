@@ -35,6 +35,7 @@ const defaultsMixin = {
               components: ['image_banner', 'map', 'text_box'],
               opts: ['padding', 'mobile'],
             },
+            components: [],
             mobile: true,
             style: {
               align: 'right',
@@ -49,6 +50,7 @@ const defaultsMixin = {
               opts: ['mobile'],
               unique: { page: true },
             },
+            form: [[{ type: 'break' }]],
             button: 'Request a quote',
             mobile: true,
             style: {},
@@ -122,6 +124,7 @@ const defaultsMixin = {
               width: '120px',
             },
             titles: true,
+            mod: 'pages',
           },
           image_banner: {
             type: 'image_banner',
@@ -218,7 +221,6 @@ const defaultsMixin = {
                 'width',
               ],
             },
-            mobile: true,
             items: [
               {
                 img: 'https://api-site.k1pro.net/public/default/logo/missingimage.png',
@@ -240,6 +242,8 @@ const defaultsMixin = {
               'font-size': '12px',
               'title-font-size': '18px',
             },
+            mod: 'pages',
+            mobile: true,
           },
           spacer: { type: 'spacer', info: { opts: ['height'] }, style: { height: '50px' } },
           terms_of_use: {

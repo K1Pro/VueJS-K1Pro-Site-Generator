@@ -96,9 +96,9 @@ export default {
   mounted() {
     this.productCardHght = this.$refs?.productCard?.scrollHeight;
     this.productCardWdth = this.$refs?.productCard?.scrollWidth;
-    if (!this.elValue.style['background-color'])
-      this.elValue.style['background-color'] = this.style.primaryColor.backgroundColor.backgroundColor;
-    if (!this.elValue.style['border-color']) this.elValue.style['border-color'] = this.site.body.style.borderColor;
+    // if (!this.elValue.style['background-color'])
+    //   this.elValue.style['background-color'] = this.style.primaryColor.backgroundColor.backgroundColor;
+    // if (!this.elValue.style['border-color']) this.elValue.style['border-color'] = this.site.body.style.borderColor;
   },
 
   updated() {

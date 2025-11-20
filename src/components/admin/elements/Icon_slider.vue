@@ -113,9 +113,9 @@ export default {
     this.iconSliderHght = this.$refs?.iconSlider?.scrollHeight;
     this.iconSliderWdth = this.$refs?.iconSlider?.scrollWidth;
     if (!this.elValue.mod) this.elValue.mod = 'titles';
-    if (!this.elValue.style['background-color'])
-      this.elValue.style['background-color'] = this.style.primaryColor.backgroundColor.backgroundColor;
-    if (!this.elValue.style['border-color']) this.elValue.style['border-color'] = this.site.body.style.borderColor;
+    // if (!this.elValue.style['background-color'])
+    //   this.elValue.style['background-color'] = this.style.primaryColor.backgroundColor.backgroundColor;
+    // if (!this.elValue.style['border-color']) this.elValue.style['border-color'] = this.site.body.style.borderColor;
   },
 
   updated() {

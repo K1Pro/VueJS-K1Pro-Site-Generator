@@ -546,12 +546,6 @@ export default {
       console.log('==============');
     },
   },
-
-  created() {
-    if (!this.elValue.form || this.elValue.form.length < 1) {
-      this.site.htmlElmnts[this.elKey].form = [[{ type: 'break' }]];
-    }
-  },
 };
 </script>
 
