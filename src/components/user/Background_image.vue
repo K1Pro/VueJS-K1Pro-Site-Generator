@@ -27,6 +27,7 @@ export default {
 <style>
 .background-image {
   position: absolute;
+  display: block;
   object-fit: cover;
   width: 100%;
 }

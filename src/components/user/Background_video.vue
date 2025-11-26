@@ -1,7 +1,7 @@
 <template>
   <video
     class="background-video"
-    :style="{ height: elValue.style.height }"
+    :style="[elVideo]"
     :src="
       elValue.src.includes('http://') || elValue.src.includes('https://') ? elValue.src : endPts.videosURL + elValue.src
     "
@@ -20,9 +20,10 @@ export default {
 
   props: ['elKey', 'elValue', 'elIndex'],
 
-  created() {
-    if (!this.elValue?.style) this.site.htmlElmnts[this.elKey].style = { height: '75vh' };
-    if (!this.elValue?.style?.height) this.site.htmlElmnts[this.elKey].style.height = '75vh';
+  computed: {
+    elVideo() {
+      return { height: this.elValue.style.height };
+    },
   },
 };
 </script>
@@ -30,6 +31,7 @@ export default {
 <style>
 .background-video {
   position: absolute;
+  display: block;
   object-fit: cover;
   width: 100%;
 }

@@ -1,14 +1,14 @@
 <template>
-  <div class="background-video" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
+  <div class="background-video" :style="[style.outline.borderColor, elDiv]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
-      v-if="slctd.edtMd == 'Individual edit mode'"
+      v-if="slctd.edtMd == 'Individual edit mode' && slctd.indEdtIndx === elIndex"
       :elKey="elKey"
       :elIndex="elIndex"
       :options="defaults.htmlElmnts[elValue.type].info.opts"
     ></edit_menu>
     <video
-      :style="{ height: elValue.style.height }"
+      :style="[elVideo]"
       :width="grid.wdth + 'px'"
       :src="
         elValue.src.includes('http://') || elValue.src.includes('https://')
@@ -30,9 +30,23 @@
 export default {
   name: 'Background video',
 
-  inject: ['defaults', 'endPts', 'grid', 'mediaReq', 'site', 'slctd', 'videosReq'],
+  inject: ['defaults', 'endPts', 'grid', 'mediaReq', 'site', 'slctd', 'style', 'videosReq'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  computed: {
+    elDiv() {
+      return {
+        height: this.elValue.style.height,
+        marginBottom: '-' + this.elValue.style.height,
+        outlineStyle:
+          this.slctd.edtMd == 'Individual edit mode' && this.slctd.indEdtIndx === this.elIndex ? 'dashed' : 'none',
+      };
+    },
+    elVideo() {
+      return { height: this.elValue.style.height };
+    },
+  },
 
   methods: {
     drop() {
@@ -71,11 +85,11 @@ export default {
   position: relative;
   min-height: 35px;
   border: none;
-  /* outline-style: dashed;
   outline-width: 2px;
-  outline-offset: -2px; */
+  outline-offset: -2px;
 }
 .background-video video {
+  display: block;
   object-fit: cover;
   width: 100%;
 }

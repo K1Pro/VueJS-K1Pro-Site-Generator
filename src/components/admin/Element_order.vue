@@ -251,7 +251,6 @@ export default {
 
   methods: {
     modeChng(event) {
-      console.log(event.target.title);
       this.tmpEls = {};
       this.slctd.indEdtIndx = null;
       this.slctd.edtMd = event.target.title;

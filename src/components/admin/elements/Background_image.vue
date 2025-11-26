@@ -1,7 +1,12 @@
 <template>
-  <div class="background-image" :style="[elDiv]">
+  <div class="background-image" :style="[style.outline.borderColor, elDiv]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
-    <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
+    <edit_menu
+      v-if="slctd.edtMd == 'Individual edit mode' && slctd.indEdtIndx === elIndex"
+      :elKey="elKey"
+      :elIndex="elIndex"
+      :options="defaults.htmlElmnts[elValue.type].info.opts"
+    ></edit_menu>
     <img
       :style="[elImg]"
       :width="grid.wdth + 'px'"
@@ -21,7 +26,7 @@
 export default {
   name: 'Background Image',
 
-  inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'mediaReq', 'site'],
+  inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'mediaReq', 'slctd', 'site', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
 
@@ -30,6 +35,8 @@ export default {
       return {
         height: this.elValue.style.height,
         marginBottom: '-' + this.elValue.style.height,
+        outlineStyle:
+          this.slctd.edtMd == 'Individual edit mode' && this.slctd.indEdtIndx === this.elIndex ? 'dashed' : 'none',
       };
     },
     elImg() {
@@ -74,11 +81,11 @@ export default {
   position: relative;
   min-height: 35px;
   border: none;
-  /* outline-style: dashed;
   outline-width: 2px;
-  outline-offset: -2px; */
+  outline-offset: -2px;
 }
 .background-image img {
+  display: block;
   object-fit: cover;
   width: 100%;
 }
