@@ -1,8 +1,8 @@
 <template>
-  <div class="headline" :style="[style.outline.borderColor]" ref="headline">
+  <div class="headline" :style="[style.outline.borderColor]" ref="comp">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
-    <span :style="[style.outline.color]" class="dim">{{ headlineHght }}px x {{ headlineWdth }}px</span>
+    <span :style="[style.outline.color]" class="dim">{{ comp.hght }}px x {{ comp.wdth }}px</span>
     <div class="headline-input" :style="[style.outline.borderColor, divStyle]">
       <input type="text" :style="inputStyle" v-model="site.htmlElmnts[elKey].text" />
     </div>
@@ -19,19 +19,18 @@ export default {
 
   data() {
     return {
-      headlineHght: 0,
-      headlineWdth: 0,
+      comp: { hght: 0, wdth: 0 },
     };
   },
 
   mounted() {
-    this.headlineHght = this.$refs?.headline?.scrollHeight;
-    this.headlineWdth = this.$refs?.headline?.scrollWidth;
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 
   updated() {
-    this.headlineHght = this.$refs?.headline?.scrollHeight;
-    this.headlineWdth = this.$refs?.headline?.scrollWidth;
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 
   computed: {

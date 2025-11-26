@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-slider" :style="[style.outline.borderColor]" ref="iconSlider">
+  <div class="icon-slider" :style="[style.outline.borderColor]" ref="comp">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu
       :elKey="elKey"
@@ -7,7 +7,7 @@
       :options="defaults.htmlElmnts[elValue.type].info.opts"
       @slctd-opt="slctdOpt = $event"
     ></edit_menu>
-    <span :style="[style.outline.color]" class="dim">{{ iconSliderHght }}px x {{ iconSliderWdth }}px</span>
+    <span :style="[style.outline.color]" class="dim">{{ comp.hght }}px x {{ comp.wdth }}px</span>
 
     <div :style="style.respPadding" style="display: grid; grid-template-columns: 30px auto 30px">
       <button class="scroller" :disabled="itemStart === 0" @click="itemStart--">
@@ -101,26 +101,21 @@ export default {
   data() {
     return {
       itemStart: 0,
-      iconSliderHght: 0,
-      iconSliderWdth: 0,
       slctdIconIndx: null,
       slctdIcon: '',
       slctdOpt: null,
+      comp: { hght: 0, wdth: 0 },
     };
   },
 
   mounted() {
-    this.iconSliderHght = this.$refs?.iconSlider?.scrollHeight;
-    this.iconSliderWdth = this.$refs?.iconSlider?.scrollWidth;
-    if (!this.elValue.mod) this.elValue.mod = 'titles';
-    // if (!this.elValue.style['background-color'])
-    //   this.elValue.style['background-color'] = this.style.primaryColor.backgroundColor.backgroundColor;
-    // if (!this.elValue.style['border-color']) this.elValue.style['border-color'] = this.site.body.style.borderColor;
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 
   updated() {
-    this.iconSliderHght = this.$refs?.iconSlider?.scrollHeight;
-    this.iconSliderWdth = this.$refs?.iconSlider?.scrollWidth;
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 
   computed: {

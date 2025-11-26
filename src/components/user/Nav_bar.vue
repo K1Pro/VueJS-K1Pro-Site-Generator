@@ -79,6 +79,7 @@ export default {
     elA() {
       return {
         color: this.site.body.style.textColor,
+        fontFamily: this.elValue.style['font-family'],
         fontSize: this.elValue.style['font-size'],
         height: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 16 + 30 + 'px' : this.elValue.style.height,
         justifyContent: this.wndw.wdth < this.respWidth.md && this.elValue.mobile ? 'flex-start' : 'center',

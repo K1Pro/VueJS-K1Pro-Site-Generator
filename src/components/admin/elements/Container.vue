@@ -1,8 +1,8 @@
 <template>
-  <div class="container" :style="[style.primaryColor.backgroundColor, style.outline.borderColor]">
+  <div class="container" :style="[style.primaryColor.backgroundColor, style.outline.borderColor]" ref="comp">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
-    <span class="dim" :style="[style.primaryColor.outline.color]">{{ grid.wdth }} px * {{ grid.hght }} px</span>
+    <span class="dim" :style="[style.primaryColor.outline.color]">{{ comp.hght }} px * {{ comp.wdth }} px</span>
     <div class="container-cntnr" :style="[style.respPadding, div1Style]">
       <template v-for="(component, componentIndex) in tempComponents">
         <div class="container-item" :style="[style.outline.borderColor, div2Style]">
@@ -91,6 +91,7 @@ export default {
       slctdComponent: '',
       slctdTmpComponentType: {},
       tempComponents: JSON.parse(JSON.stringify(this.elValue.components)),
+      comp: { hght: 0, wdth: 0 },
     };
   },
 
@@ -149,6 +150,13 @@ export default {
     this.elValue.components.forEach((component, componentIndex) => {
       this.slctdTmpComponentType[componentIndex] = null;
     });
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
+  },
+
+  updated() {
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 };
 </script>

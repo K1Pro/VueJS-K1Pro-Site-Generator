@@ -157,6 +157,7 @@ const defaultsMixin = {
                 'border-width',
                 'color',
                 'flex-direction',
+                'font-family',
                 'font-size',
                 'height',
                 'hover',
@@ -178,6 +179,7 @@ const defaultsMixin = {
             style: {
               color: '#000000',
               'flex-direction': 'row',
+              'font-family': 'Sans-serif',
               'font-size': '12px',
               height: '100px',
               hover: 'background-color',

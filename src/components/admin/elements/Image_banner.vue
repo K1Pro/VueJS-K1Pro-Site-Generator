@@ -1,22 +1,25 @@
 <template>
-  <div class="image-banner" :style="[style.outline.borderColor, divStyle]">
+  <div class="image-banner" :style="[style.outline.borderColor]" ref="comp">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
-    <img
-      :src="endPts.imagesURL + elValue.src"
-      alt="image"
-      :style="[imgStyle]"
-      @drop.prevent="drop"
-      @dragover.prevent
-      @dragenter.prevent
-    />
-    <span
-      v-if="elValue.caption"
-      contenteditable="plaintext-only"
-      :style="[spanStyle]"
-      v-on:blur="elValue.caption = $event.target.innerHTML"
-      >{{ elValue.caption === 'true' ? '' : elValue.caption }}</span
-    >
+    <span :style="[style.outline.color]" class="dim">{{ comp.hght }}px x {{ comp.wdth }}px</span>
+    <div class="image-banner-cntnr" :style="[divStyle]">
+      <img
+        :src="endPts.imagesURL + elValue.src"
+        alt="image"
+        :style="[imgStyle]"
+        @drop.prevent="drop"
+        @dragover.prevent
+        @dragenter.prevent
+      />
+      <span
+        v-if="elValue.caption"
+        contenteditable="plaintext-only"
+        :style="[spanStyle]"
+        v-on:blur="elValue.caption = $event.target.innerHTML"
+        >{{ elValue.caption === 'true' ? '' : elValue.caption }}</span
+      >
+    </div>
   </div>
 </template>
 
@@ -27,6 +30,10 @@ export default {
   inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'pexelsReq', 'respWidth', 'mediaReq', 'site', 'sttngs', 'style'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  data() {
+    return { comp: { hght: 0, wdth: 0 } };
+  },
 
   computed: {
     divStyle() {
@@ -94,6 +101,8 @@ export default {
   },
 
   mounted() {
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
     if (Array.isArray(this.elValue.style)) this.elValue.style = {};
     if (this.elValue.src === null && this.site.keywords.length > 0) {
       this.pexelsReq(
@@ -107,6 +116,11 @@ export default {
         console.log(this.endPts.imagesURL);
       });
     }
+  },
+
+  updated() {
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 };
 </script>

@@ -55,6 +55,7 @@
             <span
               v-if="!elValue.style.width"
               class="nav-bar-text"
+              :style="[elTxt]"
               contenteditable="plaintext-only"
               v-on:blur="link.title = $event.target.innerHTML"
               >{{ link.title ? link.title : 'Title' }}</span
@@ -78,21 +79,6 @@ export default {
   data() {
     return { slctdOpt: null };
   },
-  // updated() {
-  //   Object.entries(this.defaults.htmlElmnts[this.elValue.type]).forEach(([optKey, optVal]) => {
-  //     if (optKey == 'style') {
-  //       Object.entries(optVal).forEach(([styleKey, styleVal]) => {
-  //         if (this.elValue?.style?.[styleKey] === undefined)
-  //           this.site.htmlElmnts[this.elKey].style[styleKey] = styleVal;
-  //       });
-  //     } else if (this.elValue[optKey] === undefined) {
-  //       this.site.htmlElmnts[this.elKey][optKey] = optVal;
-  //     }
-  //   });
-  // },
-  // mounted() {
-  //   if (!this.elValue.mod) this.elValue.mod = 'titles';
-  // },
 
   computed: {
     elUl() {
@@ -119,6 +105,7 @@ export default {
     },
     elTxt() {
       return {
+        fontFamily: this.elValue.style['font-family'],
         fontSize: this.elValue.style['font-size'],
       };
     },

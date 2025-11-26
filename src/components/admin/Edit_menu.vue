@@ -32,6 +32,7 @@
       <option>space-around</option>
       <option>space-evenly</option>
     </select>
+    <!-- flex-direction -->
     <select
       v-if="option == 'flex-direction'"
       title="flex-direction"
@@ -40,6 +41,18 @@
       <option>row</option>
       <option>row-reverse</option>
     </select>
+    <select v-if="option == 'font-family'" title="font-family" v-model="site.htmlElmnts[elKey].style['font-family']">
+      <option>Arial</option>
+      <option>Garamond</option>
+      <option>Georgia</option>
+      <option>Helvetica</option>
+      <option>Sans-serif</option>
+      <option>Serif</option>
+      <option>Tahoma</option>
+      <option>Times New Roman</option>
+      <option>Verdana</option>
+    </select>
+    <!-- hover -->
     <select v-if="option == 'hover'" title="hover" v-model="site.htmlElmnts[elKey].style.hover">
       <option>background-color</option>
       <option>font-color</option>

@@ -1,236 +1,244 @@
 <template>
-  <div class="forms" :style="[style.outline.borderColor]">
+  <div class="forms" :style="[style.outline.borderColor]" ref="comp">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
-    <template v-for="(input, inputIndx) in elValue.form" :key="'row_' + inputIndx">
-      <div
-        style="display: grid; grid-gap: 5px"
-        :style="{
-          gridTemplateColumns:
-            'repeat(' +
-            input.length +
-            ', calc(' +
-            100 / input.length +
-            '% - ' +
-            (5 * (input.length - 1) + 90) / input.length +
-            'px)) 60px 30px',
-        }"
-      >
-        <template v-for="(subInput, subInputIndx) in input" :key="'column_' + inputIndx + '_' + subInputIndx">
-          <span
-            :title="
-              JSON.stringify(Object.entries(subInput))
-                .replaceAll('&quot;', '')
-                .replace('[mod,' + subInput.mod + '],', '')
-                .replace('[mod,' + subInput.mod + ']]', '')
-                .replace('[[', '')
-                .replace(']]', '')
-                .replaceAll('],[', '__________')
-                .replaceAll('],', '')
-                .replaceAll(',', ': ')
-                .replaceAll('__________', ' --- ')
-            "
-            :style="{
-              borderTop:
-                elValue.form?.[inputIndx - 1] &&
-                subInput.child &&
-                subInput.child !== elValue.form[inputIndx - 1]?.[0]?.child
-                  ? '3px solid #' + subInput.child
-                  : '0px solid #00000000',
-              borderRight:
-                subInput.child && subInputIndx === input.length - 1
-                  ? '3px solid #' + subInput.child
-                  : '0px solid #00000000',
-              borderBottom:
-                elValue.form?.[inputIndx + 1] &&
-                subInput.child &&
-                subInput.child !== elValue.form[inputIndx + 1]?.[0]?.child
-                  ? '3px solid #' + subInput.child
-                  : '0px solid #00000000',
-              borderLeft: subInput.child && subInputIndx === 0 ? '3px solid #' + subInput.child : '0px solid #00000000',
-              backgroundImage:
-                subInput.parent && subInput.conditional == 'true'
-                  ? 'linear-gradient(90deg, #' + subInput.parent + ' 0 20px, #ffffff00 20px 100%)'
-                  : 'linear-gradient(90deg, #00000000 0 20px, #00000000 20px 100%)',
-            }"
-          >
-            <!-- Attributes select -->
-            <select
-              v-if="!['row_increaser', 'horizontal_rule', 'break', 'label'].includes(subInput.type)"
-              style="width: 100%; margin-right: -100%; background: transparent; border: none"
-              @change="slctAttr($event, inputIndx, subInputIndx)"
-            >
-              <option selected disabled></option>
-              <option value="type" :disabled="!subInput.mod || subInput?.mod == 'type'">type</option>
-              <option v-for="attr in elements[subInput.type]" :value="attr" :disabled="subInput?.mod == attr">
-                {{ attr }}
-              </option>
-              <option v-if="subInput.parent">color</option>
-              <option>insert</option>
-              <option>remove</option>
-            </select>
-            <!-- Checkbox or radio input -->
-            <input
-              v-if="['checkbox', 'radio'].includes(subInput.type)"
-              :type="subInput.type"
-              style="width: 13px; margin: 3px 3px 3px 4px"
-              :checked="subInput.checked === true"
-              @click="checkInput($event, inputIndx, subInputIndx)"
-            />
-            <!-- Name, value, placeholder and pattern inputs -->
-            <input
-              v-if="
-                ['label', 'name', 'pattern', 'placeholder', 'value'].includes(subInput?.mod) &&
-                !['row_increaser'].includes(subInput.type)
+    <span class="dim" :style="[style.primaryColor.outline.color]">{{ comp.hght }} px * {{ comp.wdth }} px</span>
+    <div class="forms-cntnr" :style="[style.respPadding]">
+      <template v-for="(input, inputIndx) in elValue.form" :key="'row_' + inputIndx">
+        <div
+          style="display: grid; grid-gap: 5px"
+          :style="{
+            gridTemplateColumns:
+              'repeat(' +
+              input.length +
+              ', calc(' +
+              100 / input.length +
+              '% - ' +
+              (5 * (input.length - 1) + 90) / input.length +
+              'px)) 60px 30px',
+          }"
+        >
+          <template v-for="(subInput, subInputIndx) in input" :key="'column_' + inputIndx + '_' + subInputIndx">
+            <span
+              :title="
+                JSON.stringify(Object.entries(subInput))
+                  .replaceAll('&quot;', '')
+                  .replace('[mod,' + subInput.mod + '],', '')
+                  .replace('[mod,' + subInput.mod + ']]', '')
+                  .replace('[[', '')
+                  .replace(']]', '')
+                  .replaceAll('],[', '__________')
+                  .replaceAll('],', '')
+                  .replaceAll(',', ': ')
+                  .replaceAll('__________', ' --- ')
               "
-              style="height: 28px"
-              v-model="subInput[subInput.mod]"
-              :type="subInput.mod == 'value' ? subInput.type.replaceAll('_', '-') : 'text'"
-              :placeholder="subInput.type + ' input ' + subInput.mod"
               :style="{
-                width: ['checkbox', 'radio'].includes(subInput.type) ? 'calc(100% - 40px)' : 'calc(100% - 20px)',
-                background: ['checkbox', 'radio'].includes(subInput.type) ? 'transparent' : 'white',
-                border: ['checkbox', 'radio'].includes(subInput.type) ? '1px dashed black' : '1px solid black',
+                borderTop:
+                  elValue.form?.[inputIndx - 1] &&
+                  subInput.child &&
+                  subInput.child !== elValue.form[inputIndx - 1]?.[0]?.child
+                    ? '3px solid #' + subInput.child
+                    : '0px solid #00000000',
+                borderRight:
+                  subInput.child && subInputIndx === input.length - 1
+                    ? '3px solid #' + subInput.child
+                    : '0px solid #00000000',
+                borderBottom:
+                  elValue.form?.[inputIndx + 1] &&
+                  subInput.child &&
+                  subInput.child !== elValue.form[inputIndx + 1]?.[0]?.child
+                    ? '3px solid #' + subInput.child
+                    : '0px solid #00000000',
+                borderLeft:
+                  subInput.child && subInputIndx === 0 ? '3px solid #' + subInput.child : '0px solid #00000000',
+                backgroundImage:
+                  subInput.parent && subInput.conditional == 'true'
+                    ? 'linear-gradient(90deg, #' + subInput.parent + ' 0 20px, #ffffff00 20px 100%)'
+                    : 'linear-gradient(90deg, #00000000 0 20px, #00000000 20px 100%)',
               }"
-              @focusin="tempMod = $event.target.value"
-              @change="attrRptr($event, inputIndx, subInputIndx, subInput.mod)"
-            />
-            <!-- Required and conditional inputs -->
-            <select
-              v-else-if="['conditional', 'required'].includes(subInput?.mod)"
-              style="height: 28px"
-              :style="{
-                width: ['checkbox', 'radio'].includes(subInput.type) ? 'calc(100% - 40px)' : 'calc(100% - 20px)',
-              }"
-              @change="slctCondition($event, inputIndx, subInputIndx, subInput.mod)"
             >
-              <option disabled selected>
-                {{ 'is this ' + subInput.type + ' input ' + subInput.mod + '?' }}
-              </option>
-              <option :disabled="subInput[subInput.mod] == 'true'" value="true">true</option>
-              <option :disabled="subInput[subInput.mod] != 'true'" value="false">false</option>
-            </select>
-            <!-- Min, max, step and rows input -->
-            <input
-              v-else-if="['min', 'max', 'step', 'rows'].includes(subInput?.mod)"
-              :placeholder="subInput.type + ' input ' + subInput.mod"
-              type="number"
-              style="width: calc(100% - 20px); height: 28px"
-              v-model="subInput[subInput.mod]"
-            />
-            <!-- Color input for checkbox or radio inputs -->
-            <input
-              v-else-if="['color'].includes(subInput?.mod) && ['checkbox', 'radio'].includes(subInput?.type)"
-              type="color"
-              style="width: calc(100% - 40px); height: 28px"
-              :value="'#' + subInput.parent"
-              @input="chngCndtnlClor($event, subInput.parent, inputIndx, subInputIndx)"
-            />
-            <!-- Type input -->
-            <select
-              v-else
-              style="height: 28px"
-              :style="{
-                width: ['checkbox', 'radio'].includes(subInput.type)
-                  ? 'calc(100% - 40px)'
-                  : ['break', 'horizontal_rule', 'label', 'row_increaser'].includes(subInput.type)
-                  ? '100%'
-                  : 'calc(100% - 20px)',
-                background: ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type)
-                  ? 'transparent'
-                  : 'white',
-                border: ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type)
-                  ? 'none'
-                  : '1px solid black',
-              }"
-              v-model="subInput.type"
-              @change="changeInput($event, inputIndx, subInputIndx)"
-            >
-              <option
-                selected
-                disabled
-                :value="
-                  ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type) ? subInput.type : false
-                "
-              ></option>
-              <template v-for="element in Object.keys(elements)">
-                <option
-                  :value="element"
-                  :disabled="
-                    element == subInput.type ||
-                    (JSON.stringify(input).includes('row_increaser') && element == 'row_increaser')
-                  "
-                >
-                  {{ element.replaceAll('_', '-') }}
-                  {{
-                    ['break', 'horizontal_rule', 'label', 'row_increaser', 'textarea'].includes(element) ? '' : 'input'
-                  }}
+              <!-- Attributes select -->
+              <select
+                v-if="!['row_increaser', 'horizontal_rule', 'break', 'label'].includes(subInput.type)"
+                style="width: 100%; margin-right: -100%; background: transparent; border: none"
+                @change="slctAttr($event, inputIndx, subInputIndx)"
+              >
+                <option selected disabled></option>
+                <option value="type" :disabled="!subInput.mod || subInput?.mod == 'type'">type</option>
+                <option v-for="attr in elements[subInput.type]" :value="attr" :disabled="subInput?.mod == attr">
+                  {{ attr }}
                 </option>
-              </template>
-            </select>
-            <!-- Horizontal rule -->
-            <hr
-              v-if="subInput.type == 'horizontal_rule'"
-              style="margin-left: -1px; width: calc(100% - 21px); margin-top: -15px"
-            />
-            <!-- Row increaser -->
-            <span v-else-if="subInput.type == 'row_increaser'" style="margin-left: -100%">
-              <button style="width: 30px; height: 28px"><i class="fa-solid fa-plus"></i></button>
-              <button style="width: 30px; height: 28px"><i class="fa-solid fa-minus"></i></button>
-              <input type="number" style="width: 60px; height: 28px" v-model="subInput.rows" />
+                <option v-if="subInput.parent">color</option>
+                <option>insert</option>
+                <option>remove</option>
+              </select>
+              <!-- Checkbox or radio input -->
               <input
+                v-if="['checkbox', 'radio'].includes(subInput.type)"
+                :type="subInput.type"
+                style="width: 13px; margin: 3px 3px 3px 4px"
+                :checked="subInput.checked === true"
+                @click="checkInput($event, inputIndx, subInputIndx)"
+              />
+              <!-- Name, value, placeholder and pattern inputs -->
+              <input
+                v-if="
+                  ['label', 'name', 'pattern', 'placeholder', 'value'].includes(subInput?.mod) &&
+                  !['row_increaser'].includes(subInput.type)
+                "
+                style="height: 28px"
+                v-model="subInput[subInput.mod]"
+                :type="subInput.mod == 'value' ? subInput.type.replaceAll('_', '-') : 'text'"
+                :placeholder="subInput.type + ' input ' + subInput.mod"
+                :style="{
+                  width: ['checkbox', 'radio'].includes(subInput.type) ? 'calc(100% - 40px)' : 'calc(100% - 20px)',
+                  background: ['checkbox', 'radio'].includes(subInput.type) ? 'transparent' : 'white',
+                  border: ['checkbox', 'radio'].includes(subInput.type) ? '1px dashed black' : '1px solid black',
+                }"
+                @focusin="tempMod = $event.target.value"
+                @change="attrRptr($event, inputIndx, subInputIndx, subInput.mod)"
+              />
+              <!-- Required and conditional inputs -->
+              <select
+                v-else-if="['conditional', 'required'].includes(subInput?.mod)"
+                style="height: 28px"
+                :style="{
+                  width: ['checkbox', 'radio'].includes(subInput.type) ? 'calc(100% - 40px)' : 'calc(100% - 20px)',
+                }"
+                @change="slctCondition($event, inputIndx, subInputIndx, subInput.mod)"
+              >
+                <option disabled selected>
+                  {{ 'is this ' + subInput.type + ' input ' + subInput.mod + '?' }}
+                </option>
+                <option :disabled="subInput[subInput.mod] == 'true'" value="true">true</option>
+                <option :disabled="subInput[subInput.mod] != 'true'" value="false">false</option>
+              </select>
+              <!-- Min, max, step and rows input -->
+              <input
+                v-else-if="['min', 'max', 'step', 'rows'].includes(subInput?.mod)"
+                :placeholder="subInput.type + ' input ' + subInput.mod"
+                type="number"
+                style="width: calc(100% - 20px); height: 28px"
+                v-model="subInput[subInput.mod]"
+              />
+              <!-- Color input for checkbox or radio inputs -->
+              <input
+                v-else-if="['color'].includes(subInput?.mod) && ['checkbox', 'radio'].includes(subInput?.type)"
+                type="color"
+                style="width: calc(100% - 40px); height: 28px"
+                :value="'#' + subInput.parent"
+                @input="chngCndtnlClor($event, subInput.parent, inputIndx, subInputIndx)"
+              />
+              <!-- Type input -->
+              <select
+                v-else
+                style="height: 28px"
+                :style="{
+                  width: ['checkbox', 'radio'].includes(subInput.type)
+                    ? 'calc(100% - 40px)'
+                    : ['break', 'horizontal_rule', 'label', 'row_increaser'].includes(subInput.type)
+                    ? '100%'
+                    : 'calc(100% - 20px)',
+                  background: ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type)
+                    ? 'transparent'
+                    : 'white',
+                  border: ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type)
+                    ? 'none'
+                    : '1px solid black',
+                }"
+                v-model="subInput.type"
+                @change="changeInput($event, inputIndx, subInputIndx)"
+              >
+                <option
+                  selected
+                  disabled
+                  :value="
+                    ['break', 'horizontal_rule', 'row_increaser', 'label'].includes(subInput.type)
+                      ? subInput.type
+                      : false
+                  "
+                ></option>
+                <template v-for="element in Object.keys(elements)">
+                  <option
+                    :value="element"
+                    :disabled="
+                      element == subInput.type ||
+                      (JSON.stringify(input).includes('row_increaser') && element == 'row_increaser')
+                    "
+                  >
+                    {{ element.replaceAll('_', '-') }}
+                    {{
+                      ['break', 'horizontal_rule', 'label', 'row_increaser', 'textarea'].includes(element)
+                        ? ''
+                        : 'input'
+                    }}
+                  </option>
+                </template>
+              </select>
+              <!-- Horizontal rule -->
+              <hr
+                v-if="subInput.type == 'horizontal_rule'"
+                style="margin-left: -1px; width: calc(100% - 21px); margin-top: -15px"
+              />
+              <!-- Row increaser -->
+              <span v-else-if="subInput.type == 'row_increaser'" style="margin-left: -100%">
+                <button style="width: 30px; height: 28px"><i class="fa-solid fa-plus"></i></button>
+                <button style="width: 30px; height: 28px"><i class="fa-solid fa-minus"></i></button>
+                <input type="number" style="width: 60px; height: 28px" v-model="subInput.rows" />
+                <input
+                  type="text"
+                  style="background: transparent; border: 1px dashed black; width: calc(100% - 140px)"
+                  v-model="subInput.label"
+                />
+              </span>
+              <!-- Label -->
+              <input
+                v-else-if="['label'].includes(subInput.type)"
                 type="text"
-                style="background: transparent; border: 1px dashed black; width: calc(100% - 140px)"
+                placeholder="label"
+                :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
+                style="
+                  background: transparent;
+                  height: 28px;
+                  width: calc(100% - 20px);
+                  border: 1px dashed black;
+                  margin-left: -100%;
+                "
                 v-model="subInput.label"
+                @keyup.ctrl="changeBold($event, inputIndx, subInputIndx)"
               />
             </span>
-            <!-- Label -->
-            <input
-              v-else-if="['label'].includes(subInput.type)"
-              type="text"
-              placeholder="label"
-              :style="{ fontWeight: subInput.bold == 'true' ? 'bold' : 'normal' }"
-              style="
-                background: transparent;
-                height: 28px;
-                width: calc(100% - 20px);
-                border: 1px dashed black;
-                margin-left: -100%;
-              "
-              v-model="subInput.label"
-              @keyup.ctrl="changeBold($event, inputIndx, subInputIndx)"
-            />
-          </span>
-        </template>
-        <input
-          type="number"
-          style="width: 60px"
-          :value="input.length"
-          @change="changeSubInputAmnt($event, inputIndx)"
-        />
-        <button style="width: 30px; height: 28px" @click="addInput(inputIndx)">
-          <i class="fa-solid fa-plus"></i>
-        </button>
+          </template>
+          <input
+            type="number"
+            style="width: 60px"
+            :value="input.length"
+            @change="changeSubInputAmnt($event, inputIndx)"
+          />
+          <button style="width: 30px; height: 28px" @click="addInput(inputIndx)">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </template>
+      <!-- Captcha -->
+      <div class="forms-captcha-container">
+        <div class="forms-captcha-inputs">
+          <img class="forms-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" />
+          <input type="text" placeholder="Verify captcha" style="height: 4vh; width: calc(100% - 30px)" />
+          <button class="forms-captcha-btn">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
       </div>
-    </template>
-    <!-- Captcha -->
-    <div class="forms-captcha-container">
-      <div class="forms-captcha-inputs">
-        <img class="forms-captcha-img" :src="endPts.captchaURL + captchaDate + '.jpg'" />
-        <input type="text" placeholder="Verify captcha" style="height: 4vh; width: calc(100% - 30px)" />
-        <button class="forms-captcha-btn">
-          <i class="fa-solid fa-arrows-rotate"></i>
-        </button>
-      </div>
+      <br />
+      <!-- Editable submit button -->
+      <span
+        class="forms-submit"
+        contenteditable="plaintext-only"
+        v-on:blur="site.htmlElmnts[elKey].button = $event.target.innerHTML"
+        >{{ site.htmlElmnts[elKey].button ? site.htmlElmnts[elKey].button : 'Submit' }}</span
+      >
     </div>
-    <br />
-    <!-- Editable submit button -->
-    <span
-      class="forms-submit"
-      contenteditable="plaintext-only"
-      v-on:blur="site.htmlElmnts[elKey].button = $event.target.innerHTML"
-      >{{ site.htmlElmnts[elKey].button ? site.htmlElmnts[elKey].button : 'Submit' }}</span
-    >
   </div>
 </template>
 
@@ -266,7 +274,18 @@ export default {
         url: ['placeholder', 'name', 'value', 'required', 'pattern'],
         week: ['value', 'name', 'required', 'min', 'max', 'step'],
       },
+      comp: { hght: 0, wdth: 0 },
     };
+  },
+
+  mounted() {
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
+  },
+
+  updated() {
+    this.comp.hght = this.$refs?.comp?.scrollHeight;
+    this.comp.wdth = this.$refs?.comp?.scrollWidth;
   },
 
   methods: {
@@ -557,8 +576,6 @@ export default {
   outline-style: dashed;
   outline-width: 2px;
   outline-offset: -2px;
-  padding: 0px 10px;
-  /* might need to get rid of padding above */
 }
 .forms-captcha-container {
   width: 100%;
@@ -620,9 +637,6 @@ export default {
   background-color: #e5e5e5;
 }
 @media only screen and (min-width: 650px) {
-  .forms {
-    padding: 0px calc(10% + 10px);
-  }
   .forms-captcha-img {
     height: 4.5vw;
   }

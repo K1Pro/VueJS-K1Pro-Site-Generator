@@ -1,9 +1,9 @@
 <template>
-  <div class="background-image" :style="{ height: elValue.style.height, marginBottom: '-' + elValue.style.height }">
+  <div class="background-image" :style="[elDiv]">
     <div :id="'site_page_el_' + elIndex" class="el-hover"></div>
     <edit_menu :elKey="elKey" :elIndex="elIndex" :options="defaults.htmlElmnts[elValue.type].info.opts"></edit_menu>
     <img
-      :style="{ height: elValue.style.height }"
+      :style="[elImg]"
       :width="grid.wdth + 'px'"
       :src="
         elValue.src.includes('http://') || elValue.src.includes('https://')
@@ -24,6 +24,18 @@ export default {
   inject: ['defaults', 'endPts', 'grid', 'imagesReq', 'mediaReq', 'site'],
 
   props: ['elKey', 'elValue', 'elIndex'],
+
+  computed: {
+    elDiv() {
+      return {
+        height: this.elValue.style.height,
+        marginBottom: '-' + this.elValue.style.height,
+      };
+    },
+    elImg() {
+      return { height: this.elValue.style.height };
+    },
+  },
 
   methods: {
     drop() {
